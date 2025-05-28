@@ -228,10 +228,22 @@ const Admin = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="applications" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="applications" className="text-lg font-medium">Applications</TabsTrigger>
-            <TabsTrigger value="applicants" className="text-lg font-medium">Applicants</TabsTrigger>
-          </TabsList>
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <TabsList className="grid w-full grid-cols-2 bg-gray-50 rounded-lg p-1 m-1">
+              <TabsTrigger 
+                value="applications" 
+                className="text-lg font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-orange-600 data-[state=active]:border-orange-200"
+              >
+                Applications
+              </TabsTrigger>
+              <TabsTrigger 
+                value="applicants" 
+                className="text-lg font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-orange-600 data-[state=active]:border-orange-200"
+              >
+                Applicants
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           <TabsContent value="applications" className="space-y-6">
             {/* Filters Section */}

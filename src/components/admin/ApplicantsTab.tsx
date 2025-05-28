@@ -4,10 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences } from "@/domain/types/Applicant";
 import { toast } from "sonner";
-import { User, FileText, Shield, Building } from "lucide-react";
+import { User, FileText, Shield, Building, Eye, Mail, Download, MoreHorizontal } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import GuarantorForm from "@/components/applicants/GuarantorForm";
 
 interface TenancyApplication {
@@ -29,6 +32,7 @@ const ApplicantsTab = () => {
   const navigate = useNavigate();
   
   const [applicants, setApplicants] = useState<ApplicantWithApplication[]>([]);
+  const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
   const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
   const [showGuarantorForm, setShowGuarantorForm] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -94,6 +98,22 @@ const ApplicantsTab = () => {
     }
   };
 
+  const handleSelectApplicant = (applicantKey: string, checked: boolean) => {
+    if (checked) {
+      setSelectedApplicants(prev => [...prev, applicantKey]);
+    } else {
+      setSelectedApplicants(prev => prev.filter(key => key !== applicantKey));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedApplicants(applicants.map((_, index) => `${_.applicationId}-${index}`));
+    } else {
+      setSelectedApplicants([]);
+    }
+  };
+
   const handleAddGuarantor = (applicant: ApplicantWithApplication) => {
     setSelectedApplicant(applicant);
     setShowGuarantorForm(true);
@@ -103,6 +123,16 @@ const ApplicantsTab = () => {
     setShowGuarantorForm(false);
     setSelectedApplicant(null);
     toast.success('Guarantor information saved successfully');
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   if (loading) {
@@ -158,144 +188,174 @@ const ApplicantsTab = () => {
         </Badge>
       </div>
 
-      {/* Applicants */}
-      <div className="space-y-6">
-        {applicants.map((applicant, index) => (
-          <Card key={`${applicant.applicationId}-${index}`} className="shadow-sm border border-gray-200 overflow-hidden">
-            <CardHeader className="bg-white border-b border-gray-200">
-              <CardTitle className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <User className="h-5 w-5 mr-2 text-gray-600" />
-                  <div>
-                    <span className="text-xl font-semibold text-gray-900">{applicant.firstName} {applicant.lastName}</span>
-                    {applicant.isPrimary && (
-                      <Badge variant="outline" className="ml-2 text-xs border-orange-200 text-orange-700 bg-orange-50">
-                        Primary
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(`/applicants?application=${applicant.applicationId}`)}
-                    className="text-orange-600 border-orange-200 hover:bg-orange-50 shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <Building className="h-4 w-4 mr-2" />
-                    View Application
-                  </Button>
-                  {applicant.guarantorRequired === 'yes' && (
-                    <Button
-                      size="sm"
-                      onClick={() => handleAddGuarantor(applicant)}
-                      className="bg-orange-500 hover:bg-orange-600 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <Shield className="h-4 w-4 mr-2" />
-                      Add Guarantor
-                    </Button>
-                  )}
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
-              {/* Application Info */}
-              <div className="mb-6 p-4 bg-orange-50 rounded-lg border border-orange-200">
-                <h4 className="font-semibold text-orange-800 mb-2">Application Details</h4>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div>
-                    <p className="text-gray-600">Property Address</p>
-                    <p className="font-medium text-gray-900">{applicant.propertyAddress || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Postcode</p>
-                    <p className="font-medium text-gray-900">{applicant.propertyPostcode || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-600">Submitted</p>
-                    <p className="font-medium text-gray-900">{new Date(applicant.submittedAt).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}</p>
-                  </div>
-                </div>
+      {/* Bulk Actions */}
+      <Card className="shadow-sm border border-gray-200">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Checkbox
+                checked={selectedApplicants.length === applicants.length && applicants.length > 0}
+                onCheckedChange={handleSelectAll}
+                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+              />
+              <span className="text-sm text-gray-600">
+                {selectedApplicants.length} of {applicants.length} applicants selected
+              </span>
+            </div>
+            {selectedApplicants.length > 0 && (
+              <div className="flex space-x-2">
+                <Button variant="outline" size="sm" className="shadow-sm hover:shadow-md transition-shadow">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Selected
+                </Button>
               </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Personal Information */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 text-lg">Personal Information</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-gray-600">Date of Birth</p>
-                      <p className="font-medium text-gray-900">{applicant.dateOfBirth}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Email</p>
-                      <p className="font-medium text-gray-900">{applicant.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Phone</p>
-                      <p className="font-medium text-gray-900">{applicant.phone}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Employment Information */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 text-lg">Employment</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-gray-600">Employment Status</p>
-                      <p className="font-medium text-gray-900">{applicant.employment}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Company</p>
-                      <p className="font-medium text-gray-900">{applicant.companyName}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Annual Income</p>
-                      <p className="font-medium text-gray-900">£{applicant.annualIncome}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Address Information */}
-                <div className="space-y-4">
-                  <h4 className="font-semibold text-gray-900 text-lg">Current Address</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <p className="text-sm text-gray-600">Address</p>
-                      <p className="font-medium text-gray-900">{applicant.previousAddress}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Postcode</p>
-                      <p className="font-medium text-gray-900">{applicant.previousPostcode}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600">Property Status</p>
-                      <p className="font-medium text-gray-900">{applicant.currentPropertyStatus}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Guarantor Required Badge */}
-              {applicant.guarantorRequired === 'yes' && (
-                <div className="mt-6">
-                  <Badge variant="outline" className="text-orange-600 border-orange-200 bg-orange-50">
-                    <Shield className="h-3 w-3 mr-1" />
-                    Guarantor Required
-                  </Badge>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {/* Applicants Table */}
+      <Card className="shadow-sm border border-gray-200 overflow-hidden">
+        <CardHeader className="bg-white border-b border-gray-200 py-6">
+          <CardTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
+            <span>Applicants ({applicants.length})</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="border rounded-lg overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="w-12">
+                    <span className="sr-only">Select</span>
+                  </TableHead>
+                  <TableHead className="font-semibold">Applicant</TableHead>
+                  <TableHead className="font-semibold">Property</TableHead>
+                  <TableHead className="font-semibold">Employment</TableHead>
+                  <TableHead className="font-semibold">Income</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {applicants.map((applicant, index) => {
+                  const applicantKey = `${applicant.applicationId}-${index}`;
+                  return (
+                    <TableRow key={applicantKey} className="hover:bg-gray-50">
+                      <TableCell>
+                        <Checkbox
+                          checked={selectedApplicants.includes(applicantKey)}
+                          onCheckedChange={(checked) => handleSelectApplicant(applicantKey, !!checked)}
+                          className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                        />
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div>
+                          <div className="flex items-center">
+                            <p className="font-medium text-gray-900">
+                              {applicant.firstName} {applicant.lastName}
+                            </p>
+                            {applicant.isPrimary && (
+                              <Badge variant="outline" className="ml-2 text-xs border-orange-200 text-orange-700 bg-orange-50">
+                                Primary
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600">{applicant.email}</p>
+                          <p className="text-sm text-gray-600">{applicant.phone}</p>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div>
+                          <p className="font-medium text-gray-900">
+                            {applicant.propertyAddress || 'Not provided'}
+                          </p>
+                          <p className="text-sm text-gray-600">{applicant.propertyPostcode}</p>
+                          <p className="text-sm text-gray-600">
+                            {formatDate(applicant.submittedAt)}
+                          </p>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div>
+                          <p className="font-medium text-gray-900">{applicant.employment}</p>
+                          <p className="text-sm text-gray-600">{applicant.companyName}</p>
+                          <p className="text-sm text-gray-600">{applicant.jobTitle}</p>
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <p className="font-medium text-gray-900">£{applicant.annualIncome}</p>
+                        <p className="text-sm text-gray-600">{applicant.lengthOfService}</p>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="space-y-1">
+                          <p className="text-sm text-gray-900">{applicant.currentPropertyStatus}</p>
+                          {applicant.guarantorRequired === 'yes' && (
+                            <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
+                              <Shield className="h-3 w-3 mr-1" />
+                              Guarantor Required
+                            </Badge>
+                          )}
+                        </div>
+                      </TableCell>
+                      
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => navigate(`/applicants?application=${applicant.applicationId}`)}
+                            className="h-8"
+                          >
+                            <Building className="h-4 w-4" />
+                          </Button>
+                          
+                          {applicant.guarantorRequired === 'yes' && (
+                            <Button
+                              size="sm"
+                              onClick={() => handleAddGuarantor(applicant)}
+                              className="h-8 bg-orange-500 hover:bg-orange-600"
+                            >
+                              <Shield className="h-4 w-4" />
+                            </Button>
+                          )}
+                          
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                              <DropdownMenuItem>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Mail className="h-4 w-4 mr-2" />
+                                Send Email
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <Download className="h-4 w-4 mr-2" />
+                                Generate Report
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Guarantor Form Modal */}
       {showGuarantorForm && selectedApplicant && (
