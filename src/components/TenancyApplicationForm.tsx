@@ -453,7 +453,7 @@ const TenancyApplicationForm = () => {
                 variant="outline"
                 onClick={goToPrevious}
                 disabled={isFirstStep || isSubmitting}
-                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+                className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Previous
@@ -463,7 +463,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleNext}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
                   Next
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -472,7 +472,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleSubmit}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                  className="bg-primary hover:bg-primary/90"
+                  className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
                   {isSubmitting ? (
                     <>

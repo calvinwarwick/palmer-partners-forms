@@ -20,8 +20,8 @@ const FormFieldWithTooltip = ({
 }: FormFieldWithTooltipProps) => {
   return (
     <div>
-      <div className="label-with-tooltip">
-        <Label htmlFor={htmlFor} className="form-label">
+      <div className="flex items-center gap-2 mb-3">
+        <Label htmlFor={htmlFor} className="form-label mb-0">
           {label} {required && "*"}
         </Label>
         {tooltip && (
