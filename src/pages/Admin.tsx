@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
-import { Download } from "lucide-react";
+import { Download, RefreshCw } from "lucide-react";
 import AdminStats from "@/components/admin/AdminStats";
 import ApplicationFilters from "@/components/admin/ApplicationFilters";
 import BulkActions from "@/components/admin/BulkActions";
@@ -245,30 +244,17 @@ const Admin = () => {
                 variant="outline" 
                 onClick={handleManualRefresh} 
                 disabled={refreshing} 
-                className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-3"
+                className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 relative overflow-hidden"
+                style={{
+                  background: `conic-gradient(#f97316 0deg ${progress * 3.6}deg, transparent ${progress * 3.6}deg 360deg)`,
+                  padding: '2px'
+                }}
               >
-                <div className="relative w-4 h-4">
-                  <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      d="M18 2.0845 A 15.9155 15.9155 0 0 1 18 33.9155"
-                      fill="none"
-                      stroke="#e5e7eb"
-                      strokeWidth="4"
-                    />
-                    <path
-                      d="M18 2.0845 A 15.9155 15.9155 0 0 1 18 33.9155"
-                      fill="none"
-                      stroke="#f97316"
-                      strokeWidth="4"
-                      strokeDasharray={`${progress}, 100`}
-                      className="transition-all duration-1000 ease-linear"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-[6px] font-medium text-gray-600 opacity-50">{timeLeft}</span>
-                  </div>
+                <div className="bg-white rounded-md px-3 py-2 flex items-center gap-2">
+                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  <span className="text-xs font-medium opacity-50">{timeLeft}s</span>
+                  <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
                 </div>
-                {refreshing ? 'Refreshing...' : 'Refresh'}
               </Button>
               <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
                 <Download className="h-4 w-4 mr-2" />
