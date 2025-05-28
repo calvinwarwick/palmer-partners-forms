@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect, useRef } from "react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -7,26 +7,24 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { Eye, Mail, Download, Search, Calendar as CalendarIcon, Trash2, User } from "lucide-react";
-import { formatDistanceToNow, format } from "date-fns";
+import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { usePdfGeneration } from "@/hooks/usePdfGeneration";
+import { format, formatDistanceToNow } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
 interface Applicant {
   id: string;
+  applicationId: string;
   firstName: string;
   lastName: string;
   email: string;
   phone: string;
   dateOfBirth: string;
-  applicationId: string;
-  submitted_at: string;
-  property_preferences?: {
-    streetAddress?: string;
-    postcode?: string;
-  };
+  address: string;
+  postcode: string;
+  createdAt: string;
 }
 
 const ApplicantsTab = () => {
@@ -34,10 +32,25 @@ const ApplicantsTab = () => {
   const [filteredApplicants, setFilteredApplicants] = useState<Applicant[]>([]);
   const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [dateFilter, setDateFilter] = useState("all");
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { generatePdf, isGenerating } = usePdfGeneration();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const checkboxRef = useRef<HTMLButtonElement>(null);
+
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState("");
+  const [dateFilter, setDateFilter] = useState("all");
+
+  const isAllSelected = selectedApplicants.length === filteredApplicants.length && filteredApplicants.length > 0;
+  const isIndeterminate = selectedApplicants.length > 0 && selectedApplicants.length < filteredApplicants.length;
+
+  useEffect(() => {
+    if (checkboxRef.current) {
+      (checkboxRef.current as any).indeterminate = isIndeterminate;
+    }
+  }, [isIndeterminate]);
 
   useEffect(() => {
     fetchApplicants();
@@ -48,37 +61,31 @@ const ApplicantsTab = () => {
   }, [applicants, searchTerm, dateFilter]);
 
   const fetchApplicants = async () => {
+    setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('tenancy_applications')
-        .select('*')
-        .order('submitted_at', { ascending: false });
+      // Fetch applicants from Supabase
+      const applicationId = searchParams.get('application');
+      let query = supabase.from('tenancy_applications').select('applicants').eq('id', applicationId);
+      const { data, error } = await query;
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      // Flatten applicants from all applications
-      const allApplicants: Applicant[] = [];
-      data.forEach(app => {
-        if (app.applicants && Array.isArray(app.applicants)) {
-          app.applicants.forEach((applicant: any, index: number) => {
-            allApplicants.push({
-              id: `${app.id}-${index}`,
-              firstName: applicant.firstName || '',
-              lastName: applicant.lastName || '',
-              email: applicant.email || '',
-              phone: applicant.phone || '',
-              dateOfBirth: applicant.dateOfBirth || '',
-              applicationId: app.id,
-              submitted_at: app.submitted_at,
-              property_preferences: typeof app.property_preferences === 'object' && app.property_preferences !== null
-                ? app.property_preferences as { streetAddress?: string; postcode?: string }
-                : undefined
-            });
-          });
+      // Extract applicants from the response
+      const fetchedApplicants = data.flatMap(item => {
+        if (Array.isArray(item.applicants)) {
+          return item.applicants.map(applicant => ({
+            ...applicant,
+            applicationId: item.id,
+            createdAt: item.submitted_at
+          }));
+        } else {
+          return [];
         }
       });
 
-      setApplicants(allApplicants);
+      setApplicants(fetchedApplicants);
     } catch (error) {
       console.error('Error fetching applicants:', error);
       toast.error('Failed to fetch applicants');
@@ -92,11 +99,10 @@ const ApplicantsTab = () => {
 
     // Search filter
     if (searchTerm) {
-      filtered = filtered.filter(applicant => 
+      filtered = filtered.filter(applicant =>
         applicant.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         applicant.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        applicant.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        applicant.phone?.toLowerCase().includes(searchTerm.toLowerCase())
+        applicant.email?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -104,7 +110,7 @@ const ApplicantsTab = () => {
     if (dateFilter !== "all") {
       const now = new Date();
       filtered = filtered.filter(applicant => {
-        const submitDate = new Date(applicant.submitted_at);
+        const submitDate = new Date(applicant.createdAt);
         switch (dateFilter) {
           case "today":
             return submitDate.toDateString() === now.toDateString();
@@ -130,25 +136,59 @@ const ApplicantsTab = () => {
     if (checked) {
       setSelectedApplicants(prev => [...prev, id]);
     } else {
-      setSelectedApplicants(prev => prev.filter(appId => appId !== id));
+      setSelectedApplicants(prev => prev.filter(applicantId => applicantId !== id));
     }
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedApplicants(filteredApplicants.map(app => app.id));
+      setSelectedApplicants(filteredApplicants.map(applicant => `${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`));
     } else {
       setSelectedApplicants([]);
     }
   };
 
-  const handleViewPreview = (applicant: Applicant) => {
-    toast.success(`Viewing preview for ${applicant.firstName} ${applicant.lastName}`);
+  const handleBulkExport = () => {
+    const selectedData = filteredApplicants.filter(applicant =>
+      selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)
+    );
+    const csvContent = generateCSV(selectedData);
+    downloadCSV(csvContent, 'selected-applicants.csv');
+    toast.success('Applicants exported successfully');
   };
 
-  const handleBulkExport = () => {
-    const selectedData = applicants.filter(app => selectedApplicants.includes(app.id));
-    toast.success('Applicants exported successfully');
+  const generateCSV = (data: Applicant[]) => {
+    const headers = [
+      'First name',
+      'Last name',
+      'Date of birth',
+      'Mobile number',
+      'Email address',
+      'Postcode',
+      'Street address',
+    ];
+
+    const rows = data.map(applicant => [
+      applicant?.firstName || '',
+      applicant?.lastName || '',
+      applicant?.dateOfBirth || '',
+      applicant?.phone || '',
+      applicant?.email || '',
+      applicant?.postcode || '',
+      applicant?.address || '',
+    ]);
+
+    return [headers, ...rows].map(row => row.join(',')).join('\n');
+  };
+
+  const downloadCSV = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   };
 
   const formatTimeAgo = (dateString: string) => {
@@ -156,8 +196,9 @@ const ApplicantsTab = () => {
   };
 
   const getSiteBadge = (applicant: Applicant) => {
-    const postcode = applicant.property_preferences?.postcode?.toLowerCase() || '';
-    
+    const postcode = applicant?.postcode?.toLowerCase() || '';
+
+    // Determine site based on postcode
     if (postcode.startsWith('co') || postcode.includes('colchester')) {
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Colchester</Badge>;
     } else if (postcode.startsWith('ip') || postcode.includes('ipswich')) {
@@ -167,20 +208,29 @@ const ApplicantsTab = () => {
     }
   };
 
+  const handleViewApplicant = (applicant: Applicant) => {
+    // Navigate to applicant details page
+    console.log('View applicant details:', applicant);
+  };
+
+  const handleGenerateApplicantPdf = async (applicant: Applicant) => {
+    // Generate PDF for applicant
+    console.log('Generate PDF for applicant:', applicant);
+  };
+
   const handleDateRangeSelect = (range: DateRange | undefined) => {
     setDateRange(range);
     if (range?.from && range?.to) {
+      // Apply custom date range filter
       setDateFilter('custom');
       setIsDatePickerOpen(false);
     }
   };
 
-  const isAllSelected = selectedApplicants.length === filteredApplicants.length && filteredApplicants.length > 0;
-
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
       </div>
     );
   }
@@ -194,6 +244,7 @@ const ApplicantsTab = () => {
           <div className="flex items-center gap-4">
             <div className="flex items-center space-x-3">
               <Checkbox
+                ref={checkboxRef}
                 checked={isAllSelected}
                 onCheckedChange={handleSelectAll}
                 className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
@@ -217,7 +268,7 @@ const ApplicantsTab = () => {
                 placeholder="Search applicants..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 w-64 h-9 text-sm"
+                className="search-input w-64 h-9 text-sm"
               />
             </div>
             
@@ -265,39 +316,29 @@ const ApplicantsTab = () => {
             </Select>
           </div>
 
-          {/* Right side - Bulk Actions */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleBulkExport}
-              disabled={selectedApplicants.length === 0}
-              className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={selectedApplicants.length === 0}
-              className="h-9 border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700"
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Send Email
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={selectedApplicants.length === 0}
-              className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </Button>
-          </div>
+          {/* Right side - Bulk Actions - Only show when items are selected */}
+          {selectedApplicants.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleBulkExport}
+                className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -317,42 +358,43 @@ const ApplicantsTab = () => {
         </TableHeader>
         <TableBody>
           {filteredApplicants.map((applicant) => (
-            <TableRow key={applicant.id} className="hover:bg-gray-50">
+            <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50">
               <TableCell>
                 <Checkbox
-                  checked={selectedApplicants.includes(applicant.id)}
-                  onCheckedChange={(checked) => handleSelectApplicant(applicant.id, !!checked)}
+                  checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
+                  onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
                   className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                 />
               </TableCell>
               
               <TableCell>
-                <div className="flex items-center space-x-2">
-                  <User className="h-4 w-4 text-gray-400" />
-                  <div>
-                    <p className="font-medium text-gray-900">
-                      {applicant.firstName} {applicant.lastName}
-                    </p>
-                  </div>
+                <div>
+                  <p className="font-medium text-gray-900">
+                    {applicant.firstName} {applicant.lastName}
+                  </p>
                 </div>
               </TableCell>
               
               <TableCell>
                 <div>
-                  <p className="text-sm text-gray-900">{applicant.email}</p>
-                  <p className="text-sm text-gray-600">{applicant.phone}</p>
+                  <p className="text-sm text-gray-600">
+                    {applicant.email}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    {applicant.phone}
+                  </p>
                 </div>
               </TableCell>
               
               <TableCell>
                 <p className="text-sm text-gray-900">
-                  {applicant.dateOfBirth || 'N/A'}
+                  {applicant.dateOfBirth}
                 </p>
               </TableCell>
               
               <TableCell>
                 <p className="text-sm text-gray-900">
-                  {formatTimeAgo(applicant.submitted_at)}
+                  {formatTimeAgo(applicant.createdAt)}
                 </p>
               </TableCell>
               
@@ -361,29 +403,39 @@ const ApplicantsTab = () => {
               </TableCell>
               
               <TableCell>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleViewPreview(applicant)}
-                  className="h-8"
-                >
-                  <Eye className="h-4 w-4 mr-1" />
-                  Preview
-                </Button>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewApplicant(applicant)}
+                    className="h-8"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                  
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                      <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleGenerateApplicantPdf(applicant)}>
+                        <Download className="h-4 w-4 mr-2" />
+                        Generate PDF
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-
-      {filteredApplicants.length === 0 && (
-        <div className="text-center py-16 bg-white">
-          <div className="text-gray-400 mb-4">
-            <User className="mx-auto h-16 w-16" />
-          </div>
-          <p className="text-gray-500 mb-4 text-lg">No applicants found.</p>
-        </div>
-      )}
     </div>
   );
 };

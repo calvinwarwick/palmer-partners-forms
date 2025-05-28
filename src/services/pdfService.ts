@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 
 interface TenancyApplicationData {
@@ -283,28 +282,46 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   
   yPosition += 20;
   
-  const signatureRows = [
-    ['Full name', signature || 'Not provided'],
-    ['Signature', signature || 'Not provided'],
-    ['Submitted At', new Date(submittedAt).toLocaleDateString('en-GB') + ' - ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' PM']
-  ];
+  // Check if signature is a base64 image
+  const isSignatureImage = signature && signature.startsWith('data:image/');
   
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(10);
-  
-  signatureRows.forEach((row, rowIndex) => {
-    const isEven = rowIndex % 2 === 0;
-    if (isEven) {
-      doc.setFillColor(245, 245, 245);
-      doc.rect(15, yPosition - 2, 180, 10, 'F');
+  if (isSignatureImage) {
+    try {
+      // Add signature image
+      doc.addImage(signature, 'PNG', 20, yPosition, 60, 30);
+      yPosition += 35;
+      
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Digital Signature', 20, yPosition);
+      yPosition += 10;
+    } catch (error) {
+      console.error('Error adding signature image:', error);
+      // Fallback to text
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.text('Signature:', 20, yPosition + 4);
+      doc.setFont('helvetica', 'normal');
+      doc.text(signature || 'Not provided', 105, yPosition + 4);
+      yPosition += 10;
     }
-    
+  } else {
+    // Text signature
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.text(row[0], 20, yPosition + 4);
+    doc.text('Signature:', 20, yPosition + 4);
     doc.setFont('helvetica', 'normal');
-    doc.text(row[1], 105, yPosition + 4);
+    doc.text(signature || 'Not provided', 105, yPosition + 4);
     yPosition += 10;
-  });
+  }
+  
+  doc.setFont('helvetica', 'bold');
+  doc.text('Submitted At:', 20, yPosition + 4);
+  doc.setFont('helvetica', 'normal');
+  doc.text(new Date(submittedAt).toLocaleDateString('en-GB') + ' - ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' PM', 105, yPosition + 4);
   
   // Footer on all pages
   const pageCount = (doc as any).internal.pages.length - 1;

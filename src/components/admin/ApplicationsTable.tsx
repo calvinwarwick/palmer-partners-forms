@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -192,39 +191,29 @@ const ApplicationsTable = ({
             </Select>
           </div>
 
-          {/* Right side - Bulk Actions */}
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onBulkExport}
-              disabled={selectedApplications.length === 0}
-              className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={selectedApplications.length === 0}
-              className="h-9 border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700"
-            >
-              <Mail className="h-4 w-4 mr-2" />
-              Send Email
-            </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={selectedApplications.length === 0}
-              className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
-            </Button>
-          </div>
+          {/* Right side - Bulk Actions - Only show when items are selected */}
+          {selectedApplications.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={onBulkExport}
+                className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
+              >
+                <Download className="h-4 w-4 mr-2" />
+                Export CSV
+              </Button>
+              
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete
+              </Button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -312,10 +301,6 @@ const ApplicationsTable = ({
                       <DropdownMenuItem onClick={() => onViewDetails(application)}>
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem>
-                        <Mail className="h-4 w-4 mr-2" />
-                        Send Email
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
                         <Download className="h-4 w-4 mr-2" />
