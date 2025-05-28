@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -25,14 +24,47 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
+  const createDemoUser = async () => {
+    try {
+      console.log("Creating demo user...");
+      const { error } = await signUp("demo@example.com", "demo123456", {
+        first_name: "Demo",
+        last_name: "User",
+      });
+      
+      if (error && error.message.includes("User already registered")) {
+        console.log("Demo user already exists, that's fine");
+        return true;
+      }
+      
+      if (error) {
+        console.error("Error creating demo user:", error);
+        return false;
+      }
+      
+      console.log("Demo user created successfully");
+      return true;
+    } catch (error) {
+      console.error("Exception creating demo user:", error);
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       if (isLogin) {
+        // If trying to login with demo credentials, ensure demo user exists first
+        if (email === "demo@example.com" && password === "demo123456") {
+          console.log("Demo login attempt detected, ensuring demo user exists...");
+          await createDemoUser();
+        }
+        
         const { error } = await signIn(email, password);
         if (error) {
+          console.error("Login error:", error);
           toast.error(error.message);
         } else {
           toast.success("Signed in successfully!");
@@ -51,15 +83,20 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
         }
       }
     } catch (error: any) {
+      console.error("Auth error:", error);
       toast.error(error.message || "An error occurred");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const fillDemoCredentials = () => {
+  const fillDemoCredentials = async () => {
     setEmail("demo@example.com");
     setPassword("demo123456");
+    
+    // Pre-create the demo user when they click the demo button
+    console.log("Pre-creating demo user...");
+    await createDemoUser();
   };
 
   return (
