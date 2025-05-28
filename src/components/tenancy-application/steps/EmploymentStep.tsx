@@ -76,59 +76,63 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor={`employment-${applicant.id}`} className="form-label">Contract type *</Label>
-              <select
-                id={`employment-${applicant.id}`}
-                value={applicant.employment}
-                onChange={(e) => onUpdateApplicant(applicant.id, "employment", e.target.value)}
-                className="form-select"
-                required
-              >
-                <option value="">Select employment status</option>
-                <option value="Full Time">Full Time</option>
-                <option value="Part Time">Part Time</option>
-                <option value="Self-employed">Self-employed</option>
-                <option value="Contract">Contract</option>
-                <option value="Student">Student</option>
-                <option value="Retired">Retired</option>
-                <option value="Unemployed">Unemployed</option>
-              </select>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor={`employment-${applicant.id}`} className="form-label">Contract type *</Label>
+                <select
+                  id={`employment-${applicant.id}`}
+                  value={applicant.employment}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "employment", e.target.value)}
+                  className="form-select"
+                  required
+                >
+                  <option value="">Select employment status</option>
+                  <option value="Full Time">Full Time</option>
+                  <option value="Part Time">Part Time</option>
+                  <option value="Self-employed">Self-employed</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Student">Student</option>
+                  <option value="Retired">Retired</option>
+                  <option value="Unemployed">Unemployed</option>
+                </select>
+              </div>
+              
+              <div>
+                <Label htmlFor={`company-${applicant.id}`} className="form-label">Company name</Label>
+                <Input
+                  id={`company-${applicant.id}`}
+                  value={applicant.companyName}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
+                  placeholder="Enter company name"
+                  className="form-control"
+                />
+              </div>
             </div>
             
-            <div>
-              <Label htmlFor={`company-${applicant.id}`} className="form-label">Company name</Label>
-              <Input
-                id={`company-${applicant.id}`}
-                value={applicant.companyName}
-                onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
-                placeholder="Enter company name"
-                className="form-control"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label">Job title</Label>
-              <Input
-                id={`jobTitle-${applicant.id}`}
-                value={applicant.jobTitle}
-                onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
-                placeholder="Enter job title"
-                className="form-control"
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor={`income-${applicant.id}`} className="form-label">Annual salary (£) *</Label>
-              <Input
-                id={`income-${applicant.id}`}
-                type="number"
-                value={applicant.annualIncome}
-                onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
-                placeholder="e.g., 35000"
-                className="form-control"
-                required
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label">Job title</Label>
+                <Input
+                  id={`jobTitle-${applicant.id}`}
+                  value={applicant.jobTitle}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
+                  placeholder="Enter job title"
+                  className="form-control"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor={`income-${applicant.id}`} className="form-label">Annual salary (£) *</Label>
+                <Input
+                  id={`income-${applicant.id}`}
+                  type="number"
+                  value={applicant.annualIncome}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
+                  placeholder="e.g., 35000"
+                  className="form-control"
+                  required
+                />
+              </div>
             </div>
             
             <div>

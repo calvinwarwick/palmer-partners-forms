@@ -381,15 +381,8 @@ const TenancyApplicationForm = () => {
     <div className="min-h-screen bg-background py-16">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-6">
-          <div className="flex items-center justify-between mb-4">
-            <Link to="/" className="flex items-center text-primary hover:text-primary/80 transition-colors">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Properties
-            </Link>
-          </div>
-          
           <div className="flex items-center space-x-4 mb-4">
-            <Home className="h-6 w-6 text-primary" />
+            <Home className="h-6 w-6 text-orange-500" />
             <h1 className="text-2xl font-bold text-foreground">Tenancy Application</h1>
           </div>
 

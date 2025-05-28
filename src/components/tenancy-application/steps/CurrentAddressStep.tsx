@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -83,28 +84,30 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div>
-              <Label htmlFor={`streetAddress-${applicant.id}`} className="form-label">Street address *</Label>
-              <Input
-                id={`streetAddress-${applicant.id}`}
-                value={applicant.previousAddress}
-                onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
-                placeholder="Full current address"
-                className="form-control"
-                required
-              />
-            </div>
-            
-            <div>
-              <Label htmlFor={`postcode-${applicant.id}`} className="form-label">Postcode *</Label>
-              <Input
-                id={`postcode-${applicant.id}`}
-                value={applicant.previousPostcode}
-                onChange={(e) => onUpdateApplicant(applicant.id, "previousPostcode", e.target.value)}
-                placeholder="e.g., CO14 8LZ"
-                className="form-control"
-                required
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor={`streetAddress-${applicant.id}`} className="form-label">Street address *</Label>
+                <Input
+                  id={`streetAddress-${applicant.id}`}
+                  value={applicant.previousAddress}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
+                  placeholder="Full current address"
+                  className="form-control"
+                  required
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor={`postcode-${applicant.id}`} className="form-label">Postcode *</Label>
+                <Input
+                  id={`postcode-${applicant.id}`}
+                  value={applicant.previousPostcode}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "previousPostcode", e.target.value)}
+                  placeholder="e.g., CO14 8LZ"
+                  className="form-control"
+                  required
+                />
+              </div>
             </div>
             
             <div>
@@ -125,7 +128,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
               </select>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label flex items-center gap-2">
                   Move in date
@@ -156,18 +159,17 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                   />
                 </div>
               </div>
-            </div>
-            
-            <div>
-              <Label htmlFor={`currentRent-${applicant.id}`} className="form-label">Current rental amount (£)</Label>
-              <Input
-                id={`currentRent-${applicant.id}`}
-                type="number"
-                value={applicant.currentRentalAmount}
-                onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
-                placeholder="e.g., 1200"
-                className="form-control"
-              />
+              <div>
+                <Label htmlFor={`currentRent-${applicant.id}`} className="form-label">Current rental amount (£)</Label>
+                <Input
+                  id={`currentRent-${applicant.id}`}
+                  type="number"
+                  value={applicant.currentRentalAmount}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
+                  placeholder="e.g., 1200"
+                  className="form-control"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
