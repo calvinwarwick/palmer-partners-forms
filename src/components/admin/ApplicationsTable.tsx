@@ -7,11 +7,15 @@ import { Eye, Mail, Download, MoreHorizontal, User } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
+import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 
 interface TenancyApplication {
   id: string;
   applicants: any[];
   property_preferences: any;
+  additional_details: any;
+  data_sharing: any;
+  signature: string;
   submitted_at: string;
 }
 
@@ -29,6 +33,7 @@ const ApplicationsTable = ({
   onViewDetails
 }: ApplicationsTableProps) => {
   const navigate = useNavigate();
+  const { generatePdf, isGenerating } = usePdfGeneration();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-GB', {
@@ -46,6 +51,22 @@ const ApplicationsTable = ({
 
   const handleViewApplicant = (applicationId: string, applicantId: string) => {
     navigate(`/applicants?application=${applicationId}&applicant=${applicantId}`);
+  };
+
+  const handleGeneratePdf = async (application: TenancyApplication) => {
+    const pdfData = {
+      applicants: application.applicants,
+      propertyPreferences: application.property_preferences,
+      additionalDetails: application.additional_details,
+      dataSharing: application.data_sharing,
+      signature: application.signature,
+      submittedAt: application.submitted_at
+    };
+
+    const primaryApplicant = application.applicants[0];
+    const filename = `${primaryApplicant?.firstName || 'Unknown'}_${primaryApplicant?.lastName || 'Applicant'}_Application.pdf`;
+    
+    await generatePdf(pdfData, filename);
   };
 
   return (
@@ -155,7 +176,8 @@ const ApplicationsTable = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => onViewDetails(application)}
+                    onClick={() => handleGeneratePdf(application)}
+                    disabled={isGenerating}
                     className="h-8"
                   >
                     <Eye className="h-4 w-4" />
@@ -168,11 +190,15 @@ const ApplicationsTable = ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                      <DropdownMenuItem onClick={() => onViewDetails(application)}>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Mail className="h-4 w-4 mr-2" />
                         Send Email
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
                         <Download className="h-4 w-4 mr-2" />
                         Generate PDF
                       </DropdownMenuItem>
