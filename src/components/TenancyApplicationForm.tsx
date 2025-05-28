@@ -18,10 +18,36 @@ interface Applicant {
   phone: string;
   dateOfBirth: string;
   employment: string;
+  companyName: string;
+  jobTitle: string;
   annualIncome: string;
+  lengthOfService: string;
   previousAddress: string;
+  previousPostcode: string;
+  moveInDate: string;
+  vacateDate: string;
+  currentPropertyStatus: string;
+  currentRentalAmount: string;
   reference1Name: string;
   reference1Contact: string;
+  ukPassport: string;
+  adverseCredit: string;
+  requiresGuarantor: string;
+  guarantorAddress: string;
+  guarantorPostcode: string;
+}
+
+interface PropertyDetails {
+  streetAddress: string;
+  postcode: string;
+  rentalAmount: string;
+  preferredMoveInDate: string;
+  latestMoveInDate: string;
+  initialTenancyTerm: string;
+  hasPets: string;
+  under18s: string;
+  conditionsOfOffer: string;
+  depositType: string;
 }
 
 const TenancyApplicationForm = () => {
@@ -35,25 +61,50 @@ const TenancyApplicationForm = () => {
       phone: "",
       dateOfBirth: "",
       employment: "",
+      companyName: "",
+      jobTitle: "",
       annualIncome: "",
+      lengthOfService: "",
       previousAddress: "",
+      previousPostcode: "",
+      moveInDate: "",
+      vacateDate: "",
+      currentPropertyStatus: "",
+      currentRentalAmount: "",
       reference1Name: "",
-      reference1Contact: ""
+      reference1Contact: "",
+      ukPassport: "",
+      adverseCredit: "",
+      requiresGuarantor: "",
+      guarantorAddress: "",
+      guarantorPostcode: ""
     }
   ]);
-  const [propertyPreferences, setPropertyPreferences] = useState({
-    propertyType: "",
-    maxRent: "",
-    preferredLocation: "",
-    moveInDate: "",
-    additionalRequests: ""
+  
+  const [propertyDetails, setPropertyDetails] = useState<PropertyDetails>({
+    streetAddress: "",
+    postcode: "",
+    rentalAmount: "",
+    preferredMoveInDate: "",
+    latestMoveInDate: "",
+    initialTenancyTerm: "1 year",
+    hasPets: "No",
+    under18s: "None",
+    conditionsOfOffer: "",
+    depositType: "Traditional deposit"
   });
+
+  const [dataSharing, setDataSharing] = useState({
+    acceptUtilities: "Yes",
+    acceptInsurance: "Yes"
+  });
+
   const [signature, setSignature] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
 
-  const totalSteps = 4;
+  const totalSteps = 6;
   const progress = (currentStep / totalSteps) * 100;
 
   const addApplicant = () => {
@@ -66,10 +117,23 @@ const TenancyApplicationForm = () => {
         phone: "",
         dateOfBirth: "",
         employment: "",
+        companyName: "",
+        jobTitle: "",
         annualIncome: "",
+        lengthOfService: "",
         previousAddress: "",
+        previousPostcode: "",
+        moveInDate: "",
+        vacateDate: "",
+        currentPropertyStatus: "",
+        currentRentalAmount: "",
         reference1Name: "",
-        reference1Contact: ""
+        reference1Contact: "",
+        ukPassport: "",
+        adverseCredit: "",
+        requiresGuarantor: "",
+        guarantorAddress: "",
+        guarantorPostcode: ""
       };
       setApplicants([...applicants, newApplicant]);
     }
@@ -90,16 +154,24 @@ const TenancyApplicationForm = () => {
   const validateCurrentStep = () => {
     switch (currentStep) {
       case 1:
+        return propertyDetails.streetAddress && propertyDetails.postcode && propertyDetails.rentalAmount;
+      case 2:
         return applicants.every(applicant => 
           applicant.firstName && applicant.lastName && applicant.email && applicant.phone
         );
-      case 2:
+      case 3:
         return applicants.every(applicant => 
           applicant.employment && applicant.annualIncome
         );
-      case 3:
-        return propertyPreferences.propertyType && propertyPreferences.maxRent;
       case 4:
+        return applicants.every(applicant => 
+          applicant.previousAddress && applicant.currentPropertyStatus
+        );
+      case 5:
+        return applicants.every(applicant => 
+          applicant.ukPassport && applicant.adverseCredit && applicant.requiresGuarantor
+        );
+      case 6:
         return signature.length > 0;
       default:
         return false;
@@ -122,17 +194,24 @@ const TenancyApplicationForm = () => {
     setIsSubmitting(true);
     
     try {
-      console.log("Application submitted:", { applicants, propertyPreferences, signature });
+      const submissionData = {
+        applicants,
+        propertyDetails,
+        dataSharing,
+        signature,
+        submittedAt: new Date().toISOString()
+      };
       
-      // Send email notifications
+      console.log("Application submitted:", submissionData);
+      
       toast({
         title: "Sending confirmation...",
         description: "Please wait while we process your application.",
       });
 
       const [confirmationSent, adminNotified] = await Promise.all([
-        sendApplicationConfirmation(applicants, propertyPreferences, signature),
-        sendAdminNotification(applicants, propertyPreferences, signature)
+        sendApplicationConfirmation(applicants, propertyDetails, signature),
+        sendAdminNotification(applicants, propertyDetails, signature)
       ]);
 
       if (confirmationSent) {
@@ -203,6 +282,134 @@ const TenancyApplicationForm = () => {
       case 1:
         return (
           <div className="space-y-6">
+            <h3 className="text-lg font-semibold">Property Details</h3>
+            <Card>
+              <CardContent className="pt-6 space-y-4">
+                <div>
+                  <Label htmlFor="streetAddress">Street Address *</Label>
+                  <Input
+                    id="streetAddress"
+                    value={propertyDetails.streetAddress}
+                    onChange={(e) => setPropertyDetails({...propertyDetails, streetAddress: e.target.value})}
+                    placeholder="e.g., Orchard House, New Cut"
+                    required
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="postcode">Postcode *</Label>
+                    <Input
+                      id="postcode"
+                      value={propertyDetails.postcode}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, postcode: e.target.value})}
+                      placeholder="e.g., IP7 5DA"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="rentalAmount">Rental Amount (£) *</Label>
+                    <Input
+                      id="rentalAmount"
+                      type="number"
+                      value={propertyDetails.rentalAmount}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, rentalAmount: e.target.value})}
+                      placeholder="e.g., 1200"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="preferredMoveInDate">Preferred Move-in Date</Label>
+                    <Input
+                      id="preferredMoveInDate"
+                      type="date"
+                      value={propertyDetails.preferredMoveInDate}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, preferredMoveInDate: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="latestMoveInDate">Latest Move-in Date</Label>
+                    <Input
+                      id="latestMoveInDate"
+                      type="date"
+                      value={propertyDetails.latestMoveInDate}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, latestMoveInDate: e.target.value})}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="initialTenancyTerm">Initial Tenancy Term</Label>
+                    <select
+                      id="initialTenancyTerm"
+                      value={propertyDetails.initialTenancyTerm}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, initialTenancyTerm: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="6 months">6 months</option>
+                      <option value="1 year">1 year</option>
+                      <option value="2 years">2 years</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="hasPets">Has Pets</Label>
+                    <select
+                      id="hasPets"
+                      value={propertyDetails.hasPets}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, hasPets: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="No">No</option>
+                      <option value="Yes">Yes</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="under18s">Under 18s</Label>
+                    <select
+                      id="under18s"
+                      value={propertyDetails.under18s}
+                      onChange={(e) => setPropertyDetails({...propertyDetails, under18s: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="None">None</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3+">3+</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="conditionsOfOffer">Conditions of Offer</Label>
+                  <textarea
+                    id="conditionsOfOffer"
+                    value={propertyDetails.conditionsOfOffer}
+                    onChange={(e) => setPropertyDetails({...propertyDetails, conditionsOfOffer: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={3}
+                    placeholder="Any special conditions..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="depositType">Deposit Type</Label>
+                  <select
+                    id="depositType"
+                    value={propertyDetails.depositType}
+                    onChange={(e) => setPropertyDetails({...propertyDetails, depositType: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="Traditional deposit">Traditional deposit</option>
+                    <option value="Deposit replacement">Deposit replacement</option>
+                  </select>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-semibold">Personal Information</h3>
               <Badge variant="secondary">{applicants.length} of 5 applicants</Badge>
@@ -246,6 +453,15 @@ const TenancyApplicationForm = () => {
                       />
                     </div>
                   </div>
+                  <div>
+                    <Label htmlFor={`dob-${applicant.id}`}>Date of Birth</Label>
+                    <Input
+                      id={`dob-${applicant.id}`}
+                      type="date"
+                      value={applicant.dateOfBirth}
+                      onChange={(e) => updateApplicant(applicant.id, "dateOfBirth", e.target.value)}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor={`email-${applicant.id}`}>Email *</Label>
@@ -258,7 +474,7 @@ const TenancyApplicationForm = () => {
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`phone-${applicant.id}`}>Phone *</Label>
+                      <Label htmlFor={`phone-${applicant.id}`}>Mobile Number *</Label>
                       <Input
                         id={`phone-${applicant.id}`}
                         type="tel"
@@ -267,15 +483,6 @@ const TenancyApplicationForm = () => {
                         required
                       />
                     </div>
-                  </div>
-                  <div>
-                    <Label htmlFor={`dob-${applicant.id}`}>Date of Birth</Label>
-                    <Input
-                      id={`dob-${applicant.id}`}
-                      type="date"
-                      value={applicant.dateOfBirth}
-                      onChange={(e) => updateApplicant(applicant.id, "dateOfBirth", e.target.value)}
-                    />
                   </div>
                 </CardContent>
               </Card>
@@ -290,10 +497,10 @@ const TenancyApplicationForm = () => {
           </div>
         );
 
-      case 2:
+      case 3:
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold">Employment & Financial Information</h3>
+            <h3 className="text-lg font-semibold">Employment Details</h3>
             
             {applicants.map((applicant, index) => (
               <Card key={applicant.id}>
@@ -313,33 +520,55 @@ const TenancyApplicationForm = () => {
                       required
                     >
                       <option value="">Select employment status</option>
-                      <option value="employed">Employed Full-time</option>
-                      <option value="part-time">Employed Part-time</option>
-                      <option value="self-employed">Self-employed</option>
-                      <option value="student">Student</option>
-                      <option value="retired">Retired</option>
-                      <option value="unemployed">Unemployed</option>
+                      <option value="Employed Full-time">Employed Full-time</option>
+                      <option value="Employed Part-time">Employed Part-time</option>
+                      <option value="Self-employed">Self-employed</option>
+                      <option value="Student">Student</option>
+                      <option value="Retired">Retired</option>
+                      <option value="Unemployed">Unemployed</option>
                     </select>
                   </div>
-                  <div>
-                    <Label htmlFor={`income-${applicant.id}`}>Annual Income (£) *</Label>
-                    <Input
-                      id={`income-${applicant.id}`}
-                      type="number"
-                      value={applicant.annualIncome}
-                      onChange={(e) => updateApplicant(applicant.id, "annualIncome", e.target.value)}
-                      placeholder="e.g., 35000"
-                      required
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor={`companyName-${applicant.id}`}>Company Name</Label>
+                      <Input
+                        id={`companyName-${applicant.id}`}
+                        value={applicant.companyName}
+                        onChange={(e) => updateApplicant(applicant.id, "companyName", e.target.value)}
+                        placeholder="Company name"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`jobTitle-${applicant.id}`}>Job Title</Label>
+                      <Input
+                        id={`jobTitle-${applicant.id}`}
+                        value={applicant.jobTitle}
+                        onChange={(e) => updateApplicant(applicant.id, "jobTitle", e.target.value)}
+                        placeholder="Job title"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <Label htmlFor={`prevAddress-${applicant.id}`}>Previous Address</Label>
-                    <Input
-                      id={`prevAddress-${applicant.id}`}
-                      value={applicant.previousAddress}
-                      onChange={(e) => updateApplicant(applicant.id, "previousAddress", e.target.value)}
-                      placeholder="Full previous address"
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor={`income-${applicant.id}`}>Annual Salary (£) *</Label>
+                      <Input
+                        id={`income-${applicant.id}`}
+                        type="number"
+                        value={applicant.annualIncome}
+                        onChange={(e) => updateApplicant(applicant.id, "annualIncome", e.target.value)}
+                        placeholder="e.g., 35000"
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`lengthOfService-${applicant.id}`}>Length of Service</Label>
+                      <Input
+                        id={`lengthOfService-${applicant.id}`}
+                        value={applicant.lengthOfService}
+                        onChange={(e) => updateApplicant(applicant.id, "lengthOfService", e.target.value)}
+                        placeholder="e.g., 2 years"
+                      />
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -367,74 +596,219 @@ const TenancyApplicationForm = () => {
           </div>
         );
 
-      case 3:
+      case 4:
         return (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold">Property Preferences</h3>
+            <h3 className="text-lg font-semibold">Current Property Details</h3>
+            
+            {applicants.map((applicant, index) => (
+              <Card key={applicant.id}>
+                <CardHeader>
+                  <CardTitle className="text-base">
+                    {applicant.firstName} {applicant.lastName}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor={`prevPostcode-${applicant.id}`}>Current Postcode</Label>
+                      <Input
+                        id={`prevPostcode-${applicant.id}`}
+                        value={applicant.previousPostcode}
+                        onChange={(e) => updateApplicant(applicant.id, "previousPostcode", e.target.value)}
+                        placeholder="Current postcode"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`prevAddress-${applicant.id}`}>Current Street Address *</Label>
+                      <Input
+                        id={`prevAddress-${applicant.id}`}
+                        value={applicant.previousAddress}
+                        onChange={(e) => updateApplicant(applicant.id, "previousAddress", e.target.value)}
+                        placeholder="Full current address"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor={`moveInDate-${applicant.id}`}>Move In Date</Label>
+                      <Input
+                        id={`moveInDate-${applicant.id}`}
+                        type="date"
+                        value={applicant.moveInDate}
+                        onChange={(e) => updateApplicant(applicant.id, "moveInDate", e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`vacateDate-${applicant.id}`}>Vacate Date</Label>
+                      <Input
+                        id={`vacateDate-${applicant.id}`}
+                        type="date"
+                        value={applicant.vacateDate}
+                        onChange={(e) => updateApplicant(applicant.id, "vacateDate", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor={`currentPropertyStatus-${applicant.id}`}>Current Property Status *</Label>
+                      <select
+                        id={`currentPropertyStatus-${applicant.id}`}
+                        value={applicant.currentPropertyStatus}
+                        onChange={(e) => updateApplicant(applicant.id, "currentPropertyStatus", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="">Select status</option>
+                        <option value="Rented Privately">Rented Privately</option>
+                        <option value="Council Tenant">Council Tenant</option>
+                        <option value="Housing Association">Housing Association</option>
+                        <option value="Living with Family">Living with Family</option>
+                        <option value="Owner Occupier">Owner Occupier</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor={`currentRentalAmount-${applicant.id}`}>Current Rental Amount (£)</Label>
+                      <Input
+                        id={`currentRentalAmount-${applicant.id}`}
+                        type="number"
+                        value={applicant.currentRentalAmount}
+                        onChange={(e) => updateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
+                        placeholder="Current rent amount"
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        );
+
+      case 5:
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-semibold">Additional Information</h3>
+            
+            {applicants.map((applicant, index) => (
+              <Card key={applicant.id}>
+                <CardHeader>
+                  <CardTitle className="text-base">
+                    {applicant.firstName} {applicant.lastName}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <Label htmlFor={`ukPassport-${applicant.id}`}>UK/ROI Passport *</Label>
+                      <select
+                        id={`ukPassport-${applicant.id}`}
+                        value={applicant.ukPassport}
+                        onChange={(e) => updateApplicant(applicant.id, "ukPassport", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor={`adverseCredit-${applicant.id}`}>Adverse Credit *</Label>
+                      <select
+                        id={`adverseCredit-${applicant.id}`}
+                        value={applicant.adverseCredit}
+                        onChange={(e) => updateApplicant(applicant.id, "adverseCredit", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor={`requiresGuarantor-${applicant.id}`}>Requires Guarantor *</Label>
+                      <select
+                        id={`requiresGuarantor-${applicant.id}`}
+                        value={applicant.requiresGuarantor}
+                        onChange={(e) => updateApplicant(applicant.id, "requiresGuarantor", e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        required
+                      >
+                        <option value="">Select</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  {applicant.requiresGuarantor === "Yes" && (
+                    <div>
+                      <h4 className="font-medium mb-3">Guarantor Address</h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor={`guarantorAddress-${applicant.id}`}>Street Address</Label>
+                          <Input
+                            id={`guarantorAddress-${applicant.id}`}
+                            value={applicant.guarantorAddress}
+                            onChange={(e) => updateApplicant(applicant.id, "guarantorAddress", e.target.value)}
+                            placeholder="Guarantor address"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor={`guarantorPostcode-${applicant.id}`}>Postcode</Label>
+                          <Input
+                            id={`guarantorPostcode-${applicant.id}`}
+                            value={applicant.guarantorPostcode}
+                            onChange={(e) => updateApplicant(applicant.id, "guarantorPostcode", e.target.value)}
+                            placeholder="Guarantor postcode"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
+
             <Card>
-              <CardContent className="pt-6 space-y-4">
-                <div>
-                  <Label htmlFor="propertyType">Preferred Property Type *</Label>
-                  <select
-                    id="propertyType"
-                    value={propertyPreferences.propertyType}
-                    onChange={(e) => setPropertyPreferences({...propertyPreferences, propertyType: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  >
-                    <option value="">Select property type</option>
-                    <option value="apartment">Apartment</option>
-                    <option value="house">House</option>
-                    <option value="studio">Studio</option>
-                    <option value="maisonette">Maisonette</option>
-                  </select>
-                </div>
-                <div>
-                  <Label htmlFor="maxRent">Maximum Monthly Rent (£) *</Label>
-                  <Input
-                    id="maxRent"
-                    type="number"
-                    value={propertyPreferences.maxRent}
-                    onChange={(e) => setPropertyPreferences({...propertyPreferences, maxRent: e.target.value})}
-                    placeholder="e.g., 2500"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="location">Preferred Location</Label>
-                  <Input
-                    id="location"
-                    value={propertyPreferences.preferredLocation}
-                    onChange={(e) => setPropertyPreferences({...propertyPreferences, preferredLocation: e.target.value})}
-                    placeholder="e.g., Central London, Zone 2"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="moveInDate">Preferred Move-in Date</Label>
-                  <Input
-                    id="moveInDate"
-                    type="date"
-                    value={propertyPreferences.moveInDate}
-                    onChange={(e) => setPropertyPreferences({...propertyPreferences, moveInDate: e.target.value})}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="requests">Additional Requests</Label>
-                  <textarea
-                    id="requests"
-                    value={propertyPreferences.additionalRequests}
-                    onChange={(e) => setPropertyPreferences({...propertyPreferences, additionalRequests: e.target.value})}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    rows={4}
-                    placeholder="Any special requirements or preferences..."
-                  />
+              <CardHeader>
+                <CardTitle className="text-base">Data Sharing</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="acceptUtilities">Accept Utilities</Label>
+                    <select
+                      id="acceptUtilities"
+                      value={dataSharing.acceptUtilities}
+                      onChange={(e) => setDataSharing({...dataSharing, acceptUtilities: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="acceptInsurance">Accept Insurance</Label>
+                    <select
+                      id="acceptInsurance"
+                      value={dataSharing.acceptInsurance}
+                      onChange={(e) => setDataSharing({...dataSharing, acceptInsurance: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         );
 
-      case 4:
+      case 6:
         return (
           <div className="space-y-6">
             <h3 className="text-lg font-semibold">Review & Digital Signature</h3>
@@ -445,6 +819,12 @@ const TenancyApplicationForm = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
+                  <p className="font-medium">Property: {propertyDetails.streetAddress}</p>
+                  <p className="text-sm text-gray-600">
+                    Postcode: {propertyDetails.postcode} | Rent: £{propertyDetails.rentalAmount}
+                  </p>
+                </div>
+                <div>
                   <p className="font-medium">Applicants: {applicants.length}</p>
                   <ul className="text-sm text-gray-600 mt-1">
                     {applicants.map((applicant, index) => (
@@ -453,13 +833,6 @@ const TenancyApplicationForm = () => {
                       </li>
                     ))}
                   </ul>
-                </div>
-                <div>
-                  <p className="font-medium">Property Preferences:</p>
-                  <p className="text-sm text-gray-600">
-                    Type: {propertyPreferences.propertyType} | 
-                    Max Rent: £{propertyPreferences.maxRent}/month
-                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -513,10 +886,12 @@ const TenancyApplicationForm = () => {
 
           <div className="flex justify-between mb-8">
             {[
-              { step: 1, icon: User, label: "Personal Info" },
-              { step: 2, icon: FileText, label: "Employment" },
-              { step: 3, icon: Home, label: "Preferences" },
-              { step: 4, icon: CheckCircle, label: "Review & Sign" }
+              { step: 1, icon: Home, label: "Property" },
+              { step: 2, icon: User, label: "Personal Info" },
+              { step: 3, icon: FileText, label: "Employment" },
+              { step: 4, icon: Home, label: "Current Property" },
+              { step: 5, icon: FileText, label: "Additional Info" },
+              { step: 6, icon: CheckCircle, label: "Review & Sign" }
             ].map(({ step, icon: Icon, label }) => (
               <div key={step} className="flex flex-col items-center">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
