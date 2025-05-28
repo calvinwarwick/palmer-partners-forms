@@ -15,17 +15,17 @@ export const useApplicationSubmission = () => {
     try {
       console.log('Submitting application:', application);
       
-      // Save to database first
+      // Save to database first - using the correct column names
       const { error: dbError } = await supabase
         .from('tenancy_applications')
-        .insert({
-          applicants: application.applicants,
-          property_preferences: application.propertyPreferences,
-          additional_details: application.additionalDetails,
-          data_sharing: application.dataSharing,
+        .insert([{
+          applicants: application.applicants as any,
+          property_preferences: application.propertyPreferences as any,
+          additional_details: application.additionalDetails as any,
+          data_sharing: application.dataSharing as any,
           signature: application.signature,
           status: 'pending'
-        });
+        }]);
 
       if (dbError) {
         console.error('Database error:', dbError);
