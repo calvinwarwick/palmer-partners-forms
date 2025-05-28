@@ -1,14 +1,16 @@
 
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
-import { Json } from "@/integrations/supabase/types";
 import { toast } from "sonner";
+import { Download, Plus, RefreshCw } from "lucide-react";
+import AdminStats from "@/components/admin/AdminStats";
+import ApplicationFilters from "@/components/admin/ApplicationFilters";
+import BulkActions from "@/components/admin/BulkActions";
+import ApplicationsTable from "@/components/admin/ApplicationsTable";
+import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 
 interface TenancyApplication {
   id: string;
@@ -24,9 +26,16 @@ interface TenancyApplication {
 const Admin = () => {
   const [applications, setApplications] = useState<TenancyApplication[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<TenancyApplication[]>([]);
+  const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
+  const [selectedApplication, setSelectedApplication] = useState<TenancyApplication | null>(null);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [loading, setLoading] = useState(true);
+  const [dateFilter, setDateFilter] = useState("all");
 
   useEffect(() => {
     fetchApplications();
@@ -34,9 +43,10 @@ const Admin = () => {
 
   useEffect(() => {
     filterApplications();
-  }, [applications, searchTerm, statusFilter]);
+  }, [applications, searchTerm, statusFilter, dateFilter]);
 
-  const fetchApplications = async () => {
+  const fetchApplications = async (showRefreshing = false) => {
+    if (showRefreshing) setRefreshing(true);
     try {
       const { data, error } = await supabase
         .from('tenancy_applications')
@@ -45,7 +55,6 @@ const Admin = () => {
 
       if (error) throw error;
 
-      // Type cast the data properly
       const typedData = data.map(app => ({
         ...app,
         applicants: app.applicants as unknown as Applicant[],
@@ -55,31 +64,58 @@ const Admin = () => {
       }));
 
       setApplications(typedData);
+      toast.success('Applications refreshed successfully');
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast.error('Failed to fetch applications');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
   };
 
   const filterApplications = () => {
     let filtered = applications;
 
+    // Search filter
     if (searchTerm) {
       filtered = filtered.filter(app => 
         app.applicants.some(applicant => 
-          applicant.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          applicant.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          applicant.email.toLowerCase().includes(searchTerm.toLowerCase())
+          applicant.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          applicant.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          applicant.email?.toLowerCase().includes(searchTerm.toLowerCase())
         ) ||
-        app.property_preferences.streetAddress.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        app.property_preferences.postcode.toLowerCase().includes(searchTerm.toLowerCase())
+        app.property_preferences.streetAddress?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.property_preferences.postcode?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
+    // Status filter
     if (statusFilter !== "all") {
       filtered = filtered.filter(app => app.status === statusFilter);
+    }
+
+    // Date filter
+    if (dateFilter !== "all") {
+      const now = new Date();
+      filtered = filtered.filter(app => {
+        const submitDate = new Date(app.submitted_at);
+        switch (dateFilter) {
+          case "today":
+            return submitDate.toDateString() === now.toDateString();
+          case "this_week":
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            return submitDate >= weekAgo;
+          case "this_month":
+            return submitDate.getMonth() === now.getMonth() && submitDate.getFullYear() === now.getFullYear();
+          case "last_month":
+            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+            const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            return submitDate >= lastMonth && submitDate < thisMonth;
+          default:
+            return true;
+        }
+      });
     }
 
     setFilteredApplications(filtered);
@@ -104,15 +140,89 @@ const Admin = () => {
     }
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'bg-orange-100 text-orange-800';
-      case 'approved': return 'bg-green-100 text-green-800';
-      case 'rejected': return 'bg-red-100 text-red-800';
-      case 'under_review': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+  const handleBulkStatusUpdate = async (newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('tenancy_applications')
+        .update({ status: newStatus })
+        .in('id', selectedApplications);
+
+      if (error) throw error;
+
+      setApplications(prev => 
+        prev.map(app => 
+          selectedApplications.includes(app.id) ? { ...app, status: newStatus } : app
+        )
+      );
+      setSelectedApplications([]);
+      toast.success(`Updated ${selectedApplications.length} applications`);
+    } catch (error) {
+      console.error('Error updating statuses:', error);
+      toast.error('Failed to update statuses');
     }
   };
+
+  const handleSelectApplication = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedApplications(prev => [...prev, id]);
+    } else {
+      setSelectedApplications(prev => prev.filter(appId => appId !== id));
+    }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedApplications(filteredApplications.map(app => app.id));
+    } else {
+      setSelectedApplications([]);
+    }
+  };
+
+  const handleViewDetails = (application: TenancyApplication) => {
+    setSelectedApplication(application);
+    setIsDetailsModalOpen(true);
+  };
+
+  const handleBulkExport = () => {
+    const selectedData = applications.filter(app => selectedApplications.includes(app.id));
+    const csvContent = generateCSV(selectedData);
+    downloadCSV(csvContent, 'selected-applications.csv');
+    toast.success('Applications exported successfully');
+  };
+
+  const generateCSV = (data: TenancyApplication[]) => {
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Property Address', 'Status', 'Submitted At'];
+    const rows = data.map(app => [
+      app.id,
+      `${app.applicants[0]?.firstName} ${app.applicants[0]?.lastName}`,
+      app.applicants[0]?.email,
+      app.applicants[0]?.phone,
+      app.property_preferences?.streetAddress,
+      app.status,
+      new Date(app.submitted_at).toLocaleDateString()
+    ]);
+    
+    return [headers, ...rows].map(row => row.join(',')).join('\n');
+  };
+
+  const downloadCSV = (content: string, filename: string) => {
+    const blob = new Blob([content], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setStatusFilter("all");
+    setDateFilter("all");
+    setSelectedApplications([]);
+  };
+
+  const hasActiveFilters = searchTerm !== "" || statusFilter !== "all" || dateFilter !== "all";
 
   if (loading) {
     return (
@@ -123,110 +233,97 @@ const Admin = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-        <p className="text-gray-600">Manage tenancy applications</p>
-      </div>
-
-      <div className="mb-6 flex flex-col sm:flex-row gap-4">
-        <div className="flex-1">
-          <Input
-            placeholder="Search by name, email, address..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="focus:ring-orange-500 focus:border-orange-500"
-          />
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+            <p className="text-gray-600">Manage tenancy applications and track performance</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="outline" onClick={() => fetchApplications(true)} disabled={refreshing}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+            <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export All
+            </Button>
+            <Button className="bg-orange-500 hover:bg-orange-600">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Property
+            </Button>
+          </div>
         </div>
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-full sm:w-48 focus:ring-orange-500">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="under_review">Under Review</SelectItem>
-            <SelectItem value="approved">Approved</SelectItem>
-            <SelectItem value="rejected">Rejected</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
-      <div className="space-y-6">
-        {filteredApplications.map((application) => (
-          <Card key={application.id} className="shadow-sm border border-gray-200">
-            <CardHeader className="pb-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <CardTitle className="text-lg">
-                    {application.applicants[0]?.firstName} {application.applicants[0]?.lastName}
-                    {application.applicants.length > 1 && ` + ${application.applicants.length - 1} other(s)`}
-                  </CardTitle>
-                  <p className="text-gray-600 mt-1">{application.applicants[0]?.email}</p>
-                </div>
-                <div className="flex flex-col items-end gap-2">
-                  <Badge className={getStatusColor(application.status)}>
-                    {application.status.replace('_', ' ').toUpperCase()}
-                  </Badge>
-                  <p className="text-sm text-gray-500">
-                    {new Date(application.submitted_at).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Property Details</h4>
-                  <p className="text-sm text-gray-600">
-                    {application.property_preferences.streetAddress}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {application.property_preferences.postcode}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Rent: £{application.property_preferences.maxRent}/month
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Contact</h4>
-                  <p className="text-sm text-gray-600">
-                    Phone: {application.applicants[0]?.phone}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    Move-in: {application.property_preferences.moveInDate}
-                  </p>
-                </div>
-              </div>
+      {/* Statistics */}
+      <AdminStats applications={applications} />
 
-              <div className="flex gap-2 pt-4 border-t border-gray-200">
-                <Select 
-                  value={application.status} 
-                  onValueChange={(value) => updateApplicationStatus(application.id, value)}
-                >
-                  <SelectTrigger className="w-48 focus:ring-orange-500">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="under_review">Under Review</SelectItem>
-                    <SelectItem value="approved">Approved</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+      {/* Filters */}
+      <ApplicationFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        statusFilter={statusFilter}
+        onStatusFilterChange={setStatusFilter}
+        dateFilter={dateFilter}
+        onDateFilterChange={setDateFilter}
+        onClearFilters={clearFilters}
+        hasActiveFilters={hasActiveFilters}
+      />
 
-        {filteredApplications.length === 0 && (
-          <Card>
-            <CardContent className="text-center py-8">
-              <p className="text-gray-500">No applications found matching your criteria.</p>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+      {/* Bulk Actions */}
+      <BulkActions
+        selectedApplications={selectedApplications}
+        onSelectAll={handleSelectAll}
+        onBulkStatusUpdate={handleBulkStatusUpdate}
+        onBulkExport={handleBulkExport}
+        totalApplications={filteredApplications.length}
+      />
+
+      {/* Applications Table */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center justify-between">
+            <span>Applications ({filteredApplications.length})</span>
+            {hasActiveFilters && (
+              <span className="text-sm font-normal text-gray-500">
+                Showing {filteredApplications.length} of {applications.length} applications
+              </span>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          {filteredApplications.length > 0 ? (
+            <ApplicationsTable
+              applications={filteredApplications}
+              selectedApplications={selectedApplications}
+              onSelectApplication={handleSelectApplication}
+              onStatusUpdate={updateApplicationStatus}
+              onViewDetails={handleViewDetails}
+            />
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-500 mb-4">
+                {hasActiveFilters ? 'No applications match your current filters.' : 'No applications found.'}
+              </p>
+              {hasActiveFilters && (
+                <Button variant="outline" onClick={clearFilters}>
+                  Clear Filters
+                </Button>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Application Details Modal */}
+      <ApplicationDetailsModal
+        application={selectedApplication}
+        isOpen={isDetailsModalOpen}
+        onClose={() => setIsDetailsModalOpen(false)}
+      />
     </div>
   );
 };
