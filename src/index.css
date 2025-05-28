@@ -156,6 +156,11 @@ input[type="date"]::-webkit-inner-spin-button {
     font-size: 0.65rem;
     line-height: 1.1;
   }
+
+  /* Mobile checkbox sizing */
+  .mobile-checkbox {
+    @apply w-4 h-4;
+  }
 }
 
 /* Tablet adjustments */
@@ -344,4 +349,19 @@ button[class*="bg-blue"] {
 
 .terms-content p:last-child {
   @apply mb-0;
+}
+
+/* Signature input full width styling */
+.signature-input {
+  @apply w-full;
+  width: 100% !important;
+}
+
+/* Mobile checkbox specific sizing */
+@media (max-width: 640px) {
+  .mobile-checkbox {
+    @apply w-3.5 h-3.5;
+    min-width: 14px !important;
+    min-height: 14px !important;
+  }
 }
