@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -127,13 +126,13 @@ const ApplicationPreview = () => {
   );
 
   const SectionHeader = ({ title }: { title: string }) => (
-    <div className="bg-gray-800 text-white p-3 font-semibold">
+    <div className="bg-gray-800 text-white p-3 font-semibold text-center">
       {title}
     </div>
   );
 
   const SubSectionHeader = ({ title }: { title: string }) => (
-    <div className="bg-gray-200 text-gray-800 p-2 font-medium text-sm">
+    <div className="bg-gray-200 text-gray-800 p-2 font-medium text-sm text-center">
       {title}
     </div>
   );
@@ -164,7 +163,7 @@ const ApplicationPreview = () => {
         {/* Application Preview */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Palmer & Partners Header */}
-          <div className="bg-gray-800 text-white p-4">
+          <div className="bg-gray-800 text-white p-4 text-center">
             <h1 className="text-xl font-normal">Palmer & Partners</h1>
           </div>
           
