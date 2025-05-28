@@ -1,3 +1,4 @@
+
 import jsPDF from 'jspdf';
 
 interface TenancyApplicationData {
@@ -21,7 +22,7 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   doc.setTextColor(255, 255, 255);
   doc.text('Palmer & Partners', 15, 16);
   
-  // Main title
+  // Main title - centered
   doc.setFontSize(20);
   doc.setTextColor(0, 0, 0);
   doc.text('Tenancy Application', 105, 40, { align: 'center' });
@@ -33,7 +34,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   doc.rect(15, yPosition - 5, 180, 12, 'F');
   doc.setFontSize(12);
   doc.setTextColor(255, 255, 255);
-  doc.text('Property Details', 20, yPosition + 3);
+  // Center the title vertically in the container (container height is 12)
+  doc.text('Property Details', 105, yPosition + 1, { align: 'center' });
   
   yPosition += 20;
   
@@ -45,10 +47,15 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     ['Latest Move-in Date', propertyPreferences.latestMoveInDate || 'Not specified'],
     ['Initial Tenancy Term', propertyPreferences.initialTenancyTerm || 'Not specified'],
     ['Has Pets', additionalDetails.pets || 'No'],
+    ['Pet Details', additionalDetails.petDetails || '-'],
     ['Under 18s', additionalDetails.under18Count || '0'],
     ['Under 18s Details', additionalDetails.childrenAges || '-'],
     ['Conditions of Offer', additionalDetails.conditionsOfOffer || '-'],
-    ['Deposit Type', additionalDetails.depositType || 'Not specified']
+    ['Deposit Type', additionalDetails.depositType || 'Not specified'],
+    ['UK/ROI Passport', additionalDetails.ukPassport || 'Not specified'],
+    ['Adverse Credit', additionalDetails.adverseCredit || 'Not specified'],
+    ['Adverse Credit Details', additionalDetails.adverseCreditDetails || 'n/a'],
+    ['Requires Guarantor', additionalDetails.guarantorRequired || 'Not specified']
   ];
   
   doc.setTextColor(0, 0, 0);
@@ -82,7 +89,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     doc.rect(15, yPosition - 5, 180, 12, 'F');
     doc.setFontSize(12);
     doc.setTextColor(255, 255, 255);
-    doc.text(`Applicant - #${index + 1}`, 20, yPosition + 3);
+    // Center the title vertically in the container
+    doc.text(`Applicant - #${index + 1}`, 105, yPosition + 1, { align: 'center' });
     
     yPosition += 20;
     
@@ -125,7 +133,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.text('Employment Details', 20, yPosition + 1);
+    // Center the title vertically in the container (container height is 8)
+    doc.text('Employment Details', 105, yPosition - 1, { align: 'center' });
     
     yPosition += 15;
     
@@ -167,7 +176,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     doc.setFontSize(10);
     doc.setTextColor(0, 0, 0);
     doc.setFont('helvetica', 'bold');
-    doc.text('Current Property Details', 20, yPosition + 1);
+    // Center the title vertically in the container
+    doc.text('Current Property Details', 105, yPosition - 1, { align: 'center' });
     
     yPosition += 15;
     
@@ -197,41 +207,6 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     });
     
     yPosition += 15;
-    
-    // Additional Information with grey header
-    doc.setFillColor(200, 200, 200);
-    doc.rect(15, yPosition - 5, 180, 8, 'F');
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Additional Information', 20, yPosition + 1);
-    
-    yPosition += 15;
-    
-    const additionalRows = [
-      ['UK/ROI Passport', additionalDetails.ukPassport || 'Not specified'],
-      ['Adverse Credit', additionalDetails.adverseCredit || 'Not specified'],
-      ['Adverse Credit Details', additionalDetails.adverseCreditDetails || 'n/z'],
-      ['Requires Guarantor', additionalDetails.guarantorRequired || 'Not specified'],
-    ];
-    
-    doc.setFont('helvetica', 'normal');
-    
-    additionalRows.forEach((row, rowIndex) => {
-      const isEven = rowIndex % 2 === 0;
-      if (isEven) {
-        doc.setFillColor(245, 245, 245);
-        doc.rect(15, yPosition - 2, 180, 10, 'F');
-      }
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text(row[0], 20, yPosition + 4);
-      doc.setFont('helvetica', 'normal');
-      doc.text(row[1], 105, yPosition + 4);
-      yPosition += 10;
-    });
-    
-    yPosition += 15;
   });
   
   // Check if we need a new page
@@ -245,7 +220,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   doc.rect(15, yPosition - 5, 180, 12, 'F');
   doc.setFontSize(12);
   doc.setTextColor(255, 255, 255);
-  doc.text('Data Sharing', 20, yPosition + 3);
+  // Center the title vertically in the container
+  doc.text('Data Sharing', 105, yPosition + 1, { align: 'center' });
   
   yPosition += 20;
   
@@ -278,7 +254,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   doc.rect(15, yPosition - 5, 180, 12, 'F');
   doc.setFontSize(12);
   doc.setTextColor(255, 255, 255);
-  doc.text('Signature', 20, yPosition + 3);
+  // Center the title vertically in the container
+  doc.text('Signature', 105, yPosition + 1, { align: 'center' });
   
   yPosition += 20;
   
@@ -287,8 +264,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   
   if (isSignatureImage) {
     try {
-      // Add signature image
-      doc.addImage(signature, 'PNG', 20, yPosition, 60, 30);
+      // Add signature image with proper sizing
+      doc.addImage(signature, 'PNG', 20, yPosition, 80, 30);
       yPosition += 35;
       
       doc.setTextColor(0, 0, 0);
@@ -321,7 +298,7 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   doc.setFont('helvetica', 'bold');
   doc.text('Submitted At:', 20, yPosition + 4);
   doc.setFont('helvetica', 'normal');
-  doc.text(new Date(submittedAt).toLocaleDateString('en-GB') + ' - ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + ' PM', 105, yPosition + 4);
+  doc.text(new Date(submittedAt).toLocaleDateString('en-GB') + ' - ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), 105, yPosition + 4);
   
   // Footer on all pages
   const pageCount = (doc as any).internal.pages.length - 1;
