@@ -12,9 +12,6 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
     <div className="applicant-details-section mb-8">
       <div>
         <h3>Applicant Details</h3>
-        <p>
-          Please select the number of adults who will be staying at the property and provide details for each applicant.
-        </p>
       </div>
       
       <div>
