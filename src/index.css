@@ -126,6 +126,34 @@ textarea:focus {
   @apply text-orange-800;
 }
 
+/* Fill effect for refresh button */
+.fill {
+  position: relative;
+  overflow: hidden;
+  transition: color 0.09s ease-in;
+}
+
+.fill:hover {
+  color: whitesmoke;
+}
+
+.fill:before {
+  content: "";
+  position: absolute;
+  background: #383736;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: -1;
+  -webkit-transition: top 0.09s ease-in;
+  transition: top 0.09s ease-in;
+}
+
+.fill:hover:before {
+  top: 0;
+}
+
 /* Ensure buttons are touch-friendly on mobile */
 @media (max-width: 640px) {
   .btn,

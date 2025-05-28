@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -236,20 +235,11 @@ const Admin = () => {
                   variant="outline" 
                   onClick={handleManualRefresh} 
                   disabled={refreshing} 
-                  className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 relative overflow-hidden border-2 border-transparent"
-                  style={{
-                    '--progress': `${progress}%`
-                  } as React.CSSProperties & { '--progress': string }}
+                  className="fill shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"
                 >
-                  <div 
-                    className="absolute inset-0 border-2 border-orange-500 rounded-md transition-all duration-1000 ease-linear"
-                    style={{
-                      clipPath: `polygon(0 0, ${progress}% 0, ${progress}% 100%, 0 100%)`
-                    }}
-                  />
-                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''} relative z-10`} />
-                  <span className="text-xs font-medium opacity-50 relative z-10">{timeLeft}s</span>
-                  <span className="relative z-10">{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+                  <span className="text-xs font-medium opacity-50">{timeLeft}s</span>
+                  <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
                 </Button>
               </div>
               <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
@@ -265,17 +255,17 @@ const Admin = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="applications" className="w-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 p-1">
-            <TabsList className="grid w-full grid-cols-2 h-12 bg-transparent p-0">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-50 rounded-lg p-1">
               <TabsTrigger 
                 value="applications" 
-                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applications
               </TabsTrigger>
               <TabsTrigger 
                 value="applicants" 
-                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
+                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applicants
               </TabsTrigger>
@@ -314,7 +304,11 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="applicants">
-            <ApplicantsTab />
+            <Card className="shadow-sm border border-gray-200 overflow-hidden">
+              <CardContent className="p-0">
+                <ApplicantsTab />
+              </CardContent>
+            </Card>
           </TabsContent>
         </Tabs>
 
