@@ -1,5 +1,4 @@
-
-import { Applicant, PropertyPreferences } from '@/domain/types/Applicant';
+import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { sendEmail } from '../api/emailApi';
 import { generateApplicationPDF } from '../pdfService';
 
@@ -93,6 +92,8 @@ export const formatApplicationForEmail = (
 export const sendApplicationConfirmation = async (
   applicants: Applicant[],
   propertyPreferences: PropertyPreferences,
+  additionalDetails: AdditionalDetails,
+  dataSharing: { utilities: boolean; insurance: boolean },
   signature: string
 ): Promise<boolean> => {
   const primaryApplicant = applicants[0];
@@ -102,6 +103,8 @@ export const sendApplicationConfirmation = async (
     const applicationData = {
       applicants,
       propertyPreferences,
+      additionalDetails,
+      dataSharing,
       signature,
       submittedAt: new Date().toISOString()
     };
@@ -202,6 +205,8 @@ export const sendApplicationConfirmation = async (
 export const sendAdminNotification = async (
   applicants: Applicant[],
   propertyPreferences: PropertyPreferences,
+  additionalDetails: AdditionalDetails,
+  dataSharing: { utilities: boolean; insurance: boolean },
   signature: string
 ): Promise<boolean> => {
   try {
@@ -209,6 +214,8 @@ export const sendAdminNotification = async (
     const applicationData = {
       applicants,
       propertyPreferences,
+      additionalDetails,
+      dataSharing,
       signature,
       submittedAt: new Date().toISOString()
     };
