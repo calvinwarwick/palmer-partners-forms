@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
@@ -10,6 +11,7 @@ import ApplicationFilters from "@/components/admin/ApplicationFilters";
 import BulkActions from "@/components/admin/BulkActions";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
+import ApplicantsTab from "@/components/admin/ApplicantsTab";
 
 interface TenancyApplication {
   id: string;
@@ -224,71 +226,85 @@ const Admin = () => {
         {/* Statistics */}
         <AdminStats applications={applications} />
 
-        {/* Filters Section */}
-        <Card className="shadow-sm border border-gray-200 mb-6">
-          <CardContent className="p-6">
-            <ApplicationFilters
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              dateFilter={dateFilter}
-              onDateFilterChange={setDateFilter}
-              onClearFilters={clearFilters}
-              hasActiveFilters={hasActiveFilters}
-            />
-          </CardContent>
-        </Card>
+        {/* Tabs */}
+        <Tabs defaultValue="applications" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsTrigger value="applications" className="text-lg font-medium">Applications</TabsTrigger>
+            <TabsTrigger value="applicants" className="text-lg font-medium">Applicants</TabsTrigger>
+          </TabsList>
 
-        {/* Bulk Actions Section */}
-        <Card className="shadow-sm border border-gray-200 mb-6">
-          <CardContent className="p-0">
-            <BulkActions
-              selectedApplications={selectedApplications}
-              onSelectAll={handleSelectAll}
-              onBulkExport={handleBulkExport}
-              totalApplications={filteredApplications.length}
-            />
-          </CardContent>
-        </Card>
+          <TabsContent value="applications" className="space-y-6">
+            {/* Filters Section */}
+            <Card className="shadow-sm border border-gray-200">
+              <CardContent className="p-6">
+                <ApplicationFilters
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                  dateFilter={dateFilter}
+                  onDateFilterChange={setDateFilter}
+                  onClearFilters={clearFilters}
+                  hasActiveFilters={hasActiveFilters}
+                />
+              </CardContent>
+            </Card>
 
-        {/* Applications Table */}
-        <Card className="shadow-sm border border-gray-200 overflow-hidden">
-          <CardHeader className="bg-white border-b border-gray-200 py-6">
-            <CardTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
-              <span>Applications ({filteredApplications.length})</span>
-              {hasActiveFilters && (
-                <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                  Showing {filteredApplications.length} of {applications.length} applications
-                </span>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            {filteredApplications.length > 0 ? (
-              <ApplicationsTable
-                applications={filteredApplications}
-                selectedApplications={selectedApplications}
-                onSelectApplication={handleSelectApplication}
-                onViewDetails={handleViewDetails}
-              />
-            ) : (
-              <div className="text-center py-16 bg-white">
-                <div className="text-gray-400 mb-4">
-                  <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                  </svg>
-                </div>
-                <p className="text-gray-500 mb-4 text-lg">
-                  {hasActiveFilters ? 'No applications match your current filters.' : 'No applications found.'}
-                </p>
-                {hasActiveFilters && (
-                  <Button variant="outline" onClick={clearFilters} className="shadow-sm hover:shadow-md transition-shadow">
-                    Clear Filters
-                  </Button>
+            {/* Bulk Actions Section */}
+            <Card className="shadow-sm border border-gray-200">
+              <CardContent className="p-0">
+                <BulkActions
+                  selectedApplications={selectedApplications}
+                  onSelectAll={handleSelectAll}
+                  onBulkExport={handleBulkExport}
+                  totalApplications={filteredApplications.length}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Applications Table */}
+            <Card className="shadow-sm border border-gray-200 overflow-hidden">
+              <CardHeader className="bg-white border-b border-gray-200 py-6">
+                <CardTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
+                  <span>Applications ({filteredApplications.length})</span>
+                  {hasActiveFilters && (
+                    <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                      Showing {filteredApplications.length} of {applications.length} applications
+                    </span>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                {filteredApplications.length > 0 ? (
+                  <ApplicationsTable
+                    applications={filteredApplications}
+                    selectedApplications={selectedApplications}
+                    onSelectApplication={handleSelectApplication}
+                    onViewDetails={handleViewDetails}
+                  />
+                ) : (
+                  <div className="text-center py-16 bg-white">
+                    <div className="text-gray-400 mb-4">
+                      <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 mb-4 text-lg">
+                      {hasActiveFilters ? 'No applications match your current filters.' : 'No applications found.'}
+                    </p>
+                    {hasActiveFilters && (
+                      <Button variant="outline" onClick={clearFilters} className="shadow-sm hover:shadow-md transition-shadow">
+                        Clear Filters
+                      </Button>
+                    )}
+                  </div>
                 )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="applicants">
+            <ApplicantsTab />
+          </TabsContent>
+        </Tabs>
 
         {/* Application Details Modal */}
         <ApplicationDetailsModal
