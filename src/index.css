@@ -126,7 +126,7 @@ textarea:focus {
   @apply text-orange-800;
 }
 
-/* Fill effect for refresh button */
+/* Progress bar fill effect for refresh button */
 .fill {
   position: relative;
   overflow: hidden;
@@ -152,6 +152,34 @@ textarea:focus {
 
 .fill:hover:before {
   top: 0;
+}
+
+/* Progress bar animation for refresh button */
+.progress-fill {
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill:before {
+  content: "";
+  position: absolute;
+  background: linear-gradient(90deg, #f97316, #ea580c);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 100%;
+  z-index: -1;
+  transition: top linear;
+}
+
+.progress-fill.animate-progress:before {
+  top: 0;
+  transition-duration: 15s;
+}
+
+/* Fix search input padding to prevent icon overlap */
+.search-input {
+  padding-left: 2.75rem !important;
 }
 
 /* Ensure buttons are touch-friendly on mobile */

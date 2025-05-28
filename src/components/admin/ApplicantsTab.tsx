@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Eye, Mail, Download, Search, Calendar as CalendarIcon, Trash2, User } from "lucide-react";
-import { format, formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
 interface Applicant {
@@ -71,7 +70,9 @@ const ApplicantsTab = () => {
               dateOfBirth: applicant.dateOfBirth || '',
               applicationId: app.id,
               submitted_at: app.submitted_at,
-              property_preferences: app.property_preferences
+              property_preferences: typeof app.property_preferences === 'object' && app.property_preferences !== null
+                ? app.property_preferences as { streetAddress?: string; postcode?: string }
+                : undefined
             });
           });
         }

@@ -235,7 +235,8 @@ const Admin = () => {
                   variant="outline" 
                   onClick={handleManualRefresh} 
                   disabled={refreshing} 
-                  className="fill shadow-sm hover:shadow-md transition-shadow flex items-center gap-2"
+                  className={`progress-fill shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 ${progress > 0 ? 'animate-progress' : ''}`}
+                  style={{ '--progress': `${progress}%` } as React.CSSProperties}
                 >
                   <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                   <span className="text-xs font-medium opacity-50">{timeLeft}s</span>

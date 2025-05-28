@@ -144,7 +144,7 @@ const ApplicationsTable = ({
                 placeholder="Search applications..."
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="pl-10 w-64 h-9 text-sm"
+                className="search-input w-64 h-9 text-sm"
               />
             </div>
             
