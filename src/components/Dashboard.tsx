@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,23 +9,27 @@ import { Home, Users, FileText, Download, Plus, Settings, LogOut, Search, Filter
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 
 interface DashboardProps {
   user: { username: string; role: string };
   onLogout: () => void;
 }
 
-interface Application {
+interface TenancyApplication {
   id: string;
-  applicants: any[];
-  property_preferences: any;
+  applicants: Applicant[];
+  property_preferences: PropertyPreferences;
+  additional_details: AdditionalDetails;
+  data_sharing: { utilities: boolean; insurance: boolean };
+  signature: string;
   status: string;
   submitted_at: string;
 }
 
 const Dashboard = ({ user, onLogout }: DashboardProps) => {
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [filteredApplications, setFilteredApplications] = useState<Application[]>([]);
+  const [applications, setApplications] = useState<TenancyApplication[]>([]);
+  const [filteredApplications, setFilteredApplications] = useState<TenancyApplication[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(true);
@@ -48,7 +51,17 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
         .order('submitted_at', { ascending: false });
 
       if (error) throw error;
-      setApplications(data || []);
+
+      // Type cast the data properly to match our interface
+      const typedData = (data || []).map(app => ({
+        ...app,
+        applicants: app.applicants as unknown as Applicant[],
+        property_preferences: app.property_preferences as unknown as PropertyPreferences,
+        additional_details: app.additional_details as unknown as AdditionalDetails,
+        data_sharing: app.data_sharing as unknown as { utilities: boolean; insurance: boolean }
+      }));
+
+      setApplications(typedData);
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast.error('Failed to fetch applications');
