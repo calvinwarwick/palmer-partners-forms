@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -119,8 +118,8 @@ const ApplicationsTable = ({
 
   return (
     <div className="space-y-4">
-      {/* Search and Filter Controls - Always visible */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+      {/* Search and Filter Controls - Darkened background */}
+      <div className="bg-gray-100 border border-gray-200 rounded-lg p-4">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           {/* Left side - Selection and title */}
           <div className="flex items-center gap-4">
@@ -230,7 +229,7 @@ const ApplicationsTable = ({
         <div className="border rounded-lg overflow-hidden">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50">
+              <TableRow className="bg-gray-100 border-b-0">
                 <TableHead className="w-12">
                   <span className="sr-only">Select</span>
                 </TableHead>
@@ -243,7 +242,7 @@ const ApplicationsTable = ({
             </TableHeader>
             <TableBody>
               {applications.map((application) => (
-                <TableRow key={application.id} className="hover:bg-gray-50">
+                <TableRow key={application.id} className="hover:bg-gray-50 border-b">
                   <TableCell>
                     <Switch
                       checked={selectedApplications.includes(application.id)}
@@ -301,16 +300,6 @@ const ApplicationsTable = ({
                         Preview
                       </Button>
                       
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewActivity(application)}
-                        className="h-8"
-                      >
-                        <Clock className="h-4 w-4 mr-1" />
-                        Activity
-                      </Button>
-                      
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" size="sm" className="h-8 w-8 p-0">
@@ -318,6 +307,10 @@ const ApplicationsTable = ({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                          <DropdownMenuItem onClick={() => handleViewActivity(application)}>
+                            <Clock className="h-4 w-4 mr-2" />
+                            View Activity
+                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
                             <Download className="h-4 w-4 mr-2" />
                             Generate PDF
