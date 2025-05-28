@@ -15,4 +15,9 @@ export const navItems = [
     to: "/admin",
     icon: "shield",
   },
+  {
+    title: "PDF Demo",
+    to: "/pdf-demo",
+    icon: "fileText",
+  },
 ];

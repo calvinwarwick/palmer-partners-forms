@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Application from "./pages/Application";
 import Admin from "./pages/Admin";
 import Login from "./pages/Login";
+import LazyPdfDemo from "./components/LazyPdfDemo";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/application" element={<Application />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/pdf-demo" element={<LazyPdfDemo />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>

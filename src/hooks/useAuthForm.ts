@@ -53,7 +53,12 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
                 toast.error("Please try signing in again with the demo credentials.");
               } else {
                 toast.success("Signed in successfully!");
-                onLogin?.(email, "User");
+                // Redirect demo users to admin page
+                if (isDemoCredentials(email, password)) {
+                  navigate("/admin");
+                } else {
+                  onLogin?.(email, "User");
+                }
               }
             }
           } else {
@@ -61,7 +66,12 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
           }
         } else {
           toast.success("Signed in successfully!");
-          onLogin?.(email, "User");
+          // Redirect demo users to admin page
+          if (isDemoCredentials(email, password)) {
+            navigate("/admin");
+          } else {
+            onLogin?.(email, "User");
+          }
         }
       } else {
         const { error } = await signUp(email, password, {
