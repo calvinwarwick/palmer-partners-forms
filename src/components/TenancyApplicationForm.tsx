@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, Plus, X, User, Home, FileText, CheckCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft, ArrowRight, Plus, X, User, Home, FileText, CheckCircle, Mail } from "lucide-react";
+import { sendApplicationConfirmation, sendAdminNotification } from "@/services/emailService";
 
 interface Applicant {
   id: string;
@@ -49,6 +50,8 @@ const TenancyApplicationForm = () => {
   });
   const [signature, setSignature] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   const totalSteps = 4;
   const progress = (currentStep / totalSteps) * 100;
@@ -115,9 +118,51 @@ const TenancyApplicationForm = () => {
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Application submitted:", { applicants, propertyPreferences, signature });
-    setIsSubmitted(true);
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    
+    try {
+      console.log("Application submitted:", { applicants, propertyPreferences, signature });
+      
+      // Send email notifications
+      toast({
+        title: "Sending confirmation...",
+        description: "Please wait while we process your application.",
+      });
+
+      const [confirmationSent, adminNotified] = await Promise.all([
+        sendApplicationConfirmation(applicants, propertyPreferences, signature),
+        sendAdminNotification(applicants, propertyPreferences, signature)
+      ]);
+
+      if (confirmationSent) {
+        toast({
+          title: "Application Submitted Successfully!",
+          description: `A confirmation email has been sent to ${applicants[0].email}`,
+        });
+      } else {
+        toast({
+          title: "Application Submitted",
+          description: "Your application was submitted, but we couldn't send the confirmation email. Please contact us if you don't receive it shortly.",
+          variant: "destructive",
+        });
+      }
+
+      if (!adminNotified) {
+        console.warn("Admin notification failed to send");
+      }
+
+      setIsSubmitted(true);
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      toast({
+        title: "Submission Error",
+        description: "There was an error submitting your application. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSubmitted) {
@@ -127,6 +172,15 @@ const TenancyApplicationForm = () => {
           <CardContent className="pt-6 text-center">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-2">Application Submitted!</h2>
+            <div className="bg-blue-50 p-4 rounded-lg mb-6">
+              <Mail className="h-8 w-8 text-blue-500 mx-auto mb-2" />
+              <p className="text-sm text-blue-700 font-medium">
+                Confirmation email sent to:
+              </p>
+              <p className="text-sm text-blue-600">
+                {applicants[0].email}
+              </p>
+            </div>
             <p className="text-gray-600 mb-6">
               Your tenancy application has been successfully submitted. We'll review it and get back to you within 2-3 business days.
             </p>
@@ -486,7 +540,7 @@ const TenancyApplicationForm = () => {
               <Button
                 variant="outline"
                 onClick={handlePrevious}
-                disabled={currentStep === 1}
+                disabled={currentStep === 1 || isSubmitting}
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Previous
@@ -495,7 +549,7 @@ const TenancyApplicationForm = () => {
               {currentStep < totalSteps ? (
                 <Button
                   onClick={handleNext}
-                  disabled={!validateCurrentStep()}
+                  disabled={!validateCurrentStep() || isSubmitting}
                 >
                   Next
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -503,10 +557,19 @@ const TenancyApplicationForm = () => {
               ) : (
                 <Button
                   onClick={handleSubmit}
-                  disabled={!validateCurrentStep()}
+                  disabled={!validateCurrentStep() || isSubmitting}
                 >
-                  Submit Application
-                  <CheckCircle className="h-4 w-4 ml-2" />
+                  {isSubmitting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Submit Application
+                      <CheckCircle className="h-4 w-4 ml-2" />
+                    </>
+                  )}
                 </Button>
               )}
             </div>
