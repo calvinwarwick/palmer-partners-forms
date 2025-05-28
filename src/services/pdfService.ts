@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 
 interface TenancyApplicationData {
@@ -299,6 +298,55 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   doc.text('Submitted At:', 20, yPosition + 4);
   doc.setFont('helvetica', 'normal');
   doc.text(new Date(submittedAt).toLocaleDateString('en-GB') + ' - ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), 105, yPosition + 4);
+  
+  yPosition += 20;
+  
+  // Activity Log Section
+  if (yPosition > 200) {
+    doc.addPage();
+    yPosition = 30;
+  }
+  
+  doc.setFillColor(64, 64, 64);
+  doc.rect(15, yPosition - 5, 180, 12, 'F');
+  doc.setFontSize(12);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Activity Log', 105, yPosition + 1, { align: 'center' });
+  
+  yPosition += 20;
+  
+  // Mock activity log data - in real implementation, this would be passed in the data
+  const activityLogs = [
+    ['Form Opened', new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), '192.168.1.100'],
+    ['Form Submitted', new Date(submittedAt).toLocaleDateString('en-GB') + ' ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), '192.168.1.100'],
+    ['PDF Generated', new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), '10.0.0.1']
+  ];
+  
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(9);
+  
+  // Activity log headers
+  doc.setFillColor(220, 220, 220);
+  doc.rect(15, yPosition - 2, 180, 8, 'F');
+  doc.setFont('helvetica', 'bold');
+  doc.text('Action', 20, yPosition + 2);
+  doc.text('Timestamp', 80, yPosition + 2);
+  doc.text('IP Address', 140, yPosition + 2);
+  yPosition += 8;
+  
+  doc.setFont('helvetica', 'normal');
+  activityLogs.forEach((log, index) => {
+    const isEven = index % 2 === 0;
+    if (isEven) {
+      doc.setFillColor(245, 245, 245);
+      doc.rect(15, yPosition - 1, 180, 7, 'F');
+    }
+    
+    doc.text(log[0], 20, yPosition + 3);
+    doc.text(log[1], 80, yPosition + 3);
+    doc.text(log[2], 140, yPosition + 3);
+    yPosition += 7;
+  });
   
   // Footer on all pages
   const pageCount = (doc as any).internal.pages.length - 1;

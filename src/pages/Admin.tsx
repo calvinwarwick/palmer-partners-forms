@@ -11,6 +11,7 @@ import AdminStats from "@/components/admin/AdminStats";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
+import ActivityLog from "@/components/admin/ActivityLog";
 
 interface TenancyApplication {
   id: string;
@@ -158,11 +159,6 @@ const Admin = () => {
     }
   };
 
-  const handleViewDetails = (application: TenancyApplication) => {
-    setSelectedApplication(application);
-    setIsDetailsModalOpen(true);
-  };
-
   const handleBulkExport = () => {
     const selectedData = applications.filter(app => selectedApplications.includes(app.id));
     const csvContent = generateCSV(selectedData);
@@ -253,7 +249,7 @@ const Admin = () => {
         {/* Tabs */}
         <Tabs defaultValue="applications" className="w-full">
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-50 rounded-lg p-1">
+            <TabsList className="grid w-full grid-cols-3 h-12 bg-gray-50 rounded-lg p-1">
               <TabsTrigger 
                 value="applications" 
                 className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
@@ -265,6 +261,12 @@ const Admin = () => {
                 className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applicants
+              </TabsTrigger>
+              <TabsTrigger 
+                value="activity" 
+                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+              >
+                Activity Log
               </TabsTrigger>
             </TabsList>
           </div>
@@ -278,7 +280,6 @@ const Admin = () => {
                     applications={filteredApplications}
                     selectedApplications={selectedApplications}
                     onSelectApplication={handleSelectApplication}
-                    onViewDetails={handleViewDetails}
                     onSelectAll={handleSelectAll}
                     onBulkExport={handleBulkExport}
                     searchTerm={searchTerm}
@@ -304,6 +305,14 @@ const Admin = () => {
             <Card className="shadow-sm border border-gray-200 overflow-hidden">
               <CardContent className="p-0">
                 <ApplicantsTab />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="activity">
+            <Card className="shadow-sm border border-gray-200 overflow-hidden">
+              <CardContent className="p-0">
+                <ActivityLog />
               </CardContent>
             </Card>
           </TabsContent>

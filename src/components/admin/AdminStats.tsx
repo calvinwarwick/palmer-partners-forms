@@ -1,6 +1,6 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Users, CheckCircle2, Clock } from "lucide-react";
+import { FileText, Users, CheckCircle2 } from "lucide-react";
 
 interface TenancyApplication {
   id: string;
@@ -26,9 +26,6 @@ const AdminStats = ({ applications }: AdminStatsProps) => {
     return submitDate.getTime() === today.getTime();
   }).length;
 
-  // Mock data for pending applications (since status isn't fully implemented)
-  const pendingApplications = applications.filter(app => app.status === 'pending' || !app.status).length;
-
   const stats = [
     {
       title: "Total Applications",
@@ -47,17 +44,11 @@ const AdminStats = ({ applications }: AdminStatsProps) => {
       value: todayApplications,
       icon: CheckCircle2,
       color: "text-orange-600"
-    },
-    {
-      title: "Pending Review",
-      value: pendingApplications,
-      icon: Clock,
-      color: "text-purple-600"
     }
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       {stats.map((stat) => (
         <Card key={stat.title} className="shadow-sm border border-gray-200">
           <CardContent className="p-4">

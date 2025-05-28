@@ -29,7 +29,6 @@ interface ApplicationsTableProps {
   applications: TenancyApplication[];
   selectedApplications: string[];
   onSelectApplication: (id: string, checked: boolean) => void;
-  onViewDetails: (application: TenancyApplication) => void;
   onSelectAll: (checked: boolean) => void;
   onBulkExport: () => void;
   searchTerm: string;
@@ -42,7 +41,6 @@ const ApplicationsTable = ({
   applications,
   selectedApplications,
   onSelectApplication,
-  onViewDetails,
   onSelectAll,
   onBulkExport,
   searchTerm,
@@ -80,10 +78,6 @@ const ApplicationsTable = ({
     } else {
       return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Other</Badge>;
     }
-  };
-
-  const handleViewApplicants = (applicationId: string) => {
-    navigate(`/applicants?application=${applicationId}`);
   };
 
   const handlePreviewApplication = (applicationId: string) => {
@@ -297,7 +291,8 @@ const ApplicationsTable = ({
                         onClick={() => handlePreviewApplication(application.id)}
                         className="h-8"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 mr-1" />
+                        Preview
                       </Button>
                       
                       <DropdownMenu>
@@ -307,10 +302,6 @@ const ApplicationsTable = ({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
-                          <DropdownMenuItem onClick={() => onViewDetails(application)}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Details
-                          </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
                             <Download className="h-4 w-4 mr-2" />
                             Generate PDF
