@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -191,16 +190,32 @@ const Admin = () => {
   };
 
   const generateCSV = (data: TenancyApplication[]) => {
-    const headers = ['ID', 'Name', 'Email', 'Phone', 'Property Address', 'Status', 'Submitted At'];
-    const rows = data.map(app => [
-      app.id,
-      `${app.applicants[0]?.firstName} ${app.applicants[0]?.lastName}`,
-      app.applicants[0]?.email,
-      app.applicants[0]?.phone,
-      app.property_preferences?.streetAddress,
-      app.status,
-      new Date(app.submitted_at).toLocaleDateString()
-    ]);
+    const headers = [
+      'First name',
+      'Last name', 
+      'Date of birth',
+      'Mobile number',
+      'Email address',
+      'Postcode',
+      'Street address',
+      'Is rented?',
+      'Vacate date'
+    ];
+    
+    const rows = data.map(app => {
+      const primaryApplicant = app.applicants[0];
+      return [
+        primaryApplicant?.firstName || '',
+        primaryApplicant?.lastName || '',
+        primaryApplicant?.dateOfBirth || '',
+        primaryApplicant?.phone || '',
+        primaryApplicant?.email || '',
+        primaryApplicant?.previousPostcode || app.property_preferences?.postcode || '',
+        primaryApplicant?.previousAddress || app.property_preferences?.streetAddress || '',
+        primaryApplicant?.currentPropertyStatus === 'renting' ? 'Yes' : 'No',
+        primaryApplicant?.vacateDate || ''
+      ];
+    });
     
     return [headers, ...rows].map(row => row.join(',')).join('\n');
   };
