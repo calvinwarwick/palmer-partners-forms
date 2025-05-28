@@ -1,12 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
-import { RefreshCw } from "lucide-react";
 import AdminStats from "@/components/admin/AdminStats";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
@@ -29,9 +28,6 @@ const Admin = () => {
   const [selectedApplication, setSelectedApplication] = useState<TenancyApplication | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(15);
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,26 +41,7 @@ const Admin = () => {
     filterApplications();
   }, [applications, searchTerm, dateFilter]);
 
-  // Auto-refresh timer
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          fetchApplications(true);
-          setProgress(0);
-          return 15;
-        }
-        const newTimeLeft = prev - 1;
-        setProgress((15 - newTimeLeft) / 15 * 100);
-        return newTimeLeft;
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const fetchApplications = async (showRefreshing = false) => {
-    if (showRefreshing) setRefreshing(true);
+  const fetchApplications = async () => {
     try {
       const { data, error } = await supabase
         .from('tenancy_applications')
@@ -82,22 +59,12 @@ const Admin = () => {
       }));
 
       setApplications(typedData);
-      if (showRefreshing) {
-        toast.success('Applications refreshed successfully');
-      }
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast.error('Failed to fetch applications');
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
-  };
-
-  const handleManualRefresh = () => {
-    setTimeLeft(15);
-    setProgress(0);
-    fetchApplications(true);
   };
 
   const filterApplications = () => {
@@ -223,21 +190,6 @@ const Admin = () => {
             <div>
               <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
               <p className="text-gray-600 text-lg">Manage tenancy applications and track performance</p>
-            </div>
-            <div className="flex flex-wrap gap-3">
-              <div className="relative">
-                <Button 
-                  variant="outline" 
-                  onClick={handleManualRefresh} 
-                  disabled={refreshing} 
-                  className={`progress-fill shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 ${progress > 0 ? 'animate-progress' : ''}`}
-                  style={{ '--progress': `${progress}%` } as React.CSSProperties}
-                >
-                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  <span className="text-xs font-medium opacity-50">{timeLeft}s</span>
-                  <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
-                </Button>
-              </div>
             </div>
           </div>
         </div>

@@ -14,20 +14,11 @@ interface PdfData {
   applicationId?: string;
 }
 
-interface ActivityLog {
-  id: string;
-  action: string;
-  user_identifier: string | null;
-  ip_address: string | null;
-  created_at: string;
-  details: any;
-}
-
 export const generatePdf = async (data: PdfData): Promise<Blob> => {
   const doc = new jsPDF();
   let yPosition = 20;
   
-  // Helper function to add text with word wrapping
+  // Helper function to add text
   const addText = (text: string, x: number, y: number, maxWidth?: number): number => {
     if (maxWidth) {
       const lines = doc.splitTextToSize(text, maxWidth);
@@ -48,109 +39,154 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
     return yPosition;
   };
 
-  // Title
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  yPosition = addText('Tenancy Application', 20, yPosition);
-  yPosition += 10;
-
-  // Personal Information Section
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  yPosition = checkNewPage(30);
-  yPosition = addText('Personal Information', 20, yPosition);
-  yPosition += 5;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-
-  data.applicants.forEach((applicant, index) => {
-    yPosition = checkNewPage(40);
+  // Helper function to add a styled header
+  const addHeader = (text: string, isMainTitle = false) => {
+    yPosition = checkNewPage(20);
     
+    if (isMainTitle) {
+      // Palmer & Partners header
+      doc.setFillColor(43, 43, 43); // Dark gray
+      doc.rect(10, yPosition - 5, 190, 15, 'F');
+      doc.setTextColor(255, 255, 255); // White text
+      doc.setFontSize(16);
+      doc.setFont('helvetica', 'normal');
+      yPosition = addText('Palmer & Partners', 15, yPosition + 5);
+      
+      // Orange line
+      doc.setFillColor(255, 165, 0); // Orange
+      doc.rect(10, yPosition, 190, 2, 'F');
+      yPosition += 15;
+      
+      // Main title
+      doc.setTextColor(0, 0, 0); // Black text
+      doc.setFontSize(24);
+      doc.setFont('helvetica', 'bold');
+      yPosition = addText('Tenancy Application', 105, yPosition, null);
+      yPosition += 15;
+    } else {
+      // Section headers with dark background
+      doc.setFillColor(43, 43, 43); // Dark gray
+      doc.rect(10, yPosition - 3, 190, 12, 'F');
+      doc.setTextColor(255, 255, 255); // White text
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'bold');
+      yPosition = addText(text, 15, yPosition + 4);
+      yPosition += 15;
+      doc.setTextColor(0, 0, 0); // Reset to black
+    }
+  };
+
+  // Helper function to add a table row
+  const addTableRow = (label: string, value: string, isOdd = false) => {
+    yPosition = checkNewPage(12);
+    
+    // Alternating row colors
+    if (isOdd) {
+      doc.setFillColor(245, 245, 245); // Light gray
+      doc.rect(10, yPosition - 2, 190, 10, 'F');
+    }
+    
+    doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText(`Applicant ${index + 1}`, 20, yPosition);
-    yPosition += 3;
+    yPosition = addText(label, 15, yPosition + 3);
     
     doc.setFont('helvetica', 'normal');
-    yPosition = addText(`Name: ${applicant.firstName} ${applicant.lastName}`, 25, yPosition);
-    yPosition = addText(`Email: ${applicant.email}`, 25, yPosition);
-    yPosition = addText(`Phone: ${applicant.phone}`, 25, yPosition);
-    yPosition = addText(`Date of Birth: ${applicant.dateOfBirth}`, 25, yPosition);
-    yPosition = addText(`Current Address: ${applicant.previousAddress || 'N/A'}`, 25, yPosition, 150);
-    yPosition = addText(`Previous Address: ${applicant.previousAddress || 'N/A'}`, 25, yPosition, 150);
-    yPosition = addText(`Employment Status: ${applicant.employment || 'N/A'}`, 25, yPosition);
+    yPosition = addText(value || '-', 80, yPosition - 6, 110);
+    yPosition += 2;
+  };
+
+  // Title and header
+  addHeader('', true);
+
+  // Property Details Section
+  addHeader('Property Details');
+  let rowCount = 0;
+  addTableRow('Street Address', data.propertyPreferences.streetAddress, rowCount++ % 2 === 1);
+  addTableRow('Postcode', data.propertyPreferences.postcode, rowCount++ % 2 === 1);
+  addTableRow('Rental Amount', `£${data.propertyPreferences.maxRent}`, rowCount++ % 2 === 1);
+  addTableRow('Preferred Move-in Date', data.propertyPreferences.moveInDate, rowCount++ % 2 === 1);
+  addTableRow('Latest Move-in Date', data.propertyPreferences.latestMoveInDate || '-', rowCount++ % 2 === 1);
+  addTableRow('Initial Tenancy Term', data.propertyPreferences.initialTenancyTerm || '-', rowCount++ % 2 === 1);
+  addTableRow('Has Pets', data.additionalDetails.pets === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
+  addTableRow('Under 18s', data.additionalDetails.under18Count || '0', rowCount++ % 2 === 1);
+  addTableRow('Under 18s Details', data.additionalDetails.childrenAges || '-', rowCount++ % 2 === 1);
+  addTableRow('Conditions of Offer', data.additionalDetails.conditionsOfOffer || '-', rowCount++ % 2 === 1);
+  addTableRow('Deposit Type', data.additionalDetails.depositType || '-', rowCount++ % 2 === 1);
+
+  // Applicant sections
+  data.applicants.forEach((applicant, index) => {
+    addHeader(`Applicant - #${index + 1}`);
     
-    if (applicant.companyName) {
-      yPosition = addText(`Employer: ${applicant.companyName}`, 25, yPosition);
-    }
-    if (applicant.jobTitle) {
-      yPosition = addText(`Job Title: ${applicant.jobTitle}`, 25, yPosition);
-    }
-    if (applicant.annualIncome) {
-      yPosition = addText(`Annual Income: £${applicant.annualIncome}`, 25, yPosition);
-    }
-    
-    yPosition += 5;
+    rowCount = 0;
+    addTableRow('First Name', applicant.firstName, rowCount++ % 2 === 1);
+    addTableRow('Last Name', applicant.lastName, rowCount++ % 2 === 1);
+    addTableRow('Date of Birth', applicant.dateOfBirth, rowCount++ % 2 === 1);
+    addTableRow('Email Address', applicant.email, rowCount++ % 2 === 1);
+    addTableRow('Mobile Number', applicant.phone, rowCount++ % 2 === 1);
+
+    // Employment Details subsection
+    yPosition += 10;
+    doc.setFillColor(220, 220, 220); // Light gray for subsection
+    doc.rect(10, yPosition - 3, 190, 12, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText('Employment Details', 15, yPosition + 4);
+    yPosition += 10;
+
+    rowCount = 0;
+    addTableRow('Contract Type', applicant.employment || '-', rowCount++ % 2 === 1);
+    addTableRow('Company Name', applicant.companyName || '-', rowCount++ % 2 === 1);
+    addTableRow('Job Title', applicant.jobTitle || '-', rowCount++ % 2 === 1);
+    addTableRow('Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '-', rowCount++ % 2 === 1);
+    addTableRow('Length of Service', applicant.lengthOfService || '-', rowCount++ % 2 === 1);
+
+    // Current Property Details subsection
+    yPosition += 10;
+    doc.setFillColor(220, 220, 220);
+    doc.rect(10, yPosition - 3, 190, 12, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText('Current Property Details', 15, yPosition + 4);
+    yPosition += 10;
+
+    rowCount = 0;
+    addTableRow('Postcode', applicant.previousPostcode || '-', rowCount++ % 2 === 1);
+    addTableRow('Street Address', applicant.previousAddress || '-', rowCount++ % 2 === 1);
+    addTableRow('Move In Date', applicant.moveInDate || '-', rowCount++ % 2 === 1);
+    addTableRow('Vacate Date', applicant.vacateDate || '-', rowCount++ % 2 === 1);
+    addTableRow('Current Property Status', applicant.currentPropertyStatus || '-', rowCount++ % 2 === 1);
+    addTableRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '-', rowCount++ % 2 === 1);
+
+    // Additional Information subsection
+    yPosition += 10;
+    doc.setFillColor(220, 220, 220);
+    doc.rect(10, yPosition - 3, 190, 12, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText('Additional Information', 15, yPosition + 4);
+    yPosition += 10;
+
+    rowCount = 0;
+    addTableRow('UK/ROI Passport', data.additionalDetails.ukPassport === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
+    addTableRow('Adverse Credit', data.additionalDetails.adverseCredit === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
+    addTableRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails || '-', rowCount++ % 2 === 1);
+    addTableRow('Requires Guarantor', data.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
   });
 
-  // Property Preferences Section
-  yPosition = checkNewPage(40);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  yPosition = addText('Property Preferences', 20, yPosition);
-  yPosition += 5;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  yPosition = addText(`Property Address: ${data.propertyPreferences.streetAddress}`, 25, yPosition, 150);
-  yPosition = addText(`Postcode: ${data.propertyPreferences.postcode}`, 25, yPosition);
-  yPosition = addText(`Maximum Rent: £${data.propertyPreferences.maxRent}`, 25, yPosition);
-  yPosition = addText(`Preferred Move-in Date: ${data.propertyPreferences.moveInDate}`, 25, yPosition);
-  yPosition = addText(`Property Type: ${data.propertyPreferences.propertyType}`, 25, yPosition);
-  yPosition += 10;
-
-  // Additional Details Section
-  yPosition = checkNewPage(40);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  yPosition = addText('Additional Details', 20, yPosition);
-  yPosition += 5;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  yPosition = addText(`Pets: ${data.additionalDetails.pets === 'yes' ? 'Yes' : 'No'}`, 25, yPosition);
-  if (data.additionalDetails.petDetails) {
-    yPosition = addText(`Pet Details: ${data.additionalDetails.petDetails}`, 25, yPosition, 150);
-  }
-  yPosition += 10;
-
   // Data Sharing Section
-  yPosition = checkNewPage(25);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  yPosition = addText('Data Sharing Preferences', 20, yPosition);
-  yPosition += 5;
-
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  yPosition = addText(`Share with Utilities: ${data.dataSharing.utilities ? 'Yes' : 'No'}`, 25, yPosition);
-  yPosition = addText(`Share with Insurance: ${data.dataSharing.insurance ? 'Yes' : 'No'}`, 25, yPosition);
-  yPosition += 10;
+  addHeader('Data Sharing');
+  rowCount = 0;
+  addTableRow('Accept Utilities', data.dataSharing.utilities ? 'Yes' : 'No', rowCount++ % 2 === 1);
+  addTableRow('Accept Insurance', data.dataSharing.insurance ? 'Yes' : 'No', rowCount++ % 2 === 1);
 
   // Signature Section
-  yPosition = checkNewPage(25);
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  yPosition = addText('Digital Signature', 20, yPosition);
-  yPosition += 5;
+  addHeader('Signature');
+  rowCount = 0;
+  addTableRow('Full name', data.signature, rowCount++ % 2 === 1);
+  addTableRow('Signature', data.signature, rowCount++ % 2 === 1);
+  addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'), rowCount++ % 2 === 1);
 
-  doc.setFontSize(10);
-  doc.setFont('helvetica', 'normal');
-  yPosition = addText(`Signature: ${data.signature}`, 25, yPosition);
-  yPosition = addText(`Submitted: ${format(new Date(data.submittedAt), 'MMMM dd, yyyy HH:mm')}`, 25, yPosition);
-  yPosition += 15;
-
-  // Activity Log Section
+  // Activity Log Section (if available)
   if (data.applicationId) {
     try {
       const { data: activityLogs, error } = await supabase
@@ -160,40 +196,31 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
         .order('created_at', { ascending: false });
 
       if (!error && activityLogs && activityLogs.length > 0) {
-        yPosition = checkNewPage(40);
-        doc.setFontSize(16);
-        doc.setFont('helvetica', 'bold');
-        yPosition = addText('Activity Log', 20, yPosition);
-        yPosition += 5;
-
+        addHeader('History');
+        
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
 
-        activityLogs.forEach((log: any) => {
+        activityLogs.forEach((log: any, index: number) => {
           yPosition = checkNewPage(15);
           
-          const timestamp = format(new Date(log.created_at), 'MMM dd, yyyy HH:mm:ss');
-          yPosition = addText(`${timestamp} - ${log.action}`, 25, yPosition);
-          
-          if (log.user_identifier) {
-            yPosition = addText(`  User: ${log.user_identifier}`, 25, yPosition);
+          if (index % 2 === 1) {
+            doc.setFillColor(245, 245, 245);
+            doc.rect(10, yPosition - 2, 190, 12, 'F');
           }
           
-          if (log.ip_address) {
-            yPosition = addText(`  IP: ${log.ip_address}`, 25, yPosition);
-          }
+          const timestamp = format(new Date(log.created_at), 'do-MMM-yyyy h:mm aa');
+          const action = log.action;
+          const ipAddress = log.ip_address ? `IP Address: ${log.ip_address}` : '';
           
-          if (log.details && Object.keys(log.details).length > 0) {
-            const detailsText = JSON.stringify(log.details, null, 2);
-            yPosition = addText(`  Details: ${detailsText}`, 25, yPosition, 150);
-          }
-          
-          yPosition += 3;
+          yPosition = addText(action, 15, yPosition + 3);
+          yPosition = addText(ipAddress, 15, yPosition);
+          yPosition = addText(timestamp, 150, yPosition - 6);
+          yPosition += 5;
         });
       }
     } catch (error) {
       console.error('Error fetching activity logs for PDF:', error);
-      // Continue without activity logs if there's an error
     }
   }
 
