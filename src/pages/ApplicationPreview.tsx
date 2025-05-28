@@ -162,9 +162,13 @@ const ApplicationPreview = () => {
 
         {/* Application Preview */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Palmer & Partners Header */}
-          <div className="bg-gray-800 text-white p-4 text-center">
-            <h1 className="text-xl font-normal">Palmer & Partners</h1>
+          {/* Logo Header */}
+          <div className="text-center py-6">
+            <img 
+              src="/lovable-uploads/6428db9d-5582-4e09-970d-e10b1b3afe27.png" 
+              alt="Company Logo" 
+              className="mx-auto h-16 mb-4"
+            />
           </div>
           
           {/* Orange line */}
@@ -310,11 +314,6 @@ const ApplicationPreview = () => {
               </div>
             </div>
           )}
-
-          {/* Footer */}
-          <div className="border-t bg-gray-50 p-4 text-center text-sm text-gray-500">
-            Palmer & Partners - Tenancy Application
-          </div>
         </div>
       </div>
     </div>
