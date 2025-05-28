@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,19 @@ const ApplicationPreview = () => {
         .single();
 
       if (error) throw error;
-      setApplication(data);
+      
+      // Type cast the Supabase Json types to our expected types
+      const typedApplication: TenancyApplication = {
+        id: data.id,
+        applicants: data.applicants as any[],
+        property_preferences: data.property_preferences as any,
+        additional_details: data.additional_details as any,
+        data_sharing: data.data_sharing as any,
+        signature: data.signature,
+        submitted_at: data.submitted_at
+      };
+      
+      setApplication(typedApplication);
     } catch (error) {
       console.error('Error fetching application:', error);
       toast.error('Failed to fetch application');
