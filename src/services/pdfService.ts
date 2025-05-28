@@ -63,8 +63,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setTextColor(255, 255, 255); // white text
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText(title, 0, yPosition + 4, 0, 'center'); // centered
-    yPosition += 15;
+    // Center text vertically in the rectangle (rectangle height is 12, so center at yPosition + 3)
+    yPosition = addText(title, 0, yPosition + 6, 0, 'center'); // centered vertically and horizontally
+    yPosition += 12;
     doc.setTextColor(0, 0, 0); // reset to black
   };
 
@@ -76,8 +77,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(31, 41, 55); // gray-800
-    yPosition = addText(title, 0, yPosition + 4, 0, 'center'); // centered
-    yPosition += 10;
+    // Center text vertically in the rectangle (rectangle height is 12, so center at yPosition + 3)
+    yPosition = addText(title, 0, yPosition + 6, 0, 'center'); // centered vertically and horizontally
+    yPosition += 7;
     doc.setTextColor(0, 0, 0); // reset to black
   };
 
@@ -108,6 +110,10 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
 
   // Header with logo and title - exactly like preview
   yPosition = checkNewPage(40);
+  
+  // Logo area with grey background
+  doc.setFillColor(229, 231, 235); // gray-200 background for logo
+  doc.rect(80, yPosition - 8, 50, 20, 'F');
   
   // Logo area (centered) - using the new logo
   doc.setFillColor(249, 115, 22); // orange-500 placeholder for logo
@@ -141,7 +147,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     ['Initial Tenancy Term', data.propertyPreferences.initialTenancyTerm || ''],
     ['Has Pets', data.additionalDetails.pets === 'yes' ? 'Yes' : 'No'],
     ['Under 18s', data.additionalDetails.under18Count || '0'],
-    ['Under 18s Details', data.additionalDetails.childrenAges || ''],
+    ...(data.additionalDetails.under18Count && data.additionalDetails.under18Count !== '0' ? [['Under 18s Details', data.additionalDetails.childrenAges || '']] : []),
     ['Conditions of Offer', data.additionalDetails.conditionsOfOffer || ''],
     ['Deposit Type', data.additionalDetails.depositType || '']
   ].forEach(([label, value], index) => {
@@ -190,12 +196,15 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
 
     // Additional Information subsection
     addSubSectionHeader('Additional Information');
-    [
+    const additionalInfoRows = [
       ['UK/ROI Passport', data.additionalDetails.ukPassport === 'yes' ? 'Yes' : 'No'],
       ['Adverse Credit', data.additionalDetails.adverseCredit === 'yes' ? 'Yes' : 'No'],
-      ['Adverse Credit Details', data.additionalDetails.adverseCreditDetails || ''],
-      ['Requires Guarantor', data.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No']
-    ].forEach(([label, value], rowIndex) => {
+      ...(data.additionalDetails.adverseCredit === 'yes' ? [['Adverse Credit Details', data.additionalDetails.adverseCreditDetails || '']] : []),
+      ['Requires Guarantor', data.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No'],
+      ...(data.additionalDetails.pets === 'yes' && data.additionalDetails.petDetails ? [['Pet Details', data.additionalDetails.petDetails]] : [])
+    ];
+    
+    additionalInfoRows.forEach(([label, value], rowIndex) => {
       addTableRow(label, value, rowIndex % 2 === 1);
     });
   });
