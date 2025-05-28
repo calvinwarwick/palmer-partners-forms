@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense } from "react";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -41,29 +41,10 @@ const PageLoader = () => (
   </div>
 );
 
-// Theme initialization component
-const ThemeInitializer = () => {
-  useEffect(() => {
-    // Initialize theme on app load
-    const theme = localStorage.getItem('theme') || 'system';
-    const root = window.document.documentElement;
-    
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(theme);
-    }
-  }, []);
-  
-  return null;
-};
-
 const App = () => (
   <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <ThemeInitializer />
         <Toaster />
         <Sonner />
         <BrowserRouter>

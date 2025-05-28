@@ -215,7 +215,6 @@ const TenancyApplicationForm = () => {
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Properties
             </Link>
-            <ThemeToggle />
           </div>
           
           <div className="flex items-center space-x-4 mb-4">
