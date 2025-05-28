@@ -125,18 +125,43 @@ const AdditionalDetailsStep = ({
 
         <FormFieldWithTooltip
           label="Do you have any pets?"
-          tooltip="Include type and number of pets. Some properties have pet restrictions"
+          tooltip="Some properties have pet restrictions"
+          required
           htmlFor="pets"
         >
-          <Input
-            id="pets"
+          <Select
             value={additionalDetails.pets}
-            onChange={(e) => onUpdateDetails("pets", e.target.value)}
-            placeholder="e.g., 1 cat, 2 dogs, etc."
-            className="form-control"
-          />
+            onValueChange={(value) => onUpdateDetails("pets", value)}
+          >
+            <SelectTrigger className="form-control">
+              <SelectValue placeholder="Select an option" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
         </FormFieldWithTooltip>
       </div>
+
+      {additionalDetails.pets === "yes" && (
+        <div>
+          <FormFieldWithTooltip
+            label="Please provide details about your pets"
+            tooltip="Include type and number of pets"
+            required
+            htmlFor="petDetails"
+          >
+            <Textarea
+              id="petDetails"
+              value={additionalDetails.petDetails || ""}
+              onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
+              placeholder="e.g., 1 cat, 2 dogs, etc."
+              className="form-control min-h-[100px]"
+            />
+          </FormFieldWithTooltip>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormFieldWithTooltip

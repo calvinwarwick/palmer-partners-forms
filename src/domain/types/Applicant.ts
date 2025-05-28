@@ -1,3 +1,4 @@
+
 export interface Applicant {
   id: string;
   firstName: string;
@@ -39,6 +40,7 @@ export interface AdditionalDetails {
   adverseCreditDetails: string;
   guarantorRequired: string;
   pets: string;
+  petDetails?: string;
   under18Count: string;
   childrenAges: string;
   conditionsOfOffer: string;

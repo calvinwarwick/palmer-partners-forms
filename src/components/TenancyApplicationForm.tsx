@@ -65,6 +65,7 @@ const TenancyApplicationForm = () => {
     adverseCreditDetails: "",
     guarantorRequired: "",
     pets: "",
+    petDetails: "",
     under18Count: "",
     childrenAges: "",
     conditionsOfOffer: "",
@@ -73,7 +74,7 @@ const TenancyApplicationForm = () => {
 
   const [dataSharing, setDataSharing] = useState({
     utilities: false,
-    insurance: false
+    insurance: true
   });
 
   const [signature, setSignature] = useState("");
@@ -240,11 +241,12 @@ const TenancyApplicationForm = () => {
       adverseCredit: "no",
       adverseCreditDetails: "",
       guarantorRequired: "no",
-      pets: "yes - 1 cat",
+      pets: "yes",
+      petDetails: "1 cat",
       under18Count: "0",
       childrenAges: "",
       conditionsOfOffer: "Standard conditions accepted",
-      depositType: "standard"
+      depositType: "traditional"
     });
 
     // Fill Terms and Data
@@ -252,7 +254,7 @@ const TenancyApplicationForm = () => {
     setTermsAccepted(true);
     setDataSharing({
       utilities: true,
-      insurance: false
+      insurance: true
     });
 
     console.log('All test data filled successfully');
