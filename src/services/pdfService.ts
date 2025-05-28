@@ -126,8 +126,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   yPosition += 8;
   doc.text(`Date: ${new Date(submittedAt).toLocaleDateString()}`, 25, yPosition);
   
-  // Footer
-  const pageCount = doc.internal.getNumberOfPages();
+  // Footer - Fixed to use the correct method to get page count
+  const pageCount = (doc as any).internal.pages.length - 1; // Subtract 1 because pages array includes a null first element
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(8);
