@@ -13,6 +13,9 @@ interface EmploymentStepProps {
 
 const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) => {
   const fillTestData = () => {
+    console.log('Fill test data button clicked - Employment');
+    console.log('Current applicants for employment:', applicants);
+    
     const testData = [
       {
         employment: "Full Time",

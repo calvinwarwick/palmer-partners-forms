@@ -27,7 +27,11 @@ const TermsAndDataStep = ({
   onTermsAccepted
 }: TermsAndDataStepProps) => {
   const fillTestData = () => {
-    console.log('Filling terms and data test data');
+    console.log('Fill test data button clicked - Terms and Data');
+    console.log('Current signature:', signature);
+    console.log('Current terms accepted:', termsAccepted);
+    console.log('Current data sharing:', dataSharing);
+    
     console.log('Setting signature to John Smith');
     onSignatureChange("John Smith");
     console.log('Setting terms accepted to true');

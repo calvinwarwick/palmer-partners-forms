@@ -13,6 +13,9 @@ interface CurrentAddressStepProps {
 
 const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressStepProps) => {
   const fillTestData = () => {
+    console.log('Fill test data button clicked - Current Address');
+    console.log('Current applicants for address:', applicants);
+    
     const testData = [
       {
         previousAddress: "45 Elm Street, Colchester",

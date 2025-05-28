@@ -12,7 +12,9 @@ interface AdditionalDetailsStepProps {
 
 const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails }: AdditionalDetailsStepProps) => {
   const fillTestData = () => {
-    console.log('Filling additional details test data');
+    console.log('Fill test data button clicked - Additional Details');
+    console.log('Current additional details:', additionalDetails);
+    
     const testDataEntries = [
       ['ukPassport', 'yes'],
       ['adverseCredit', 'no'],
