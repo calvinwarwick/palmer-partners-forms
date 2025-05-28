@@ -2,10 +2,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Home, Users, FileText, Phone, Mail, Building, Award, Shield, Clock, Star, Bed, Bath, Car, Square, Eye, Heart } from "lucide-react";
+import { Search, MapPin, Home, FileText, Phone, Mail, Award, Shield, Clock, Star, Bed, Bath, Square, Eye, Heart } from "lucide-react";
+import OptimizedCard from "@/components/optimized/OptimizedCard";
 
 // Enhanced mock property data for both sales and lettings
 const mockProperties = [
@@ -107,21 +108,6 @@ const Index = () => {
     setFilteredProperties(filtered);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "For Sale":
-        return "bg-emerald-500";
-      case "To Let":
-        return "bg-blue-500";
-      case "Let Agreed":
-        return "bg-orange-500";
-      case "Sold":
-        return "bg-red-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -156,7 +142,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-24">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23f1f5f9" fill-opacity="0.4"%3E%3Ccircle cx="7" cy="7" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23f1f5f9\" fill-opacity=\"0.4\"%3E%3Ccircle cx=\"7\" cy=\"7\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent leading-tight">
@@ -284,105 +270,22 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProperties.map((property) => (
-              <Card key={property.id} className="group overflow-hidden bg-white border-0 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 rounded-2xl">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={property.image}
-                    alt={property.address}
-                    className="w-full h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  
-                  {/* Overlay badges */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                  
-                  {property.featured && (
-                    <Badge className="absolute top-4 left-4 bg-orange-500 text-white font-semibold px-3 py-1 rounded-full">
-                      Featured
-                    </Badge>
-                  )}
-                  
-                  <Badge 
-                    className={`absolute top-4 right-4 text-white font-semibold px-3 py-1 rounded-full ${getStatusColor(property.status)}`}
-                  >
-                    {property.status}
-                  </Badge>
-
-                  {/* Action buttons */}
-                  <div className="absolute bottom-4 right-4 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Button size="sm" variant="secondary" className="rounded-full w-10 h-10 p-0 bg-white/90 hover:bg-white">
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                    <Button size="sm" variant="secondary" className="rounded-full w-10 h-10 p-0 bg-white/90 hover:bg-white">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  {/* Price overlay */}
-                  <div className="absolute bottom-4 left-4">
-                    <div className="bg-white/95 backdrop-blur-sm px-4 py-2 rounded-xl">
-                      <span className="font-bold text-2xl text-gray-900">
-                        {property.price}
-                        {property.priceType === "pcm" && <span className="text-sm font-normal text-gray-600 ml-1">pcm</span>}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <CardContent className="p-6">
-                  <div className="flex justify-between items-start mb-3">
-                    <Badge variant="outline" className="border-blue-200 text-blue-700 font-medium">
-                      {property.type}
-                    </Badge>
-                    <div className="flex items-center text-yellow-500">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-3 w-3 fill-current" />
-                      ))}
-                    </div>
-                  </div>
-
-                  <h4 className="font-bold text-xl text-gray-900 mb-2 line-clamp-1">
-                    {property.type} in {property.address.split(',')[1] || property.address.split(',')[0]}
-                  </h4>
-                  
-                  <p className="flex items-center text-gray-600 text-sm mb-4">
-                    <MapPin className="h-4 w-4 mr-2 text-blue-600 flex-shrink-0" />
-                    <span className="line-clamp-1">{property.address}</span>
-                  </p>
-
-                  <p className="text-gray-600 mb-6 leading-relaxed line-clamp-2">{property.description}</p>
-
-                  {/* Property details */}
-                  <div className="flex items-center justify-between text-gray-600 mb-6">
-                    <div className="flex items-center space-x-4">
-                      <span className="flex items-center text-sm font-medium">
-                        <Bed className="h-4 w-4 mr-1 text-blue-600" />
-                        {property.bedrooms}
-                      </span>
-                      <span className="flex items-center text-sm font-medium">
-                        <Bath className="h-4 w-4 mr-1 text-blue-600" />
-                        {property.bathrooms}
-                      </span>
-                      <span className="flex items-center text-sm font-medium">
-                        <Square className="h-4 w-4 mr-1 text-blue-600" />
-                        {property.sqft} sqft
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex space-x-3">
-                    <Button variant="outline" className="flex-1 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-xl">
-                      View Details
-                    </Button>
-                    <Link to="/application" className="flex-1">
-                      <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl">
-                        <FileText className="h-4 w-4 mr-2" />
-                        {property.priceType === "sale" ? "Enquire" : "Apply"}
-                      </Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
+              <OptimizedCard
+                key={property.id}
+                id={property.id}
+                address={property.address}
+                price={property.price}
+                priceType={property.priceType}
+                type={property.type}
+                bedrooms={property.bedrooms}
+                bathrooms={property.bathrooms}
+                sqft={property.sqft}
+                status={property.status}
+                image={property.image}
+                description={property.description}
+                features={property.features}
+                featured={property.featured}
+              />
             ))}
           </div>
         </div>
@@ -427,7 +330,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="7" cy="7" r="1"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"7\" cy=\"7\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-4xl md:text-5xl font-bold mb-6">Ready to Make Your Move?</h3>
