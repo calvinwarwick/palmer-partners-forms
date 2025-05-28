@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,8 +9,6 @@ import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/type
 import { toast } from "sonner";
 import { Download, RefreshCw } from "lucide-react";
 import AdminStats from "@/components/admin/AdminStats";
-import ApplicationFilters from "@/components/admin/ApplicationFilters";
-import BulkActions from "@/components/admin/BulkActions";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
@@ -35,7 +34,7 @@ const Admin = () => {
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState(15);
 
-  // Filter states (removed statusFilter)
+  // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
 
@@ -213,14 +212,6 @@ const Admin = () => {
     window.URL.revokeObjectURL(url);
   };
 
-  const clearFilters = () => {
-    setSearchTerm("");
-    setDateFilter("all");
-    setSelectedApplications([]);
-  };
-
-  const hasActiveFilters = searchTerm !== "" || dateFilter !== "all";
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -274,17 +265,17 @@ const Admin = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="applications" className="w-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <TabsList className="grid w-full grid-cols-2 bg-gray-50 rounded-lg p-1 m-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 p-1">
+            <TabsList className="grid w-full grid-cols-2 h-12 bg-transparent p-0">
               <TabsTrigger 
                 value="applications" 
-                className="text-lg font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-orange-600 data-[state=active]:border-orange-200"
+                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
               >
                 Applications
               </TabsTrigger>
               <TabsTrigger 
                 value="applicants" 
-                className="text-lg font-medium data-[state=active]:bg-white data-[state=active]:shadow-sm data-[state=active]:text-orange-600 data-[state=active]:border-orange-200"
+                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm"
               >
                 Applicants
               </TabsTrigger>
@@ -292,60 +283,8 @@ const Admin = () => {
           </div>
 
           <TabsContent value="applications" className="space-y-6">
-            {/* Filters Section */}
-            <Card className="shadow-sm border border-gray-200">
-              <CardContent className="p-6">
-                <ApplicationFilters
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                  dateFilter={dateFilter}
-                  onDateFilterChange={setDateFilter}
-                  onClearFilters={clearFilters}
-                  hasActiveFilters={hasActiveFilters}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Bulk Actions Section */}
-            <Card className="shadow-sm border border-gray-200">
-              <CardContent className="p-0">
-                <BulkActions
-                  selectedApplications={selectedApplications}
-                  onSelectAll={handleSelectAll}
-                  onBulkExport={handleBulkExport}
-                  totalApplications={filteredApplications.length}
-                />
-              </CardContent>
-            </Card>
-
             {/* Applications Table */}
             <Card className="shadow-sm border border-gray-200 overflow-hidden">
-              <CardHeader className="bg-white border-b border-gray-200 py-6">
-                <CardTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
-                  <div className="flex items-center gap-4">
-                    <span>Applications ({filteredApplications.length})</span>
-                    <div className="flex items-center gap-3">
-                      <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                        {selectedApplications.length} of {filteredApplications.length} selected
-                      </span>
-                      <ApplicationFilters
-                        searchTerm={searchTerm}
-                        onSearchChange={setSearchTerm}
-                        dateFilter={dateFilter}
-                        onDateFilterChange={setDateFilter}
-                        onClearFilters={clearFilters}
-                        hasActiveFilters={hasActiveFilters}
-                        compact={true}
-                      />
-                    </div>
-                  </div>
-                  {hasActiveFilters && (
-                    <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                      Showing {filteredApplications.length} of {applications.length} applications
-                    </span>
-                  )}
-                </CardTitle>
-              </CardHeader>
               <CardContent className="p-0">
                 {filteredApplications.length > 0 ? (
                   <ApplicationsTable
@@ -353,6 +292,12 @@ const Admin = () => {
                     selectedApplications={selectedApplications}
                     onSelectApplication={handleSelectApplication}
                     onViewDetails={handleViewDetails}
+                    onSelectAll={handleSelectAll}
+                    onBulkExport={handleBulkExport}
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                    dateFilter={dateFilter}
+                    onDateFilterChange={setDateFilter}
                   />
                 ) : (
                   <div className="text-center py-16 bg-white">
@@ -361,14 +306,7 @@ const Admin = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <p className="text-gray-500 mb-4 text-lg">
-                      {hasActiveFilters ? 'No applications match your current filters.' : 'No applications found.'}
-                    </p>
-                    {hasActiveFilters && (
-                      <Button variant="outline" onClick={clearFilters} className="shadow-sm hover:shadow-md transition-shadow">
-                        Clear Filters
-                      </Button>
-                    )}
+                    <p className="text-gray-500 mb-4 text-lg">No applications found.</p>
                   </div>
                 )}
               </CardContent>

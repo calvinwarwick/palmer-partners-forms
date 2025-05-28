@@ -3,11 +3,17 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Eye, Mail, Download, MoreHorizontal, User } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Eye, Mail, Download, MoreHorizontal, User, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
+import { useState, useRef, useEffect } from "react";
+import { format } from "date-fns";
 
 interface TenancyApplication {
   id: string;
@@ -24,16 +30,39 @@ interface ApplicationsTableProps {
   selectedApplications: string[];
   onSelectApplication: (id: string, checked: boolean) => void;
   onViewDetails: (application: TenancyApplication) => void;
+  onSelectAll: (checked: boolean) => void;
+  onBulkExport: () => void;
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  dateFilter: string;
+  onDateFilterChange: (value: string) => void;
 }
 
 const ApplicationsTable = ({
   applications,
   selectedApplications,
   onSelectApplication,
-  onViewDetails
+  onViewDetails,
+  onSelectAll,
+  onBulkExport,
+  searchTerm,
+  onSearchChange,
+  dateFilter,
+  onDateFilterChange
 }: ApplicationsTableProps) => {
   const navigate = useNavigate();
   const { generatePdf, isGenerating } = usePdfGeneration();
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
+  const checkboxRef = useRef<HTMLButtonElement>(null);
+  
+  const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
+  const isIndeterminate = selectedApplications.length > 0 && selectedApplications.length < applications.length;
+
+  useEffect(() => {
+    if (checkboxRef.current) {
+      (checkboxRef.current as any).indeterminate = isIndeterminate;
+    }
+  }, [isIndeterminate]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-GB', {
@@ -71,6 +100,116 @@ const ApplicationsTable = ({
 
   return (
     <div className="border rounded-lg overflow-hidden">
+      {/* Table Header with Controls */}
+      <div className="bg-gray-50 border-b border-gray-200 p-4">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          {/* Left side - Selection and title */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                ref={checkboxRef}
+                checked={isAllSelected}
+                onCheckedChange={onSelectAll}
+                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
+              />
+              <span className="text-sm font-semibold text-gray-900">
+                Applications ({applications.length})
+              </span>
+            </div>
+            {selectedApplications.length > 0 && (
+              <span className="text-sm text-gray-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                {selectedApplications.length} selected
+              </span>
+            )}
+          </div>
+
+          {/* Center - Search and Date Filter */}
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search applications..."
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
+                className="pl-10 w-64 h-9 text-sm"
+              />
+            </div>
+            
+            <Select value={dateFilter} onValueChange={onDateFilterChange}>
+              <SelectTrigger className="w-36 h-9 text-sm">
+                <CalendarIcon className="h-3 w-3 mr-1" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All time</SelectItem>
+                <SelectItem value="today">Today</SelectItem>
+                <SelectItem value="this_week">This week</SelectItem>
+                <SelectItem value="this_month">This month</SelectItem>
+                <SelectItem value="last_month">Last month</SelectItem>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <SelectItem value="custom">Custom range</SelectItem>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={dateRange.from}
+                      selected={dateRange}
+                      onSelect={setDateRange}
+                      numberOfMonths={2}
+                    />
+                    <div className="p-3 border-t">
+                      <div className="text-sm text-gray-600">
+                        {dateRange.from && dateRange.to ? (
+                          `${format(dateRange.from, "MMM dd, yyyy")} - ${format(dateRange.to, "MMM dd, yyyy")}`
+                        ) : (
+                          "Select date range"
+                        )}
+                      </div>
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Right side - Bulk Actions */}
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onBulkExport}
+              disabled={selectedApplications.length === 0}
+              className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={selectedApplications.length === 0}
+              className="h-9 border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700"
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Send Email
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={selectedApplications.length === 0}
+              className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete
+            </Button>
+          </div>
+        </div>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow className="bg-gray-50">
