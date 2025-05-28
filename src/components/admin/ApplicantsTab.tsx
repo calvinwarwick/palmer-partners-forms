@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -74,7 +73,12 @@ const ApplicantsTab = () => {
     try {
       // Fetch applicants from Supabase
       const applicationId = searchParams.get('application');
-      let query = supabase.from('tenancy_applications').select('*').eq('id', applicationId);
+      let query = supabase.from('tenancy_applications').select('*');
+      
+      if (applicationId) {
+        query = query.eq('id', applicationId);
+      }
+      
       const { data, error } = await query;
 
       if (error) {
@@ -84,9 +88,10 @@ const ApplicantsTab = () => {
       // Extract applicants from the response
       const fetchedApplicants: Applicant[] = [];
       if (data) {
-        data.forEach((item: TenancyApplicationData) => {
-          if (Array.isArray(item.applicants)) {
-            item.applicants.forEach(applicant => {
+        data.forEach((item) => {
+          const applicantsData = item.applicants as any[];
+          if (Array.isArray(applicantsData)) {
+            applicantsData.forEach(applicant => {
               fetchedApplicants.push({
                 ...applicant,
                 applicationId: item.id,
@@ -248,19 +253,21 @@ const ApplicantsTab = () => {
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden">
-      {/* Table Header with Controls */}
-      <div className="bg-gray-50 border-b border-gray-200 p-4">
+    <div className="space-y-4">
+      {/* Search and Filter Controls - Always visible */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           {/* Left side - Selection and title */}
           <div className="flex items-center gap-4">
             <div className="flex items-center space-x-3">
-              <Checkbox
-                ref={checkboxRef}
-                checked={isAllSelected}
-                onCheckedChange={handleSelectAll}
-                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
-              />
+              {filteredApplicants.length > 0 && (
+                <Checkbox
+                  ref={checkboxRef}
+                  checked={isAllSelected}
+                  onCheckedChange={handleSelectAll}
+                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
+                />
+              )}
               <span className="text-sm font-semibold text-gray-900">
                 Applicants ({filteredApplicants.length})
               </span>
@@ -280,7 +287,7 @@ const ApplicantsTab = () => {
                 placeholder="Search applicants..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input w-64 h-9 text-sm"
+                className="search-input w-64 h-9 text-sm pl-10"
               />
             </div>
             
@@ -354,100 +361,116 @@ const ApplicantsTab = () => {
         </div>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead className="w-12">
-              <span className="sr-only">Select</span>
-            </TableHead>
-            <TableHead className="font-semibold">Name</TableHead>
-            <TableHead className="font-semibold">Contact</TableHead>
-            <TableHead className="font-semibold">Date of Birth</TableHead>
-            <TableHead className="font-semibold">Submitted</TableHead>
-            <TableHead className="font-semibold">Site</TableHead>
-            <TableHead className="font-semibold">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredApplicants.map((applicant) => (
-            <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50">
-              <TableCell>
-                <Checkbox
-                  checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
-                  onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
-                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                />
-              </TableCell>
-              
-              <TableCell>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {applicant.firstName} {applicant.lastName}
-                  </p>
-                </div>
-              </TableCell>
-              
-              <TableCell>
-                <div>
-                  <p className="text-sm text-gray-600">
-                    {applicant.email}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {applicant.phone}
-                  </p>
-                </div>
-              </TableCell>
-              
-              <TableCell>
-                <p className="text-sm text-gray-900">
-                  {applicant.dateOfBirth}
-                </p>
-              </TableCell>
-              
-              <TableCell>
-                <p className="text-sm text-gray-900">
-                  {formatTimeAgo(applicant.createdAt)}
-                </p>
-              </TableCell>
-              
-              <TableCell>
-                {getSiteBadge(applicant)}
-              </TableCell>
-              
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleViewApplicant(applicant)}
-                    className="h-8"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
+      {/* Table */}
+      {filteredApplicants.length > 0 ? (
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-50">
+                <TableHead className="w-12">
+                  <span className="sr-only">Select</span>
+                </TableHead>
+                <TableHead className="font-semibold">Name</TableHead>
+                <TableHead className="font-semibold">Contact</TableHead>
+                <TableHead className="font-semibold">Date of Birth</TableHead>
+                <TableHead className="font-semibold">Submitted</TableHead>
+                <TableHead className="font-semibold">Site</TableHead>
+                <TableHead className="font-semibold">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredApplicants.map((applicant) => (
+                <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50">
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
+                      onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
+                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                    />
+                  </TableCell>
                   
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
+                  <TableCell>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {applicant.firstName} {applicant.lastName}
+                      </p>
+                    </div>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        {applicant.email}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {applicant.phone}
+                      </p>
+                    </div>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <p className="text-sm text-gray-900">
+                      {applicant.dateOfBirth}
+                    </p>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <p className="text-sm text-gray-900">
+                      {formatTimeAgo(applicant.createdAt)}
+                    </p>
+                  </TableCell>
+                  
+                  <TableCell>
+                    {getSiteBadge(applicant)}
+                  </TableCell>
+                  
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewApplicant(applicant)}
+                        className="h-8"
+                      >
+                        <Eye className="h-4 w-4" />
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
-                      <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleGenerateApplicantPdf(applicant)}>
-                        <Download className="h-4 w-4 mr-2" />
-                        Generate PDF
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                          <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleGenerateApplicantPdf(applicant)}>
+                            <Download className="h-4 w-4 mr-2" />
+                            Generate PDF
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="text-center py-16 bg-white border rounded-lg">
+          <div className="text-gray-400 mb-4">
+            <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 mb-4 text-lg">
+            {searchTerm || dateFilter !== "all" ? "No applicants found matching your search." : "No applicants found."}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

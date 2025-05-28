@@ -1,3 +1,4 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Eye, Mail, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
@@ -85,6 +86,10 @@ const ApplicationsTable = ({
     navigate(`/applicants?application=${applicationId}`);
   };
 
+  const handlePreviewApplication = (applicationId: string) => {
+    navigate(`/application-preview/${applicationId}`);
+  };
+
   const handleGeneratePdf = async (application: TenancyApplication) => {
     const pdfData = {
       applicants: application.applicants,
@@ -111,19 +116,21 @@ const ApplicationsTable = ({
   };
 
   return (
-    <div className="border rounded-lg overflow-hidden">
-      {/* Table Header with Controls */}
-      <div className="bg-gray-50 border-b border-gray-200 p-4">
+    <div className="space-y-4">
+      {/* Search and Filter Controls - Always visible */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           {/* Left side - Selection and title */}
           <div className="flex items-center gap-4">
             <div className="flex items-center space-x-3">
-              <Checkbox
-                ref={checkboxRef}
-                checked={isAllSelected}
-                onCheckedChange={onSelectAll}
-                className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
-              />
+              {applications.length > 0 && (
+                <Checkbox
+                  ref={checkboxRef}
+                  checked={isAllSelected}
+                  onCheckedChange={onSelectAll}
+                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
+                />
+              )}
               <span className="text-sm font-semibold text-gray-900">
                 Applications ({applications.length})
               </span>
@@ -143,7 +150,7 @@ const ApplicationsTable = ({
                 placeholder="Search applications..."
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="search-input w-64 h-9 text-sm"
+                className="search-input w-64 h-9 text-sm pl-10"
               />
             </div>
             
@@ -217,103 +224,118 @@ const ApplicationsTable = ({
         </div>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead className="w-12">
-              <span className="sr-only">Select</span>
-            </TableHead>
-            <TableHead className="font-semibold">Primary Applicant</TableHead>
-            <TableHead className="font-semibold">Property</TableHead>
-            <TableHead className="font-semibold">Submitted</TableHead>
-            <TableHead className="font-semibold">Site</TableHead>
-            <TableHead className="font-semibold">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {applications.map((application) => (
-            <TableRow key={application.id} className="hover:bg-gray-50">
-              <TableCell>
-                <Checkbox
-                  checked={selectedApplications.includes(application.id)}
-                  onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
-                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                />
-              </TableCell>
-              
-              <TableCell>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {application.applicants?.[0]?.firstName} {application.applicants?.[0]?.lastName}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {application.applicants?.[0]?.email}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {application.applicants?.[0]?.phone}
-                  </p>
-                </div>
-              </TableCell>
-              
-              <TableCell>
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {application.property_preferences?.streetAddress || 'N/A'}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    {application.property_preferences?.postcode}
-                  </p>
-                  <p className="text-sm text-gray-600">
-                    £{application.property_preferences?.maxRent}/month
-                  </p>
-                </div>
-              </TableCell>
-              
-              <TableCell>
-                <p className="text-sm text-gray-900">
-                  {formatTimeAgo(application.submitted_at)}
-                </p>
-              </TableCell>
-              
-              <TableCell>
-                {getSiteBadge(application)}
-              </TableCell>
-              
-              <TableCell>
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleGeneratePdf(application)}
-                    disabled={isGenerating}
-                    className="h-8"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
+      {/* Table */}
+      {applications.length > 0 ? (
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow className="bg-gray-50">
+                <TableHead className="w-12">
+                  <span className="sr-only">Select</span>
+                </TableHead>
+                <TableHead className="font-semibold">Primary Applicant</TableHead>
+                <TableHead className="font-semibold">Property</TableHead>
+                <TableHead className="font-semibold">Submitted</TableHead>
+                <TableHead className="font-semibold">Site</TableHead>
+                <TableHead className="font-semibold">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {applications.map((application) => (
+                <TableRow key={application.id} className="hover:bg-gray-50">
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedApplications.includes(application.id)}
+                      onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
+                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                    />
+                  </TableCell>
                   
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
+                  <TableCell>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {application.applicants?.[0]?.firstName} {application.applicants?.[0]?.lastName}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {application.applicants?.[0]?.email}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {application.applicants?.[0]?.phone}
+                      </p>
+                    </div>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <div>
+                      <p className="font-medium text-gray-900">
+                        {application.property_preferences?.streetAddress || 'N/A'}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        {application.property_preferences?.postcode}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        £{application.property_preferences?.maxRent}/month
+                      </p>
+                    </div>
+                  </TableCell>
+                  
+                  <TableCell>
+                    <p className="text-sm text-gray-900">
+                      {formatTimeAgo(application.submitted_at)}
+                    </p>
+                  </TableCell>
+                  
+                  <TableCell>
+                    {getSiteBadge(application)}
+                  </TableCell>
+                  
+                  <TableCell>
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePreviewApplication(application.id)}
+                        className="h-8"
+                      >
+                        <Eye className="h-4 w-4" />
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
-                      <DropdownMenuItem onClick={() => onViewDetails(application)}>
-                        <Eye className="h-4 w-4 mr-2" />
-                        View Details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
-                        <Download className="h-4 w-4 mr-2" />
-                        Generate PDF
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                      
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                          <DropdownMenuItem onClick={() => onViewDetails(application)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
+                            <Download className="h-4 w-4 mr-2" />
+                            Generate PDF
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <div className="text-center py-16 bg-white border rounded-lg">
+          <div className="text-gray-400 mb-4">
+            <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <p className="text-gray-500 mb-4 text-lg">
+            {searchTerm || dateFilter !== "all" ? "No applications found matching your search." : "No applications found."}
+          </p>
+        </div>
+      )}
     </div>
   );
 };

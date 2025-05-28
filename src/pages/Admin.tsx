@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
-import { Download, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import AdminStats from "@/components/admin/AdminStats";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
@@ -243,10 +243,6 @@ const Admin = () => {
                   <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
                 </Button>
               </div>
-              <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
-                <Download className="h-4 w-4 mr-2" />
-                Export All
-              </Button>
             </div>
           </div>
         </div>
