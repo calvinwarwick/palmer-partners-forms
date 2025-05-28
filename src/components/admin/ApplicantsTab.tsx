@@ -1,60 +1,90 @@
 
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { supabase } from "@/integrations/supabase/client";
-import { Applicant, PropertyPreferences } from "@/domain/types/Applicant";
 import { toast } from "sonner";
-import { User, FileText, Shield, Building, Eye, Mail, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import GuarantorForm from "@/components/applicants/GuarantorForm";
-import { format } from "date-fns";
+import { Eye, Mail, Download, Search, Calendar as CalendarIcon, Trash2, User } from "lucide-react";
+import { format, formatDistanceToNow } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
-interface TenancyApplication {
+interface Applicant {
   id: string;
-  applicants: Applicant[];
-  property_preferences: PropertyPreferences;
-  submitted_at: string;
-}
-
-interface ApplicantWithApplication extends Applicant {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
   applicationId: string;
-  submittedAt: string;
-  propertyAddress?: string;
-  propertyPostcode?: string;
-  isPrimary: boolean;
+  submitted_at: string;
+  property_preferences?: {
+    streetAddress?: string;
+    postcode?: string;
+  };
 }
 
 const ApplicantsTab = () => {
-  const navigate = useNavigate();
-  
-  const [applicants, setApplicants] = useState<ApplicantWithApplication[]>([]);
-  const [filteredApplicants, setFilteredApplicants] = useState<ApplicantWithApplication[]>([]);
+  const [applicants, setApplicants] = useState<Applicant[]>([]);
+  const [filteredApplicants, setFilteredApplicants] = useState<Applicant[]>([]);
   const [selectedApplicants, setSelectedApplicants] = useState<string[]>([]);
-  const [selectedApplicant, setSelectedApplicant] = useState<Applicant | null>(null);
-  const [showGuarantorForm, setShowGuarantorForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   useEffect(() => {
-    fetchAllApplicants();
+    fetchApplicants();
   }, []);
 
   useEffect(() => {
     filterApplicants();
   }, [applicants, searchTerm, dateFilter]);
+
+  const fetchApplicants = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('tenancy_applications')
+        .select('*')
+        .order('submitted_at', { ascending: false });
+
+      if (error) throw error;
+
+      // Flatten applicants from all applications
+      const allApplicants: Applicant[] = [];
+      data.forEach(app => {
+        if (app.applicants && Array.isArray(app.applicants)) {
+          app.applicants.forEach((applicant: any, index: number) => {
+            allApplicants.push({
+              id: `${app.id}-${index}`,
+              firstName: applicant.firstName || '',
+              lastName: applicant.lastName || '',
+              email: applicant.email || '',
+              phone: applicant.phone || '',
+              dateOfBirth: applicant.dateOfBirth || '',
+              applicationId: app.id,
+              submitted_at: app.submitted_at,
+              property_preferences: app.property_preferences
+            });
+          });
+        }
+      });
+
+      setApplicants(allApplicants);
+    } catch (error) {
+      console.error('Error fetching applicants:', error);
+      toast.error('Failed to fetch applicants');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filterApplicants = () => {
     let filtered = applicants;
@@ -65,8 +95,7 @@ const ApplicantsTab = () => {
         applicant.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         applicant.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         applicant.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        applicant.propertyAddress?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        applicant.propertyPostcode?.toLowerCase().includes(searchTerm.toLowerCase())
+        applicant.phone?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -74,7 +103,7 @@ const ApplicantsTab = () => {
     if (dateFilter !== "all") {
       const now = new Date();
       filtered = filtered.filter(applicant => {
-        const submitDate = new Date(applicant.submittedAt);
+        const submitDate = new Date(applicant.submitted_at);
         switch (dateFilter) {
           case "today":
             return submitDate.toDateString() === now.toDateString();
@@ -96,145 +125,61 @@ const ApplicantsTab = () => {
     setFilteredApplicants(filtered);
   };
 
-  const fetchAllApplicants = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      console.log('Fetching all applications and applicants');
-      
-      const { data, error: fetchError } = await supabase
-        .from('tenancy_applications')
-        .select('*')
-        .order('submitted_at', { ascending: false });
-
-      if (fetchError) {
-        console.error('Supabase error:', fetchError);
-        throw fetchError;
-      }
-
-      if (!data || data.length === 0) {
-        setApplicants([]);
-        setFilteredApplicants([]);
-        return;
-      }
-
-      console.log('Applications data:', data);
-
-      // Flatten all applicants from all applications
-      const allApplicants: ApplicantWithApplication[] = [];
-      
-      data.forEach((application) => {
-        const typedApplication = {
-          ...application,
-          applicants: application.applicants as unknown as Applicant[],
-          property_preferences: application.property_preferences as unknown as PropertyPreferences
-        };
-
-        typedApplication.applicants.forEach((applicant, index) => {
-          allApplicants.push({
-            ...applicant,
-            applicationId: application.id,
-            submittedAt: application.submitted_at,
-            propertyAddress: typedApplication.property_preferences?.streetAddress,
-            propertyPostcode: typedApplication.property_preferences?.postcode,
-            isPrimary: index === 0
-          });
-        });
-      });
-
-      setApplicants(allApplicants);
-      setFilteredApplicants(allApplicants);
-    } catch (error) {
-      console.error('Error fetching applications:', error);
-      setError('Failed to fetch applicant details');
-      toast.error('Failed to fetch applicant details');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSelectApplicant = (applicantKey: string, checked: boolean) => {
+  const handleSelectApplicant = (id: string, checked: boolean) => {
     if (checked) {
-      setSelectedApplicants(prev => [...prev, applicantKey]);
+      setSelectedApplicants(prev => [...prev, id]);
     } else {
-      setSelectedApplicants(prev => prev.filter(key => key !== applicantKey));
+      setSelectedApplicants(prev => prev.filter(appId => appId !== id));
     }
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedApplicants(filteredApplicants.map((_, index) => `${_.applicationId}-${index}`));
+      setSelectedApplicants(filteredApplicants.map(app => app.id));
     } else {
       setSelectedApplicants([]);
     }
   };
 
-  const handleAddGuarantor = (applicant: ApplicantWithApplication) => {
-    setSelectedApplicant(applicant);
-    setShowGuarantorForm(true);
+  const handleViewPreview = (applicant: Applicant) => {
+    toast.success(`Viewing preview for ${applicant.firstName} ${applicant.lastName}`);
   };
 
-  const handleGuarantorSaved = () => {
-    setShowGuarantorForm(false);
-    setSelectedApplicant(null);
-    toast.success('Guarantor information saved successfully');
+  const handleBulkExport = () => {
+    const selectedData = applicants.filter(app => selectedApplicants.includes(app.id));
+    toast.success('Applicants exported successfully');
   };
 
-  const handleViewApplicant = (applicant: ApplicantWithApplication) => {
-    // Show a preview modal or navigate to a detailed view
-    console.log('Viewing applicant:', applicant);
-    toast.info('Applicant preview feature coming soon');
+  const formatTimeAgo = (dateString: string) => {
+    return formatDistanceToNow(new Date(dateString), { addSuffix: true });
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const getSiteBadge = (applicant: Applicant) => {
+    const postcode = applicant.property_preferences?.postcode?.toLowerCase() || '';
+    
+    if (postcode.startsWith('co') || postcode.includes('colchester')) {
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Colchester</Badge>;
+    } else if (postcode.startsWith('ip') || postcode.includes('ipswich')) {
+      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Ipswich</Badge>;
+    } else {
+      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Other</Badge>;
+    }
+  };
+
+  const handleDateRangeSelect = (range: DateRange | undefined) => {
+    setDateRange(range);
+    if (range?.from && range?.to) {
+      setDateFilter('custom');
+      setIsDatePickerOpen(false);
+    }
   };
 
   const isAllSelected = selectedApplicants.length === filteredApplicants.length && filteredApplicants.length > 0;
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-16">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="text-center py-16 bg-white rounded-lg shadow-sm">
-        <div className="text-gray-400 mb-4">
-          <FileText className="mx-auto h-16 w-16" />
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Error Loading Applicants
-        </h1>
-        <p className="text-gray-600 mb-6">
-          {error}
-        </p>
-      </div>
-    );
-  }
-
-  if (filteredApplicants.length === 0) {
-    return (
-      <div className="text-center py-16 bg-white rounded-lg shadow-sm">
-        <div className="text-gray-400 mb-4">
-          <User className="mx-auto h-16 w-16" />
-        </div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          No Applicants Found
-        </h1>
-        <p className="text-gray-600 mb-6">
-          There are no applicants matching your current filters.
-        </p>
+      <div className="flex items-center justify-center min-h-96">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
       </div>
     );
   }
@@ -286,10 +231,10 @@ const ApplicantsTab = () => {
                 <SelectItem value="this_week">This week</SelectItem>
                 <SelectItem value="this_month">This month</SelectItem>
                 <SelectItem value="last_month">Last month</SelectItem>
-                <div className="px-2 py-1">
-                  <Popover>
+                <SelectItem value="custom">
+                  <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                     <PopoverTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start text-sm font-normal">
+                      <Button variant="ghost" className="w-full justify-start text-sm font-normal p-0 h-auto">
                         Custom range
                       </Button>
                     </PopoverTrigger>
@@ -299,7 +244,7 @@ const ApplicantsTab = () => {
                         mode="range"
                         defaultMonth={dateRange?.from}
                         selected={dateRange}
-                        onSelect={setDateRange}
+                        onSelect={handleDateRangeSelect}
                         numberOfMonths={2}
                         className="pointer-events-auto"
                       />
@@ -314,7 +259,7 @@ const ApplicantsTab = () => {
                       </div>
                     </PopoverContent>
                   </Popover>
-                </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -324,6 +269,7 @@ const ApplicantsTab = () => {
             <Button
               variant="outline"
               size="sm"
+              onClick={handleBulkExport}
               disabled={selectedApplicants.length === 0}
               className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
             >
@@ -360,140 +306,82 @@ const ApplicantsTab = () => {
             <TableHead className="w-12">
               <span className="sr-only">Select</span>
             </TableHead>
-            <TableHead className="font-semibold">Applicant</TableHead>
-            <TableHead className="font-semibold">Property</TableHead>
-            <TableHead className="font-semibold">Employment</TableHead>
-            <TableHead className="font-semibold">Income</TableHead>
-            <TableHead className="font-semibold">Status</TableHead>
+            <TableHead className="font-semibold">Name</TableHead>
+            <TableHead className="font-semibold">Contact</TableHead>
+            <TableHead className="font-semibold">Date of Birth</TableHead>
+            <TableHead className="font-semibold">Submitted</TableHead>
+            <TableHead className="font-semibold">Site</TableHead>
             <TableHead className="font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredApplicants.map((applicant, index) => {
-            const applicantKey = `${applicant.applicationId}-${index}`;
-            return (
-              <TableRow key={applicantKey} className="hover:bg-gray-50">
-                <TableCell>
-                  <Checkbox
-                    checked={selectedApplicants.includes(applicantKey)}
-                    onCheckedChange={(checked) => handleSelectApplicant(applicantKey, !!checked)}
-                    className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                  />
-                </TableCell>
-                
-                <TableCell>
-                  <div>
-                    <div className="flex items-center">
-                      <p className="font-medium text-gray-900">
-                        {applicant.firstName} {applicant.lastName}
-                      </p>
-                      {applicant.isPrimary && (
-                        <Badge variant="outline" className="ml-2 text-xs border-orange-200 text-orange-700 bg-orange-50">
-                          Primary
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="text-sm text-gray-600">{applicant.email}</p>
-                    <p className="text-sm text-gray-600">{applicant.phone}</p>
-                  </div>
-                </TableCell>
-                
-                <TableCell>
+          {filteredApplicants.map((applicant) => (
+            <TableRow key={applicant.id} className="hover:bg-gray-50">
+              <TableCell>
+                <Checkbox
+                  checked={selectedApplicants.includes(applicant.id)}
+                  onCheckedChange={(checked) => handleSelectApplicant(applicant.id, !!checked)}
+                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                />
+              </TableCell>
+              
+              <TableCell>
+                <div className="flex items-center space-x-2">
+                  <User className="h-4 w-4 text-gray-400" />
                   <div>
                     <p className="font-medium text-gray-900">
-                      {applicant.propertyAddress || 'Not provided'}
-                    </p>
-                    <p className="text-sm text-gray-600">{applicant.propertyPostcode}</p>
-                    <p className="text-sm text-gray-600">
-                      {formatDate(applicant.submittedAt)}
+                      {applicant.firstName} {applicant.lastName}
                     </p>
                   </div>
-                </TableCell>
-                
-                <TableCell>
-                  <div>
-                    <p className="font-medium text-gray-900">{applicant.employment}</p>
-                    <p className="text-sm text-gray-600">{applicant.companyName}</p>
-                    <p className="text-sm text-gray-600">{applicant.jobTitle}</p>
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  <p className="font-medium text-gray-900">£{applicant.annualIncome}</p>
-                  <p className="text-sm text-gray-600">{applicant.lengthOfService}</p>
-                </TableCell>
-                
-                <TableCell>
-                  <div className="space-y-1">
-                    <p className="text-sm text-gray-900">{applicant.currentPropertyStatus}</p>
-                    {applicant.guarantorRequired === 'yes' && (
-                      <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
-                        <Shield className="h-3 w-3 mr-1" />
-                        Guarantor Required
-                      </Badge>
-                    )}
-                  </div>
-                </TableCell>
-                
-                <TableCell>
-                  <div className="flex items-center space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleViewApplicant(applicant)}
-                      className="h-8"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    
-                    {applicant.guarantorRequired === 'yes' && (
-                      <Button
-                        size="sm"
-                        onClick={() => handleAddGuarantor(applicant)}
-                        className="h-8 bg-orange-500 hover:bg-orange-600"
-                      >
-                        <Shield className="h-4 w-4" />
-                      </Button>
-                    )}
-                    
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
-                        <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Mail className="h-4 w-4 mr-2" />
-                          Send Email
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Download className="h-4 w-4 mr-2" />
-                          Generate Report
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
+                </div>
+              </TableCell>
+              
+              <TableCell>
+                <div>
+                  <p className="text-sm text-gray-900">{applicant.email}</p>
+                  <p className="text-sm text-gray-600">{applicant.phone}</p>
+                </div>
+              </TableCell>
+              
+              <TableCell>
+                <p className="text-sm text-gray-900">
+                  {applicant.dateOfBirth || 'N/A'}
+                </p>
+              </TableCell>
+              
+              <TableCell>
+                <p className="text-sm text-gray-900">
+                  {formatTimeAgo(applicant.submitted_at)}
+                </p>
+              </TableCell>
+              
+              <TableCell>
+                {getSiteBadge(applicant)}
+              </TableCell>
+              
+              <TableCell>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleViewPreview(applicant)}
+                  className="h-8"
+                >
+                  <Eye className="h-4 w-4 mr-1" />
+                  Preview
+                </Button>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
 
-      {/* Guarantor Form Modal */}
-      {showGuarantorForm && selectedApplicant && (
-        <GuarantorForm
-          applicant={selectedApplicant}
-          applicationId={(selectedApplicant as ApplicantWithApplication).applicationId}
-          isOpen={showGuarantorForm}
-          onClose={() => setShowGuarantorForm(false)}
-          onSave={handleGuarantorSaved}
-        />
+      {filteredApplicants.length === 0 && (
+        <div className="text-center py-16 bg-white">
+          <div className="text-gray-400 mb-4">
+            <User className="mx-auto h-16 w-16" />
+          </div>
+          <p className="text-gray-500 mb-4 text-lg">No applicants found.</p>
+        </div>
       )}
     </div>
   );

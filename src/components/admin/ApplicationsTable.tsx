@@ -1,3 +1,4 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,13 +7,12 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Eye, Mail, Download, MoreHorizontal, User, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+import { Eye, Mail, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { useState, useRef, useEffect } from "react";
-import { format } from "date-fns";
+import { format, formatDistanceToNow } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
 interface TenancyApplication {
@@ -53,6 +53,7 @@ const ApplicationsTable = ({
   const navigate = useNavigate();
   const { generatePdf, isGenerating } = usePdfGeneration();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const checkboxRef = useRef<HTMLButtonElement>(null);
   
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
@@ -64,22 +65,25 @@ const ApplicationsTable = ({
     }
   }, [isIndeterminate]);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-GB', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  const formatTimeAgo = (dateString: string) => {
+    return formatDistanceToNow(new Date(dateString), { addSuffix: true });
+  };
+
+  const getSiteBadge = (application: TenancyApplication) => {
+    const postcode = application.property_preferences?.postcode?.toLowerCase() || '';
+    
+    // Determine site based on postcode
+    if (postcode.startsWith('co') || postcode.includes('colchester')) {
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Colchester</Badge>;
+    } else if (postcode.startsWith('ip') || postcode.includes('ipswich')) {
+      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Ipswich</Badge>;
+    } else {
+      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Other</Badge>;
+    }
   };
 
   const handleViewApplicants = (applicationId: string) => {
     navigate(`/applicants?application=${applicationId}`);
-  };
-
-  const handleViewApplicant = (applicationId: string, applicantId: string) => {
-    navigate(`/applicants?application=${applicationId}&applicant=${applicantId}`);
   };
 
   const handleGeneratePdf = async (application: TenancyApplication) => {
@@ -96,6 +100,15 @@ const ApplicationsTable = ({
     const filename = `${primaryApplicant?.firstName || 'Unknown'}_${primaryApplicant?.lastName || 'Applicant'}_Application.pdf`;
     
     await generatePdf(pdfData, filename);
+  };
+
+  const handleDateRangeSelect = (range: DateRange | undefined) => {
+    setDateRange(range);
+    if (range?.from && range?.to) {
+      // Apply custom date range filter
+      onDateFilterChange('custom');
+      setIsDatePickerOpen(false);
+    }
   };
 
   return (
@@ -146,10 +159,10 @@ const ApplicationsTable = ({
                 <SelectItem value="this_week">This week</SelectItem>
                 <SelectItem value="this_month">This month</SelectItem>
                 <SelectItem value="last_month">Last month</SelectItem>
-                <div className="px-2 py-1">
-                  <Popover>
+                <SelectItem value="custom">
+                  <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                     <PopoverTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start text-sm font-normal">
+                      <Button variant="ghost" className="w-full justify-start text-sm font-normal p-0 h-auto">
                         Custom range
                       </Button>
                     </PopoverTrigger>
@@ -159,7 +172,7 @@ const ApplicationsTable = ({
                         mode="range"
                         defaultMonth={dateRange?.from}
                         selected={dateRange}
-                        onSelect={setDateRange}
+                        onSelect={handleDateRangeSelect}
                         numberOfMonths={2}
                         className="pointer-events-auto"
                       />
@@ -174,7 +187,7 @@ const ApplicationsTable = ({
                       </div>
                     </PopoverContent>
                   </Popover>
-                </div>
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -224,7 +237,7 @@ const ApplicationsTable = ({
             <TableHead className="font-semibold">Primary Applicant</TableHead>
             <TableHead className="font-semibold">Property</TableHead>
             <TableHead className="font-semibold">Submitted</TableHead>
-            <TableHead className="font-semibold">Applicants</TableHead>
+            <TableHead className="font-semibold">Site</TableHead>
             <TableHead className="font-semibold">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -269,50 +282,12 @@ const ApplicationsTable = ({
               
               <TableCell>
                 <p className="text-sm text-gray-900">
-                  {formatDate(application.submitted_at)}
+                  {formatTimeAgo(application.submitted_at)}
                 </p>
               </TableCell>
               
               <TableCell>
-                <div className="flex items-center space-x-2">
-                  <HoverCard>
-                    <HoverCardTrigger asChild>
-                      <Badge variant="outline" className="text-xs cursor-pointer hover:bg-orange-50">
-                        {application.applicants?.length || 0} {application.applicants?.length === 1 ? 'applicant' : 'applicants'}
-                      </Badge>
-                    </HoverCardTrigger>
-                    <HoverCardContent className="w-80 bg-white shadow-lg border z-50">
-                      <div className="space-y-2">
-                        <h4 className="font-semibold text-sm">Applicants</h4>
-                        {application.applicants?.map((applicant, index) => (
-                          <div 
-                            key={index}
-                            className="flex items-center justify-between p-2 rounded hover:bg-gray-50 cursor-pointer"
-                            onClick={() => handleViewApplicant(application.id, applicant.id)}
-                          >
-                            <div className="flex items-center space-x-2">
-                              <User className="h-4 w-4 text-gray-400" />
-                              <div>
-                                <p className="text-sm font-medium">{applicant.firstName} {applicant.lastName}</p>
-                                <p className="text-xs text-gray-500">{applicant.email}</p>
-                              </div>
-                            </div>
-                            <span className="text-xs text-orange-500">View →</span>
-                          </div>
-                        ))}
-                      </div>
-                    </HoverCardContent>
-                  </HoverCard>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleViewApplicants(application.id)}
-                    className="h-7 px-2"
-                  >
-                    <User className="h-3 w-3 mr-1" />
-                    View
-                  </Button>
-                </div>
+                {getSiteBadge(application)}
               </TableCell>
               
               <TableCell>
