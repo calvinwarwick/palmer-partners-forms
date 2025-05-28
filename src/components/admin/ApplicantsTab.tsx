@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,8 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { format, formatDistanceToNow } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "@/hooks/use-toast";
 import type { DateRange } from "react-day-picker";
 
 interface Applicant {
