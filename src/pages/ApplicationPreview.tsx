@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,7 @@ import { ArrowLeft, Download } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { toast } from "sonner";
+import { format } from "date-fns";
 
 interface TenancyApplication {
   id: string;
@@ -21,11 +23,13 @@ const ApplicationPreview = () => {
   const navigate = useNavigate();
   const [application, setApplication] = useState<TenancyApplication | null>(null);
   const [loading, setLoading] = useState(true);
+  const [activityLogs, setActivityLogs] = useState<any[]>([]);
   const { generatePdf, isGenerating } = usePdfGeneration();
 
   useEffect(() => {
     if (id) {
       fetchApplication();
+      fetchActivityLogs();
     }
   }, [id]);
 
@@ -39,7 +43,6 @@ const ApplicationPreview = () => {
 
       if (error) throw error;
       
-      // Type cast the Supabase Json types to our expected types
       const typedApplication: TenancyApplication = {
         id: data.id,
         applicants: data.applicants as any[],
@@ -59,6 +62,22 @@ const ApplicationPreview = () => {
     }
   };
 
+  const fetchActivityLogs = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .eq('application_id', id)
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setActivityLogs(data);
+      }
+    } catch (error) {
+      console.error('Error fetching activity logs:', error);
+    }
+  };
+
   const handleGeneratePdf = async () => {
     if (!application) return;
 
@@ -68,7 +87,8 @@ const ApplicationPreview = () => {
       additionalDetails: application.additional_details,
       dataSharing: application.data_sharing,
       signature: application.signature,
-      submittedAt: application.submitted_at
+      submittedAt: application.submitted_at,
+      applicationId: application.id
     };
 
     const primaryApplicant = application.applicants[0];
@@ -99,6 +119,25 @@ const ApplicationPreview = () => {
     );
   }
 
+  const TableRow = ({ label, value, isOdd = false }: { label: string; value: string; isOdd?: boolean }) => (
+    <div className={`grid grid-cols-3 gap-4 py-2 px-4 text-sm ${isOdd ? 'bg-gray-50' : 'bg-white'}`}>
+      <div className="font-semibold text-gray-800">{label}</div>
+      <div className="col-span-2 text-gray-900">{value || '-'}</div>
+    </div>
+  );
+
+  const SectionHeader = ({ title }: { title: string }) => (
+    <div className="bg-gray-800 text-white p-3 font-semibold">
+      {title}
+    </div>
+  );
+
+  const SubSectionHeader = ({ title }: { title: string }) => (
+    <div className="bg-gray-200 text-gray-800 p-2 font-medium text-sm">
+      {title}
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto p-8">
@@ -122,149 +161,110 @@ const ApplicationPreview = () => {
           </Button>
         </div>
 
-        {/* Application Preview - Styled like PDF */}
-        <div className="bg-white rounded-lg shadow-lg p-8 space-y-8">
-          {/* Header */}
-          <div className="bg-gray-800 text-white p-4 -m-8 mb-8 rounded-t-lg">
-            <h1 className="text-xl font-bold">Palmer & Partners</h1>
+        {/* Application Preview */}
+        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
+          {/* Palmer & Partners Header */}
+          <div className="bg-gray-800 text-white p-4">
+            <h1 className="text-xl font-normal">Palmer & Partners</h1>
           </div>
-
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Tenancy Application</h2>
+          
+          {/* Orange line */}
+          <div className="h-0.5 bg-orange-500"></div>
+          
+          {/* Main Title */}
+          <div className="text-center py-6">
+            <h2 className="text-2xl font-bold text-gray-900">Tenancy Application</h2>
           </div>
 
           {/* Property Details */}
-          <div className="space-y-4">
-            <div className="bg-gray-800 text-white p-3 -mx-8">
-              <h3 className="font-semibold">Property Details</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              {[
-                ['Street Address', application.property_preferences?.streetAddress || 'Not specified'],
-                ['Postcode', application.property_preferences?.postcode || 'Not specified'],
-                ['Rental Amount', application.property_preferences?.maxRent ? `£${application.property_preferences.maxRent}` : 'Not specified'],
-                ['Preferred Move-in Date', application.property_preferences?.moveInDate || 'Not specified'],
-                ['Latest Move-in Date', application.property_preferences?.latestMoveInDate || 'Not specified'],
-                ['Initial Tenancy Term', application.property_preferences?.initialTenancyTerm || 'Not specified'],
-                ['Has Pets', application.additional_details?.pets || 'No'],
-                ['Under 18s', application.additional_details?.under18Count || '0'],
-                ['Under 18s Details', application.additional_details?.childrenAges || '-'],
-                ['Conditions of Offer', application.additional_details?.conditionsOfOffer || '-'],
-                ['Deposit Type', application.additional_details?.depositType || 'Not specified']
-              ].map(([label, value], index) => (
-                <div key={index} className={`p-2 ${index % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                  <div className="font-semibold text-gray-700">{label}</div>
-                  <div className="text-gray-900">{value}</div>
-                </div>
-              ))}
-            </div>
+          <div className="border-t">
+            <SectionHeader title="Property Details" />
+            {[
+              ['Street Address', application.property_preferences?.streetAddress],
+              ['Postcode', application.property_preferences?.postcode],
+              ['Rental Amount', application.property_preferences?.maxRent ? `£${application.property_preferences.maxRent}` : ''],
+              ['Preferred Move-in Date', application.property_preferences?.moveInDate],
+              ['Latest Move-in Date', application.property_preferences?.latestMoveInDate],
+              ['Initial Tenancy Term', application.property_preferences?.initialTenancyTerm],
+              ['Has Pets', application.additional_details?.pets === 'yes' ? 'Yes' : 'No'],
+              ['Under 18s', application.additional_details?.under18Count || '0'],
+              ['Under 18s Details', application.additional_details?.childrenAges],
+              ['Conditions of Offer', application.additional_details?.conditionsOfOffer],
+              ['Deposit Type', application.additional_details?.depositType]
+            ].map(([label, value], index) => (
+              <TableRow key={index} label={label} value={value || ''} isOdd={index % 2 === 1} />
+            ))}
           </div>
 
           {/* Applicants */}
           {application.applicants.map((applicant, index) => (
-            <div key={index} className="space-y-4">
-              <div className="bg-gray-800 text-white p-3 -mx-8">
-                <h3 className="font-semibold">Applicant #{index + 1}</h3>
-              </div>
+            <div key={index} className="border-t">
+              <SectionHeader title={`Applicant - #${index + 1}`} />
               
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                {[
-                  ['First Name', applicant.firstName || 'Not specified'],
-                  ['Last Name', applicant.lastName || 'Not specified'],
-                  ['Date of Birth', applicant.dateOfBirth || 'Not specified'],
-                  ['Email Address', applicant.email || 'Not specified'],
-                  ['Mobile Number', applicant.phone || 'Not specified']
-                ].map(([label, value], rowIndex) => (
-                  <div key={rowIndex} className={`p-2 ${rowIndex % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                    <div className="font-semibold text-gray-700">{label}</div>
-                    <div className="text-gray-900">{value}</div>
-                  </div>
-                ))}
-              </div>
+              {/* Personal Details */}
+              {[
+                ['First Name', applicant.firstName],
+                ['Last Name', applicant.lastName],
+                ['Date of Birth', applicant.dateOfBirth],
+                ['Email Address', applicant.email],
+                ['Mobile Number', applicant.phone]
+              ].map(([label, value], rowIndex) => (
+                <TableRow key={rowIndex} label={label} value={value || ''} isOdd={rowIndex % 2 === 1} />
+              ))}
 
               {/* Employment Details */}
-              <div className="bg-gray-200 p-2 -mx-8">
-                <h4 className="font-semibold text-gray-800">Employment Details</h4>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                {[
-                  ['Contract Type', applicant.employment || 'Not specified'],
-                  ['Company Name', applicant.companyName || '-'],
-                  ['Job Title', applicant.jobTitle || 'Not specified'],
-                  ['Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '-'],
-                  ['Length of Service', applicant.lengthOfService || '']
-                ].map(([label, value], rowIndex) => (
-                  <div key={rowIndex} className={`p-2 ${rowIndex % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                    <div className="font-semibold text-gray-700">{label}</div>
-                    <div className="text-gray-900">{value}</div>
-                  </div>
-                ))}
-              </div>
+              <SubSectionHeader title="Employment Details" />
+              {[
+                ['Contract Type', applicant.employment],
+                ['Company Name', applicant.companyName],
+                ['Job Title', applicant.jobTitle],
+                ['Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : ''],
+                ['Length of Service', applicant.lengthOfService]
+              ].map(([label, value], rowIndex) => (
+                <TableRow key={rowIndex} label={label} value={value || ''} isOdd={rowIndex % 2 === 1} />
+              ))}
 
               {/* Current Property Details */}
-              <div className="bg-gray-200 p-2 -mx-8">
-                <h4 className="font-semibold text-gray-800">Current Property Details</h4>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                {[
-                  ['Postcode', applicant.previousPostcode || 'Not specified'],
-                  ['Street Address', applicant.previousAddress || 'Not specified'],
-                  ['Move In Date', applicant.moveInDate || 'Not specified'],
-                  ['Vacate Date', applicant.vacateDate || 'Not specified'],
-                  ['Current Property Status', applicant.currentPropertyStatus || 'Not specified'],
-                  ['Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : 'Not specified']
-                ].map(([label, value], rowIndex) => (
-                  <div key={rowIndex} className={`p-2 ${rowIndex % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                    <div className="font-semibold text-gray-700">{label}</div>
-                    <div className="text-gray-900">{value}</div>
-                  </div>
-                ))}
-              </div>
+              <SubSectionHeader title="Current Property Details" />
+              {[
+                ['Postcode', applicant.previousPostcode],
+                ['Street Address', applicant.previousAddress],
+                ['Move In Date', applicant.moveInDate],
+                ['Vacate Date', applicant.vacateDate],
+                ['Current Property Status', applicant.currentPropertyStatus],
+                ['Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '']
+              ].map(([label, value], rowIndex) => (
+                <TableRow key={rowIndex} label={label} value={value || ''} isOdd={rowIndex % 2 === 1} />
+              ))}
 
               {/* Additional Information */}
-              <div className="bg-gray-200 p-2 -mx-8">
-                <h4 className="font-semibold text-gray-800">Additional Information</h4>
-              </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                {[
-                  ['UK/ROI Passport', application.additional_details?.ukPassport || 'Not specified'],
-                  ['Adverse Credit', application.additional_details?.adverseCredit || 'Not specified'],
-                  ['Adverse Credit Details', application.additional_details?.adverseCreditDetails || 'n/a'],
-                  ['Requires Guarantor', application.additional_details?.guarantorRequired || 'Not specified']
-                ].map(([label, value], rowIndex) => (
-                  <div key={rowIndex} className={`p-2 ${rowIndex % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                    <div className="font-semibold text-gray-700">{label}</div>
-                    <div className="text-gray-900">{value}</div>
-                  </div>
-                ))}
-              </div>
+              <SubSectionHeader title="Additional Information" />
+              {[
+                ['UK/ROI Passport', application.additional_details?.ukPassport === 'yes' ? 'Yes' : 'No'],
+                ['Adverse Credit', application.additional_details?.adverseCredit === 'yes' ? 'Yes' : 'No'],
+                ['Adverse Credit Details', application.additional_details?.adverseCreditDetails],
+                ['Requires Guarantor', application.additional_details?.guarantorRequired === 'yes' ? 'Yes' : 'No']
+              ].map(([label, value], rowIndex) => (
+                <TableRow key={rowIndex} label={label} value={value || ''} isOdd={rowIndex % 2 === 1} />
+              ))}
             </div>
           ))}
 
           {/* Data Sharing */}
-          <div className="space-y-4">
-            <div className="bg-gray-800 text-white p-3 -mx-8">
-              <h3 className="font-semibold">Data Sharing</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              {[
-                ['Accept Utilities', application.data_sharing?.utilities ? 'Yes' : 'No'],
-                ['Accept Insurance', application.data_sharing?.insurance ? 'Yes' : 'No']
-              ].map(([label, value], index) => (
-                <div key={index} className={`p-2 ${index % 2 === 0 ? 'bg-gray-50' : ''}`}>
-                  <div className="font-semibold text-gray-700">{label}</div>
-                  <div className="text-gray-900">{value}</div>
-                </div>
-              ))}
-            </div>
+          <div className="border-t">
+            <SectionHeader title="Data Sharing" />
+            {[
+              ['Accept Utilities', application.data_sharing?.utilities ? 'Yes' : 'No'],
+              ['Accept Insurance', application.data_sharing?.insurance ? 'Yes' : 'No']
+            ].map(([label, value], index) => (
+              <TableRow key={index} label={label} value={value} isOdd={index % 2 === 1} />
+            ))}
           </div>
 
           {/* Signature */}
-          <div className="space-y-4">
-            <div className="bg-gray-800 text-white p-3 -mx-8">
-              <h3 className="font-semibold">Signature</h3>
-            </div>
-            <div className="space-y-4">
+          <div className="border-t">
+            <SectionHeader title="Signature" />
+            <div className="p-4 space-y-4">
               {application.signature && application.signature.startsWith('data:image/') ? (
                 <div>
                   <img 
@@ -275,22 +275,45 @@ const ApplicationPreview = () => {
                   <p className="text-sm font-semibold text-gray-700 mt-2">Digital Signature</p>
                 </div>
               ) : (
-                <div className="p-2 bg-gray-50">
-                  <div className="font-semibold text-gray-700">Signature:</div>
-                  <div className="text-gray-900">{application.signature || 'Not provided'}</div>
-                </div>
+                <>
+                  <TableRow label="Full Name" value={application.signature} isOdd={false} />
+                  <TableRow label="Signature" value={application.signature} isOdd={true} />
+                </>
               )}
-              <div className="p-2">
-                <div className="font-semibold text-gray-700">Submitted At:</div>
-                <div className="text-gray-900">
-                  {new Date(application.submitted_at).toLocaleDateString('en-GB')} - {new Date(application.submitted_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}
-                </div>
-              </div>
+              <TableRow 
+                label="Submitted At" 
+                value={format(new Date(application.submitted_at), 'do MMMM yyyy - h:mm aa')} 
+                isOdd={false} 
+              />
             </div>
           </div>
 
+          {/* Activity Log */}
+          {activityLogs.length > 0 && (
+            <div className="border-t">
+              <SectionHeader title="History" />
+              <div className="p-4">
+                {activityLogs.map((log, index) => (
+                  <div key={log.id} className={`p-3 text-sm ${index % 2 === 1 ? 'bg-gray-50' : 'bg-white'} border-b border-gray-100 last:border-b-0`}>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <div className="font-medium text-gray-900">{log.action}</div>
+                        {log.ip_address && (
+                          <div className="text-gray-600 text-xs mt-1">IP Address: {log.ip_address}</div>
+                        )}
+                      </div>
+                      <div className="text-gray-500 text-xs ml-4">
+                        {format(new Date(log.created_at), 'do-MMM-yyyy h:mm aa')}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Footer */}
-          <div className="border-t pt-4 text-center text-sm text-gray-500">
+          <div className="border-t bg-gray-50 p-4 text-center text-sm text-gray-500">
             Palmer & Partners - Tenancy Application
           </div>
         </div>
