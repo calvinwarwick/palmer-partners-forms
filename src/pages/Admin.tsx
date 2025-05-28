@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -252,19 +253,19 @@ const Admin = () => {
                       d="M18 2.0845 A 15.9155 15.9155 0 0 1 18 33.9155"
                       fill="none"
                       stroke="#e5e7eb"
-                      strokeWidth="2"
+                      strokeWidth="4"
                     />
                     <path
                       d="M18 2.0845 A 15.9155 15.9155 0 0 1 18 33.9155"
                       fill="none"
                       stroke="#f97316"
-                      strokeWidth="2"
+                      strokeWidth="4"
                       strokeDasharray={`${progress}, 100`}
                       className="transition-all duration-1000 ease-linear"
                     />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-xs font-medium text-gray-600">{timeLeft}</span>
+                    <span className="text-[6px] font-medium text-gray-600 opacity-50">{timeLeft}</span>
                   </div>
                 </div>
                 {refreshing ? 'Refreshing...' : 'Refresh'}
@@ -330,7 +331,23 @@ const Admin = () => {
             <Card className="shadow-sm border border-gray-200 overflow-hidden">
               <CardHeader className="bg-white border-b border-gray-200 py-6">
                 <CardTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
-                  <span>Applications ({filteredApplications.length})</span>
+                  <div className="flex items-center gap-4">
+                    <span>Applications ({filteredApplications.length})</span>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                        {selectedApplications.length} of {filteredApplications.length} selected
+                      </span>
+                      <ApplicationFilters
+                        searchTerm={searchTerm}
+                        onSearchChange={setSearchTerm}
+                        dateFilter={dateFilter}
+                        onDateFilterChange={setDateFilter}
+                        onClearFilters={clearFilters}
+                        hasActiveFilters={hasActiveFilters}
+                        compact={true}
+                      />
+                    </div>
+                  </div>
                   {hasActiveFilters && (
                     <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
                       Showing {filteredApplications.length} of {applications.length} applications

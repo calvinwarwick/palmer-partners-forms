@@ -1,17 +1,17 @@
 
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, Search, X, Filter } from "lucide-react";
+import { Search, X, Calendar, Filter } from "lucide-react";
 
 interface ApplicationFiltersProps {
   searchTerm: string;
-  onSearchChange: (term: string) => void;
+  onSearchChange: (value: string) => void;
   dateFilter: string;
-  onDateFilterChange: (date: string) => void;
+  onDateFilterChange: (value: string) => void;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
+  compact?: boolean;
 }
 
 const ApplicationFilters = ({
@@ -20,77 +20,98 @@ const ApplicationFilters = ({
   dateFilter,
   onDateFilterChange,
   onClearFilters,
-  hasActiveFilters
+  hasActiveFilters,
+  compact = false
 }: ApplicationFiltersProps) => {
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-3">
-        <div className="flex items-center justify-center w-10 h-10 bg-orange-50 rounded-lg border border-orange-200">
-          <Filter className="h-5 w-5 text-orange-600" />
-        </div>
-        <div>
-          <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
-          <p className="text-sm text-gray-600">Search and filter applications</p>
-        </div>
-      </div>
-
-      <div className="flex flex-col lg:flex-row gap-4">
-        {/* Search Input */}
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+  if (compact) {
+    return (
+      <div className="flex items-center gap-2">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
-            placeholder="Search by name, email, address, or postcode..."
+            placeholder="Search..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-12 h-12 bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:ring-orange-500 focus:border-orange-500 shadow-sm"
+            className="pl-10 w-48 h-8 text-sm"
           />
         </div>
-
-        {/* Date Filter */}
+        
         <Select value={dateFilter} onValueChange={onDateFilterChange}>
-          <SelectTrigger className="w-full lg:w-56 h-12 bg-white border-gray-300 text-gray-900 focus:ring-orange-500 shadow-sm">
-            <Calendar className="h-5 w-5 mr-2 text-gray-400" />
-            <SelectValue placeholder="Filter by date" />
+          <SelectTrigger className="w-32 h-8 text-sm">
+            <Calendar className="h-3 w-3 mr-1" />
+            <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-white border-gray-200">
-            <SelectItem value="all" className="text-gray-900 hover:bg-gray-50">All Time</SelectItem>
-            <SelectItem value="today" className="text-gray-900 hover:bg-gray-50">Today</SelectItem>
-            <SelectItem value="this_week" className="text-gray-900 hover:bg-gray-50">This Week</SelectItem>
-            <SelectItem value="this_month" className="text-gray-900 hover:bg-gray-50">This Month</SelectItem>
-            <SelectItem value="last_month" className="text-gray-900 hover:bg-gray-50">Last Month</SelectItem>
+          <SelectContent>
+            <SelectItem value="all">All time</SelectItem>
+            <SelectItem value="today">Today</SelectItem>
+            <SelectItem value="this_week">This week</SelectItem>
+            <SelectItem value="this_month">This month</SelectItem>
+            <SelectItem value="last_month">Last month</SelectItem>
           </SelectContent>
         </Select>
 
-        {/* Clear Filters */}
         {hasActiveFilters && (
           <Button 
             variant="outline" 
-            onClick={onClearFilters} 
-            className="w-full lg:w-auto h-12 bg-white border-gray-300 text-gray-700 hover:bg-gray-50 shadow-sm"
+            size="sm" 
+            onClick={onClearFilters}
+            className="h-8 px-2 text-xs"
           >
+            <X className="h-3 w-3" />
+          </Button>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+          <Filter className="h-5 w-5 mr-2 text-orange-500" />
+          Filter Applications
+        </h3>
+        {hasActiveFilters && (
+          <Button variant="outline" onClick={onClearFilters} className="shadow-sm hover:shadow-md transition-shadow">
             <X className="h-4 w-4 mr-2" />
             Clear Filters
           </Button>
         )}
       </div>
 
-      {/* Active Filters Display */}
-      {hasActiveFilters && (
-        <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-200">
-          <span className="text-sm font-medium text-gray-600 self-center">Active filters:</span>
-          {searchTerm && (
-            <Badge variant="secondary" className="text-xs bg-orange-50 text-orange-700 border-orange-200">
-              Search: "{searchTerm}"
-            </Badge>
-          )}
-          {dateFilter !== "all" && (
-            <Badge variant="secondary" className="text-xs bg-blue-50 text-blue-700 border-blue-200">
-              Date: {dateFilter.replace('_', ' ')}
-            </Badge>
-          )}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Search Filter */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">Search</label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Input
+              placeholder="Search by name, email, or address..."
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="pl-10 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+            />
+          </div>
         </div>
-      )}
+
+        {/* Date Filter */}
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">Date Range</label>
+          <Select value={dateFilter} onValueChange={onDateFilterChange}>
+            <SelectTrigger className="shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+              <Calendar className="h-4 w-4 mr-2 text-gray-400" />
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All time</SelectItem>
+              <SelectItem value="today">Today</SelectItem>
+              <SelectItem value="this_week">This week</SelectItem>
+              <SelectItem value="this_month">This month</SelectItem>
+              <SelectItem value="last_month">Last month</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
     </div>
   );
 };
