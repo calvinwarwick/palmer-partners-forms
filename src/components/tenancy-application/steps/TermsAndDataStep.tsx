@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -28,12 +27,12 @@ const TermsAndDataStep = ({
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Terms, Conditions & Data Sharing</h3>
       
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Terms and Conditions</CardTitle>
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-base font-medium">Terms and Conditions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="text-sm text-gray-700 space-y-4 max-h-96 overflow-y-auto p-4 border rounded-lg bg-gray-50">
+          <div className="text-sm text-muted-foreground space-y-4 max-h-96 overflow-y-auto p-4 border rounded-lg bg-muted/30">
             <div>
               <h4 className="font-semibold mb-2">Terms & Conditions</h4>
               <p>If your offer is accepted by the landlord of your chosen property, the "Holding Deposit" will become payable. Upon receipt of this payment Palmer & Partners will commence the referencing process. This is usually done via an online form sent to your email address. This form must be completed within 72 hours to avoid the failure of your tenancy application.</p>
@@ -71,45 +70,48 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <div className="flex items-start space-x-3">
+          <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg">
             <Checkbox
               id="termsAccepted"
               checked={termsAccepted}
               onCheckedChange={onTermsAccepted}
+              className="mt-1"
             />
-            <Label htmlFor="termsAccepted" className="text-sm leading-relaxed">
+            <Label htmlFor="termsAccepted" className="text-sm leading-relaxed cursor-pointer">
               I confirm that I have read and understood the terms and conditions and I am bound by their contents *
             </Label>
           </div>
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Data Sharing</CardTitle>
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-base font-medium">Data Sharing</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-gray-600">We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.</p>
+          <p className="text-sm text-muted-foreground">We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.</p>
           
           <div className="space-y-4">
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg">
               <Checkbox
                 id="utilitiesSharing"
                 checked={dataSharing.utilities}
                 onCheckedChange={(checked) => onUpdateDataSharing('utilities', checked as boolean)}
+                className="mt-1"
               />
-              <Label htmlFor="utilitiesSharing" className="text-sm leading-relaxed">
+              <Label htmlFor="utilitiesSharing" className="text-sm leading-relaxed cursor-pointer">
                 I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
               </Label>
             </div>
             
-            <div className="flex items-start space-x-3">
+            <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg">
               <Checkbox
                 id="insuranceSharing"
                 checked={dataSharing.insurance}
                 onCheckedChange={(checked) => onUpdateDataSharing('insurance', checked as boolean)}
+                className="mt-1"
               />
-              <Label htmlFor="insuranceSharing" className="text-sm leading-relaxed">
+              <Label htmlFor="insuranceSharing" className="text-sm leading-relaxed cursor-pointer">
                 I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
               </Label>
             </div>
@@ -117,23 +119,23 @@ const TermsAndDataStep = ({
         </CardContent>
       </Card>
       
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Digital Signature</CardTitle>
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-base font-medium">Digital Signature</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-gray-600">I confirm that the information I have provided is accurate and complete</p>
+          <p className="text-sm text-muted-foreground">I confirm that the information I have provided is accurate and complete</p>
           
-          <div>
-            <Label htmlFor="fullName">Full name *</Label>
+          <div className="form-floating">
             <Input
               id="fullName"
               value={signature}
               onChange={(e) => onSignatureChange(e.target.value)}
               placeholder="Type your full name as your digital signature"
-              className="text-lg"
+              className="form-control text-lg"
               required
             />
+            <label htmlFor="fullName" className="text-muted-foreground">Full name *</label>
           </div>
         </CardContent>
       </Card>

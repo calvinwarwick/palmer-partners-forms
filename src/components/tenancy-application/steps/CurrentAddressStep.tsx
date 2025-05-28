@@ -1,7 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface CurrentAddressStepProps {
@@ -15,42 +14,43 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
       <h3 className="text-lg font-semibold">Current Address Details</h3>
       
       {applicants.map((applicant) => (
-        <Card key={applicant.id}>
-          <CardHeader>
-            <CardTitle className="text-base">
+        <Card key={applicant.id} className="border-0 shadow-sm">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-base font-medium">
               {applicant.firstName} {applicant.lastName} - Current Address
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor={`streetAddress-${applicant.id}`}>Street address *</Label>
+          <CardContent className="space-y-6">
+            <div className="form-floating">
               <Input
                 id={`streetAddress-${applicant.id}`}
                 value={applicant.previousAddress}
                 onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
                 placeholder="Full current address"
+                className="form-control"
                 required
               />
+              <label htmlFor={`streetAddress-${applicant.id}`} className="text-muted-foreground">Street address *</label>
             </div>
             
-            <div>
-              <Label htmlFor={`postcode-${applicant.id}`}>Postcode *</Label>
+            <div className="form-floating">
               <Input
                 id={`postcode-${applicant.id}`}
                 value={applicant.previousPostcode}
                 onChange={(e) => onUpdateApplicant(applicant.id, "previousPostcode", e.target.value)}
                 placeholder="e.g., CO14 8LZ"
+                className="form-control"
                 required
               />
+              <label htmlFor={`postcode-${applicant.id}`} className="text-muted-foreground">Postcode *</label>
             </div>
             
-            <div>
-              <Label htmlFor={`propertyStatus-${applicant.id}`}>Current property status *</Label>
+            <div className="form-floating">
               <select
                 id={`propertyStatus-${applicant.id}`}
                 value={applicant.currentPropertyStatus}
                 onChange={(e) => onUpdateApplicant(applicant.id, "currentPropertyStatus", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="form-select w-full px-3 py-2 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                 required
               >
                 <option value="">Select status</option>
@@ -60,38 +60,42 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 <option value="Owner Occupier">Owner Occupier</option>
                 <option value="Other">Other</option>
               </select>
+              <label htmlFor={`propertyStatus-${applicant.id}`} className="text-muted-foreground">Current property status *</label>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor={`moveInDate-${applicant.id}`}>Move in date</Label>
+              <div className="form-floating">
                 <Input
                   id={`moveInDate-${applicant.id}`}
                   type="date"
                   value={applicant.moveInDate}
                   onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
+                  className="form-control"
                 />
+                <label htmlFor={`moveInDate-${applicant.id}`} className="text-muted-foreground">Move in date</label>
               </div>
-              <div>
-                <Label htmlFor={`vacateDate-${applicant.id}`}>Vacate date</Label>
+              <div className="form-floating">
                 <Input
                   id={`vacateDate-${applicant.id}`}
                   type="date"
                   value={applicant.vacateDate}
                   onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
+                  className="form-control"
                 />
+                <label htmlFor={`vacateDate-${applicant.id}`} className="text-muted-foreground">Vacate date</label>
               </div>
             </div>
             
-            <div>
-              <Label htmlFor={`currentRent-${applicant.id}`}>Current rental amount (£)</Label>
+            <div className="form-floating">
               <Input
                 id={`currentRent-${applicant.id}`}
                 type="number"
                 value={applicant.currentRentalAmount}
                 onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
                 placeholder="e.g., 1200"
+                className="form-control"
               />
+              <label htmlFor={`currentRent-${applicant.id}`} className="text-muted-foreground">Current rental amount (£)</label>
             </div>
           </CardContent>
         </Card>
