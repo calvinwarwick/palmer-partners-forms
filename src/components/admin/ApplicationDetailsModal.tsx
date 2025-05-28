@@ -13,7 +13,7 @@ interface ApplicationDetailsModalProps {
     additional_details: AdditionalDetails;
     data_sharing: { utilities: boolean; insurance: boolean };
     signature: string;
-    status: string;
+    status?: string;
     submitted_at: string;
   } | null;
   isOpen: boolean;
@@ -31,9 +31,11 @@ const ApplicationDetailsModal = ({ application, isOpen, onClose }: ApplicationDe
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
             <span>Application Details</span>
-            <Badge className={`${getStatusColor(application.status)} text-white`}>
-              {application.status.replace('_', ' ').toUpperCase()}
-            </Badge>
+            {application.status && (
+              <Badge className={`${getStatusColor(application.status)} text-white`}>
+                {application.status.replace('_', ' ').toUpperCase()}
+              </Badge>
+            )}
           </DialogTitle>
         </DialogHeader>
         
