@@ -122,8 +122,16 @@ const ApplicationDetailsModal = ({ application, isOpen, onClose }: ApplicationDe
                   <p className="font-medium">{application.additional_details?.pets || 'None specified'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Additional Notes</p>
-                  <p className="font-medium">{application.additional_details?.additionalNotes || 'None'}</p>
+                  <p className="text-sm text-gray-600">Additional Requests</p>
+                  <p className="font-medium">{application.additional_details?.additionalRequests || 'None'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Guarantor Required</p>
+                  <p className="font-medium">{application.additional_details?.guarantorRequired || 'Not specified'}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">UK Passport</p>
+                  <p className="font-medium">{application.additional_details?.ukPassport || 'Not specified'}</p>
                 </div>
               </div>
             </div>
