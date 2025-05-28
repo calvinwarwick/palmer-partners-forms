@@ -4,7 +4,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { RefreshCw, Info } from "lucide-react";
 import { AdditionalDetails } from "@/domain/types/Applicant";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 
@@ -263,6 +264,23 @@ const AdditionalDetailsStep = ({
             </div>
           </RadioGroup>
         </FormFieldWithTooltip>
+
+        {additionalDetails.depositType === "replacement" && (
+          <Alert className="mt-4 border-blue-200 bg-blue-50">
+            <Info className="h-4 w-4 text-blue-600" />
+            <AlertTitle className="text-blue-800 font-semibold">Deposit Replacement Information</AlertTitle>
+            <AlertDescription className="text-blue-700 text-sm mt-2 space-y-2">
+              <p>If you have chosen to apply for a property using a Deposit Replacement product supplied by Reposit Group Ltd, the following terms and conditions shall apply:</p>
+              <ul className="list-disc pl-4 space-y-1">
+                <li>The tenant shall pay a service fee equal to 1 weeks rent to Reposit Group Ltd prior to the commencement of the tenancy as well as any renewal fees as notified by Reposit Group Ltd</li>
+                <li>Palmer & Partners may receive a commission from Reposit in relation to any sums paid by the tenant to Reposit Group Ltd</li>
+                <li>Palmer & Partners will share the tenant's private contact information with Reposit for the purposes of setting up the Deposit Replacement Product.</li>
+                <li>In the event that a tenancy has been agreed using a Deposit Replacement option, no keys will be released until Palmer & Partners are in receipt of confirmation from Reposit that all necessary payments and documents have been completed</li>
+                <li>By confirming that you would like to apply for your chosen property using a Deposit Replacement option, you agree to the above terms and conditions.</li>
+              </ul>
+            </AlertDescription>
+          </Alert>
+        )}
 
         {maxRent && (
           <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
