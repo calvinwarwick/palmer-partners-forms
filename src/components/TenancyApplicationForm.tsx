@@ -416,11 +416,9 @@ const TenancyApplicationForm = () => {
                     : "bg-muted text-muted-foreground"
                 }`}>
                   <Icon className="h-5 w-5" />
-                  {isStepCompleted(step) && step < currentStep && (
-                    <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) ? 'animate-in' : ''}`}>
-                      <Check className="h-3 w-3" />
-                    </div>
-                  )}
+                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
+                    <Check className="h-3 w-3" />
+                  </div>
                 </div>
                 <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
               </div>
@@ -437,11 +435,9 @@ const TenancyApplicationForm = () => {
                     : "bg-muted text-muted-foreground"
                 }`}>
                   <Icon className="h-5 w-5" />
-                  {isStepCompleted(step) && step < currentStep && (
-                    <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) ? 'animate-in' : ''}`}>
-                      <Check className="h-3 w-3" />
-                    </div>
-                  )}
+                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
+                    <Check className="h-3 w-3" />
+                  </div>
                 </div>
                 <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
               </div>

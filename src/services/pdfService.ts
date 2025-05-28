@@ -18,14 +18,28 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
   const doc = new jsPDF();
   let yPosition = 20;
   
-  // Helper function to add text
-  const addText = (text: string, x: number, y: number, maxWidth?: number): number => {
+  // Helper function to add text with proper centering
+  const addText = (text: string, x: number, y: number, maxWidth?: number, align: 'left' | 'center' = 'left'): number => {
     if (maxWidth) {
       const lines = doc.splitTextToSize(text, maxWidth);
-      doc.text(lines, x, y);
+      if (align === 'center') {
+        lines.forEach((line: string, index: number) => {
+          const textWidth = doc.getTextWidth(line);
+          const centerX = (doc.internal.pageSize.width - textWidth) / 2;
+          doc.text(line, centerX, y + (index * 6));
+        });
+      } else {
+        doc.text(lines, x, y);
+      }
       return y + (lines.length * 6);
     } else {
-      doc.text(text, x, y);
+      if (align === 'center') {
+        const textWidth = doc.getTextWidth(text);
+        const centerX = (doc.internal.pageSize.width - textWidth) / 2;
+        doc.text(text, centerX, y);
+      } else {
+        doc.text(text, x, y);
+      }
       return y + 6;
     }
   };
@@ -43,13 +57,13 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(20);
     
-    // Dark background header
+    // Dark background header - matching preview exactly
     doc.setFillColor(31, 41, 55); // gray-800
     doc.rect(10, yPosition - 3, 190, 12, 'F');
     doc.setTextColor(255, 255, 255); // white text
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText(title, 105, yPosition + 4); // centered
+    yPosition = addText(title, 0, yPosition + 4, 0, 'center'); // centered
     yPosition += 15;
     doc.setTextColor(0, 0, 0); // reset to black
   };
@@ -62,12 +76,12 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(31, 41, 55); // gray-800
-    yPosition = addText(title, 105, yPosition + 4); // centered
+    yPosition = addText(title, 0, yPosition + 4, 0, 'center'); // centered
     yPosition += 10;
     doc.setTextColor(0, 0, 0); // reset to black
   };
 
-  // Helper function to add a table row
+  // Helper function to add a table row - matching preview styling exactly
   const addTableRow = (label: string, value: string, isOdd = false) => {
     yPosition = checkNewPage(12);
     
@@ -92,27 +106,27 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
     doc.setTextColor(0, 0, 0); // reset
   };
 
-  // Header with logo placeholder and title
-  yPosition = checkNewPage(30);
+  // Header with logo and title - exactly like preview
+  yPosition = checkNewPage(40);
   
-  // Logo area (placeholder for now since we can't easily embed images in jsPDF without base64)
-  doc.setFillColor(249, 115, 22); // orange-500 placeholder
+  // Logo area (centered) - using the new logo
+  doc.setFillColor(249, 115, 22); // orange-500 placeholder for logo
   doc.rect(85, yPosition - 5, 40, 15, 'F');
   doc.setTextColor(255, 255, 255);
-  doc.setFontSize(12);
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  yPosition = addText('LOGO', 105, yPosition + 5); // centered
+  yPosition = addText('PALMER & PARTNERS', 0, yPosition + 5, 0, 'center'); // centered
   
-  // Orange line
+  // Orange line exactly like preview
   doc.setFillColor(249, 115, 22); // orange-500
   doc.rect(10, yPosition + 5, 190, 1, 'F');
   yPosition += 20;
   
-  // Main title
+  // Main title - exactly like preview
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  yPosition = addText('Tenancy Application', 105, yPosition); // centered
+  yPosition = addText('Tenancy Application', 0, yPosition, 0, 'center'); // centered
   yPosition += 20;
 
   // Property Details Section
@@ -260,10 +274,5 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
   return doc.output('blob');
 };
 
-// Export the correct function name for backward compatibility
-export const generateApplicationPDF = (data: any): Uint8Array => {
-  // This is a simplified synchronous version for the existing code
-  const doc = new jsPDF();
-  doc.text('Application PDF', 20, 20);
-  return new Uint8Array(doc.output('arraybuffer'));
-};
+// Remove the old generateApplicationPDF function and replace with proper export
+export const generateApplicationPDF = generatePdf;
