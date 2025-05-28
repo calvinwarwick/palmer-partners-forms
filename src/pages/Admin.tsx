@@ -241,31 +241,24 @@ const Admin = () => {
             </div>
             <div className="flex flex-wrap gap-3">
               <div className="relative">
-                <svg 
-                  className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none"
-                  viewBox="0 0 100 100"
-                >
-                  <circle
-                    cx="50"
-                    cy="50"
-                    r="48"
-                    fill="none"
-                    stroke="#f97316"
-                    strokeWidth="4"
-                    strokeDasharray={`${progress * 3.01592} 301.592`}
-                    strokeLinecap="round"
-                    className="transition-all duration-1000 ease-linear"
-                  />
-                </svg>
                 <Button 
                   variant="outline" 
                   onClick={handleManualRefresh} 
                   disabled={refreshing} 
-                  className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 relative"
+                  className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 relative overflow-hidden border-2 border-transparent"
+                  style={{
+                    '--progress': `${progress}%`
+                  } as React.CSSProperties & { '--progress': string }}
                 >
-                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  <span className="text-xs font-medium opacity-50">{timeLeft}s</span>
-                  <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+                  <div 
+                    className="absolute inset-0 border-2 border-orange-500 rounded-md transition-all duration-1000 ease-linear"
+                    style={{
+                      clipPath: `polygon(0 0, ${progress}% 0, ${progress}% 100%, 0 100%)`
+                    }}
+                  />
+                  <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''} relative z-10`} />
+                  <span className="text-xs font-medium opacity-50 relative z-10">{timeLeft}s</span>
+                  <span className="relative z-10">{refreshing ? 'Refreshing...' : 'Refresh'}</span>
                 </Button>
               </div>
               <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
