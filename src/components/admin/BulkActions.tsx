@@ -42,7 +42,7 @@ const BulkActions = ({
                   ref={checkboxRef}
                   checked={isAllSelected}
                   onCheckedChange={onSelectAll}
-                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
+                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400 h-3 w-3"
                 />
                 <span className="text-sm font-medium text-gray-900">
                   Select all applications
@@ -68,8 +68,8 @@ const BulkActions = ({
               onClick={onBulkExport}
               className="shadow-sm hover:shadow-md transition-shadow border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
             >
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
+              <Download className="h-4 w-4 md:mr-2" />
+              <span className="hidden md:inline">Export CSV</span>
             </Button>
             
             <Button
@@ -77,8 +77,8 @@ const BulkActions = ({
               size="sm"
               className="shadow-sm hover:shadow-md transition-shadow border-blue-500 hover:bg-blue-50 text-blue-600 hover:text-blue-700"
             >
-              <Mail className="h-4 w-4 mr-2" />
-              Send Email
+              <Mail className="h-4 w-4 md:mr-2" />
+              <span className="hidden md:inline">Send Email</span>
             </Button>
             
             <Button
@@ -86,8 +86,8 @@ const BulkActions = ({
               size="sm"
               className="shadow-sm hover:shadow-md transition-shadow border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
             >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete
+              <Trash2 className="h-4 w-4 md:mr-2" />
+              <span className="hidden md:inline">Delete</span>
             </Button>
           </div>
         )}
