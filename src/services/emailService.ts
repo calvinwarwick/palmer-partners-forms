@@ -1,3 +1,4 @@
+import { supabase } from "@/integrations/supabase/client";
 
 interface EmailData {
   to: string;
@@ -13,15 +14,24 @@ interface TenancyApplicationData {
 }
 
 export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
-  // This will integrate with Supabase Edge Functions once connected
-  console.log("Email would be sent:", emailData);
-  
-  // Simulate email sending for now
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // In a real implementation, this would call a Supabase Edge Function
-  // that handles email sending via a service like Resend or SendGrid
-  return true;
+  try {
+    console.log("Sending email via Supabase Edge Function:", emailData.to);
+    
+    const { data, error } = await supabase.functions.invoke('send-application-email', {
+      body: emailData
+    });
+
+    if (error) {
+      console.error("Error calling email function:", error);
+      return false;
+    }
+
+    console.log("Email sent successfully:", data);
+    return true;
+  } catch (error) {
+    console.error("Failed to send email:", error);
+    return false;
+  }
 };
 
 export const generateApplicationEmailHTML = (data: TenancyApplicationData): string => {
