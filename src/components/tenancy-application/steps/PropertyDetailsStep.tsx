@@ -32,7 +32,7 @@ const PropertyDetailsStep = ({
           variant="outline" 
           size="sm" 
           onClick={onFillAllTestData}
-          className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+          className="flex items-center gap-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
         >
           <TestTube className="h-4 w-4" />
           Fill Test Data
@@ -41,24 +41,17 @@ const PropertyDetailsStep = ({
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mobile-form-grid">
         <FormFieldWithTooltip
-          label="Property Type"
-          tooltip="Select the type of accommodation you're looking for"
+          label="Property Address"
+          tooltip="Enter the full address of the property you're applying for"
           htmlFor="propertyType"
         >
-          <Select
+          <Input
+            id="propertyType"
             value={propertyPreferences.propertyType}
-            onValueChange={(value) => onUpdatePreferences("propertyType", value)}
-          >
-            <SelectTrigger className="focus:ring-orange-500 focus:border-orange-500">
-              <SelectValue placeholder="Select property type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="apartment">Apartment</SelectItem>
-              <SelectItem value="house">House</SelectItem>
-              <SelectItem value="studio">Studio</SelectItem>
-              <SelectItem value="room">Room</SelectItem>
-            </SelectContent>
-          </Select>
+            onChange={(e) => onUpdatePreferences("propertyType", e.target.value)}
+            placeholder="eg 123 Orchard House, New Cut, London"
+            className="focus:ring-orange-500 focus:border-orange-500"
+          />
         </FormFieldWithTooltip>
 
         <FormFieldWithTooltip
@@ -89,8 +82,8 @@ const PropertyDetailsStep = ({
         </FormFieldWithTooltip>
 
         <FormFieldWithTooltip
-          label="Maximum Rent (per month)"
-          tooltip="Enter your maximum monthly rental budget in pounds"
+          label="Rental Amount for the House (per month)"
+          tooltip="Enter the monthly rental amount for the property you're applying for in pounds"
           htmlFor="maxRent"
         >
           <Input
@@ -172,21 +165,6 @@ const PropertyDetailsStep = ({
           </Select>
         </FormFieldWithTooltip>
       </div>
-
-      <FormFieldWithTooltip
-        label="Additional Requests"
-        tooltip="Any specific requirements or requests for your ideal property"
-        htmlFor="additionalRequests"
-      >
-        <Textarea
-          id="additionalRequests"
-          value={propertyPreferences.additionalRequests}
-          onChange={(e) => onUpdatePreferences("additionalRequests", e.target.value)}
-          placeholder="Any specific requirements or requests..."
-          rows={3}
-          className="focus:ring-orange-500 focus:border-orange-500"
-        />
-      </FormFieldWithTooltip>
     </div>
   );
 };

@@ -211,6 +211,15 @@ textarea:focus {
   @apply text-orange-800;
 }
 
+/* Links and navigation colors */
+a {
+  @apply text-orange-500;
+}
+
+a:hover {
+  @apply text-orange-600;
+}
+
 /* Ensure all buttons use orange theme */
 .btn-primary,
 button[class*="bg-blue"] {
