@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -6,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PropertyPreferences } from "@/domain/types/Applicant";
 import { TestTube, Calendar } from "lucide-react";
+import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 
 interface PropertyDetailsStepProps {
   propertyPreferences: PropertyPreferences;
@@ -19,11 +21,11 @@ const PropertyDetailsStep = ({
   onFillAllTestData 
 }: PropertyDetailsStepProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Property Details</h2>
-          <p className="text-gray-600 mt-1">Tell us about your ideal property</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Property Details</h2>
+          <p className="text-gray-600">Tell us about your ideal property</p>
         </div>
         <Button 
           type="button" 
@@ -37,9 +39,12 @@ const PropertyDetailsStep = ({
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <Label htmlFor="propertyType">Property Type</Label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mobile-form-grid">
+        <FormFieldWithTooltip
+          label="Property Type"
+          tooltip="Select the type of accommodation you're looking for"
+          htmlFor="propertyType"
+        >
           <Select
             value={propertyPreferences.propertyType}
             onValueChange={(value) => onUpdatePreferences("propertyType", value)}
@@ -54,10 +59,13 @@ const PropertyDetailsStep = ({
               <SelectItem value="room">Room</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="streetAddress">Street Address</Label>
+        <FormFieldWithTooltip
+          label="Street Address"
+          tooltip="Enter the full street address of your preferred property"
+          htmlFor="streetAddress"
+        >
           <Input
             id="streetAddress"
             value={propertyPreferences.streetAddress}
@@ -65,10 +73,12 @@ const PropertyDetailsStep = ({
             placeholder="eg 123 Orchard House, New Cut"
             className="focus:ring-orange-500 focus:border-orange-500"
           />
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="postcode">Postcode</Label>
+        <FormFieldWithTooltip
+          label="Postcode"
+          htmlFor="postcode"
+        >
           <Input
             id="postcode"
             value={propertyPreferences.postcode}
@@ -76,10 +86,13 @@ const PropertyDetailsStep = ({
             placeholder="IP7 5DA"
             className="focus:ring-orange-500 focus:border-orange-500"
           />
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="maxRent">Maximum Rent (per month)</Label>
+        <FormFieldWithTooltip
+          label="Maximum Rent (per month)"
+          tooltip="Enter your maximum monthly rental budget in pounds"
+          htmlFor="maxRent"
+        >
           <Input
             id="maxRent"
             type="number"
@@ -88,10 +101,13 @@ const PropertyDetailsStep = ({
             placeholder="2500"
             className="focus:ring-orange-500 focus:border-orange-500"
           />
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="preferredLocation">Preferred Location</Label>
+        <FormFieldWithTooltip
+          label="Preferred Location"
+          tooltip="Specify your preferred area or neighborhood"
+          htmlFor="preferredLocation"
+        >
           <Input
             id="preferredLocation"
             value={propertyPreferences.preferredLocation}
@@ -99,12 +115,13 @@ const PropertyDetailsStep = ({
             placeholder="Central London"
             className="focus:ring-orange-500 focus:border-orange-500"
           />
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="moveInDate" className="flex items-center gap-2">
-            Preferred Move-in Date
-          </Label>
+        <FormFieldWithTooltip
+          label="Preferred Move-in Date"
+          tooltip="When would you ideally like to move in?"
+          htmlFor="moveInDate"
+        >
           <div className="date-input-container">
             <Calendar className="date-input-icon h-4 w-4" />
             <Input
@@ -115,12 +132,13 @@ const PropertyDetailsStep = ({
               className="focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="latestMoveInDate" className="flex items-center gap-2">
-            Latest Move-in Date
-          </Label>
+        <FormFieldWithTooltip
+          label="Latest Move-in Date"
+          tooltip="What's the latest date you could move in?"
+          htmlFor="latestMoveInDate"
+        >
           <div className="date-input-container">
             <Calendar className="date-input-icon h-4 w-4" />
             <Input
@@ -131,10 +149,13 @@ const PropertyDetailsStep = ({
               className="focus:ring-orange-500 focus:border-orange-500"
             />
           </div>
-        </div>
+        </FormFieldWithTooltip>
 
-        <div>
-          <Label htmlFor="initialTenancyTerm">Initial Tenancy Term</Label>
+        <FormFieldWithTooltip
+          label="Initial Tenancy Term"
+          tooltip="How long would you like your initial tenancy agreement to be?"
+          htmlFor="initialTenancyTerm"
+        >
           <Select
             value={propertyPreferences.initialTenancyTerm}
             onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
@@ -149,11 +170,14 @@ const PropertyDetailsStep = ({
               <SelectItem value="2 years">2 years</SelectItem>
             </SelectContent>
           </Select>
-        </div>
+        </FormFieldWithTooltip>
       </div>
 
-      <div>
-        <Label htmlFor="additionalRequests">Additional Requests</Label>
+      <FormFieldWithTooltip
+        label="Additional Requests"
+        tooltip="Any specific requirements or requests for your ideal property"
+        htmlFor="additionalRequests"
+      >
         <Textarea
           id="additionalRequests"
           value={propertyPreferences.additionalRequests}
@@ -162,7 +186,7 @@ const PropertyDetailsStep = ({
           rows={3}
           className="focus:ring-orange-500 focus:border-orange-500"
         />
-      </div>
+      </FormFieldWithTooltip>
     </div>
   );
 };

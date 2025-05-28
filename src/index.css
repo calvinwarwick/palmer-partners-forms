@@ -43,13 +43,14 @@
   }
 }
 
-/* Standard input and select styling without floating labels */
+/* Improved form spacing */
 .form-control,
 .form-select {
   @apply w-full px-3 py-3 border border-input bg-transparent rounded-md text-foreground;
   @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
   @apply disabled:cursor-not-allowed disabled:opacity-50;
   background-color: transparent !important;
+  margin-top: 0.75rem; /* More spacing from label */
 }
 
 .form-select {
@@ -61,14 +62,25 @@
   padding: 0.75rem;
 }
 
-/* Standard label styling */
+/* Improved label styling with more spacing */
 .form-label {
-  @apply block text-sm font-medium text-muted-foreground mb-2;
+  @apply block text-sm font-medium text-muted-foreground;
+  margin-bottom: 0.75rem; /* Increased spacing */
+}
+
+/* Helper tooltip styling */
+.label-with-tooltip {
+  @apply flex items-center gap-2;
+}
+
+.help-tooltip {
+  @apply text-orange-500 hover:text-orange-600 cursor-help;
 }
 
 /* Date input specific styling with icon inside */
 .date-input-container {
   @apply relative;
+  margin-top: 0.75rem;
 }
 
 .date-input-icon {
@@ -94,26 +106,66 @@ input[type="date"]::-webkit-inner-spin-button {
   display: none;
 }
 
-/* Mobile-first responsive design for form inputs */
+/* Enhanced mobile responsiveness */
 @media (max-width: 640px) {
   .form-control,
   .form-select {
     @apply text-base; /* Prevents zoom on iOS */
-    min-height: 44px; /* Touch-friendly size */
+    min-height: 48px; /* More touch-friendly size */
+    padding: 0.875rem; /* Better padding on mobile */
   }
   
-  /* Better spacing on mobile */
+  .form-label {
+    margin-bottom: 0.5rem; /* Adjusted spacing for mobile */
+  }
+  
+  .date-input-container {
+    margin-top: 0.5rem;
+  }
+  
+  /* Better container spacing on mobile */
   .container {
-    @apply px-3;
+    @apply px-4;
   }
   
-  /* Stack form elements on mobile */
-  .flex-col.lg\:flex-row {
-    @apply space-y-3;
+  /* Stack form elements on mobile with proper spacing */
+  .mobile-form-grid {
+    @apply space-y-6;
   }
   
-  .flex-col.lg\:flex-row > * {
+  .mobile-form-grid > * {
     @apply w-full;
+  }
+  
+  /* Card spacing on mobile */
+  .card {
+    @apply mx-1;
+  }
+  
+  .card-content {
+    @apply p-4;
+  }
+  
+  /* Step indicators on mobile */
+  .step-indicator {
+    min-width: 60px;
+  }
+  
+  .step-indicator span {
+    font-size: 0.65rem;
+    line-height: 1.1;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .form-control,
+  .form-select {
+    min-height: 44px;
+  }
+  
+  .container {
+    @apply px-6;
   }
 }
 
@@ -224,19 +276,9 @@ button[class*="bg-blue"] {
 @media (max-width: 640px) {
   .btn,
   button {
-    min-height: 44px;
+    min-height: 48px;
     @apply text-base;
-  }
-}
-
-/* Improve card spacing on mobile */
-@media (max-width: 640px) {
-  .card {
-    @apply mx-2;
-  }
-  
-  .card-content {
-    @apply p-4;
+    padding: 0.75rem 1.5rem;
   }
 }
 
@@ -251,4 +293,23 @@ button[class*="bg-blue"] {
   top: -8px;
   right: -8px;
   z-index: 10;
+}
+
+/* Terms and conditions styling */
+.terms-content {
+  max-height: 400px;
+  overflow-y: auto;
+  @apply border border-gray-200 rounded-lg p-6 bg-gray-50;
+}
+
+.terms-content h3 {
+  @apply font-semibold text-gray-900 mb-3;
+}
+
+.terms-content p {
+  @apply mb-4 text-sm text-gray-700 leading-relaxed;
+}
+
+.terms-content p:last-child {
+  @apply mb-0;
 }

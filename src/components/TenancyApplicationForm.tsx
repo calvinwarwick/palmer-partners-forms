@@ -328,6 +328,7 @@ const TenancyApplicationForm = () => {
             additionalDetails={additionalDetails}
             onUpdateDetails={updateAdditionalDetails}
             onFillAllTestData={fillAllTestData}
+            maxRent={propertyPreferences.maxRent}
           />
         );
       case 6:

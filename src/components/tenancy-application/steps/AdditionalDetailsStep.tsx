@@ -1,193 +1,265 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { TestTube } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { TestTube, Calculator } from "lucide-react";
 import { AdditionalDetails } from "@/domain/types/Applicant";
+import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: AdditionalDetails;
   onUpdateDetails: (field: keyof AdditionalDetails, value: string) => void;
-  onFillAllTestData?: () => void;
+  onFillAllTestData: () => void;
+  maxRent?: string;
 }
 
-const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails, onFillAllTestData }: AdditionalDetailsStepProps) => {
-  const fillTestData = () => {
-    console.log('Fill test data button clicked - Additional Details');
-    console.log('Current additional details:', additionalDetails);
-    
-    const testDataEntries = [
-      ['ukPassport', 'yes'],
-      ['adverseCredit', 'no'],
-      ['adverseCreditDetails', ''],
-      ['guarantorRequired', 'no'],
-      ['pets', 'yes - 1 cat'],
-      ['under18Count', '0'],
-      ['childrenAges', ''],
-      ['conditionsOfOffer', 'Standard conditions accepted'],
-      ['depositType', 'standard']
-    ];
+const AdditionalDetailsStep = ({
+  additionalDetails,
+  onUpdateDetails,
+  onFillAllTestData,
+  maxRent = "0"
+}: AdditionalDetailsStepProps) => {
+  const monthlyRent = parseFloat(maxRent) || 0;
+  const holdingDeposit = Math.round((monthlyRent / 4.33) * 100) / 100; // 1 week's rent
+  const standardDeposit = monthlyRent * 6; // 6 weeks
+  const totalDepositStandard = standardDeposit - holdingDeposit;
+  const totalDepositPet = monthlyRent * 8 - holdingDeposit; // 8 weeks for pets
 
-    testDataEntries.forEach(([field, value]) => {
-      console.log(`Setting additional detail ${field} to ${value}`);
-      onUpdateDetails(field as keyof AdditionalDetails, value);
-    });
+  const fillTestData = () => {
+    onUpdateDetails("ukPassport", "yes");
+    onUpdateDetails("adverseCredit", "no");
+    onUpdateDetails("adverseCreditDetails", "");
+    onUpdateDetails("guarantorRequired", "no");
+    onUpdateDetails("pets", "yes - 1 cat");
+    onUpdateDetails("under18Count", "0");
+    onUpdateDetails("childrenAges", "");
+    onUpdateDetails("conditionsOfOffer", "Standard conditions accepted");
+    onUpdateDetails("depositType", "standard");
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-start">
-        <h3 className="text-lg font-semibold">Additional Details</h3>
+    <div className="space-y-8">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Additional Details</h2>
+          <p className="text-gray-600">Please provide some additional information</p>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-            <TestTube className="h-4 w-4" />
+          <Button variant="outline" size="sm" onClick={fillTestData}>
+            <TestTube className="h-4 w-4 mr-2" />
             Fill Step Data
           </Button>
-          {onFillAllTestData && (
-            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
-              <TestTube className="h-4 w-4" />
-              Fill All Form Data
-            </Button>
-          )}
+          <Button variant="default" size="sm" onClick={onFillAllTestData}>
+            <TestTube className="h-4 w-4 mr-2" />
+            Fill All Data
+          </Button>
         </div>
       </div>
-      
-      <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base font-medium">Additional Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="ukPassport" className="form-label">UK/EU Passport/ID *</Label>
-                <select
-                  id="ukPassport"
-                  value={additionalDetails.ukPassport}
-                  onChange={(e) => onUpdateDetails("ukPassport", e.target.value)}
-                  className="form-select"
-                  required
-                >
-                  <option value="">Select option</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
-              
-              <div>
-                <Label htmlFor="adverseCredit" className="form-label">Adverse Credit History *</Label>
-                <select
-                  id="adverseCredit"
-                  value={additionalDetails.adverseCredit}
-                  onChange={(e) => onUpdateDetails("adverseCredit", e.target.value)}
-                  className="form-select"
-                  required
-                >
-                  <option value="">Select option</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
 
-              {additionalDetails.adverseCredit === "yes" && (
-                <div>
-                  <Label htmlFor="adverseCreditDetails" className="form-label">Credit Details</Label>
-                  <textarea
-                    id="adverseCreditDetails"
-                    value={additionalDetails.adverseCreditDetails}
-                    onChange={(e) => onUpdateDetails("adverseCreditDetails", e.target.value)}
-                    className="form-control min-h-[100px] resize-none"
-                    placeholder="Please provide details..."
-                  />
-                </div>
-              )}
-              
-              <div>
-                <Label htmlFor="guarantorRequired" className="form-label">Guarantor Required</Label>
-                <select
-                  id="guarantorRequired"
-                  value={additionalDetails.guarantorRequired}
-                  onChange={(e) => onUpdateDetails("guarantorRequired", e.target.value)}
-                  className="form-select"
-                >
-                  <option value="">Select option</option>
-                  <option value="yes">Yes</option>
-                  <option value="no">No</option>
-                </select>
-              </div>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="pets" className="form-label">Pets Details</Label>
-                <textarea
-                  id="pets"
-                  value={additionalDetails.pets}
-                  onChange={(e) => onUpdateDetails("pets", e.target.value)}
-                  className="form-control min-h-[100px] resize-none"
-                  placeholder="e.g., 1 cat, 2 dogs, or 'None'"
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="under18Count" className="form-label">Children Under 18</Label>
-                <select
-                  id="under18Count"
-                  value={additionalDetails.under18Count}
-                  onChange={(e) => onUpdateDetails("under18Count", e.target.value)}
-                  className="form-select"
-                >
-                  <option value="">Select count</option>
-                  <option value="0">0</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4+">4+</option>
-                </select>
-              </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mobile-form-grid">
+        <FormFieldWithTooltip
+          label="Do you have a UK passport?"
+          tooltip="This helps us verify your right to rent in the UK"
+          required
+          htmlFor="ukPassport"
+        >
+          <Select
+            value={additionalDetails.ukPassport}
+            onValueChange={(value) => onUpdateDetails("ukPassport", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select option" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormFieldWithTooltip>
 
-              {additionalDetails.under18Count && additionalDetails.under18Count !== "0" && (
-                <div>
-                  <Label htmlFor="childrenAges" className="form-label">Children Ages</Label>
-                  <textarea
-                    id="childrenAges"
-                    value={additionalDetails.childrenAges}
-                    onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
-                    className="form-control min-h-[80px] resize-none"
-                    placeholder="e.g., 5, 8, 12"
-                  />
-                </div>
-              )}
-              
-              <div>
-                <Label htmlFor="depositType" className="form-label">Preferred Deposit Type</Label>
-                <select
-                  id="depositType"
-                  value={additionalDetails.depositType}
-                  onChange={(e) => onUpdateDetails("depositType", e.target.value)}
-                  className="form-select"
-                >
-                  <option value="">Select deposit type</option>
-                  <option value="standard">Standard Deposit</option>
-                  <option value="no-deposit">No Deposit Scheme</option>
-                  <option value="guarantor">Guarantor</option>
-                </select>
-              </div>
-            </div>
+        <FormFieldWithTooltip
+          label="Do you have any adverse credit history?"
+          tooltip="This includes CCJs, bankruptcies, IVAs, or missed payments"
+          required
+          htmlFor="adverseCredit"
+        >
+          <Select
+            value={additionalDetails.adverseCredit}
+            onValueChange={(value) => onUpdateDetails("adverseCredit", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select option" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormFieldWithTooltip>
+
+        {additionalDetails.adverseCredit === "yes" && (
+          <div className="md:col-span-2">
+            <FormFieldWithTooltip
+              label="Please provide details of adverse credit"
+              tooltip="Explain any credit issues - this helps us understand your situation"
+              htmlFor="adverseCreditDetails"
+            >
+              <Textarea
+                id="adverseCreditDetails"
+                value={additionalDetails.adverseCreditDetails}
+                onChange={(e) => onUpdateDetails("adverseCreditDetails", e.target.value)}
+                placeholder="Please provide details..."
+                rows={3}
+              />
+            </FormFieldWithTooltip>
           </div>
-          
-          <div>
-            <Label htmlFor="conditionsOfOffer" className="form-label">Conditions of Offer</Label>
-            <textarea
+        )}
+
+        <FormFieldWithTooltip
+          label="Will you require a guarantor?"
+          tooltip="A guarantor is someone who guarantees to pay your rent if you cannot"
+          required
+          htmlFor="guarantorRequired"
+        >
+          <Select
+            value={additionalDetails.guarantorRequired}
+            onValueChange={(value) => onUpdateDetails("guarantorRequired", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select option" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormFieldWithTooltip>
+
+        <FormFieldWithTooltip
+          label="Do you have any pets?"
+          tooltip="Please specify type and number of pets"
+          required
+          htmlFor="pets"
+        >
+          <Input
+            id="pets"
+            value={additionalDetails.pets}
+            onChange={(e) => onUpdateDetails("pets", e.target.value)}
+            placeholder="e.g. 1 cat, no pets"
+          />
+        </FormFieldWithTooltip>
+
+        <FormFieldWithTooltip
+          label="Number of children under 18"
+          tooltip="How many children under 18 will be living in the property?"
+          required
+          htmlFor="under18Count"
+        >
+          <Select
+            value={additionalDetails.under18Count}
+            onValueChange={(value) => onUpdateDetails("under18Count", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select number" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="0">0</SelectItem>
+              <SelectItem value="1">1</SelectItem>
+              <SelectItem value="2">2</SelectItem>
+              <SelectItem value="3">3</SelectItem>
+              <SelectItem value="4">4</SelectItem>
+              <SelectItem value="5+">5+</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormFieldWithTooltip>
+
+        {additionalDetails.under18Count !== "0" && additionalDetails.under18Count !== "" && (
+          <FormFieldWithTooltip
+            label="Ages of children"
+            tooltip="Please specify the ages of all children under 18"
+            htmlFor="childrenAges"
+          >
+            <Input
+              id="childrenAges"
+              value={additionalDetails.childrenAges}
+              onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
+              placeholder="e.g. 5, 8, 12"
+            />
+          </FormFieldWithTooltip>
+        )}
+
+        <div className="md:col-span-2">
+          <FormFieldWithTooltip
+            label="Conditions of offer"
+            tooltip="Any specific conditions or requirements for your tenancy"
+            htmlFor="conditionsOfOffer"
+          >
+            <Textarea
               id="conditionsOfOffer"
               value={additionalDetails.conditionsOfOffer}
               onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
-              className="form-control min-h-[120px] resize-none"
-              placeholder="Any special conditions or requests..."
+              placeholder="Any specific conditions..."
+              rows={3}
             />
-          </div>
-        </CardContent>
-      </Card>
+          </FormFieldWithTooltip>
+        </div>
+      </div>
+
+      {monthlyRent > 0 && (
+        <Card className="border-orange-200 bg-orange-50">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Calculator className="h-5 w-5 text-orange-600" />
+              Deposit Calculator
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p className="text-sm text-gray-600 mb-2">Based on monthly rent of £{monthlyRent.toLocaleString()}</p>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-sm">Holding Deposit (1 week):</span>
+                    <Badge variant="secondary">£{holdingDeposit.toLocaleString()}</Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Standard Deposit (6 weeks):</span>
+                    <Badge variant="secondary">£{totalDepositStandard.toLocaleString()}</Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Pet Deposit (8 weeks):</span>
+                    <Badge variant="secondary">£{totalDepositPet.toLocaleString()}</Badge>
+                  </div>
+                </div>
+              </div>
+              
+              <FormFieldWithTooltip
+                label="Deposit Type"
+                tooltip="Standard deposit for properties without pets, or pet deposit if you have pets"
+                required
+                htmlFor="depositType"
+              >
+                <Select
+                  value={additionalDetails.depositType}
+                  onValueChange={(value) => onUpdateDetails("depositType", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select deposit type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="standard">Standard (£{totalDepositStandard.toLocaleString()})</SelectItem>
+                    <SelectItem value="pet">Pet Deposit (£{totalDepositPet.toLocaleString()})</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormFieldWithTooltip>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
