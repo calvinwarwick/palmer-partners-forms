@@ -122,10 +122,6 @@ const ApplicationDetailsModal = ({ application, isOpen, onClose }: ApplicationDe
                   <p className="font-medium">{application.additional_details?.pets || 'None specified'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Additional Requests</p>
-                  <p className="font-medium">{application.additional_details?.additionalRequests || 'None'}</p>
-                </div>
-                <div>
                   <p className="text-sm text-gray-600">Guarantor Required</p>
                   <p className="font-medium">{application.additional_details?.guarantorRequired || 'Not specified'}</p>
                 </div>
@@ -133,6 +129,26 @@ const ApplicationDetailsModal = ({ application, isOpen, onClose }: ApplicationDe
                   <p className="text-sm text-gray-600">UK Passport</p>
                   <p className="font-medium">{application.additional_details?.ukPassport || 'Not specified'}</p>
                 </div>
+                <div>
+                  <p className="text-sm text-gray-600">Adverse Credit</p>
+                  <p className="font-medium">{application.additional_details?.adverseCredit || 'Not specified'}</p>
+                </div>
+                {application.additional_details?.adverseCreditDetails && (
+                  <div>
+                    <p className="text-sm text-gray-600">Adverse Credit Details</p>
+                    <p className="font-medium">{application.additional_details.adverseCreditDetails}</p>
+                  </div>
+                )}
+                <div>
+                  <p className="text-sm text-gray-600">Children Under 18</p>
+                  <p className="font-medium">{application.additional_details?.under18Count || 'None'}</p>
+                </div>
+                {application.additional_details?.childrenAges && (
+                  <div>
+                    <p className="text-sm text-gray-600">Children Ages</p>
+                    <p className="font-medium">{application.additional_details.childrenAges}</p>
+                  </div>
+                )}
               </div>
             </div>
 
