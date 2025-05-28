@@ -13,6 +13,11 @@ interface EmailRequest {
   to: string;
   subject: string;
   html: string;
+  attachment?: {
+    filename: string;
+    content: string;
+    type: string;
+  };
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -32,16 +37,28 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { to, subject, html }: EmailRequest = await req.json();
+    const { to, subject, html, attachment }: EmailRequest = await req.json();
 
     console.log("Sending email to:", to);
 
-    const emailResponse = await resend.emails.send({
-      from: "Tenancy Application <onboarding@resend.dev>",
+    const emailPayload: any = {
+      from: "Palmer & Partners <onboarding@resend.dev>",
       to: [to],
       subject,
       html,
-    });
+    };
+
+    // Add attachment if provided
+    if (attachment) {
+      emailPayload.attachments = [{
+        filename: attachment.filename,
+        content: attachment.content,
+        type: attachment.type,
+      }];
+      console.log("Email includes attachment:", attachment.filename);
+    }
+
+    const emailResponse = await resend.emails.send(emailPayload);
 
     console.log("Email sent successfully:", emailResponse);
 

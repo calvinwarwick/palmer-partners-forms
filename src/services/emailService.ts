@@ -1,9 +1,16 @@
+
 import { supabase } from "@/integrations/supabase/client";
+import { generateApplicationPDF } from "./pdfService";
 
 interface EmailData {
   to: string;
   subject: string;
   html: string;
+  attachment?: {
+    filename: string;
+    content: string;
+    type: string;
+  };
 }
 
 interface TenancyApplicationData {
@@ -34,121 +41,62 @@ export const sendEmail = async (emailData: EmailData): Promise<boolean> => {
   }
 };
 
-export const generateApplicationEmailHTML = (data: TenancyApplicationData): string => {
-  const { applicants, propertyPreferences, signature, submittedAt } = data;
-  
+export const generateSimpleConfirmationEmailHTML = (applicantName: string, applicationRef: string): string => {
   return `
     <!DOCTYPE html>
     <html>
     <head>
       <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .header { background-color: #2563eb; color: white; padding: 20px; text-align: center; }
-        .content { padding: 20px; }
-        .section { margin-bottom: 30px; }
-        .section h3 { color: #2563eb; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
-        .applicant { background-color: #f9fafb; padding: 15px; margin-bottom: 15px; border-radius: 8px; }
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .info-item { margin-bottom: 8px; }
-        .label { font-weight: bold; color: #4b5563; }
-        .signature { background-color: #fef3c7; padding: 15px; border-radius: 8px; text-align: center; }
+        .header { background-color: #2563eb; color: white; padding: 30px; text-align: center; }
+        .content { padding: 30px; max-width: 600px; margin: 0 auto; }
+        .logo { font-size: 28px; font-weight: bold; margin-bottom: 10px; }
+        .tagline { font-size: 16px; opacity: 0.9; }
+        .highlight { background-color: #eff6ff; padding: 20px; border-radius: 8px; margin: 20px 0; }
         .footer { background-color: #f3f4f6; padding: 20px; text-align: center; font-size: 14px; color: #6b7280; }
+        .btn { display: inline-block; background-color: #2563eb; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; margin: 10px 0; }
       </style>
     </head>
     <body>
       <div class="header">
-        <h1>Tenancy Application Confirmation</h1>
-        <p>Thank you for submitting your application</p>
+        <div class="logo">Palmer & Partners</div>
+        <div class="tagline">Premium Estate Agents</div>
       </div>
       
       <div class="content">
-        <div class="section">
-          <p><strong>Submission Date:</strong> ${new Date(submittedAt).toLocaleString()}</p>
-          <p>Dear Applicant(s), we have successfully received your tenancy application. Please find the details below for your records.</p>
-        </div>
-
-        <div class="section">
-          <h3>Applicant Information</h3>
-          ${applicants.map((applicant, index) => `
-            <div class="applicant">
-              <h4>Applicant ${index + 1}: ${applicant.firstName} ${applicant.lastName}</h4>
-              <div class="info-grid">
-                <div class="info-item">
-                  <span class="label">Email:</span> ${applicant.email}
-                </div>
-                <div class="info-item">
-                  <span class="label">Phone:</span> ${applicant.phone}
-                </div>
-                <div class="info-item">
-                  <span class="label">Date of Birth:</span> ${applicant.dateOfBirth || 'Not provided'}
-                </div>
-                <div class="info-item">
-                  <span class="label">Employment:</span> ${applicant.employment || 'Not provided'}
-                </div>
-                <div class="info-item">
-                  <span class="label">Annual Income:</span> £${applicant.annualIncome || 'Not provided'}
-                </div>
-                <div class="info-item">
-                  <span class="label">Previous Address:</span> ${applicant.previousAddress || 'Not provided'}
-                </div>
-              </div>
-              ${applicant.reference1Name ? `
-                <div style="margin-top: 15px;">
-                  <strong>Reference:</strong> ${applicant.reference1Name} (${applicant.reference1Contact})
-                </div>
-              ` : ''}
-            </div>
-          `).join('')}
-        </div>
-
-        <div class="section">
-          <h3>Property Preferences</h3>
-          <div class="info-grid">
-            <div class="info-item">
-              <span class="label">Property Type:</span> ${propertyPreferences.propertyType}
-            </div>
-            <div class="info-item">
-              <span class="label">Maximum Rent:</span> £${propertyPreferences.maxRent}/month
-            </div>
-            <div class="info-item">
-              <span class="label">Preferred Location:</span> ${propertyPreferences.preferredLocation || 'Not specified'}
-            </div>
-            <div class="info-item">
-              <span class="label">Move-in Date:</span> ${propertyPreferences.moveInDate || 'Flexible'}
-            </div>
-          </div>
-          ${propertyPreferences.additionalRequests ? `
-            <div style="margin-top: 15px;">
-              <span class="label">Additional Requests:</span>
-              <p style="background-color: #f9fafb; padding: 10px; border-radius: 4px; margin-top: 5px;">
-                ${propertyPreferences.additionalRequests}
-              </p>
-            </div>
-          ` : ''}
-        </div>
-
-        <div class="section">
-          <h3>Digital Signature</h3>
-          <div class="signature">
-            <p><strong>Signed by:</strong> ${signature}</p>
-            <p><em>Digitally signed on ${new Date(submittedAt).toLocaleDateString()}</em></p>
-          </div>
-        </div>
-
-        <div class="section">
-          <h3>Next Steps</h3>
+        <h2>Application Received Successfully</h2>
+        
+        <p>Dear ${applicantName},</p>
+        
+        <p>Thank you for submitting your tenancy application through Palmer & Partners. We have successfully received your application and all supporting documentation.</p>
+        
+        <div class="highlight">
+          <h3>Application Reference: ${applicationRef}</h3>
+          <p><strong>What happens next?</strong></p>
           <ul>
-            <li>We will review your application within 2-3 business days</li>
-            <li>You will receive an email notification regarding the status of your application</li>
-            <li>If you need to make any changes, please contact us as soon as possible</li>
-            <li>Keep this email for your records</li>
+            <li>Our team will review your application within 24-48 hours</li>
+            <li>We may contact you for additional information or clarifications</li>
+            <li>You'll receive an email update on your application status</li>
+            <li>If successful, we'll arrange a property viewing and tenancy agreement</li>
           </ul>
         </div>
+
+        <p><strong>Please find your complete application details attached as a PDF for your records.</strong></p>
+        
+        <p>If you have any questions about your application or need to make any changes, please contact us immediately using the reference number above.</p>
+        
+        <p>Thank you for choosing Palmer & Partners for your property needs.</p>
+        
+        <p>Best regards,<br>
+        <strong>The Palmer & Partners Team</strong><br>
+        Premium Estate Agents</p>
       </div>
 
       <div class="footer">
+        <p><strong>Palmer & Partners</strong></p>
+        <p>123 Kensington High Street, London W8 5SF</p>
+        <p>Phone: +44 20 7123 4567 | Email: info@palmerpartners.com</p>
         <p>This is an automated email. Please do not reply directly to this message.</p>
-        <p>For any questions, please contact our office.</p>
       </div>
     </body>
     </html>
@@ -161,18 +109,30 @@ export const sendApplicationConfirmation = async (
   signature: string
 ): Promise<boolean> => {
   const submittedAt = new Date().toISOString();
+  const applicationRef = `APP-${Date.now()}`;
+  
+  // Generate PDF
+  const pdfContent = generateApplicationPDF({
+    applicants,
+    propertyPreferences,
+    signature,
+    submittedAt
+  });
+  
+  // Convert PDF to base64 for email attachment
+  const pdfBase64 = btoa(String.fromCharCode(...pdfContent));
   
   // Send email to the primary applicant
   const primaryApplicant = applicants[0];
   const emailData: EmailData = {
     to: primaryApplicant.email,
-    subject: "Tenancy Application Confirmation - Thank You",
-    html: generateApplicationEmailHTML({
-      applicants,
-      propertyPreferences,
-      signature,
-      submittedAt
-    })
+    subject: "Tenancy Application Confirmation - Palmer & Partners",
+    html: generateSimpleConfirmationEmailHTML(`${primaryApplicant.firstName} ${primaryApplicant.lastName}`, applicationRef),
+    attachment: {
+      filename: `Tenancy_Application_${applicationRef}.pdf`,
+      content: pdfBase64,
+      type: 'application/pdf'
+    }
   };
 
   try {
@@ -192,12 +152,24 @@ export const sendAdminNotification = async (
 ): Promise<boolean> => {
   const submittedAt = new Date().toISOString();
   const primaryApplicant = applicants[0];
+  const applicationRef = `APP-${Date.now()}`;
+  
+  // Generate PDF for admin
+  const pdfContent = generateApplicationPDF({
+    applicants,
+    propertyPreferences,
+    signature,
+    submittedAt
+  });
+  
+  const pdfBase64 = btoa(String.fromCharCode(...pdfContent));
   
   const adminEmailData: EmailData = {
-    to: "admin@estateagent.com", // This would be configurable
-    subject: `New Tenancy Application from ${primaryApplicant.firstName} ${primaryApplicant.lastName}`,
+    to: "admin@palmerpartners.com",
+    subject: `New Tenancy Application - ${primaryApplicant.firstName} ${primaryApplicant.lastName} (${applicationRef})`,
     html: `
       <h2>New Tenancy Application Received</h2>
+      <p><strong>Application Reference:</strong> ${applicationRef}</p>
       <p><strong>Submitted:</strong> ${new Date(submittedAt).toLocaleString()}</p>
       <p><strong>Primary Applicant:</strong> ${primaryApplicant.firstName} ${primaryApplicant.lastName}</p>
       <p><strong>Email:</strong> ${primaryApplicant.email}</p>
@@ -206,8 +178,15 @@ export const sendAdminNotification = async (
       <p><strong>Max Rent:</strong> £${propertyPreferences.maxRent}/month</p>
       <p><strong>Property Type:</strong> ${propertyPreferences.propertyType}</p>
       
-      <p>Please review the full application in the admin dashboard.</p>
-    `
+      <p><strong>Complete application details are attached as PDF.</strong></p>
+      
+      <p>Please review and process this application in the admin dashboard.</p>
+    `,
+    attachment: {
+      filename: `Tenancy_Application_${applicationRef}.pdf`,
+      content: pdfBase64,
+      type: 'application/pdf'
+    }
   };
 
   try {
