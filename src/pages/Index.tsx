@@ -1,437 +1,328 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Search, MapPin, Home, FileText, Phone, Mail, Award, Shield, Clock, Star, Bed, Bath, Square, Eye, Heart } from "lucide-react";
-import OptimizedCard from "@/components/optimized/OptimizedCard";
-import ThemeToggle from "@/components/ThemeToggle";
-
-// Enhanced mock property data for both sales and lettings
-const mockProperties = [
-  {
-    id: 1,
-    address: "Lexden Road, Colchester, Essex",
-    price: "£695,000",
-    priceType: "sale",
-    type: "Detached",
-    bedrooms: 4,
-    bathrooms: 3,
-    sqft: 2150,
-    status: "For Sale",
-    featured: true,
-    image: "/lovable-uploads/2ffe88f6-5299-4edd-b1b2-e44585fafe59.png",
-    description: "Modern family home with stunning contemporary design, spacious garden and premium finishes throughout.",
-    features: ["Garden", "Parking", "Modern Kitchen", "En-Suite", "Double Glazing"]
-  },
-  {
-    id: 2,
-    address: "Victoria Gardens, Kensington, London SW7",
-    price: "£3,500",
-    priceType: "pcm",
-    type: "Apartment",
-    bedrooms: 2,
-    bathrooms: 2,
-    sqft: 1200,
-    status: "To Let",
-    featured: true,
-    image: "/placeholder.svg",
-    description: "Luxury apartment in prestigious Kensington with period features and modern amenities.",
-    features: ["Balcony", "Concierge", "Furnished", "Central Heating", "Gym Access"]
-  },
-  {
-    id: 3,
-    address: "Heritage Mews, Chelsea, London SW3",
-    price: "£1,250,000",
-    priceType: "sale",
-    type: "House",
-    bedrooms: 3,
-    bathrooms: 2,
-    sqft: 1800,
-    status: "For Sale",
-    featured: false,
-    image: "/placeholder.svg",
-    description: "Charming Victorian mews house with private courtyard in the heart of Chelsea.",
-    features: ["Private Garden", "Period Features", "Fireplace", "Wine Cellar", "Parking"]
-  },
-  {
-    id: 4,
-    address: "Riverside View, Notting Hill, London W11",
-    price: "£2,800",
-    priceType: "pcm",
-    type: "Apartment",
-    bedrooms: 1,
-    bathrooms: 1,
-    sqft: 750,
-    status: "Let Agreed",
-    featured: false,
-    image: "/placeholder.svg",
-    description: "Contemporary riverside apartment with stunning views and excellent transport links.",
-    features: ["River View", "Balcony", "Gym Access", "Concierge", "Storage"]
-  }
-];
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MapPin, Bed, Bath, Car, Home, Search, Filter, Star, LogIn } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProperties, setFilteredProperties] = useState(mockProperties);
-  const [priceFilter, setPriceFilter] = useState("");
-  const [typeFilter, setTypeFilter] = useState("");
-  const [saleTypeFilter, setSaleTypeFilter] = useState("");
-
-  const handleSearch = (term: string) => {
-    setSearchTerm(term);
-    filterProperties(term, priceFilter, typeFilter, saleTypeFilter);
-  };
-
-  const filterProperties = (search: string, price: string, type: string, saleType: string) => {
-    let filtered = mockProperties;
-
-    if (search) {
-      filtered = filtered.filter(property =>
-        property.address.toLowerCase().includes(search.toLowerCase()) ||
-        property.type.toLowerCase().includes(search.toLowerCase()) ||
-        property.description.toLowerCase().includes(search.toLowerCase())
-      );
+  const [priceRange, setPriceRange] = useState("all");
+  const [propertyType, setPropertyType] = useState("all");
+  const [bedrooms, setBedrooms] = useState("all");
+  
+  const mockProperties = [
+    {
+      id: 1,
+      title: "Modern 2-Bed Apartment",
+      address: "123 Oak Street, London, SW1A 1AA",
+      price: 2500,
+      bedrooms: 2,
+      bathrooms: 2,
+      parking: 1,
+      type: "Apartment",
+      rating: 4.8,
+      image: "/placeholder.svg",
+      description: "Beautiful modern apartment in the heart of London with excellent transport links."
+    },
+    {
+      id: 2,
+      title: "Victorian Terrace House",
+      address: "456 Pine Avenue, Manchester, M1 4BD",
+      price: 1800,
+      bedrooms: 3,
+      bathrooms: 2,
+      parking: 0,
+      type: "House",
+      rating: 4.6,
+      image: "/placeholder.svg",
+      description: "Charming Victorian terrace with original features and modern amenities."
+    },
+    {
+      id: 3,
+      title: "Contemporary Studio",
+      address: "789 Elm Close, Birmingham, B2 4QA",
+      price: 1200,
+      bedrooms: 1,
+      bathrooms: 1,
+      parking: 0,
+      type: "Studio",
+      rating: 4.4,
+      image: "/placeholder.svg",
+      description: "Perfect studio for young professionals in Birmingham city center."
     }
+  ];
 
-    if (saleType && saleType !== "all") {
-      filtered = filtered.filter(property => property.priceType === saleType);
-    }
+  const navigate = useNavigate();
 
-    if (type && type !== "all") {
-      filtered = filtered.filter(property => 
-        property.type.toLowerCase() === type.toLowerCase()
-      );
-    }
-
-    setFilteredProperties(filtered);
-  };
+  const filteredProperties = mockProperties.filter(property => {
+    const matchesSearch = property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         property.address.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesPrice = priceRange === "all" || 
+                        (priceRange === "1000-1500" && property.price >= 1000 && property.price <= 1500) ||
+                        (priceRange === "1500-2000" && property.price >= 1500 && property.price <= 2000) ||
+                        (priceRange === "2000+" && property.price >= 2000);
+    
+    const matchesType = propertyType === "all" || property.type.toLowerCase() === propertyType.toLowerCase();
+    
+    const matchesBedrooms = bedrooms === "all" || property.bedrooms.toString() === bedrooms;
+    
+    return matchesSearch && matchesPrice && matchesType && matchesBedrooms;
+  });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="bg-background shadow-sm border-b border-border">
+      <header className="bg-white shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-3">
-              <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
-                <Home className="h-8 w-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-foreground">Palmer & Partners</h1>
-                <p className="text-muted-foreground font-medium">Premium Estate Agents</p>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Home className="h-8 w-8 text-blue-600" />
+              <h1 className="text-2xl font-bold text-gray-900">EstateAgent</h1>
             </div>
-            <nav className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-primary font-semibold">Properties</Link>
-              <a href="#sales" className="text-muted-foreground hover:text-primary transition-colors">Sales</a>
-              <a href="#lettings" className="text-muted-foreground hover:text-primary transition-colors">Lettings</a>
-              <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">About</a>
-              <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
-              <ThemeToggle />
-              <Link to="/login">
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">Login</Button>
+            <nav className="flex items-center space-x-6">
+              <Link to="/application" className="text-gray-600 hover:text-blue-600 transition-colors">
+                Apply for Tenancy
               </Link>
-              <Link to="/application">
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">Get Started</Button>
-              </Link>
+              {user ? (
+                <Link to="/login">
+                  <Button variant="outline">
+                    <Home className="h-4 w-4 mr-2" />
+                    Dashboard
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <Button>
+                    <LogIn className="h-4 w-4 mr-2" />
+                    Login
+                  </Button>
+                </Link>
+              )}
             </nav>
           </div>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-background via-muted/50 to-muted py-24">
-        <div className="absolute inset-0 opacity-50" style={{
-          backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1f5f9' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
-        }}></div>
-        <div className="container mx-auto px-4 text-center relative">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground via-primary to-primary bg-clip-text text-transparent leading-tight">
-              Find Your Perfect
-              <br />
-              <span className="text-primary">Home</span>
-            </h2>
-            <p className="text-xl md:text-2xl mb-12 text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Whether you&apos;re looking to buy, sell, rent, or let, we connect you with London&apos;s finest properties
-            </p>
-            
-            {/* Enhanced Search Bar */}
-            <div className="bg-card p-8 rounded-3xl shadow-2xl max-w-6xl mx-auto border border-border">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div className="relative md:col-span-2">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
-                  <Input
-                    type="text"
-                    placeholder="Enter location or postcode..."
-                    value={searchTerm}
-                    onChange={(e) => handleSearch(e.target.value)}
-                    className="pl-12 py-4 text-foreground border-border focus:border-primary rounded-xl h-14"
-                  />
-                </div>
-                <select 
-                  className="px-4 py-4 border border-border rounded-xl text-foreground focus:border-primary h-14 bg-background"
-                  value={saleTypeFilter}
-                  onChange={(e) => {
-                    setSaleTypeFilter(e.target.value);
-                    filterProperties(searchTerm, priceFilter, typeFilter, e.target.value);
-                  }}
-                >
-                  <option value="">Buy or Rent</option>
-                  <option value="sale">For Sale</option>
-                  <option value="pcm">To Rent</option>
-                </select>
-                <select 
-                  className="px-4 py-4 border border-border rounded-xl text-foreground focus:border-primary h-14 bg-background"
-                  value={typeFilter}
-                  onChange={(e) => {
-                    setTypeFilter(e.target.value);
-                    filterProperties(searchTerm, priceFilter, e.target.value, saleTypeFilter);
-                  }}
-                >
-                  <option value="">Property Type</option>
-                  <option value="apartment">Apartment</option>
-                  <option value="house">House</option>
-                  <option value="detached">Detached</option>
-                </select>
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-14 text-lg font-semibold rounded-xl">
-                  Search
-                </Button>
-              </div>
-            </div>
-          </div>
+      <section className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-5xl font-bold mb-6">Find Your Perfect Rental Property</h2>
+          <p className="text-xl mb-8 max-w-2xl mx-auto">
+            Discover amazing rental properties with our comprehensive estate agent platform. 
+            From modern apartments to family homes, find your next home today.
+          </p>
+          <Button size="lg" variant="secondary" onClick={() => document.getElementById('properties')?.scrollIntoView({ behavior: 'smooth' })}>
+            Browse Properties
+          </Button>
         </div>
       </section>
 
-      {/* Sales & Lettings Tabs */}
-      <section className="py-16 bg-background">
+      {/* Search and Filter Section */}
+      <section className="py-8 bg-white border-b">
         <div className="container mx-auto px-4">
-          <div className="flex justify-center mb-12">
-            <div className="bg-gray-100 p-2 rounded-2xl">
-              <div className="flex space-x-2">
-                <Button 
-                  variant={saleTypeFilter === "sale" || saleTypeFilter === "" ? "default" : "ghost"}
-                  className="rounded-xl px-8 py-3"
-                  onClick={() => {
-                    setSaleTypeFilter("sale");
-                    filterProperties(searchTerm, priceFilter, typeFilter, "sale");
-                  }}
-                >
-                  For Sale
-                </Button>
-                <Button 
-                  variant={saleTypeFilter === "pcm" ? "default" : "ghost"}
-                  className="rounded-xl px-8 py-3"
-                  onClick={() => {
-                    setSaleTypeFilter("pcm");
-                    filterProperties(searchTerm, priceFilter, typeFilter, "pcm");
-                  }}
-                >
-                  To Rent
-                </Button>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+            <div className="relative lg:col-span-2">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                placeholder="Search by property or location..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
             </div>
-          </div>
+            
+            <Select value={priceRange} onValueChange={setPriceRange}>
+              <SelectTrigger>
+                <SelectValue placeholder="Price Range" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Prices</SelectItem>
+                <SelectItem value="1000-1500">£1,000 - £1,500</SelectItem>
+                <SelectItem value="1500-2000">£1,500 - £2,000</SelectItem>
+                <SelectItem value="2000+">£2,000+</SelectItem>
+              </SelectContent>
+            </Select>
 
-          {/* Stats Section */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center mb-16">
-            <div className="space-y-3">
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">500+</div>
-              <div className="text-gray-600 font-medium">Properties Listed</div>
-            </div>
-            <div className="space-y-3">
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">1,200+</div>
-              <div className="text-gray-600 font-medium">Happy Clients</div>
-            </div>
-            <div className="space-y-3">
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">15+</div>
-              <div className="text-gray-600 font-medium">Years Experience</div>
-            </div>
-            <div className="space-y-3">
-              <div className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">98%</div>
-              <div className="text-gray-600 font-medium">Success Rate</div>
-            </div>
+            <Select value={propertyType} onValueChange={setPropertyType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Property Type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Types</SelectItem>
+                <SelectItem value="apartment">Apartment</SelectItem>
+                <SelectItem value="house">House</SelectItem>
+                <SelectItem value="studio">Studio</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={bedrooms} onValueChange={setBedrooms}>
+              <SelectTrigger>
+                <SelectValue placeholder="Bedrooms" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Any</SelectItem>
+                <SelectItem value="1">1 Bedroom</SelectItem>
+                <SelectItem value="2">2 Bedrooms</SelectItem>
+                <SelectItem value="3">3 Bedrooms</SelectItem>
+                <SelectItem value="4">4+ Bedrooms</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </section>
 
       {/* Properties Section */}
-      <section className="py-20 bg-gray-50">
+      <section id="properties" className="py-16">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl font-bold text-gray-900 mb-4">Featured Properties</h3>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover exceptional properties for sale and rent across London&apos;s most desirable locations
+          <div className="text-center mb-12">
+            <h3 className="text-3xl font-bold text-gray-900 mb-4">Featured Properties</h3>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Explore our handpicked selection of rental properties across the UK. 
+              Each property is verified and ready for immediate viewing.
             </p>
-            <div className="mt-6">
-              <Badge variant="secondary" className="text-lg px-6 py-2 bg-blue-50 text-blue-700 border-blue-200">
-                {filteredProperties.length} properties available
-              </Badge>
-            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProperties.map((property) => (
-              <OptimizedCard
-                key={property.id}
-                id={property.id}
-                address={property.address}
-                price={property.price}
-                priceType={property.priceType}
-                type={property.type}
-                bedrooms={property.bedrooms}
-                bathrooms={property.bathrooms}
-                sqft={property.sqft}
-                status={property.status}
-                image={property.image}
-                description={property.description}
-                features={property.features}
-                featured={property.featured}
-              />
+              <Card key={property.id} className="hover:shadow-lg transition-shadow">
+                <div className="aspect-video bg-gray-200 rounded-t-lg overflow-hidden">
+                  <img 
+                    src={property.image} 
+                    alt={property.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <CardTitle className="text-lg">{property.title}</CardTitle>
+                    <div className="flex items-center">
+                      <Star className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="text-sm text-gray-600 ml-1">{property.rating}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center text-gray-600">
+                    <MapPin className="h-4 w-4 mr-2" />
+                    <span className="text-sm">{property.address}</span>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 text-sm mb-4">{property.description}</p>
+                  
+                  <div className="flex items-center space-x-4 mb-4 text-sm text-gray-600">
+                    <div className="flex items-center">
+                      <Bed className="h-4 w-4 mr-1" />
+                      <span>{property.bedrooms}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Bath className="h-4 w-4 mr-1" />
+                      <span>{property.bathrooms}</span>
+                    </div>
+                    {property.parking > 0 && (
+                      <div className="flex items-center">
+                        <Car className="h-4 w-4 mr-1" />
+                        <span>{property.parking}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-2xl font-bold text-blue-600">£{property.price}</span>
+                      <span className="text-gray-600">/month</span>
+                    </div>
+                    <Button 
+                      onClick={() => navigate('/application')}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      Apply Now
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* About Section */}
-      <section id="about" className="bg-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16">
-              <h3 className="text-4xl font-bold text-gray-900 mb-6">Why Choose Palmer & Partners?</h3>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Leading London&apos;s property market with expertise in both sales and lettings across the capital&apos;s most prestigious areas
-              </p>
+          {filteredProperties.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No properties found matching your criteria. Try adjusting your filters.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="text-center group">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-2xl w-20 h-20 mx-auto mb-6 group-hover:from-blue-700 group-hover:to-purple-700 transition-all">
-                  <Award className="h-8 w-8 text-white mx-auto mt-2" />
-                </div>
-                <h4 className="text-2xl font-semibold mb-4 text-gray-900">Premium Portfolio</h4>
-                <p className="text-gray-600 leading-relaxed">Exclusive access to London&apos;s finest properties for sale and rent in prime locations including Kensington, Chelsea, and Mayfair</p>
-              </div>
-              <div className="text-center group">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-2xl w-20 h-20 mx-auto mb-6 group-hover:from-blue-700 group-hover:to-purple-700 transition-all">
-                  <Shield className="h-8 w-8 text-white mx-auto mt-2" />
-                </div>
-                <h4 className="text-2xl font-semibold mb-4 text-gray-900">Expert Guidance</h4>
-                <p className="text-gray-600 leading-relaxed">Professional agents with deep local market knowledge providing expert advice for buyers, sellers, landlords, and tenants</p>
-              </div>
-              <div className="text-center group">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-2xl w-20 h-20 mx-auto mb-6 group-hover:from-blue-700 group-hover:to-purple-700 transition-all">
-                  <Clock className="h-8 w-8 text-white mx-auto mt-2" />
-                </div>
-                <h4 className="text-2xl font-semibold mb-4 text-gray-900">Seamless Service</h4>
-                <p className="text-gray-600 leading-relaxed">End-to-end support from initial consultation to completion, with dedicated specialists for sales and lettings</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white py-20 relative overflow-hidden">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }}></div>
-        <div className="container mx-auto px-4 text-center relative">
-          <div className="max-w-4xl mx-auto">
-            <h3 className="text-4xl md:text-5xl font-bold mb-6">Ready to Make Your Move?</h3>
-            <p className="text-xl md:text-2xl mb-10 opacity-90 leading-relaxed">
-              Whether buying, selling, renting, or letting - start your property journey with London&apos;s trusted experts
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/application">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-xl">
-                  Get Started Today
-                </Button>
-              </Link>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold rounded-xl">
-                Schedule Viewing
+      <section className="bg-blue-600 text-white py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h3 className="text-3xl font-bold mb-4">Ready to Find Your New Home?</h3>
+          <p className="text-xl mb-8">Join thousands of satisfied tenants who found their perfect rental through our platform.</p>
+          <div className="space-x-4">
+            <Button 
+              size="lg" 
+              variant="secondary"
+              onClick={() => navigate('/application')}
+            >
+              Start Your Application
+            </Button>
+            {!user && (
+              <Button 
+                size="lg" 
+                variant="outline"
+                className="text-white border-white hover:bg-white hover:text-blue-600"
+                onClick={() => navigate('/login')}
+              >
+                Agent Login
               </Button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-16">
-              <h3 className="text-4xl font-bold text-gray-900 mb-6">Get In Touch</h3>
-              <p className="text-xl text-gray-600">Our expert sales and lettings teams are here to help</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-              <div className="text-center group">
-                <div className="bg-white p-8 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow border border-gray-100">
-                  <Phone className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h4 className="font-semibold text-xl mb-3 text-gray-900">Sales Enquiries</h4>
-                  <p className="text-gray-600 text-lg">+44 20 7123 4567</p>
-                  <p className="text-gray-500 text-sm mt-2">Mon-Fri 9AM-6PM</p>
-                </div>
-              </div>
-              <div className="text-center group">
-                <div className="bg-white p-8 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow border border-gray-100">
-                  <Home className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h4 className="font-semibold text-xl mb-3 text-gray-900">Lettings Team</h4>
-                  <p className="text-gray-600 text-lg">+44 20 7123 4568</p>
-                  <p className="text-gray-500 text-sm mt-2">Mon-Sat 8AM-7PM</p>
-                </div>
-              </div>
-              <div className="text-center group">
-                <div className="bg-white p-8 rounded-2xl shadow-lg group-hover:shadow-xl transition-shadow border border-gray-100">
-                  <Mail className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                  <h4 className="font-semibold text-xl mb-3 text-gray-900">Email Us</h4>
-                  <p className="text-gray-600 text-lg">info@palmerpartners.com</p>
-                  <p className="text-gray-500 text-sm mt-2">24/7 Support</p>
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-16">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            <div className="md:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-3 rounded-xl">
-                  <Home className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <span className="text-2xl font-bold">Palmer & Partners</span>
-                  <p className="text-blue-400 font-medium">Premium Estate Agents</p>
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Home className="h-6 w-6" />
+                <span className="text-xl font-bold">EstateAgent</span>
               </div>
-              <p className="text-gray-300 leading-relaxed max-w-md">
-                London&apos;s premier estate agency specializing in luxury sales and lettings across the capital&apos;s most prestigious neighborhoods.
+              <p className="text-gray-400">
+                Your trusted partner in finding the perfect rental property across the UK.
               </p>
             </div>
             <div>
-              <h4 className="font-semibold mb-6 text-lg">Services</h4>
-              <ul className="space-y-3 text-gray-300">
-                <li><a href="#sales" className="hover:text-blue-400 transition-colors">Property Sales</a></li>
-                <li><a href="#lettings" className="hover:text-blue-400 transition-colors">Lettings & Rentals</a></li>
-                <li><Link to="/application" className="hover:text-blue-400 transition-colors">Property Management</Link></li>
-                <li><a href="#about" className="hover:text-blue-400 transition-colors">Valuations</a></li>
+              <h4 className="font-semibold mb-4">Properties</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white">Apartments</a></li>
+                <li><a href="#" className="hover:text-white">Houses</a></li>
+                <li><a href="#" className="hover:text-white">Studios</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold mb-6 text-lg">Contact</h4>
-              <div className="space-y-3 text-gray-300">
-                <p className="flex items-center"><Mail className="h-4 w-4 mr-2" /> info@palmerpartners.com</p>
-                <p className="flex items-center"><Phone className="h-4 w-4 mr-2" /> +44 20 7123 4567</p>
-                <p className="flex items-center"><MapPin className="h-4 w-4 mr-2" /> 123 Kensington High St, London</p>
-              </div>
+              <h4 className="font-semibold mb-4">Services</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li><a href="#" className="hover:text-white">Property Management</a></li>
+                <li><a href="#" className="hover:text-white">Tenant Screening</a></li>
+                <li><a href="#" className="hover:text-white">Maintenance</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-4">Contact</h4>
+              <ul className="space-y-2 text-gray-400">
+                <li>Phone: +44 20 1234 5678</li>
+                <li>Email: info@estateagent.com</li>
+                <li>Address: 123 Business Street, London</li>
+              </ul>
             </div>
           </div>
-          <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Palmer & Partners. All rights reserved. | Licensed Estate Agents | ARLA & NAEA Members</p>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
+            <p>&copy; 2024 EstateAgent. All rights reserved.</p>
           </div>
         </div>
       </footer>

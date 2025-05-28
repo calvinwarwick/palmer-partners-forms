@@ -1,53 +1,109 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Home, Users, FileText, Download, Plus, Settings, LogOut } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Home, Users, FileText, Download, Plus, Settings, LogOut, Search, Filter } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 interface DashboardProps {
   user: { username: string; role: string };
   onLogout: () => void;
 }
 
+interface Application {
+  id: string;
+  applicants: any[];
+  property_preferences: any;
+  status: string;
+  submitted_at: string;
+}
+
 const Dashboard = ({ user, onLogout }: DashboardProps) => {
-  const [applications] = useState([
-    {
-      id: 1,
-      property: "123 Oak Street, London",
-      applicants: 2,
-      status: "Pending Review",
-      submittedDate: "2024-01-15",
-      agent: "John Smith"
-    },
-    {
-      id: 2,
-      property: "456 Pine Avenue, Manchester",
-      applicants: 1,
-      status: "Approved",
-      submittedDate: "2024-01-10",
-      agent: "Sarah Johnson"
-    },
-    {
-      id: 3,
-      property: "789 Elm Close, Birmingham",
-      applicants: 3,
-      status: "Under Review",
-      submittedDate: "2024-01-12",
-      agent: "Mike Davis"
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [filteredApplications, setFilteredApplications] = useState<Application[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const { user: authUser } = useAuth();
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+
+  useEffect(() => {
+    filterApplications();
+  }, [applications, searchTerm, statusFilter]);
+
+  const fetchApplications = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('tenancy_applications')
+        .select('*')
+        .order('submitted_at', { ascending: false });
+
+      if (error) throw error;
+      setApplications(data || []);
+    } catch (error) {
+      console.error('Error fetching applications:', error);
+      toast.error('Failed to fetch applications');
+    } finally {
+      setLoading(false);
     }
-  ]);
+  };
+
+  const filterApplications = () => {
+    let filtered = applications;
+
+    if (searchTerm) {
+      filtered = filtered.filter(app => 
+        app.applicants?.[0]?.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.applicants?.[0]?.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.applicants?.[0]?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        app.property_preferences?.streetAddress?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(app => app.status === statusFilter);
+    }
+
+    setFilteredApplications(filtered);
+  };
+
+  const updateApplicationStatus = async (id: string, newStatus: string) => {
+    try {
+      const { error } = await supabase
+        .from('tenancy_applications')
+        .update({ status: newStatus })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev => 
+        prev.map(app => app.id === id ? { ...app, status: newStatus } : app)
+      );
+      toast.success('Application status updated');
+    } catch (error) {
+      console.error('Error updating status:', error);
+      toast.error('Failed to update status');
+    }
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "Approved":
+      case "approved":
         return "bg-green-500";
-      case "Pending Review":
+      case "pending":
         return "bg-yellow-500";
-      case "Under Review":
+      case "under_review":
         return "bg-blue-500";
-      case "Rejected":
+      case "rejected":
         return "bg-red-500";
       default:
         return "bg-gray-500";
@@ -55,50 +111,31 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
   };
 
   const getRoleSpecificContent = () => {
-    switch (user.role) {
-      case "Admin":
-        return {
-          title: "Admin Dashboard",
-          description: "Manage all properties, applications, and users",
-          stats: [
-            { label: "Total Properties", value: "156", icon: Home },
-            { label: "Total Applications", value: "89", icon: FileText },
-            { label: "Active Users", value: "23", icon: Users },
-            { label: "Pending Reviews", value: "12", icon: Settings }
-          ]
-        };
-      case "Agent":
-        return {
-          title: "Agent Dashboard",
-          description: "Manage your assigned properties and applications",
-          stats: [
-            { label: "My Properties", value: "23", icon: Home },
-            { label: "My Applications", value: "15", icon: FileText },
-            { label: "Pending Reviews", value: "3", icon: Settings },
-            { label: "This Month", value: "8", icon: Plus }
-          ]
-        };
-      case "Tenant":
-        return {
-          title: "Tenant Portal",
-          description: "View your applications and property listings",
-          stats: [
-            { label: "My Applications", value: "2", icon: FileText },
-            { label: "Approved", value: "1", icon: Home },
-            { label: "Pending", value: "1", icon: Settings },
-            { label: "Available Properties", value: "45", icon: Plus }
-          ]
-        };
-      default:
-        return {
-          title: "Dashboard",
-          description: "Welcome to the portal",
-          stats: []
-        };
-    }
+    return {
+      title: "Estate Agent Dashboard",
+      description: "Manage tenancy applications and property listings",
+      stats: [
+        { label: "Total Applications", value: applications.length.toString(), icon: FileText },
+        { label: "Pending Review", value: applications.filter(app => app.status === 'pending').length.toString(), icon: Settings },
+        { label: "Approved", value: applications.filter(app => app.status === 'approved').length.toString(), icon: Home },
+        { label: "This Month", value: applications.filter(app => {
+          const submitDate = new Date(app.submitted_at);
+          const now = new Date();
+          return submitDate.getMonth() === now.getMonth() && submitDate.getFullYear() === now.getFullYear();
+        }).length.toString(), icon: Plus }
+      ]
+    };
   };
 
   const content = getRoleSpecificContent();
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -115,7 +152,7 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
             </div>
             <div className="flex items-center space-x-4">
               <Badge variant="secondary">{user.role}</Badge>
-              <span className="text-sm text-gray-600">Welcome, {user.username}</span>
+              <span className="text-sm text-gray-600">Welcome, {authUser?.email || user.username}</span>
               <Button variant="outline" onClick={onLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -154,7 +191,7 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
           <TabsList>
             <TabsTrigger value="applications">Applications</TabsTrigger>
             <TabsTrigger value="properties">Properties</TabsTrigger>
-            {user.role === "Admin" && <TabsTrigger value="users">Users</TabsTrigger>}
+            <TabsTrigger value="reports">Reports</TabsTrigger>
           </TabsList>
 
           <TabsContent value="applications">
@@ -164,7 +201,7 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                   <div>
                     <CardTitle>Tenancy Applications</CardTitle>
                     <CardDescription>
-                      {user.role === "Admin" ? "All applications" : "Your applications"}
+                      Manage all tenancy applications
                     </CardDescription>
                   </div>
                   <div className="flex space-x-2">
@@ -172,32 +209,72 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                       <Download className="h-4 w-4 mr-2" />
                       Export
                     </Button>
-                    {user.role !== "Tenant" && (
-                      <Button>
-                        <Plus className="h-4 w-4 mr-2" />
-                        New Application
-                      </Button>
-                    )}
                   </div>
+                </div>
+
+                {/* Search and Filter */}
+                <div className="flex gap-4 mt-4">
+                  <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                    <Input
+                      placeholder="Search applications..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                  <Select value={statusFilter} onValueChange={setStatusFilter}>
+                    <SelectTrigger className="w-48">
+                      <Filter className="h-4 w-4 mr-2" />
+                      <SelectValue placeholder="Filter by status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Statuses</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="under_review">Under Review</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {applications.map((app) => (
+                  {filteredApplications.map((app) => (
                     <div key={app.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
                       <div className="flex justify-between items-start">
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{app.property}</h3>
+                          <h3 className="font-semibold text-lg">
+                            {app.applicants?.[0]?.firstName} {app.applicants?.[0]?.lastName}
+                            {app.applicants?.length > 1 && ` + ${app.applicants.length - 1} other(s)`}
+                          </h3>
                           <p className="text-gray-600 text-sm">
-                            {app.applicants} applicant(s) • Submitted {app.submittedDate}
+                            {app.applicants?.[0]?.email}
                           </p>
-                          {user.role === "Admin" && (
-                            <p className="text-gray-600 text-sm">Agent: {app.agent}</p>
-                          )}
+                          <p className="text-gray-600 text-sm">
+                            Property: {app.property_preferences?.streetAddress || 'N/A'}
+                          </p>
+                          <p className="text-gray-600 text-sm">
+                            Submitted: {new Date(app.submitted_at).toLocaleDateString()}
+                          </p>
                         </div>
                         <div className="flex items-center space-x-2">
+                          <Select 
+                            value={app.status} 
+                            onValueChange={(value) => updateApplicationStatus(app.id, value)}
+                          >
+                            <SelectTrigger className="w-32">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="pending">Pending</SelectItem>
+                              <SelectItem value="under_review">Under Review</SelectItem>
+                              <SelectItem value="approved">Approved</SelectItem>
+                              <SelectItem value="rejected">Rejected</SelectItem>
+                            </SelectContent>
+                          </Select>
                           <Badge className={`text-white ${getStatusColor(app.status)}`}>
-                            {app.status}
+                            {app.status.replace('_', ' ').toUpperCase()}
                           </Badge>
                           <Button variant="outline" size="sm">
                             View Details
@@ -206,6 +283,12 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                       </div>
                     </div>
                   ))}
+
+                  {filteredApplications.length === 0 && (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500">No applications found matching your criteria.</p>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -218,24 +301,36 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                 <CardDescription>Manage property listings and details</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600">Property management interface will be implemented here.</p>
+                <div className="text-center py-8">
+                  <Home className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-4">Property management features coming soon</p>
+                  <Button variant="outline">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Property
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
-          {user.role === "Admin" && (
-            <TabsContent value="users">
-              <Card>
-                <CardHeader>
-                  <CardTitle>User Management</CardTitle>
-                  <CardDescription>Manage system users and permissions</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">User management interface will be implemented here.</p>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          )}
+          <TabsContent value="reports">
+            <Card>
+              <CardHeader>
+                <CardTitle>Reports & Analytics</CardTitle>
+                <CardDescription>View application statistics and reports</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8">
+                  <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-4">Reporting features coming soon</p>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Generate Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
