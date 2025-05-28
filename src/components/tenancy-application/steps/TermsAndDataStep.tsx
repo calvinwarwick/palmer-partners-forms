@@ -2,7 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 
@@ -53,11 +53,11 @@ const TermsAndDataStep = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-start space-x-3">
-            <Checkbox
+            <Switch
               id="utilities"
               checked={dataSharing.utilities}
-              onCheckedChange={(checked) => onUpdateDataSharing('utilities', checked as boolean)}
-              className="mt-1 mobile-checkbox"
+              onCheckedChange={(checked) => onUpdateDataSharing('utilities', checked)}
+              className="mt-1"
             />
             <div className="space-y-1">
               <Label htmlFor="utilities" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -70,11 +70,11 @@ const TermsAndDataStep = ({
           </div>
           
           <div className="flex items-start space-x-3">
-            <Checkbox
+            <Switch
               id="insurance"
               checked={dataSharing.insurance}
-              onCheckedChange={(checked) => onUpdateDataSharing('insurance', checked as boolean)}
-              className="mt-1 mobile-checkbox"
+              onCheckedChange={(checked) => onUpdateDataSharing('insurance', checked)}
+              className="mt-1"
             />
             <div className="space-y-1">
               <Label htmlFor="insurance" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -115,12 +115,11 @@ const TermsAndDataStep = ({
           </div>
           
           <div className="flex items-start space-x-3">
-            <Checkbox
+            <Switch
               id="terms"
               checked={termsAccepted}
-              onCheckedChange={(checked) => onTermsAccepted(checked as boolean)}
-              required
-              className="mt-1 mobile-checkbox"
+              onCheckedChange={(checked) => onTermsAccepted(checked)}
+              className="mt-1"
             />
             <Label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
               I accept the terms and conditions and confirm that all information provided is accurate *

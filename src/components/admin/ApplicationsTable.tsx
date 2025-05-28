@@ -2,7 +2,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -52,14 +52,14 @@ const ApplicationsTable = ({
   const { generatePdf, isGenerating } = usePdfGeneration();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const checkboxRef = useRef<HTMLButtonElement>(null);
+  const switchRef = useRef<HTMLButtonElement>(null);
   
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
   const isIndeterminate = selectedApplications.length > 0 && selectedApplications.length < applications.length;
 
   useEffect(() => {
-    if (checkboxRef.current) {
-      (checkboxRef.current as any).indeterminate = isIndeterminate;
+    if (switchRef.current) {
+      (switchRef.current as any).indeterminate = isIndeterminate;
     }
   }, [isIndeterminate]);
 
@@ -118,11 +118,10 @@ const ApplicationsTable = ({
           <div className="flex items-center gap-4">
             <div className="flex items-center space-x-3">
               {applications.length > 0 && (
-                <Checkbox
-                  ref={checkboxRef}
+                <Switch
+                  ref={switchRef}
                   checked={isAllSelected}
                   onCheckedChange={onSelectAll}
-                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
                 />
               )}
               <span className="text-sm font-semibold text-gray-900">
@@ -238,10 +237,9 @@ const ApplicationsTable = ({
               {applications.map((application) => (
                 <TableRow key={application.id} className="hover:bg-gray-50">
                   <TableCell>
-                    <Checkbox
+                    <Switch
                       checked={selectedApplications.includes(application.id)}
                       onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
-                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                     />
                   </TableCell>
                   
