@@ -18,7 +18,7 @@ export const validateEmploymentInfo = (applicants: Applicant[]): boolean => {
 };
 
 export const validatePropertyPreferences = (preferences: PropertyPreferences): boolean => {
-  return preferences.propertyType && preferences.maxRent;
+  return !!(preferences.propertyType && preferences.maxRent);
 };
 
 export const validateSignature = (signature: string): boolean => {
