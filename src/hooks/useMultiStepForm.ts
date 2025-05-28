@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { validateStep } from '../domain/validation/applicationValidation';
-import { Applicant, PropertyPreferences } from '../domain/types/Applicant';
+import { Applicant, PropertyPreferences, AdditionalDetails } from '../domain/types/Applicant';
 
 export const useMultiStepForm = (totalSteps: number) => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -20,8 +20,15 @@ export const useMultiStepForm = (totalSteps: number) => {
     }
   };
 
-  const canProceed = (applicants: Applicant[], preferences: PropertyPreferences, signature: string): boolean => {
-    return validateStep(currentStep, applicants, preferences, signature);
+  const canProceed = (
+    step: number,
+    applicants: Applicant[], 
+    preferences: PropertyPreferences, 
+    additionalDetails: AdditionalDetails,
+    signature: string,
+    termsAccepted: boolean
+  ): boolean => {
+    return validateStep(step, applicants, preferences, additionalDetails, signature, termsAccepted);
   };
 
   return {

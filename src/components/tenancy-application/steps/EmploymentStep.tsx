@@ -12,18 +12,18 @@ interface EmploymentStepProps {
 const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) => {
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold">Employment & Financial Information</h3>
+      <h3 className="text-lg font-semibold">Employment Details</h3>
       
       {applicants.map((applicant) => (
         <Card key={applicant.id}>
           <CardHeader>
             <CardTitle className="text-base">
-              {applicant.firstName} {applicant.lastName}
+              {applicant.firstName} {applicant.lastName} - Employment Information
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor={`employment-${applicant.id}`}>Employment Status *</Label>
+              <Label htmlFor={`employment-${applicant.id}`}>Contract type *</Label>
               <select
                 id={`employment-${applicant.id}`}
                 value={applicant.employment}
@@ -32,16 +32,38 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 required
               >
                 <option value="">Select employment status</option>
-                <option value="employed">Employed Full-time</option>
-                <option value="part-time">Employed Part-time</option>
-                <option value="self-employed">Self-employed</option>
-                <option value="student">Student</option>
-                <option value="retired">Retired</option>
-                <option value="unemployed">Unemployed</option>
+                <option value="Full Time">Full Time</option>
+                <option value="Part Time">Part Time</option>
+                <option value="Self-employed">Self-employed</option>
+                <option value="Contract">Contract</option>
+                <option value="Student">Student</option>
+                <option value="Retired">Retired</option>
+                <option value="Unemployed">Unemployed</option>
               </select>
             </div>
+            
             <div>
-              <Label htmlFor={`income-${applicant.id}`}>Annual Income (£) *</Label>
+              <Label htmlFor={`company-${applicant.id}`}>Company name</Label>
+              <Input
+                id={`company-${applicant.id}`}
+                value={applicant.companyName}
+                onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
+                placeholder="Enter company name"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor={`jobTitle-${applicant.id}`}>Job title</Label>
+              <Input
+                id={`jobTitle-${applicant.id}`}
+                value={applicant.jobTitle}
+                onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
+                placeholder="Enter job title"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor={`income-${applicant.id}`}>Annual salary (£) *</Label>
               <Input
                 id={`income-${applicant.id}`}
                 type="number"
@@ -51,15 +73,17 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 required
               />
             </div>
+            
             <div>
-              <Label htmlFor={`prevAddress-${applicant.id}`}>Previous Address</Label>
+              <Label htmlFor={`lengthOfService-${applicant.id}`}>Length of service</Label>
               <Input
-                id={`prevAddress-${applicant.id}`}
-                value={applicant.previousAddress}
-                onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
-                placeholder="Full previous address"
+                id={`lengthOfService-${applicant.id}`}
+                value={applicant.lengthOfService}
+                onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
+                placeholder="e.g., 2 years"
               />
             </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor={`ref1Name-${applicant.id}`}>Reference 1 Name</Label>
