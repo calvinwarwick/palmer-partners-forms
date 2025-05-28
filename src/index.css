@@ -66,6 +66,29 @@
   @apply block text-sm font-medium text-muted-foreground mb-2;
 }
 
+/* Date input specific styling */
+input[type="date"] {
+  @apply relative;
+  /* Ensure the calendar icon appears at the start */
+  direction: ltr;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  background: none;
+  color: hsl(var(--primary));
+  width: 16px;
+  height: 16px;
+}
+
+input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
 /* Mobile-first responsive design for form inputs */
 @media (max-width: 640px) {
   .form-control,
@@ -89,7 +112,7 @@
   }
 }
 
-/* Remove any focus states that use blue colors */
+/* Remove any focus states that use blue colors and ensure orange is used */
 input:focus,
 select:focus,
 textarea:focus {
@@ -98,23 +121,27 @@ textarea:focus {
 }
 
 /* Override any blue colors in the UI with orange */
-.focus\:ring-blue-500:focus {
+.focus\:ring-blue-500:focus,
+.ring-blue-500 {
   @apply ring-orange-500;
 }
 
-.focus\:border-blue-500:focus {
-  @apply border-orange-500;
-}
-
+.focus\:border-blue-500:focus,
 .border-blue-500 {
   @apply border-orange-500;
 }
 
-.bg-blue-500 {
+.bg-blue-500,
+.bg-blue-600 {
   @apply bg-orange-500;
 }
 
-.text-blue-500 {
+.hover\:bg-blue-600:hover {
+  @apply hover:bg-orange-600;
+}
+
+.text-blue-500,
+.text-blue-600 {
   @apply text-orange-500;
 }
 
@@ -124,6 +151,12 @@ textarea:focus {
 
 .text-blue-800 {
   @apply text-orange-800;
+}
+
+/* Ensure all buttons use orange theme */
+.btn-primary,
+button[class*="bg-blue"] {
+  @apply bg-orange-500 hover:bg-orange-600;
 }
 
 /* Progress bar fill effect for refresh button */

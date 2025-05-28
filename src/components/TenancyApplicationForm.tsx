@@ -1,9 +1,11 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase } from "lucide-react";
+import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
@@ -238,6 +240,12 @@ const TenancyApplicationForm = () => {
     await submitApplication(application);
   };
 
+  // Check if step is completed
+  const isStepCompleted = (step: number) => {
+    if (step > currentStep) return false;
+    return canProceed(step, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
+  };
+
   if (isSubmitted) {
     return <ApplicationSuccess applicants={applicants} />;
   }
@@ -336,13 +344,18 @@ const TenancyApplicationForm = () => {
               { step: 5, icon: Info, label: "Additional Details" },
               { step: 6, icon: CheckCircle, label: "Terms & Sign" }
             ].map(({ step, icon: Icon, label }) => (
-              <div key={step} className="flex flex-col items-center min-w-0 flex-1">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
+              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 relative ${
                   currentStep >= step 
                     ? "bg-primary text-primary-foreground" 
                     : "bg-muted text-muted-foreground"
                 }`}>
                   <Icon className="h-5 w-5" />
+                  {isStepCompleted(step) && step < currentStep && (
+                    <Badge className="absolute -top-2 -right-2 bg-green-500 hover:bg-green-600 text-white p-1 h-6 w-6 rounded-full flex items-center justify-center">
+                      <Check className="h-3 w-3" />
+                    </Badge>
+                  )}
                 </div>
                 <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
               </div>
@@ -359,6 +372,7 @@ const TenancyApplicationForm = () => {
                 variant="outline"
                 onClick={goToPrevious}
                 disabled={isFirstStep || isSubmitting}
+                className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Previous
@@ -368,6 +382,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleNext}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
+                  className="bg-primary hover:bg-primary/90"
                 >
                   Next
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -376,6 +391,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleSubmit}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
+                  className="bg-primary hover:bg-primary/90"
                 >
                   {isSubmitting ? (
                     <>

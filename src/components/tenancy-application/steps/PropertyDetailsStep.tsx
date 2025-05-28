@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { PropertyPreferences } from "@/domain/types/Applicant";
-import { TestTube } from "lucide-react";
+import { TestTube, Calendar } from "lucide-react";
 
 interface PropertyDetailsStepProps {
   propertyPreferences: PropertyPreferences;
@@ -31,7 +31,7 @@ const PropertyDetailsStep = ({
           variant="outline" 
           size="sm" 
           onClick={onFillAllTestData}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
         >
           <TestTube className="h-4 w-4" />
           Fill Test Data
@@ -45,7 +45,7 @@ const PropertyDetailsStep = ({
             value={propertyPreferences.propertyType}
             onValueChange={(value) => onUpdatePreferences("propertyType", value)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="focus:ring-orange-500 focus:border-orange-500">
               <SelectValue placeholder="Select property type" />
             </SelectTrigger>
             <SelectContent>
@@ -64,6 +64,7 @@ const PropertyDetailsStep = ({
             value={propertyPreferences.streetAddress}
             onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
             placeholder="eg 123 Orchard House, New Cut"
+            className="focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
 
@@ -74,6 +75,7 @@ const PropertyDetailsStep = ({
             value={propertyPreferences.postcode}
             onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
             placeholder="IP7 5DA"
+            className="focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
 
@@ -85,6 +87,7 @@ const PropertyDetailsStep = ({
             value={propertyPreferences.maxRent}
             onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
             placeholder="2500"
+            className="focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
 
@@ -95,26 +98,35 @@ const PropertyDetailsStep = ({
             value={propertyPreferences.preferredLocation}
             onChange={(e) => onUpdatePreferences("preferredLocation", e.target.value)}
             placeholder="Central London"
+            className="focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
 
         <div>
-          <Label htmlFor="moveInDate">Preferred Move-in Date</Label>
+          <Label htmlFor="moveInDate" className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-primary" />
+            Preferred Move-in Date
+          </Label>
           <Input
             id="moveInDate"
             type="date"
             value={propertyPreferences.moveInDate}
             onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+            className="focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
 
         <div>
-          <Label htmlFor="latestMoveInDate">Latest Move-in Date</Label>
+          <Label htmlFor="latestMoveInDate" className="flex items-center gap-2">
+            <Calendar className="h-4 w-4 text-primary" />
+            Latest Move-in Date
+          </Label>
           <Input
             id="latestMoveInDate"
             type="date"
             value={propertyPreferences.latestMoveInDate}
             onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
+            className="focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
 
@@ -124,7 +136,7 @@ const PropertyDetailsStep = ({
             value={propertyPreferences.initialTenancyTerm}
             onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
           >
-            <SelectTrigger>
+            <SelectTrigger className="focus:ring-orange-500 focus:border-orange-500">
               <SelectValue placeholder="Select tenancy term" />
             </SelectTrigger>
             <SelectContent>
@@ -145,6 +157,7 @@ const PropertyDetailsStep = ({
           onChange={(e) => onUpdatePreferences("additionalRequests", e.target.value)}
           placeholder="Any specific requirements or requests..."
           rows={3}
+          className="focus:ring-orange-500 focus:border-orange-500"
         />
       </div>
     </div>

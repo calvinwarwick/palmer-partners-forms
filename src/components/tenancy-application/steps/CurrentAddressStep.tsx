@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TestTube } from "lucide-react";
+import { TestTube, Calendar } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface CurrentAddressStepProps {
@@ -53,12 +53,22 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
       <div className="flex justify-between items-start">
         <h3 className="text-lg font-semibold">Current Address Details</h3>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={fillTestData} 
+            className="flex items-center gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+          >
             <TestTube className="h-4 w-4" />
             Fill Step Data
           </Button>
           {onFillAllTestData && (
-            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+            <Button 
+              variant="default" 
+              size="sm" 
+              onClick={onFillAllTestData} 
+              className="flex items-center gap-2 bg-primary hover:bg-primary/90"
+            >
               <TestTube className="h-4 w-4" />
               Fill All Form Data
             </Button>
@@ -118,7 +128,10 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label">Move in date</Label>
+                <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  Move in date
+                </Label>
                 <Input
                   id={`moveInDate-${applicant.id}`}
                   type="date"
@@ -128,7 +141,10 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                 />
               </div>
               <div>
-                <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label">Vacate date</Label>
+                <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label flex items-center gap-2">
+                  <Calendar className="h-4 w-4 text-primary" />
+                  Vacate date
+                </Label>
                 <Input
                   id={`vacateDate-${applicant.id}`}
                   type="date"
