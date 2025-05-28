@@ -25,6 +25,10 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
+  const isDemoCredentials = (email: string, password: string) => {
+    return email === "demo.user@test.com" && password === "demo123456";
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -34,7 +38,33 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
         const { error } = await signIn(email, password);
         if (error) {
           console.error("Login error:", error);
-          toast.error(error.message);
+          
+          // If it's demo credentials and login failed, try to create the account
+          if (isDemoCredentials(email, password) && error.message === "Invalid login credentials") {
+            console.log("Demo login failed, attempting to create demo account...");
+            toast.info("Demo account doesn't exist. Creating it now...");
+            
+            const { error: signUpError } = await signUp(email, password, {
+              first_name: "Demo",
+              last_name: "User",
+            });
+            
+            if (signUpError) {
+              toast.error(`Failed to create demo account: ${signUpError.message}`);
+            } else {
+              toast.success("Demo account created! You can now sign in.");
+              // Try to sign in again after successful signup
+              const { error: retryError } = await signIn(email, password);
+              if (retryError) {
+                toast.error("Please try signing in again with the demo credentials.");
+              } else {
+                toast.success("Signed in successfully!");
+                onLogin?.(email, "User");
+              }
+            }
+          } else {
+            toast.error(error.message);
+          }
         } else {
           toast.success("Signed in successfully!");
           onLogin?.(email, "User");
@@ -62,7 +92,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const fillDemoCredentials = () => {
     setEmail("demo.user@test.com");
     setPassword("demo123456");
-    toast.info("Demo credentials filled. You can now sign in or create this account if it doesn't exist.");
+    toast.info("Demo credentials filled. Click 'Sign In' to login or create the account automatically.");
   };
 
   return (
@@ -186,7 +216,7 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
                   <strong>Demo User:</strong> demo.user@test.com / demo123456
                 </button>
                 <p className="text-xs text-gray-500 mt-2">
-                  Click to auto-fill demo credentials. If the account doesn't exist, switch to "Sign up" to create it first.
+                  Click to auto-fill demo credentials. If the account doesn't exist, it will be created automatically.
                 </p>
               </div>
             )}
