@@ -1,12 +1,12 @@
-
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { generateApplicationPDF } from "@/services/pdfService";
+import { generatePDFInWorker } from "@/services/pdfWorker";
 import { FileText, Download } from "lucide-react";
 
 const PdfDemo = () => {
   const [pdfBlob, setPdfBlob] = useState<Blob | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const demoData = {
     applicants: [
@@ -47,17 +47,20 @@ const PdfDemo = () => {
     submittedAt: "2025-02-10T12:38:00.000Z"
   };
 
-  const generatePdf = () => {
+  const generatePdf = useCallback(async () => {
+    setIsGenerating(true);
     try {
-      const pdfContent = generateApplicationPDF(demoData);
+      const pdfContent = await generatePDFInWorker(demoData);
       const blob = new Blob([pdfContent], { type: 'application/pdf' });
       setPdfBlob(blob);
     } catch (error) {
       console.error("Error generating PDF:", error);
+    } finally {
+      setIsGenerating(false);
     }
-  };
+  }, []);
 
-  const downloadPdf = () => {
+  const downloadPdf = useCallback(() => {
     if (pdfBlob) {
       const url = URL.createObjectURL(pdfBlob);
       const a = document.createElement('a');
@@ -68,14 +71,14 @@ const PdfDemo = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     }
-  };
+  }, [pdfBlob]);
 
-  const viewPdf = () => {
+  const viewPdf = useCallback(() => {
     if (pdfBlob) {
       const url = URL.createObjectURL(pdfBlob);
       window.open(url, '_blank');
     }
-  };
+  }, [pdfBlob]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -136,9 +139,13 @@ const PdfDemo = () => {
               <CardTitle>Generate & View PDF</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <Button onClick={generatePdf} className="w-full">
+              <Button 
+                onClick={generatePdf} 
+                className="w-full"
+                disabled={isGenerating}
+              >
                 <FileText className="h-4 w-4 mr-2" />
-                Generate PDF
+                {isGenerating ? 'Generating...' : 'Generate PDF'}
               </Button>
               
               {pdfBlob && (
