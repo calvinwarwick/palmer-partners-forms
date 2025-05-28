@@ -27,9 +27,14 @@ const TermsAndDataStep = ({
   onTermsAccepted
 }: TermsAndDataStepProps) => {
   const fillTestData = () => {
+    console.log('Filling terms and data test data');
+    console.log('Setting signature to John Smith');
     onSignatureChange("John Smith");
+    console.log('Setting terms accepted to true');
     onTermsAccepted(true);
+    console.log('Setting utilities sharing to true');
     onUpdateDataSharing('utilities', true);
+    console.log('Setting insurance sharing to false');
     onUpdateDataSharing('insurance', false);
   };
 

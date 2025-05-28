@@ -32,9 +32,12 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
       }
     ];
 
+    console.log('Filling address test data for', applicants.length, 'applicants');
     applicants.forEach((applicant, index) => {
       if (testData[index]) {
+        console.log(`Filling address data for applicant ${index + 1}:`, testData[index]);
         Object.entries(testData[index]).forEach(([field, value]) => {
+          console.log(`Setting address ${field} to ${value} for applicant ${applicant.id}`);
           onUpdateApplicant(applicant.id, field as keyof Applicant, value);
         });
       }

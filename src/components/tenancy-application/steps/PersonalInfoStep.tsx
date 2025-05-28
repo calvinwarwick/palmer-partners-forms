@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -38,15 +37,12 @@ const PersonalInfoStep = ({
       }
     ];
 
-    // Ensure we have at least one applicant
-    if (applicants.length === 0) {
-      return;
-    }
-
     // Fill data for existing applicants
     applicants.forEach((applicant, index) => {
       if (testData[index]) {
+        console.log(`Filling test data for applicant ${index + 1}:`, testData[index]);
         Object.entries(testData[index]).forEach(([field, value]) => {
+          console.log(`Setting ${field} to ${value} for applicant ${applicant.id}`);
           onUpdateApplicant(applicant.id, field as keyof Applicant, value);
         });
       }

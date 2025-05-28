@@ -12,15 +12,23 @@ interface AdditionalDetailsStepProps {
 
 const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails }: AdditionalDetailsStepProps) => {
   const fillTestData = () => {
-    onUpdateDetails("ukPassport", "yes");
-    onUpdateDetails("adverseCredit", "no");
-    onUpdateDetails("adverseCreditDetails", "");
-    onUpdateDetails("guarantorRequired", "no");
-    onUpdateDetails("pets", "yes - 1 cat");
-    onUpdateDetails("under18Count", "0");
-    onUpdateDetails("childrenAges", "");
-    onUpdateDetails("conditionsOfOffer", "Standard conditions accepted");
-    onUpdateDetails("depositType", "standard");
+    console.log('Filling additional details test data');
+    const testDataEntries = [
+      ['ukPassport', 'yes'],
+      ['adverseCredit', 'no'],
+      ['adverseCreditDetails', ''],
+      ['guarantorRequired', 'no'],
+      ['pets', 'yes - 1 cat'],
+      ['under18Count', '0'],
+      ['childrenAges', ''],
+      ['conditionsOfOffer', 'Standard conditions accepted'],
+      ['depositType', 'standard']
+    ];
+
+    testDataEntries.forEach(([field, value]) => {
+      console.log(`Setting additional detail ${field} to ${value}`);
+      onUpdateDetails(field as keyof AdditionalDetails, value);
+    });
   };
 
   return (

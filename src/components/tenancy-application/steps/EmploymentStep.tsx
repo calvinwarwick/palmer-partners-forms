@@ -34,9 +34,12 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
       }
     ];
 
+    console.log('Filling employment test data for', applicants.length, 'applicants');
     applicants.forEach((applicant, index) => {
       if (testData[index]) {
+        console.log(`Filling employment data for applicant ${index + 1}:`, testData[index]);
         Object.entries(testData[index]).forEach(([field, value]) => {
+          console.log(`Setting employment ${field} to ${value} for applicant ${applicant.id}`);
           onUpdateApplicant(applicant.id, field as keyof Applicant, value);
         });
       }
