@@ -1,4 +1,3 @@
-
 export interface Applicant {
   id: string;
   firstName: string;
@@ -19,6 +18,7 @@ export interface Applicant {
   currentRentalAmount: string;
   reference1Name: string;
   reference1Contact: string;
+  guarantorRequired?: string;
 }
 
 export interface PropertyPreferences {
