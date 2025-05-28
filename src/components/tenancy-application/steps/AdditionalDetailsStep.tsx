@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -270,14 +269,6 @@ const AdditionalDetailsStep = ({
             <p className="text-sm text-orange-800">
               <strong>Please note:</strong> The above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
             </p>
-            {traditionalDeposit > 0 && (
-              <div className="mt-2 text-sm text-orange-700">
-                <p>Based on your maximum rent of £{maxRent}/month:</p>
-                <p>• Weekly rent: £{weeklyRent}</p>
-                <p>• Traditional deposit (5 weeks): £{traditionalDeposit}</p>
-                <p>• Holding deposit (1 week): £{holdingDeposit}</p>
-              </div>
-            )}
           </div>
         )}
       </div>
