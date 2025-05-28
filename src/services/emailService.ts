@@ -103,6 +103,16 @@ export const generateSimpleConfirmationEmailHTML = (applicantName: string, appli
   `;
 };
 
+// Helper function to convert Uint8Array to base64 without spread operator
+const uint8ArrayToBase64 = (uint8Array: Uint8Array): string => {
+  let binary = '';
+  const len = uint8Array.byteLength;
+  for (let i = 0; i < len; i++) {
+    binary += String.fromCharCode(uint8Array[i]);
+  }
+  return btoa(binary);
+};
+
 export const sendApplicationConfirmation = async (
   applicants: any[],
   propertyPreferences: any,
@@ -119,8 +129,8 @@ export const sendApplicationConfirmation = async (
     submittedAt
   });
   
-  // Convert PDF to base64 for email attachment
-  const pdfBase64 = btoa(String.fromCharCode(...pdfContent));
+  // Convert PDF to base64 for email attachment using safe method
+  const pdfBase64 = uint8ArrayToBase64(pdfContent);
   
   // Send email to the primary applicant
   const primaryApplicant = applicants[0];
@@ -162,7 +172,8 @@ export const sendAdminNotification = async (
     submittedAt
   });
   
-  const pdfBase64 = btoa(String.fromCharCode(...pdfContent));
+  // Convert PDF to base64 for email attachment using safe method
+  const pdfBase64 = uint8ArrayToBase64(pdfContent);
   
   const adminEmailData: EmailData = {
     to: "admin@palmerpartners.com",
