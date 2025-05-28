@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +53,19 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setActivityLogs(data || []);
+      
+      // Transform the Supabase data to match our ActivityLog interface
+      const transformedLogs: ActivityLog[] = (data || []).map(log => ({
+        id: log.id,
+        action: log.action,
+        user_identifier: log.user_identifier,
+        ip_address: log.ip_address ? String(log.ip_address) : null,
+        user_agent: log.user_agent,
+        details: log.details,
+        created_at: log.created_at
+      }));
+      
+      setActivityLogs(transformedLogs);
     } catch (error) {
       console.error('Error fetching activity logs:', error);
       // For now, show some mock data
