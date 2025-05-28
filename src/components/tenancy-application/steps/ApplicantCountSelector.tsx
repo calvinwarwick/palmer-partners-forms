@@ -9,10 +9,10 @@ interface ApplicantCountSelectorProps {
 
 const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: ApplicantCountSelectorProps) => {
   return (
-    <div className="space-y-4 mb-8 p-6 bg-orange-50 rounded-lg border border-orange-200">
+    <div className="applicant-details-section mb-8">
       <div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">Applicant Details</h3>
-        <p className="text-gray-600 mb-4">
+        <h3>Applicant Details</h3>
+        <p>
           Please select the number of adults who will be staying at the property and provide details for each applicant.
         </p>
       </div>

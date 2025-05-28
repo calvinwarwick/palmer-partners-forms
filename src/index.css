@@ -90,6 +90,7 @@
 input[type="date"] {
   @apply pl-10;
   direction: ltr;
+  padding-left: 2.5rem !important; /* Ensure proper padding for icon */
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -113,6 +114,10 @@ input[type="date"]::-webkit-inner-spin-button {
     @apply text-base; /* Prevents zoom on iOS */
     min-height: 48px; /* More touch-friendly size */
     padding: 0.875rem; /* Better padding on mobile */
+  }
+  
+  input[type="date"] {
+    padding-left: 2.5rem !important; /* Maintain icon spacing on mobile */
   }
   
   .form-label {
@@ -146,9 +151,14 @@ input[type="date"]::-webkit-inner-spin-button {
     @apply p-4;
   }
   
-  /* Step indicators on mobile */
+  /* Step indicators on mobile - only show 3 steps max */
   .step-indicator {
     min-width: 60px;
+    display: none; /* Hide all by default */
+  }
+  
+  .step-indicator.mobile-visible {
+    display: flex; /* Show only relevant steps */
   }
   
   .step-indicator span {
@@ -214,6 +224,19 @@ textarea:focus {
 .btn-primary,
 button[class*="bg-blue"] {
   @apply bg-orange-500 hover:bg-orange-600;
+}
+
+/* Applicant details section styling - less prominent */
+.applicant-details-section {
+  @apply p-4 bg-gray-50 rounded-lg border border-gray-200;
+}
+
+.applicant-details-section h3 {
+  @apply text-base font-medium text-gray-800 mb-2;
+}
+
+.applicant-details-section p {
+  @apply text-sm text-gray-600 mb-3;
 }
 
 /* Progress bar fill effect for refresh button */

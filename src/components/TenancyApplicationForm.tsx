@@ -281,6 +281,33 @@ const TenancyApplicationForm = () => {
     return canProceed(step, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
   };
 
+  // Function to determine which steps to show on mobile
+  const getMobileVisibleSteps = () => {
+    const steps = [
+      { step: 1, icon: Building, label: "Property Details" },
+      { step: 2, icon: User, label: "Personal Info" },
+      { step: 3, icon: Briefcase, label: "Employment" },
+      { step: 4, icon: MapPin, label: "Current Address" },
+      { step: 5, icon: Info, label: "Additional Details" },
+      { step: 6, icon: CheckCircle, label: "Terms & Sign" }
+    ];
+
+    // On mobile, show max 3 steps: previous, current, next
+    const visibleSteps = [];
+    
+    if (currentStep > 1) {
+      visibleSteps.push(steps[currentStep - 2]); // Previous step
+    }
+    
+    visibleSteps.push(steps[currentStep - 1]); // Current step
+    
+    if (currentStep < totalSteps) {
+      visibleSteps.push(steps[currentStep]); // Next step
+    }
+
+    return { allSteps: steps, visibleSteps };
+  };
+
   if (isSubmitted) {
     return <ApplicationSuccess applicants={applicants} />;
   }
@@ -348,6 +375,8 @@ const TenancyApplicationForm = () => {
     }
   };
 
+  const { allSteps, visibleSteps } = getMobileVisibleSteps();
+
   return (
     <div className="min-h-screen bg-background py-16">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -372,19 +401,34 @@ const TenancyApplicationForm = () => {
             <Progress value={progress} className="h-2" />
           </div>
 
-          <div className="flex justify-between mb-8 overflow-visible">
-            {[
-              { step: 1, icon: Building, label: "Property Details" },
-              { step: 2, icon: User, label: "Personal Info" },
-              { step: 3, icon: Briefcase, label: "Employment" },
-              { step: 4, icon: MapPin, label: "Current Address" },
-              { step: 5, icon: Info, label: "Additional Details" },
-              { step: 6, icon: CheckCircle, label: "Terms & Sign" }
-            ].map(({ step, icon: Icon, label }) => (
+          {/* Desktop step indicators */}
+          <div className="hidden md:flex justify-between mb-8 overflow-visible">
+            {allSteps.map(({ step, icon: Icon, label }) => (
               <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative step-indicator">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 relative ${
                   currentStep >= step 
-                    ? "bg-primary text-primary-foreground" 
+                    ? "bg-orange-500 text-white" 
+                    : "bg-muted text-muted-foreground"
+                }`}>
+                  <Icon className="h-5 w-5" />
+                  {isStepCompleted(step) && step < currentStep && (
+                    <div className="step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6">
+                      <Check className="h-3 w-3" />
+                    </div>
+                  )}
+                </div>
+                <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile step indicators */}
+          <div className="flex md:hidden justify-center mb-8 overflow-visible space-x-4">
+            {visibleSteps.map(({ step, icon: Icon, label }) => (
+              <div key={step} className="flex flex-col items-center relative step-indicator mobile-visible">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 relative ${
+                  currentStep >= step 
+                    ? "bg-orange-500 text-white" 
                     : "bg-muted text-muted-foreground"
                 }`}>
                   <Icon className="h-5 w-5" />
