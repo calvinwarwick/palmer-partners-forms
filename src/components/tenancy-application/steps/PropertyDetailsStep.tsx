@@ -18,6 +18,9 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
     onUpdatePreferences("moveInDate", "2024-06-01");
     onUpdatePreferences("latestMoveInDate", "2024-06-15");
     onUpdatePreferences("initialTenancyTerm", "1 year");
+    onUpdatePreferences("propertyType", "apartment");
+    onUpdatePreferences("preferredLocation", "Central London");
+    onUpdatePreferences("additionalRequests", "Pet-friendly property preferred");
   };
 
   return (
