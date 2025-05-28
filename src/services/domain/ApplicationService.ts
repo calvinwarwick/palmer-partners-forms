@@ -1,3 +1,4 @@
+
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { sendEmail } from '../api/emailApi';
 import { generateApplicationPDF } from '../pdfService';
@@ -226,7 +227,7 @@ export const sendAdminNotification = async (
     const html = formatApplicationForEmail(applicants, propertyPreferences, signature);
 
     return sendEmail({
-      to: "admin@palmerpartners.com",
+      to: "admin@palmerpartners.uk",
       subject: `New Application: ${applicants[0].firstName} ${applicants[0].lastName} - ${propertyPreferences.propertyType}`,
       html,
       attachment: {
@@ -241,7 +242,7 @@ export const sendAdminNotification = async (
     const fallbackHtml = formatApplicationForEmail(applicants, propertyPreferences, signature);
     
     return sendEmail({
-      to: "admin@palmerpartners.com",
+      to: "admin@palmerpartners.uk",
       subject: `New Application: ${applicants[0].firstName} ${applicants[0].lastName}`,
       html: fallbackHtml
     });

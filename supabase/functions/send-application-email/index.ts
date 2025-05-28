@@ -42,7 +42,7 @@ const handler = async (req: Request): Promise<Response> => {
     console.log("Sending email to:", to);
 
     const emailPayload: any = {
-      from: "Palmer & Partners <onboarding@resend.dev>",
+      from: "Palmer & Partners <no-reply@palmerpartners.uk>",
       to: [to],
       subject,
       html,
