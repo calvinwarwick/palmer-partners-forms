@@ -108,10 +108,7 @@ const Applicants = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading all applicants...</p>
-        </div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
       </div>
     );
   }
@@ -120,22 +117,20 @@ const Applicants = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <div className="text-center max-w-md mx-auto">
-            <div className="bg-white rounded-lg shadow-sm p-8">
-              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <FileText className="h-8 w-8 text-red-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                Error Loading Applicants
-              </h1>
-              <p className="text-gray-600 mb-6">
-                {error}
-              </p>
-              <Button onClick={() => navigate('/admin')} className="bg-orange-500 hover:bg-orange-600">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Admin Dashboard
-              </Button>
+          <div className="text-center py-16 bg-white rounded-lg shadow-sm">
+            <div className="text-gray-400 mb-4">
+              <FileText className="mx-auto h-16 w-16" />
             </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Error Loading Applicants
+            </h1>
+            <p className="text-gray-600 mb-6">
+              {error}
+            </p>
+            <Button onClick={() => navigate('/admin')} className="bg-orange-500 hover:bg-orange-600 shadow-sm hover:shadow-md transition-shadow">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Admin Dashboard
+            </Button>
           </div>
         </div>
       </div>
@@ -146,22 +141,20 @@ const Applicants = () => {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8 max-w-7xl">
-          <div className="text-center max-w-md mx-auto">
-            <div className="bg-white rounded-lg shadow-sm p-8">
-              <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <User className="h-8 w-8 text-gray-600" />
-              </div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-4">
-                No Applicants Found
-              </h1>
-              <p className="text-gray-600 mb-6">
-                There are no applicants in the system yet. Applicants will appear here once tenancy applications are submitted.
-              </p>
-              <Button onClick={() => navigate('/admin')} className="bg-orange-500 hover:bg-orange-600">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back to Admin Dashboard
-              </Button>
+          <div className="text-center py-16 bg-white rounded-lg shadow-sm">
+            <div className="text-gray-400 mb-4">
+              <User className="mx-auto h-16 w-16" />
             </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              No Applicants Found
+            </h1>
+            <p className="text-gray-600 mb-6">
+              There are no applicants in the system yet. Applicants will appear here once tenancy applications are submitted.
+            </p>
+            <Button onClick={() => navigate('/admin')} className="bg-orange-500 hover:bg-orange-600 shadow-sm hover:shadow-md transition-shadow">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Admin Dashboard
+            </Button>
           </div>
         </div>
       </div>
