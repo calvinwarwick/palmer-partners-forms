@@ -241,33 +241,21 @@ const Admin = () => {
             </div>
             <div className="flex flex-wrap gap-3">
               <div className="relative">
-                <style>{`
-                  .progress-button {
-                    position: relative;
-                    overflow: hidden;
-                    border: 2px solid transparent;
-                  }
-                  
-                  .progress-button::before {
-                    content: "";
-                    position: absolute;
-                    top: -2px;
-                    left: -2px;
-                    width: ${progress}%;
-                    height: calc(100% + 4px);
-                    border: 2px solid #f97316;
-                    border-radius: 8px;
-                    box-sizing: border-box;
-                    z-index: 0;
-                    transition: width 1s linear;
-                  }
-                `}</style>
                 <Button 
                   variant="outline" 
                   onClick={handleManualRefresh} 
                   disabled={refreshing} 
-                  className="progress-button shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 relative"
+                  className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 relative overflow-hidden border-2 border-transparent"
+                  style={{
+                    '--progress': `${progress}%`
+                  } as React.CSSProperties & { '--progress': string }}
                 >
+                  <div 
+                    className="absolute inset-0 border-2 border-orange-500 rounded-md transition-all duration-1000 ease-linear"
+                    style={{
+                      clipPath: `polygon(0 0, ${progress}% 0, ${progress}% 100%, 0 100%)`
+                    }}
+                  />
                   <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''} relative z-10`} />
                   <span className="text-xs font-medium opacity-50 relative z-10">{timeLeft}s</span>
                   <span className="relative z-10">{refreshing ? 'Refreshing...' : 'Refresh'}</span>
