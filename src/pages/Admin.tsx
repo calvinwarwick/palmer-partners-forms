@@ -192,34 +192,30 @@ const Admin = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gray-900">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gray-900">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-              <p className="text-gray-600 text-lg">Manage tenancy applications and track performance</p>
+              <h1 className="text-4xl font-bold text-white mb-2">Admin Dashboard</h1>
+              <p className="text-gray-400 text-lg">Manage tenancy applications and track performance</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button variant="outline" onClick={() => fetchApplications(true)} disabled={refreshing} className="shadow-sm hover:shadow-md transition-shadow">
+              <Button variant="outline" onClick={() => fetchApplications(true)} disabled={refreshing} className="shadow-sm hover:shadow-md transition-shadow bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700">
                 <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                 Refresh
               </Button>
-              <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
+              <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow bg-gray-800 border-gray-600 text-gray-200 hover:bg-gray-700">
                 <Download className="h-4 w-4 mr-2" />
                 Export All
-              </Button>
-              <Button className="bg-orange-500 hover:bg-orange-600 shadow-lg hover:shadow-xl transition-all duration-200">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Property
               </Button>
             </div>
           </div>
@@ -229,7 +225,7 @@ const Admin = () => {
         <AdminStats applications={applications} />
 
         {/* Filters Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+        <div className="bg-gray-800 rounded-xl shadow-sm border border-gray-700 p-6 mb-6">
           <ApplicationFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
@@ -241,7 +237,7 @@ const Admin = () => {
         </div>
 
         {/* Bulk Actions Section */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="mb-6">
           <BulkActions
             selectedApplications={selectedApplications}
             onSelectAll={handleSelectAll}
@@ -251,12 +247,12 @@ const Admin = () => {
         </div>
 
         {/* Applications Table */}
-        <Card className="shadow-lg border-0 bg-white rounded-xl overflow-hidden">
-          <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 py-6">
-            <CardTitle className="flex items-center justify-between text-xl font-semibold text-gray-900">
+        <Card className="shadow-lg border-0 bg-gray-800 border-gray-700 rounded-xl overflow-hidden">
+          <CardHeader className="bg-gray-800 border-b border-gray-700 py-6">
+            <CardTitle className="flex items-center justify-between text-xl font-semibold text-white">
               <span>Applications ({filteredApplications.length})</span>
               {hasActiveFilters && (
-                <span className="text-sm font-normal text-gray-500 bg-orange-50 px-3 py-1 rounded-full">
+                <span className="text-sm font-normal text-gray-400 bg-orange-500/10 px-3 py-1 rounded-full">
                   Showing {filteredApplications.length} of {applications.length} applications
                 </span>
               )}
@@ -271,17 +267,17 @@ const Admin = () => {
                 onViewDetails={handleViewDetails}
               />
             ) : (
-              <div className="text-center py-16 bg-gray-50">
-                <div className="text-gray-400 mb-4">
+              <div className="text-center py-16 bg-gray-800">
+                <div className="text-gray-500 mb-4">
                   <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
-                <p className="text-gray-500 mb-4 text-lg">
+                <p className="text-gray-400 mb-4 text-lg">
                   {hasActiveFilters ? 'No applications match your current filters.' : 'No applications found.'}
                 </p>
                 {hasActiveFilters && (
-                  <Button variant="outline" onClick={clearFilters} className="shadow-sm hover:shadow-md transition-shadow">
+                  <Button variant="outline" onClick={clearFilters} className="shadow-sm hover:shadow-md transition-shadow bg-gray-700 border-gray-600 text-gray-200 hover:bg-gray-600">
                     Clear Filters
                   </Button>
                 )}
