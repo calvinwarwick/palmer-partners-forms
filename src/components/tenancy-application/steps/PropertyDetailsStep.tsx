@@ -1,6 +1,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { TestTube } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
 
 interface PropertyDetailsStepProps {
@@ -9,11 +11,26 @@ interface PropertyDetailsStepProps {
 }
 
 const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: PropertyDetailsStepProps) => {
+  const fillTestData = () => {
+    onUpdatePreferences("streetAddress", "123 Orchard House, New Cut");
+    onUpdatePreferences("postcode", "IP7 5DA");
+    onUpdatePreferences("maxRent", "2500");
+    onUpdatePreferences("moveInDate", "2024-06-01");
+    onUpdatePreferences("latestMoveInDate", "2024-06-15");
+    onUpdatePreferences("initialTenancyTerm", "1 year");
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Proposed Rental Property Details</h3>
-        <p className="text-muted-foreground mb-6">Please provide the details of the property you are applying for.</p>
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className="text-lg font-semibold mb-2">Proposed Rental Property Details</h3>
+          <p className="text-muted-foreground mb-6">Please provide the details of the property you are applying for.</p>
+        </div>
+        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+          <TestTube className="h-4 w-4" />
+          Fill Test Data
+        </Button>
       </div>
       
       <Card className="border-0 shadow-sm">
@@ -87,7 +104,7 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
               id="tenancyTerm"
               value={propertyPreferences.initialTenancyTerm}
               onChange={(e) => onUpdatePreferences("initialTenancyTerm", e.target.value)}
-              className="form-select w-full px-3 py-2 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+              className="form-select w-full px-3 py-2 border border-input bg-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
               required
             >
               <option value="">Select term</option>

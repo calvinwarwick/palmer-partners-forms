@@ -1,6 +1,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { TestTube } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface EmploymentStepProps {
@@ -9,9 +11,46 @@ interface EmploymentStepProps {
 }
 
 const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) => {
+  const fillTestData = () => {
+    const testData = [
+      {
+        employment: "Full Time",
+        companyName: "Tech Solutions Ltd",
+        jobTitle: "Software Engineer",
+        annualIncome: "45000",
+        lengthOfService: "3 years",
+        reference1Name: "Mike Johnson",
+        reference1Contact: "mike.johnson@techsolutions.com"
+      },
+      {
+        employment: "Full Time",
+        companyName: "Design Studio",
+        jobTitle: "Graphic Designer",
+        annualIncome: "38000",
+        lengthOfService: "2 years",
+        reference1Name: "Lisa Brown",
+        reference1Contact: "lisa.brown@designstudio.com"
+      }
+    ];
+
+    applicants.forEach((applicant, index) => {
+      if (testData[index]) {
+        Object.entries(testData[index]).forEach(([field, value]) => {
+          onUpdateApplicant(applicant.id, field as keyof Applicant, value);
+        });
+      }
+    });
+  };
+
   return (
     <div className="space-y-6">
-      <h3 className="text-lg font-semibold">Employment Details</h3>
+      <div className="flex justify-between items-start">
+        <h3 className="text-lg font-semibold">Employment Details</h3>
+        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+          <TestTube className="h-4 w-4" />
+          Fill Test Data
+        </Button>
+      </div>
       
       {applicants.map((applicant) => (
         <Card key={applicant.id} className="border-0 shadow-sm">
@@ -26,7 +65,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 id={`employment-${applicant.id}`}
                 value={applicant.employment}
                 onChange={(e) => onUpdateApplicant(applicant.id, "employment", e.target.value)}
-                className="form-select w-full px-3 py-2 border border-input bg-background rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                className="form-select w-full px-3 py-2 border border-input bg-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
                 required
               >
                 <option value="">Select employment status</option>

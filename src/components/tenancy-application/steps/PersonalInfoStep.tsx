@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, X } from "lucide-react";
+import { Plus, X, TestTube } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface PersonalInfoStepProps {
@@ -19,11 +19,44 @@ const PersonalInfoStep = ({
   onRemoveApplicant,
   onUpdateApplicant,
 }: PersonalInfoStepProps) => {
+  const fillTestData = () => {
+    const testData = [
+      {
+        firstName: "John",
+        lastName: "Smith",
+        email: "john.smith@example.com",
+        phone: "07700 900123",
+        dateOfBirth: "1990-05-15"
+      },
+      {
+        firstName: "Sarah",
+        lastName: "Johnson",
+        email: "sarah.johnson@example.com",
+        phone: "07700 900456",
+        dateOfBirth: "1988-11-22"
+      }
+    ];
+
+    applicants.forEach((applicant, index) => {
+      if (testData[index]) {
+        Object.entries(testData[index]).forEach(([field, value]) => {
+          onUpdateApplicant(applicant.id, field as keyof Applicant, value);
+        });
+      }
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Personal Information</h3>
-        <Badge variant="secondary">{applicants.length} of 5 applicants</Badge>
+        <div className="flex items-center gap-4">
+          <h3 className="text-lg font-semibold">Personal Information</h3>
+          <Badge variant="secondary">{applicants.length} of 5 applicants</Badge>
+        </div>
+        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+          <TestTube className="h-4 w-4" />
+          Fill Test Data
+        </Button>
       </div>
       
       {applicants.map((applicant, index) => (
