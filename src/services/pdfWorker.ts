@@ -6,12 +6,11 @@ export const generatePDFInWorker = async (data: any): Promise<Uint8Array> => {
     if (typeof Worker === 'undefined') {
       // Fallback to main thread if workers aren't available
       import('./pdfService').then(({ generateApplicationPDF }) => {
-        try {
-          const result = generateApplicationPDF(data);
+        generateApplicationPDF(data).then(result => {
           resolve(result);
-        } catch (error) {
+        }).catch(error => {
           reject(error);
-        }
+        });
       });
       return;
     }
@@ -39,12 +38,11 @@ export const generatePDFInWorker = async (data: any): Promise<Uint8Array> => {
       if (e.data.error) {
         // Fallback to main thread
         import('./pdfService').then(({ generateApplicationPDF }) => {
-          try {
-            const result = generateApplicationPDF(data);
+          generateApplicationPDF(data).then(result => {
             resolve(result);
-          } catch (error) {
+          }).catch(error => {
             reject(error);
-          }
+          });
         });
       } else {
         resolve(e.data.result);
@@ -56,12 +54,11 @@ export const generatePDFInWorker = async (data: any): Promise<Uint8Array> => {
     worker.onerror = () => {
       // Fallback to main thread on error
       import('./pdfService').then(({ generateApplicationPDF }) => {
-        try {
-          const result = generateApplicationPDF(data);
+        generateApplicationPDF(data).then(result => {
           resolve(result);
-        } catch (error) {
+        }).catch(error => {
           reject(error);
-        }
+        });
       });
       worker.terminate();
       URL.revokeObjectURL(workerUrl);

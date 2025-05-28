@@ -14,7 +14,7 @@ interface PdfData {
   applicationId?: string;
 }
 
-export const generatePdf = async (data: PdfData): Promise<Blob> => {
+export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   const doc = new jsPDF();
   let yPosition = 20;
   
@@ -271,7 +271,10 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
     }
   }
 
-  return doc.output('blob');
+  // Convert to Uint8Array
+  const pdfBlob = doc.output('blob');
+  const arrayBuffer = await pdfBlob.arrayBuffer();
+  return new Uint8Array(arrayBuffer);
 };
 
 // Remove the old generateApplicationPDF function and replace with proper export

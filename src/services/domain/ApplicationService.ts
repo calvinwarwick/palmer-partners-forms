@@ -1,3 +1,4 @@
+
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { sendEmail } from '../api/emailApi';
 import { generateApplicationPDF } from '../pdfService';
@@ -109,7 +110,7 @@ export const sendApplicationConfirmation = async (
       submittedAt: new Date().toISOString()
     };
     
-    const pdfBytes = generateApplicationPDF(applicationData);
+    const pdfBytes = await generateApplicationPDF(applicationData);
     const pdfBase64 = btoa(String.fromCharCode(...pdfBytes));
     
     const html = `
@@ -220,7 +221,7 @@ export const sendAdminNotification = async (
       submittedAt: new Date().toISOString()
     };
     
-    const pdfBytes = generateApplicationPDF(applicationData);
+    const pdfBytes = await generateApplicationPDF(applicationData);
     const pdfBase64 = btoa(String.fromCharCode(...pdfBytes));
     
     const html = formatApplicationForEmail(applicants, propertyPreferences, signature);
