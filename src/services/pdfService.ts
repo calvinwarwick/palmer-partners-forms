@@ -50,7 +50,7 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
       doc.setTextColor(255, 255, 255); // White text
       doc.setFontSize(16);
       doc.setFont('helvetica', 'normal');
-      yPosition = addText('Palmer & Partners', 15, yPosition + 5);
+      yPosition = addText('Palmer & Partners', 105, yPosition + 5); // Centered
       
       // Orange line
       doc.setFillColor(255, 165, 0); // Orange
@@ -61,7 +61,7 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
       doc.setTextColor(0, 0, 0); // Black text
       doc.setFontSize(24);
       doc.setFont('helvetica', 'bold');
-      yPosition = addText('Tenancy Application', 105, yPosition, null);
+      yPosition = addText('Tenancy Application', 105, yPosition); // Centered
       yPosition += 15;
     } else {
       // Section headers with dark background
@@ -70,10 +70,21 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
       doc.setTextColor(255, 255, 255); // White text
       doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      yPosition = addText(text, 15, yPosition + 4);
+      yPosition = addText(text, 105, yPosition + 4); // Centered
       yPosition += 15;
       doc.setTextColor(0, 0, 0); // Reset to black
     }
+  };
+
+  // Helper function to add a subsection header
+  const addSubSectionHeader = (text: string) => {
+    yPosition = checkNewPage(12);
+    doc.setFillColor(220, 220, 220);
+    doc.rect(10, yPosition - 3, 190, 12, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText(text, 105, yPosition + 4); // Centered
+    yPosition += 10;
   };
 
   // Helper function to add a table row
@@ -101,75 +112,54 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
   // Property Details Section
   addHeader('Property Details');
   let rowCount = 0;
-  addTableRow('Street Address', data.propertyPreferences.streetAddress, rowCount++ % 2 === 1);
-  addTableRow('Postcode', data.propertyPreferences.postcode, rowCount++ % 2 === 1);
-  addTableRow('Rental Amount', `£${data.propertyPreferences.maxRent}`, rowCount++ % 2 === 1);
-  addTableRow('Preferred Move-in Date', data.propertyPreferences.moveInDate, rowCount++ % 2 === 1);
-  addTableRow('Latest Move-in Date', data.propertyPreferences.latestMoveInDate || '-', rowCount++ % 2 === 1);
-  addTableRow('Initial Tenancy Term', data.propertyPreferences.initialTenancyTerm || '-', rowCount++ % 2 === 1);
+  addTableRow('Street Address', data.propertyPreferences.streetAddress || '', rowCount++ % 2 === 1);
+  addTableRow('Postcode', data.propertyPreferences.postcode || '', rowCount++ % 2 === 1);
+  addTableRow('Rental Amount', data.propertyPreferences.maxRent ? `£${data.propertyPreferences.maxRent}` : '', rowCount++ % 2 === 1);
+  addTableRow('Preferred Move-in Date', data.propertyPreferences.moveInDate || '', rowCount++ % 2 === 1);
+  addTableRow('Latest Move-in Date', data.propertyPreferences.latestMoveInDate || '', rowCount++ % 2 === 1);
+  addTableRow('Initial Tenancy Term', data.propertyPreferences.initialTenancyTerm || '', rowCount++ % 2 === 1);
   addTableRow('Has Pets', data.additionalDetails.pets === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
   addTableRow('Under 18s', data.additionalDetails.under18Count || '0', rowCount++ % 2 === 1);
-  addTableRow('Under 18s Details', data.additionalDetails.childrenAges || '-', rowCount++ % 2 === 1);
-  addTableRow('Conditions of Offer', data.additionalDetails.conditionsOfOffer || '-', rowCount++ % 2 === 1);
-  addTableRow('Deposit Type', data.additionalDetails.depositType || '-', rowCount++ % 2 === 1);
+  addTableRow('Under 18s Details', data.additionalDetails.childrenAges || '', rowCount++ % 2 === 1);
+  addTableRow('Conditions of Offer', data.additionalDetails.conditionsOfOffer || '', rowCount++ % 2 === 1);
+  addTableRow('Deposit Type', data.additionalDetails.depositType || '', rowCount++ % 2 === 1);
 
   // Applicant sections
   data.applicants.forEach((applicant, index) => {
     addHeader(`Applicant - #${index + 1}`);
     
     rowCount = 0;
-    addTableRow('First Name', applicant.firstName, rowCount++ % 2 === 1);
-    addTableRow('Last Name', applicant.lastName, rowCount++ % 2 === 1);
-    addTableRow('Date of Birth', applicant.dateOfBirth, rowCount++ % 2 === 1);
-    addTableRow('Email Address', applicant.email, rowCount++ % 2 === 1);
-    addTableRow('Mobile Number', applicant.phone, rowCount++ % 2 === 1);
+    addTableRow('First Name', applicant.firstName || '', rowCount++ % 2 === 1);
+    addTableRow('Last Name', applicant.lastName || '', rowCount++ % 2 === 1);
+    addTableRow('Date of Birth', applicant.dateOfBirth || '', rowCount++ % 2 === 1);
+    addTableRow('Email Address', applicant.email || '', rowCount++ % 2 === 1);
+    addTableRow('Mobile Number', applicant.phone || '', rowCount++ % 2 === 1);
 
     // Employment Details subsection
-    yPosition += 10;
-    doc.setFillColor(220, 220, 220); // Light gray for subsection
-    doc.rect(10, yPosition - 3, 190, 12, 'F');
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    yPosition = addText('Employment Details', 15, yPosition + 4);
-    yPosition += 10;
-
+    addSubSectionHeader('Employment Details');
     rowCount = 0;
-    addTableRow('Contract Type', applicant.employment || '-', rowCount++ % 2 === 1);
-    addTableRow('Company Name', applicant.companyName || '-', rowCount++ % 2 === 1);
-    addTableRow('Job Title', applicant.jobTitle || '-', rowCount++ % 2 === 1);
-    addTableRow('Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '-', rowCount++ % 2 === 1);
-    addTableRow('Length of Service', applicant.lengthOfService || '-', rowCount++ % 2 === 1);
+    addTableRow('Contract Type', applicant.employment || '', rowCount++ % 2 === 1);
+    addTableRow('Company Name', applicant.companyName || '', rowCount++ % 2 === 1);
+    addTableRow('Job Title', applicant.jobTitle || '', rowCount++ % 2 === 1);
+    addTableRow('Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '', rowCount++ % 2 === 1);
+    addTableRow('Length of Service', applicant.lengthOfService || '', rowCount++ % 2 === 1);
 
     // Current Property Details subsection
-    yPosition += 10;
-    doc.setFillColor(220, 220, 220);
-    doc.rect(10, yPosition - 3, 190, 12, 'F');
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    yPosition = addText('Current Property Details', 15, yPosition + 4);
-    yPosition += 10;
-
+    addSubSectionHeader('Current Property Details');
     rowCount = 0;
-    addTableRow('Postcode', applicant.previousPostcode || '-', rowCount++ % 2 === 1);
-    addTableRow('Street Address', applicant.previousAddress || '-', rowCount++ % 2 === 1);
-    addTableRow('Move In Date', applicant.moveInDate || '-', rowCount++ % 2 === 1);
-    addTableRow('Vacate Date', applicant.vacateDate || '-', rowCount++ % 2 === 1);
-    addTableRow('Current Property Status', applicant.currentPropertyStatus || '-', rowCount++ % 2 === 1);
-    addTableRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '-', rowCount++ % 2 === 1);
+    addTableRow('Postcode', applicant.previousPostcode || '', rowCount++ % 2 === 1);
+    addTableRow('Street Address', applicant.previousAddress || '', rowCount++ % 2 === 1);
+    addTableRow('Move In Date', applicant.moveInDate || '', rowCount++ % 2 === 1);
+    addTableRow('Vacate Date', applicant.vacateDate || '', rowCount++ % 2 === 1);
+    addTableRow('Current Property Status', applicant.currentPropertyStatus || '', rowCount++ % 2 === 1);
+    addTableRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', rowCount++ % 2 === 1);
 
     // Additional Information subsection
-    yPosition += 10;
-    doc.setFillColor(220, 220, 220);
-    doc.rect(10, yPosition - 3, 190, 12, 'F');
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    yPosition = addText('Additional Information', 15, yPosition + 4);
-    yPosition += 10;
-
+    addSubSectionHeader('Additional Information');
     rowCount = 0;
     addTableRow('UK/ROI Passport', data.additionalDetails.ukPassport === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
     addTableRow('Adverse Credit', data.additionalDetails.adverseCredit === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
-    addTableRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails || '-', rowCount++ % 2 === 1);
+    addTableRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails || '', rowCount++ % 2 === 1);
     addTableRow('Requires Guarantor', data.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No', rowCount++ % 2 === 1);
   });
 
@@ -182,8 +172,12 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
   // Signature Section
   addHeader('Signature');
   rowCount = 0;
-  addTableRow('Full name', data.signature, rowCount++ % 2 === 1);
-  addTableRow('Signature', data.signature, rowCount++ % 2 === 1);
+  if (data.signature && data.signature.startsWith('data:image/')) {
+    addTableRow('Signature Type', 'Digital Signature', rowCount++ % 2 === 1);
+  } else {
+    addTableRow('Full Name', data.signature || '', rowCount++ % 2 === 1);
+    addTableRow('Signature', data.signature || '', rowCount++ % 2 === 1);
+  }
   addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'), rowCount++ % 2 === 1);
 
   // Activity Log Section (if available)
@@ -214,8 +208,10 @@ export const generatePdf = async (data: PdfData): Promise<Blob> => {
           const ipAddress = log.ip_address ? `IP Address: ${log.ip_address}` : '';
           
           yPosition = addText(action, 15, yPosition + 3);
-          yPosition = addText(ipAddress, 15, yPosition);
-          yPosition = addText(timestamp, 150, yPosition - 6);
+          if (ipAddress) {
+            yPosition = addText(ipAddress, 15, yPosition);
+          }
+          yPosition = addText(timestamp, 150, yPosition - (ipAddress ? 6 : 0));
           yPosition += 5;
         });
       }
