@@ -14,7 +14,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { format, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import type { DateRange } from "react-day-picker";
 
 interface Applicant {
@@ -28,6 +28,12 @@ interface Applicant {
   address: string;
   postcode: string;
   createdAt: string;
+}
+
+interface TenancyApplicationData {
+  id: string;
+  applicants: any[];
+  submitted_at: string;
 }
 
 const ApplicantsTab = () => {
@@ -68,7 +74,7 @@ const ApplicantsTab = () => {
     try {
       // Fetch applicants from Supabase
       const applicationId = searchParams.get('application');
-      let query = supabase.from('tenancy_applications').select('applicants').eq('id', applicationId);
+      let query = supabase.from('tenancy_applications').select('*').eq('id', applicationId);
       const { data, error } = await query;
 
       if (error) {
@@ -76,17 +82,20 @@ const ApplicantsTab = () => {
       }
 
       // Extract applicants from the response
-      const fetchedApplicants = data.flatMap(item => {
-        if (Array.isArray(item.applicants)) {
-          return item.applicants.map(applicant => ({
-            ...applicant,
-            applicationId: item.id,
-            createdAt: item.submitted_at
-          }));
-        } else {
-          return [];
-        }
-      });
+      const fetchedApplicants: Applicant[] = [];
+      if (data) {
+        data.forEach((item: TenancyApplicationData) => {
+          if (Array.isArray(item.applicants)) {
+            item.applicants.forEach(applicant => {
+              fetchedApplicants.push({
+                ...applicant,
+                applicationId: item.id,
+                createdAt: item.submitted_at
+              });
+            });
+          }
+        });
+      }
 
       setApplicants(fetchedApplicants);
     } catch (error) {
