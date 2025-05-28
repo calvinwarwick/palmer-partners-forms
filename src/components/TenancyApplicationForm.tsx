@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -110,6 +109,42 @@ const TenancyApplicationForm = () => {
   const removeApplicant = (id: string) => {
     if (applicants.length > 1) {
       setApplicants(applicants.filter(applicant => applicant.id !== id));
+    }
+  };
+
+  const handleApplicantCountChange = (count: number) => {
+    const currentCount = applicants.length;
+    
+    if (count > currentCount) {
+      // Add applicants
+      const newApplicants = [...applicants];
+      for (let i = currentCount; i < count; i++) {
+        newApplicants.push({
+          id: Date.now().toString() + i,
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          dateOfBirth: "",
+          employment: "",
+          companyName: "",
+          jobTitle: "",
+          annualIncome: "",
+          lengthOfService: "",
+          previousAddress: "",
+          previousPostcode: "",
+          currentPropertyStatus: "",
+          moveInDate: "",
+          vacateDate: "",
+          currentRentalAmount: "",
+          reference1Name: "",
+          reference1Contact: ""
+        });
+      }
+      setApplicants(newApplicants);
+    } else if (count < currentCount) {
+      // Remove applicants
+      setApplicants(applicants.slice(0, count));
     }
   };
 
@@ -268,6 +303,7 @@ const TenancyApplicationForm = () => {
             onRemoveApplicant={removeApplicant}
             onUpdateApplicant={updateApplicant}
             onFillAllTestData={fillAllTestData}
+            onApplicantCountChange={handleApplicantCountChange}
           />
         );
       case 3:
@@ -335,7 +371,7 @@ const TenancyApplicationForm = () => {
             <Progress value={progress} className="h-2" />
           </div>
 
-          <div className="flex justify-between mb-8 overflow-x-auto">
+          <div className="flex justify-between mb-8 overflow-visible">
             {[
               { step: 1, icon: Building, label: "Property Details" },
               { step: 2, icon: User, label: "Personal Info" },
@@ -344,7 +380,7 @@ const TenancyApplicationForm = () => {
               { step: 5, icon: Info, label: "Additional Details" },
               { step: 6, icon: CheckCircle, label: "Terms & Sign" }
             ].map(({ step, icon: Icon, label }) => (
-              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative">
+              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative step-indicator">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 relative ${
                   currentStep >= step 
                     ? "bg-primary text-primary-foreground" 
@@ -352,9 +388,9 @@ const TenancyApplicationForm = () => {
                 }`}>
                   <Icon className="h-5 w-5" />
                   {isStepCompleted(step) && step < currentStep && (
-                    <Badge className="absolute -top-2 -right-2 bg-green-500 hover:bg-green-600 text-white p-1 h-6 w-6 rounded-full flex items-center justify-center">
+                    <div className="step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6">
                       <Check className="h-3 w-3" />
-                    </Badge>
+                    </div>
                   )}
                 </div>
                 <span className="text-xs text-muted-foreground text-center px-1">{label}</span>

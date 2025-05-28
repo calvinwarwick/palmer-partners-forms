@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -129,29 +128,33 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
                   Move in date
                 </Label>
-                <Input
-                  id={`moveInDate-${applicant.id}`}
-                  type="date"
-                  value={applicant.moveInDate}
-                  onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
-                  className="form-control"
-                />
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon h-4 w-4" />
+                  <Input
+                    id={`moveInDate-${applicant.id}`}
+                    type="date"
+                    value={applicant.moveInDate}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
+                    className="form-control"
+                  />
+                </div>
               </div>
               <div>
                 <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
                   Vacate date
                 </Label>
-                <Input
-                  id={`vacateDate-${applicant.id}`}
-                  type="date"
-                  value={applicant.vacateDate}
-                  onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
-                  className="form-control"
-                />
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon h-4 w-4" />
+                  <Input
+                    id={`vacateDate-${applicant.id}`}
+                    type="date"
+                    value={applicant.vacateDate}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
+                    className="form-control"
+                  />
+                </div>
               </div>
             </div>
             

@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -104,30 +103,34 @@ const PropertyDetailsStep = ({
 
         <div>
           <Label htmlFor="moveInDate" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-primary" />
             Preferred Move-in Date
           </Label>
-          <Input
-            id="moveInDate"
-            type="date"
-            value={propertyPreferences.moveInDate}
-            onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-            className="focus:ring-orange-500 focus:border-orange-500"
-          />
+          <div className="date-input-container">
+            <Calendar className="date-input-icon h-4 w-4" />
+            <Input
+              id="moveInDate"
+              type="date"
+              value={propertyPreferences.moveInDate}
+              onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+              className="focus:ring-orange-500 focus:border-orange-500"
+            />
+          </div>
         </div>
 
         <div>
           <Label htmlFor="latestMoveInDate" className="flex items-center gap-2">
-            <Calendar className="h-4 w-4 text-primary" />
             Latest Move-in Date
           </Label>
-          <Input
-            id="latestMoveInDate"
-            type="date"
-            value={propertyPreferences.latestMoveInDate}
-            onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-            className="focus:ring-orange-500 focus:border-orange-500"
-          />
+          <div className="date-input-container">
+            <Calendar className="date-input-icon h-4 w-4" />
+            <Input
+              id="latestMoveInDate"
+              type="date"
+              value={propertyPreferences.latestMoveInDate}
+              onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
+              className="focus:ring-orange-500 focus:border-orange-500"
+            />
+          </div>
         </div>
 
         <div>

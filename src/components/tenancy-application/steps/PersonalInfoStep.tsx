@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Plus, X, TestTube } from "lucide-react";
+import { TestTube } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
+import ApplicantCountSelector from "./ApplicantCountSelector";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -13,6 +14,7 @@ interface PersonalInfoStepProps {
   onRemoveApplicant: (id: string) => void;
   onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
   onFillAllTestData?: () => void;
+  onApplicantCountChange: (count: number) => void;
 }
 
 const PersonalInfoStep = ({
@@ -21,6 +23,7 @@ const PersonalInfoStep = ({
   onRemoveApplicant,
   onUpdateApplicant,
   onFillAllTestData,
+  onApplicantCountChange,
 }: PersonalInfoStepProps) => {
   const fillTestData = () => {
     console.log('Fill test data button clicked - Personal Info');
@@ -60,7 +63,9 @@ const PersonalInfoStep = ({
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
           <h3 className="text-lg font-semibold">Personal Information</h3>
-          <Badge variant="secondary">{applicants.length} of 5 applicants</Badge>
+          <Badge variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-200">
+            {applicants.length} of 5 applicants
+          </Badge>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
@@ -75,22 +80,17 @@ const PersonalInfoStep = ({
           )}
         </div>
       </div>
+
+      <ApplicantCountSelector
+        applicantCount={applicants.length}
+        onApplicantCountChange={onApplicantCountChange}
+      />
       
       {applicants.map((applicant, index) => (
         <Card key={applicant.id} className="border-0 shadow-sm">
           <CardHeader className="pb-4">
             <div className="flex justify-between items-center">
               <CardTitle className="text-base font-medium">Applicant {index + 1}</CardTitle>
-              {applicants.length > 1 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onRemoveApplicant(applicant.id)}
-                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
             </div>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -146,24 +146,24 @@ const PersonalInfoStep = ({
             </div>
             <div>
               <Label htmlFor={`dob-${applicant.id}`} className="form-label">Date of Birth</Label>
-              <Input
-                id={`dob-${applicant.id}`}
-                type="date"
-                value={applicant.dateOfBirth}
-                onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
-                className="form-control"
-              />
+              <div className="date-input-container">
+                <div className="date-input-icon">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <Input
+                  id={`dob-${applicant.id}`}
+                  type="date"
+                  value={applicant.dateOfBirth}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
+                  className="form-control"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
       ))}
-      
-      {applicants.length < 5 && (
-        <Button variant="outline" onClick={onAddApplicant} className="w-full border-dashed border-2 hover:bg-muted">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Another Applicant
-        </Button>
-      )}
     </div>
   );
 };
