@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TestTube } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
@@ -41,7 +42,8 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
           <CardTitle className="text-base font-medium">Property Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="form-floating">
+          <div>
+            <Label htmlFor="streetAddress" className="form-label">Address *</Label>
             <Input
               id="streetAddress"
               value={propertyPreferences.streetAddress}
@@ -50,10 +52,10 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
               className="form-control"
               required
             />
-            <label htmlFor="streetAddress" className="text-muted-foreground">Address *</label>
           </div>
           
-          <div className="form-floating">
+          <div>
+            <Label htmlFor="postcode" className="form-label">Postcode *</Label>
             <Input
               id="postcode"
               value={propertyPreferences.postcode}
@@ -62,10 +64,10 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
               className="form-control"
               required
             />
-            <label htmlFor="postcode" className="text-muted-foreground">Postcode *</label>
           </div>
           
-          <div className="form-floating">
+          <div>
+            <Label htmlFor="rentalAmount" className="form-label">Rental amount (£) *</Label>
             <Input
               id="rentalAmount"
               type="number"
@@ -75,11 +77,11 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
               className="form-control"
               required
             />
-            <label htmlFor="rentalAmount" className="text-muted-foreground">Rental amount (£) *</label>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="form-floating">
+            <div>
+              <Label htmlFor="preferredMoveIn" className="form-label">Preferred move-in date *</Label>
               <Input
                 id="preferredMoveIn"
                 type="date"
@@ -88,9 +90,9 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
                 className="form-control"
                 required
               />
-              <label htmlFor="preferredMoveIn" className="text-muted-foreground">Preferred move-in date *</label>
             </div>
-            <div className="form-floating">
+            <div>
+              <Label htmlFor="latestMoveIn" className="form-label">Latest move-in date</Label>
               <Input
                 id="latestMoveIn"
                 type="date"
@@ -98,16 +100,16 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
                 onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
                 className="form-control"
               />
-              <label htmlFor="latestMoveIn" className="text-muted-foreground">Latest move-in date</label>
             </div>
           </div>
           
-          <div className="form-floating">
+          <div>
+            <Label htmlFor="tenancyTerm" className="form-label">Preferred initial tenancy term *</Label>
             <select
               id="tenancyTerm"
               value={propertyPreferences.initialTenancyTerm}
               onChange={(e) => onUpdatePreferences("initialTenancyTerm", e.target.value)}
-              className="form-select w-full px-3 py-2 border border-input bg-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+              className="form-select"
               required
             >
               <option value="">Select term</option>
@@ -116,7 +118,6 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
               <option value="2 years">2 years</option>
               <option value="3 years">3 years</option>
             </select>
-            <label htmlFor="tenancyTerm" className="text-muted-foreground">Preferred initial tenancy term *</label>
           </div>
         </CardContent>
       </Card>

@@ -43,76 +43,62 @@
   }
 }
 
-/* Custom styles for Bootstrap floating labels integration */
-.form-floating {
-  position: relative;
-}
-
-.form-floating > .form-control,
-.form-floating > .form-select {
-  height: calc(3.5rem + 2px);
-  line-height: 1.25;
-  @apply bg-transparent border-input text-foreground;
-  background-color: transparent !important;
-}
-
-.form-floating > label {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 1rem 0.75rem;
-  overflow: hidden;
-  text-align: start;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  pointer-events: none;
-  border: 1px solid transparent;
-  transform-origin: 0 0;
-  transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;
-  @apply text-muted-foreground;
-  background-color: transparent !important;
-}
-
-.form-floating > .form-control::placeholder {
-  color: transparent;
-}
-
-.form-floating > .form-control:focus,
-.form-floating > .form-control:not(:placeholder-shown),
-.form-floating > .form-select:focus,
-.form-floating > .form-select:not([value=""]) {
-  padding-top: 1.625rem;
-  padding-bottom: 0.625rem;
-}
-
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select:focus ~ label,
-.form-floating > .form-select:not([value=""]) ~ label {
-  opacity: 0.65;
-  transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem);
-  background-color: transparent !important;
-}
-
-.form-floating > .form-control:focus ~ label {
-  @apply text-orange-500;
-}
-
-.form-control:focus,
-.form-select:focus {
-  @apply ring-2 ring-orange-500 ring-offset-2;
-  background-color: transparent !important;
-}
-
-/* Ensure select options have proper background and increased spacing */
+/* Standard input and select styling without floating labels */
+.form-control,
 .form-select {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  @apply w-full px-3 py-3 border border-input bg-transparent rounded-md text-foreground;
+  @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
+  background-color: transparent !important;
+}
+
+.form-select {
+  @apply bg-white;
 }
 
 .form-select option {
-  @apply bg-background text-foreground;
+  @apply bg-white text-foreground;
   padding: 0.75rem;
+}
+
+/* Standard label styling */
+.form-label {
+  @apply block text-sm font-medium text-muted-foreground mb-2;
+}
+
+/* Remove any focus states that use blue colors */
+input:focus,
+select:focus,
+textarea:focus {
+  @apply ring-2 ring-orange-500 ring-offset-2 border-orange-500;
+  outline: none !important;
+}
+
+/* Override any blue colors in the UI */
+.focus\:ring-blue-500:focus {
+  @apply ring-orange-500;
+}
+
+.focus\:border-blue-500:focus {
+  @apply border-orange-500;
+}
+
+.border-blue-500 {
+  @apply border-orange-500;
+}
+
+.bg-blue-500 {
+  @apply bg-orange-500;
+}
+
+.text-blue-500 {
+  @apply text-orange-500;
+}
+
+.bg-blue-100 {
+  @apply bg-orange-100;
+}
+
+.text-blue-800 {
+  @apply text-orange-800;
 }

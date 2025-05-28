@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TestTube } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
@@ -60,12 +61,13 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`employment-${applicant.id}`} className="form-label">Contract type *</Label>
               <select
                 id={`employment-${applicant.id}`}
                 value={applicant.employment}
                 onChange={(e) => onUpdateApplicant(applicant.id, "employment", e.target.value)}
-                className="form-select w-full px-3 py-2 border border-input bg-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                className="form-select"
                 required
               >
                 <option value="">Select employment status</option>
@@ -77,10 +79,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 <option value="Retired">Retired</option>
                 <option value="Unemployed">Unemployed</option>
               </select>
-              <label htmlFor={`employment-${applicant.id}`} className="text-muted-foreground">Contract type *</label>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`company-${applicant.id}`} className="form-label">Company name</Label>
               <Input
                 id={`company-${applicant.id}`}
                 value={applicant.companyName}
@@ -88,10 +90,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 placeholder="Enter company name"
                 className="form-control"
               />
-              <label htmlFor={`company-${applicant.id}`} className="text-muted-foreground">Company name</label>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label">Job title</Label>
               <Input
                 id={`jobTitle-${applicant.id}`}
                 value={applicant.jobTitle}
@@ -99,10 +101,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 placeholder="Enter job title"
                 className="form-control"
               />
-              <label htmlFor={`jobTitle-${applicant.id}`} className="text-muted-foreground">Job title</label>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`income-${applicant.id}`} className="form-label">Annual salary (£) *</Label>
               <Input
                 id={`income-${applicant.id}`}
                 type="number"
@@ -112,10 +114,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 className="form-control"
                 required
               />
-              <label htmlFor={`income-${applicant.id}`} className="text-muted-foreground">Annual salary (£) *</label>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label">Length of service</Label>
               <Input
                 id={`lengthOfService-${applicant.id}`}
                 value={applicant.lengthOfService}
@@ -123,11 +125,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 placeholder="e.g., 2 years"
                 className="form-control"
               />
-              <label htmlFor={`lengthOfService-${applicant.id}`} className="text-muted-foreground">Length of service</label>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`ref1Name-${applicant.id}`} className="form-label">Reference 1 Name</Label>
                 <Input
                   id={`ref1Name-${applicant.id}`}
                   value={applicant.reference1Name}
@@ -135,9 +137,9 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                   placeholder="Reference name"
                   className="form-control"
                 />
-                <label htmlFor={`ref1Name-${applicant.id}`} className="text-muted-foreground">Reference 1 Name</label>
               </div>
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`ref1Contact-${applicant.id}`} className="form-label">Reference 1 Contact</Label>
                 <Input
                   id={`ref1Contact-${applicant.id}`}
                   value={applicant.reference1Contact}
@@ -145,7 +147,6 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                   placeholder="Email or phone"
                   className="form-control"
                 />
-                <label htmlFor={`ref1Contact-${applicant.id}`} className="text-muted-foreground">Reference 1 Contact</label>
               </div>
             </div>
           </CardContent>

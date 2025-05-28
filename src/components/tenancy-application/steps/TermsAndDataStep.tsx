@@ -1,9 +1,8 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { TestTube } from "lucide-react";
 
 interface TermsAndDataStepProps {
@@ -87,7 +86,7 @@ const TermsAndDataStep = ({
           </div>
           
           <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg">
-            <Checkbox
+            <Switch
               id="termsAccepted"
               checked={termsAccepted}
               onCheckedChange={onTermsAccepted}
@@ -109,10 +108,10 @@ const TermsAndDataStep = ({
           
           <div className="space-y-4">
             <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg">
-              <Checkbox
+              <Switch
                 id="utilitiesSharing"
                 checked={dataSharing.utilities}
-                onCheckedChange={(checked) => onUpdateDataSharing('utilities', checked as boolean)}
+                onCheckedChange={(checked) => onUpdateDataSharing('utilities', checked)}
                 className="mt-1"
               />
               <Label htmlFor="utilitiesSharing" className="text-sm leading-relaxed cursor-pointer">
@@ -121,10 +120,10 @@ const TermsAndDataStep = ({
             </div>
             
             <div className="flex items-start space-x-3 p-4 bg-muted/30 rounded-lg">
-              <Checkbox
+              <Switch
                 id="insuranceSharing"
                 checked={dataSharing.insurance}
-                onCheckedChange={(checked) => onUpdateDataSharing('insurance', checked as boolean)}
+                onCheckedChange={(checked) => onUpdateDataSharing('insurance', checked)}
                 className="mt-1"
               />
               <Label htmlFor="insuranceSharing" className="text-sm leading-relaxed cursor-pointer">
@@ -142,7 +141,8 @@ const TermsAndDataStep = ({
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">I confirm that the information I have provided is accurate and complete</p>
           
-          <div className="form-floating">
+          <div>
+            <Label htmlFor="fullName" className="form-label">Full name *</Label>
             <Input
               id="fullName"
               value={signature}
@@ -151,7 +151,6 @@ const TermsAndDataStep = ({
               className="form-control text-lg"
               required
             />
-            <label htmlFor="fullName" className="text-muted-foreground">Full name *</label>
           </div>
         </CardContent>
       </Card>

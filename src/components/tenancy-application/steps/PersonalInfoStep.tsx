@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Plus, X, TestTube } from "lucide-react";
@@ -78,7 +79,8 @@ const PersonalInfoStep = ({
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`firstName-${applicant.id}`} className="form-label">First Name *</Label>
                 <Input
                   id={`firstName-${applicant.id}`}
                   value={applicant.firstName}
@@ -87,9 +89,9 @@ const PersonalInfoStep = ({
                   className="form-control"
                   required
                 />
-                <label htmlFor={`firstName-${applicant.id}`} className="text-muted-foreground">First Name *</label>
               </div>
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`lastName-${applicant.id}`} className="form-label">Last Name *</Label>
                 <Input
                   id={`lastName-${applicant.id}`}
                   value={applicant.lastName}
@@ -98,11 +100,11 @@ const PersonalInfoStep = ({
                   className="form-control"
                   required
                 />
-                <label htmlFor={`lastName-${applicant.id}`} className="text-muted-foreground">Last Name *</label>
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`email-${applicant.id}`} className="form-label">Email *</Label>
                 <Input
                   id={`email-${applicant.id}`}
                   type="email"
@@ -112,9 +114,9 @@ const PersonalInfoStep = ({
                   className="form-control"
                   required
                 />
-                <label htmlFor={`email-${applicant.id}`} className="text-muted-foreground">Email *</label>
               </div>
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`phone-${applicant.id}`} className="form-label">Phone *</Label>
                 <Input
                   id={`phone-${applicant.id}`}
                   type="tel"
@@ -124,10 +126,10 @@ const PersonalInfoStep = ({
                   className="form-control"
                   required
                 />
-                <label htmlFor={`phone-${applicant.id}`} className="text-muted-foreground">Phone *</label>
               </div>
             </div>
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`dob-${applicant.id}`} className="form-label">Date of Birth</Label>
               <Input
                 id={`dob-${applicant.id}`}
                 type="date"
@@ -135,7 +137,6 @@ const PersonalInfoStep = ({
                 onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
                 className="form-control"
               />
-              <label htmlFor={`dob-${applicant.id}`} className="text-muted-foreground">Date of Birth</label>
             </div>
           </CardContent>
         </Card>

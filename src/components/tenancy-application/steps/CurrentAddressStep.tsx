@@ -1,6 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { TestTube } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
@@ -58,7 +59,8 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`streetAddress-${applicant.id}`} className="form-label">Street address *</Label>
               <Input
                 id={`streetAddress-${applicant.id}`}
                 value={applicant.previousAddress}
@@ -67,10 +69,10 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 className="form-control"
                 required
               />
-              <label htmlFor={`streetAddress-${applicant.id}`} className="text-muted-foreground">Street address *</label>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`postcode-${applicant.id}`} className="form-label">Postcode *</Label>
               <Input
                 id={`postcode-${applicant.id}`}
                 value={applicant.previousPostcode}
@@ -79,15 +81,15 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 className="form-control"
                 required
               />
-              <label htmlFor={`postcode-${applicant.id}`} className="text-muted-foreground">Postcode *</label>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`propertyStatus-${applicant.id}`} className="form-label">Current property status *</Label>
               <select
                 id={`propertyStatus-${applicant.id}`}
                 value={applicant.currentPropertyStatus}
                 onChange={(e) => onUpdateApplicant(applicant.id, "currentPropertyStatus", e.target.value)}
-                className="form-select w-full px-3 py-2 border border-input bg-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-ring"
+                className="form-select"
                 required
               >
                 <option value="">Select status</option>
@@ -97,11 +99,11 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 <option value="Owner Occupier">Owner Occupier</option>
                 <option value="Other">Other</option>
               </select>
-              <label htmlFor={`propertyStatus-${applicant.id}`} className="text-muted-foreground">Current property status *</label>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label">Move in date</Label>
                 <Input
                   id={`moveInDate-${applicant.id}`}
                   type="date"
@@ -109,9 +111,9 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                   onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
                   className="form-control"
                 />
-                <label htmlFor={`moveInDate-${applicant.id}`} className="text-muted-foreground">Move in date</label>
               </div>
-              <div className="form-floating">
+              <div>
+                <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label">Vacate date</Label>
                 <Input
                   id={`vacateDate-${applicant.id}`}
                   type="date"
@@ -119,11 +121,11 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                   onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
                   className="form-control"
                 />
-                <label htmlFor={`vacateDate-${applicant.id}`} className="text-muted-foreground">Vacate date</label>
               </div>
             </div>
             
-            <div className="form-floating">
+            <div>
+              <Label htmlFor={`currentRent-${applicant.id}`} className="form-label">Current rental amount (£)</Label>
               <Input
                 id={`currentRent-${applicant.id}`}
                 type="number"
@@ -132,7 +134,6 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 placeholder="e.g., 1200"
                 className="form-control"
               />
-              <label htmlFor={`currentRent-${applicant.id}`} className="text-muted-foreground">Current rental amount (£)</label>
             </div>
           </CardContent>
         </Card>
