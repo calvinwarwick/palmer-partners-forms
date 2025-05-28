@@ -1,11 +1,12 @@
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Eye, EyeOff, Lock, User } from "lucide-react";
+import { Eye, EyeOff, Lock, User, ArrowLeft } from "lucide-react";
 
 interface LoginFormProps {
   onLogin?: (username: string, role: string) => void;
@@ -44,9 +45,24 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     setIsLoading(false);
   };
 
+  const fillTestCredentials = (userType: string) => {
+    const testUser = mockUsers.find(u => u.role === userType);
+    if (testUser) {
+      setUsername(testUser.username);
+      setPassword(testUser.password);
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
+        <div className="mb-4">
+          <Link to="/" className="flex items-center text-blue-600 hover:text-blue-700 transition-colors">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Properties
+          </Link>
+        </div>
+        
         <Card>
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
@@ -110,12 +126,31 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
             </form>
 
             <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm font-medium text-gray-700 mb-2">Test Accounts:</p>
-              <div className="text-xs text-gray-600 space-y-1">
-                <p><strong>Admin:</strong> admin / admin</p>
-                <p><strong>Agent:</strong> agent1 / agent123</p>
-                <p><strong>Tenant:</strong> tenant1 / tenant123</p>
+              <p className="text-sm font-medium text-gray-700 mb-3">Test Accounts:</p>
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={() => fillTestCredentials("Admin")}
+                  className="w-full text-left p-2 text-xs bg-white rounded border hover:bg-gray-50 transition-colors"
+                >
+                  <strong>Admin:</strong> admin / admin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillTestCredentials("Agent")}
+                  className="w-full text-left p-2 text-xs bg-white rounded border hover:bg-gray-50 transition-colors"
+                >
+                  <strong>Agent:</strong> agent1 / agent123
+                </button>
+                <button
+                  type="button"
+                  onClick={() => fillTestCredentials("Tenant")}
+                  className="w-full text-left p-2 text-xs bg-white rounded border hover:bg-gray-50 transition-colors"
+                >
+                  <strong>Tenant:</strong> tenant1 / tenant123
+                </button>
               </div>
+              <p className="text-xs text-gray-500 mt-2">Click any account to auto-fill credentials</p>
             </div>
           </CardContent>
         </Card>
