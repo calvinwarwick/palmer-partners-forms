@@ -16,6 +16,7 @@ interface TermsAndDataStepProps {
   onSignatureChange: (signature: string) => void;
   termsAccepted: boolean;
   onTermsAccepted: (accepted: boolean) => void;
+  onFillAllTestData?: () => void;
 }
 
 const TermsAndDataStep = ({ 
@@ -24,7 +25,8 @@ const TermsAndDataStep = ({
   signature, 
   onSignatureChange,
   termsAccepted,
-  onTermsAccepted
+  onTermsAccepted,
+  onFillAllTestData
 }: TermsAndDataStepProps) => {
   const fillTestData = () => {
     console.log('Fill test data button clicked - Terms and Data');
@@ -46,10 +48,18 @@ const TermsAndDataStep = ({
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <h3 className="text-lg font-semibold">Terms, Conditions & Data Sharing</h3>
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-          <TestTube className="h-4 w-4" />
-          Fill Test Data
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Fill Step Data
+          </Button>
+          {onFillAllTestData && (
+            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+              <TestTube className="h-4 w-4" />
+              Fill All Form Data
+            </Button>
+          )}
+        </div>
       </div>
       
       <Card className="border-0 shadow-sm">

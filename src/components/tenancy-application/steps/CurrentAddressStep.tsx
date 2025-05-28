@@ -9,9 +9,10 @@ import { Applicant } from "@/domain/types/Applicant";
 interface CurrentAddressStepProps {
   applicants: Applicant[];
   onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
+  onFillAllTestData?: () => void;
 }
 
-const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressStepProps) => {
+const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: CurrentAddressStepProps) => {
   const fillTestData = () => {
     console.log('Fill test data button clicked - Current Address');
     console.log('Current applicants for address:', applicants);
@@ -51,10 +52,18 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <h3 className="text-lg font-semibold">Current Address Details</h3>
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-          <TestTube className="h-4 w-4" />
-          Fill Test Data
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Fill Step Data
+          </Button>
+          {onFillAllTestData && (
+            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+              <TestTube className="h-4 w-4" />
+              Fill All Form Data
+            </Button>
+          )}
+        </div>
       </div>
       
       {applicants.map((applicant) => (

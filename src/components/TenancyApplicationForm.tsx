@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -129,6 +130,98 @@ const TenancyApplicationForm = () => {
     setDataSharing(prev => ({ ...prev, [field]: value }));
   };
 
+  const fillAllTestData = () => {
+    console.log('Fill All Test Data clicked - populating entire form');
+    
+    // Fill Property Preferences
+    setPropertyPreferences({
+      propertyType: "apartment",
+      streetAddress: "123 Orchard House, New Cut",
+      postcode: "IP7 5DA",
+      maxRent: "2500",
+      preferredLocation: "Central London",
+      moveInDate: "2024-06-01",
+      latestMoveInDate: "2024-06-15",
+      initialTenancyTerm: "1 year",
+      additionalRequests: "Pet-friendly property preferred"
+    });
+
+    // Fill Applicant Personal Info, Employment, and Address Data
+    const testData = [
+      {
+        firstName: "John",
+        lastName: "Smith",
+        email: "john.smith@example.com",
+        phone: "07700 900123",
+        dateOfBirth: "1990-05-15",
+        employment: "Full Time",
+        companyName: "Tech Solutions Ltd",
+        jobTitle: "Software Engineer",
+        annualIncome: "45000",
+        lengthOfService: "3 years",
+        previousAddress: "45 Elm Street, Colchester",
+        previousPostcode: "CO1 2AB",
+        currentPropertyStatus: "Rented Privately",
+        moveInDate: "2022-01-15",
+        vacateDate: "2024-05-30",
+        currentRentalAmount: "1800",
+        reference1Name: "Mike Johnson",
+        reference1Contact: "mike.johnson@techsolutions.com"
+      },
+      {
+        firstName: "Sarah",
+        lastName: "Johnson",
+        email: "sarah.johnson@example.com",
+        phone: "07700 900456",
+        dateOfBirth: "1988-11-22",
+        employment: "Full Time",
+        companyName: "Design Studio",
+        jobTitle: "Graphic Designer",
+        annualIncome: "38000",
+        lengthOfService: "2 years",
+        previousAddress: "22 Oak Avenue, Ipswich",
+        previousPostcode: "IP2 3CD",
+        currentPropertyStatus: "Rented Privately",
+        moveInDate: "2021-03-01",
+        vacateDate: "2024-05-30",
+        currentRentalAmount: "1600",
+        reference1Name: "Lisa Brown",
+        reference1Contact: "lisa.brown@designstudio.com"
+      }
+    ];
+
+    // Update existing applicants with test data
+    setApplicants(applicants.map((applicant, index) => {
+      if (testData[index]) {
+        return { ...applicant, ...testData[index] };
+      }
+      return applicant;
+    }));
+
+    // Fill Additional Details
+    setAdditionalDetails({
+      ukPassport: "yes",
+      adverseCredit: "no",
+      adverseCreditDetails: "",
+      guarantorRequired: "no",
+      pets: "yes - 1 cat",
+      under18Count: "0",
+      childrenAges: "",
+      conditionsOfOffer: "Standard conditions accepted",
+      depositType: "standard"
+    });
+
+    // Fill Terms and Data
+    setSignature("John Smith");
+    setTermsAccepted(true);
+    setDataSharing({
+      utilities: true,
+      insurance: false
+    });
+
+    console.log('All test data filled successfully');
+  };
+
   const handleNext = () => {
     if (canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted)) {
       goToNext();
@@ -157,6 +250,7 @@ const TenancyApplicationForm = () => {
           <PropertyDetailsStep
             propertyPreferences={propertyPreferences}
             onUpdatePreferences={updatePropertyPreferences}
+            onFillAllTestData={fillAllTestData}
           />
         );
       case 2:
@@ -166,6 +260,7 @@ const TenancyApplicationForm = () => {
             onAddApplicant={addApplicant}
             onRemoveApplicant={removeApplicant}
             onUpdateApplicant={updateApplicant}
+            onFillAllTestData={fillAllTestData}
           />
         );
       case 3:
@@ -173,6 +268,7 @@ const TenancyApplicationForm = () => {
           <EmploymentStep
             applicants={applicants}
             onUpdateApplicant={updateApplicant}
+            onFillAllTestData={fillAllTestData}
           />
         );
       case 4:
@@ -180,6 +276,7 @@ const TenancyApplicationForm = () => {
           <CurrentAddressStep
             applicants={applicants}
             onUpdateApplicant={updateApplicant}
+            onFillAllTestData={fillAllTestData}
           />
         );
       case 5:
@@ -187,6 +284,7 @@ const TenancyApplicationForm = () => {
           <AdditionalDetailsStep
             additionalDetails={additionalDetails}
             onUpdateDetails={updateAdditionalDetails}
+            onFillAllTestData={fillAllTestData}
           />
         );
       case 6:
@@ -198,6 +296,7 @@ const TenancyApplicationForm = () => {
             onSignatureChange={setSignature}
             termsAccepted={termsAccepted}
             onTermsAccepted={setTermsAccepted}
+            onFillAllTestData={fillAllTestData}
           />
         );
       default:

@@ -12,6 +12,7 @@ interface PersonalInfoStepProps {
   onAddApplicant: () => void;
   onRemoveApplicant: (id: string) => void;
   onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
+  onFillAllTestData?: () => void;
 }
 
 const PersonalInfoStep = ({
@@ -19,6 +20,7 @@ const PersonalInfoStep = ({
   onAddApplicant,
   onRemoveApplicant,
   onUpdateApplicant,
+  onFillAllTestData,
 }: PersonalInfoStepProps) => {
   const fillTestData = () => {
     console.log('Fill test data button clicked - Personal Info');
@@ -60,10 +62,18 @@ const PersonalInfoStep = ({
           <h3 className="text-lg font-semibold">Personal Information</h3>
           <Badge variant="secondary">{applicants.length} of 5 applicants</Badge>
         </div>
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-          <TestTube className="h-4 w-4" />
-          Fill Test Data
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Fill Step Data
+          </Button>
+          {onFillAllTestData && (
+            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+              <TestTube className="h-4 w-4" />
+              Fill All Form Data
+            </Button>
+          )}
+        </div>
       </div>
       
       {applicants.map((applicant, index) => (

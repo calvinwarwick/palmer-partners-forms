@@ -9,9 +9,10 @@ import { PropertyPreferences } from "@/domain/types/Applicant";
 interface PropertyDetailsStepProps {
   propertyPreferences: PropertyPreferences;
   onUpdatePreferences: (field: keyof PropertyPreferences, value: string) => void;
+  onFillAllTestData?: () => void;
 }
 
-const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: PropertyDetailsStepProps) => {
+const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences, onFillAllTestData }: PropertyDetailsStepProps) => {
   const fillTestData = () => {
     onUpdatePreferences("streetAddress", "123 Orchard House, New Cut");
     onUpdatePreferences("postcode", "IP7 5DA");
@@ -31,10 +32,18 @@ const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences }: Prope
           <h3 className="text-lg font-semibold mb-2">Proposed Rental Property Details</h3>
           <p className="text-muted-foreground mb-6">Please provide the details of the property you are applying for.</p>
         </div>
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-          <TestTube className="h-4 w-4" />
-          Fill Test Data
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Fill Step Data
+          </Button>
+          {onFillAllTestData && (
+            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+              <TestTube className="h-4 w-4" />
+              Fill All Form Data
+            </Button>
+          )}
+        </div>
       </div>
       
       <Card className="border-0 shadow-sm">

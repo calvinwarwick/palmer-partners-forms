@@ -9,9 +9,10 @@ import { Applicant } from "@/domain/types/Applicant";
 interface EmploymentStepProps {
   applicants: Applicant[];
   onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
+  onFillAllTestData?: () => void;
 }
 
-const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) => {
+const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: EmploymentStepProps) => {
   const fillTestData = () => {
     console.log('Fill test data button clicked - Employment');
     console.log('Current applicants for employment:', applicants);
@@ -53,10 +54,18 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
     <div className="space-y-6">
       <div className="flex justify-between items-start">
         <h3 className="text-lg font-semibold">Employment Details</h3>
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-          <TestTube className="h-4 w-4" />
-          Fill Test Data
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Fill Step Data
+          </Button>
+          {onFillAllTestData && (
+            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+              <TestTube className="h-4 w-4" />
+              Fill All Form Data
+            </Button>
+          )}
+        </div>
       </div>
       
       {applicants.map((applicant) => (
