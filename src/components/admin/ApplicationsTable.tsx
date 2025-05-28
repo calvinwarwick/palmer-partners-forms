@@ -3,15 +3,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Eye, Mail, Download, MoreHorizontal } from "lucide-react";
+import { Eye, Mail, Download, MoreHorizontal, User } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 interface TenancyApplication {
   id: string;
   applicants: any[];
   property_preferences: any;
-  status: string;
   submitted_at: string;
 }
 
@@ -19,7 +18,6 @@ interface ApplicationsTableProps {
   applications: TenancyApplication[];
   selectedApplications: string[];
   onSelectApplication: (id: string, checked: boolean) => void;
-  onStatusUpdate: (id: string, status: string) => void;
   onViewDetails: (application: TenancyApplication) => void;
 }
 
@@ -27,18 +25,9 @@ const ApplicationsTable = ({
   applications,
   selectedApplications,
   onSelectApplication,
-  onStatusUpdate,
   onViewDetails
 }: ApplicationsTableProps) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'approved': return 'bg-green-100 text-green-800 border-green-200';
-      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
-      case 'under_review': return 'bg-blue-100 text-blue-800 border-blue-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
+  const navigate = useNavigate();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-GB', {
@@ -50,6 +39,10 @@ const ApplicationsTable = ({
     });
   };
 
+  const handleViewApplicants = (applicationId: string) => {
+    navigate(`/applicants?application=${applicationId}`);
+  };
+
   return (
     <div className="border rounded-lg overflow-hidden">
       <Table>
@@ -58,9 +51,8 @@ const ApplicationsTable = ({
             <TableHead className="w-12">
               <span className="sr-only">Select</span>
             </TableHead>
-            <TableHead className="font-semibold">Applicant</TableHead>
+            <TableHead className="font-semibold">Primary Applicant</TableHead>
             <TableHead className="font-semibold">Property</TableHead>
-            <TableHead className="font-semibold">Status</TableHead>
             <TableHead className="font-semibold">Submitted</TableHead>
             <TableHead className="font-semibold">Applicants</TableHead>
             <TableHead className="font-semibold">Actions</TableHead>
@@ -106,37 +98,26 @@ const ApplicationsTable = ({
               </TableCell>
               
               <TableCell>
-                <div className="flex flex-col space-y-2">
-                  <Badge className={`text-xs ${getStatusColor(application.status)} border`}>
-                    {application.status.replace('_', ' ').toUpperCase()}
-                  </Badge>
-                  <Select 
-                    value={application.status} 
-                    onValueChange={(value) => onStatusUpdate(application.id, value)}
-                  >
-                    <SelectTrigger className="w-32 h-8 text-xs">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="under_review">Under Review</SelectItem>
-                      <SelectItem value="approved">Approved</SelectItem>
-                      <SelectItem value="rejected">Rejected</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </TableCell>
-              
-              <TableCell>
                 <p className="text-sm text-gray-900">
                   {formatDate(application.submitted_at)}
                 </p>
               </TableCell>
               
               <TableCell>
-                <Badge variant="outline" className="text-xs">
-                  {application.applicants?.length || 0} {application.applicants?.length === 1 ? 'applicant' : 'applicants'}
-                </Badge>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="outline" className="text-xs">
+                    {application.applicants?.length || 0} {application.applicants?.length === 1 ? 'applicant' : 'applicants'}
+                  </Badge>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewApplicants(application.id)}
+                    className="h-7 px-2"
+                  >
+                    <User className="h-3 w-3 mr-1" />
+                    View
+                  </Button>
+                </div>
               </TableCell>
               
               <TableCell>

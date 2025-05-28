@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,6 @@ interface TenancyApplication {
   additional_details: AdditionalDetails;
   data_sharing: { utilities: boolean; insurance: boolean };
   signature: string;
-  status: string;
   submitted_at: string;
 }
 
@@ -31,9 +31,8 @@ const Admin = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // Filter states
+  // Filter states (removed statusFilter)
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
   const [dateFilter, setDateFilter] = useState("all");
 
   useEffect(() => {
@@ -42,7 +41,7 @@ const Admin = () => {
 
   useEffect(() => {
     filterApplications();
-  }, [applications, searchTerm, statusFilter, dateFilter]);
+  }, [applications, searchTerm, dateFilter]);
 
   const fetchApplications = async (showRefreshing = false) => {
     if (showRefreshing) setRefreshing(true);
@@ -89,11 +88,6 @@ const Admin = () => {
       );
     }
 
-    // Status filter
-    if (statusFilter !== "all") {
-      filtered = filtered.filter(app => app.status === statusFilter);
-    }
-
     // Date filter
     if (dateFilter !== "all") {
       const now = new Date();
@@ -118,47 +112,6 @@ const Admin = () => {
     }
 
     setFilteredApplications(filtered);
-  };
-
-  const updateApplicationStatus = async (id: string, newStatus: string) => {
-    try {
-      const { error } = await supabase
-        .from('tenancy_applications')
-        .update({ status: newStatus })
-        .eq('id', id);
-
-      if (error) throw error;
-
-      setApplications(prev => 
-        prev.map(app => app.id === id ? { ...app, status: newStatus } : app)
-      );
-      toast.success('Application status updated');
-    } catch (error) {
-      console.error('Error updating status:', error);
-      toast.error('Failed to update status');
-    }
-  };
-
-  const handleBulkStatusUpdate = async (newStatus: string) => {
-    try {
-      const { error } = await supabase
-        .from('tenancy_applications')
-        .update({ status: newStatus })
-        .in('id', selectedApplications);
-
-      if (error) throw error;
-
-      setApplications(prev => 
-        prev.map(app => 
-          selectedApplications.includes(app.id) ? { ...app, status: newStatus } : app
-        )
-      );
-      setSelectedApplications([]);
-      toast.success(`Updated ${selectedApplications.length} applications`);
-    } catch (error) {
-      console.error('Error updating statuses:', error);
-      toast.error('Failed to update statuses');
-    }
   };
 
   const handleSelectApplication = (id: string, checked: boolean) => {
@@ -232,12 +185,11 @@ const Admin = () => {
 
   const clearFilters = () => {
     setSearchTerm("");
-    setStatusFilter("all");
     setDateFilter("all");
     setSelectedApplications([]);
   };
 
-  const hasActiveFilters = searchTerm !== "" || statusFilter !== "all" || dateFilter !== "all";
+  const hasActiveFilters = searchTerm !== "" || dateFilter !== "all";
 
   if (loading) {
     return (
@@ -280,8 +232,6 @@ const Admin = () => {
       <ApplicationFilters
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        statusFilter={statusFilter}
-        onStatusFilterChange={setStatusFilter}
         dateFilter={dateFilter}
         onDateFilterChange={setDateFilter}
         onClearFilters={clearFilters}
@@ -292,7 +242,6 @@ const Admin = () => {
       <BulkActions
         selectedApplications={selectedApplications}
         onSelectAll={handleSelectAll}
-        onBulkStatusUpdate={handleBulkStatusUpdate}
         onBulkExport={handleBulkExport}
         totalApplications={filteredApplications.length}
       />
@@ -315,7 +264,6 @@ const Admin = () => {
               applications={filteredApplications}
               selectedApplications={selectedApplications}
               onSelectApplication={handleSelectApplication}
-              onStatusUpdate={updateApplicationStatus}
               onViewDetails={handleViewDetails}
             />
           ) : (

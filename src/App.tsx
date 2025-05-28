@@ -7,6 +7,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import Application from "./pages/Application";
 import Admin from "./pages/Admin";
+import Applicants from "./pages/Applicants";
 import Login from "./pages/Login";
 import LazyPdfDemo from "./components/LazyPdfDemo";
 
@@ -22,6 +23,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/application" element={<Application />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/applicants" element={<Applicants />} />
             <Route path="/login" element={<Login />} />
             <Route path="/pdf-demo" element={<LazyPdfDemo />} />
           </Routes>

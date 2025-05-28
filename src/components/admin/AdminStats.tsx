@@ -1,10 +1,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, Clock, CheckCircle, XCircle, Users, Calendar } from "lucide-react";
+import { FileText, Calendar, TrendingUp, Clock, Users, CalendarDays } from "lucide-react";
 
 interface TenancyApplication {
   id: string;
-  status: string;
   submitted_at: string;
   applicants: any[];
 }
@@ -15,10 +14,6 @@ interface AdminStatsProps {
 
 const AdminStats = ({ applications }: AdminStatsProps) => {
   const totalApplications = applications.length;
-  const pendingApplications = applications.filter(app => app.status === 'pending').length;
-  const approvedApplications = applications.filter(app => app.status === 'approved').length;
-  const rejectedApplications = applications.filter(app => app.status === 'rejected').length;
-  const underReviewApplications = applications.filter(app => app.status === 'under_review').length;
   
   // Applications this month
   const thisMonth = applications.filter(app => {
@@ -35,6 +30,28 @@ const AdminStats = ({ applications }: AdminStatsProps) => {
     return submitDate >= weekAgo;
   }).length;
 
+  // Applications today
+  const today = applications.filter(app => {
+    const submitDate = new Date(app.submitted_at);
+    const now = new Date();
+    return submitDate.toDateString() === now.toDateString();
+  }).length;
+
+  // Applications last month
+  const lastMonth = applications.filter(app => {
+    const submitDate = new Date(app.submitted_at);
+    const now = new Date();
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const thisMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    return submitDate >= lastMonthStart && submitDate < thisMonthStart;
+  }).length;
+
+  // Total applicants (sum of all applicants across all applications)
+  const totalApplicants = applications.reduce((sum, app) => sum + (app.applicants?.length || 0), 0);
+
+  // Average applicants per application
+  const avgApplicantsPerApp = totalApplications > 0 ? (totalApplicants / totalApplications).toFixed(1) : '0';
+
   const stats = [
     {
       title: "Total Applications",
@@ -44,39 +61,39 @@ const AdminStats = ({ applications }: AdminStatsProps) => {
       bgColor: "bg-blue-50"
     },
     {
-      title: "Pending Review",
-      value: pendingApplications,
+      title: "This Month",
+      value: thisMonth,
+      icon: Calendar,
+      color: "text-green-600",
+      bgColor: "bg-green-50"
+    },
+    {
+      title: "This Week",
+      value: thisWeek,
+      icon: TrendingUp,
+      color: "text-purple-600",
+      bgColor: "bg-purple-50"
+    },
+    {
+      title: "Today",
+      value: today,
       icon: Clock,
       color: "text-orange-600",
       bgColor: "bg-orange-50"
     },
     {
-      title: "Approved",
-      value: approvedApplications,
-      icon: CheckCircle,
-      color: "text-green-600",
-      bgColor: "bg-green-50"
+      title: "Last Month",
+      value: lastMonth,
+      icon: CalendarDays,
+      color: "text-gray-600",
+      bgColor: "bg-gray-50"
     },
     {
-      title: "Under Review",
-      value: underReviewApplications,
+      title: "Total Applicants",
+      value: totalApplicants,
       icon: Users,
-      color: "text-blue-600",
-      bgColor: "bg-blue-50"
-    },
-    {
-      title: "Rejected",
-      value: rejectedApplications,
-      icon: XCircle,
-      color: "text-red-600",
-      bgColor: "bg-red-50"
-    },
-    {
-      title: "This Month",
-      value: thisMonth,
-      icon: Calendar,
-      color: "text-purple-600",
-      bgColor: "bg-purple-50"
+      color: "text-indigo-600",
+      bgColor: "bg-indigo-50"
     }
   ];
 
@@ -89,6 +106,9 @@ const AdminStats = ({ applications }: AdminStatsProps) => {
               <div>
                 <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
                 <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                {stat.title === "Total Applicants" && (
+                  <p className="text-xs text-gray-500 mt-1">Avg: {avgApplicantsPerApp} per app</p>
+                )}
               </div>
               <div className={`p-3 rounded-full ${stat.bgColor}`}>
                 <stat.icon className={`h-6 w-6 ${stat.color}`} />
