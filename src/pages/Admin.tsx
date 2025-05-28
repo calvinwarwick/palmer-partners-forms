@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
-import { Download, RefreshCw } from "lucide-react";
+import { Download } from "lucide-react";
 import AdminStats from "@/components/admin/AdminStats";
 import ApplicationFilters from "@/components/admin/ApplicationFilters";
 import BulkActions from "@/components/admin/BulkActions";
@@ -31,6 +32,8 @@ const Admin = () => {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(15);
 
   // Filter states (removed statusFilter)
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,6 +46,24 @@ const Admin = () => {
   useEffect(() => {
     filterApplications();
   }, [applications, searchTerm, dateFilter]);
+
+  // Auto-refresh timer
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev <= 1) {
+          fetchApplications(true);
+          setProgress(0);
+          return 15;
+        }
+        const newTimeLeft = prev - 1;
+        setProgress((15 - newTimeLeft) / 15 * 100);
+        return newTimeLeft;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const fetchApplications = async (showRefreshing = false) => {
     if (showRefreshing) setRefreshing(true);
@@ -63,7 +84,9 @@ const Admin = () => {
       }));
 
       setApplications(typedData);
-      toast.success('Applications refreshed successfully');
+      if (showRefreshing) {
+        toast.success('Applications refreshed successfully');
+      }
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast.error('Failed to fetch applications');
@@ -71,6 +94,12 @@ const Admin = () => {
       setLoading(false);
       setRefreshing(false);
     }
+  };
+
+  const handleManualRefresh = () => {
+    setTimeLeft(15);
+    setProgress(0);
+    fetchApplications(true);
   };
 
   const filterApplications = () => {
@@ -211,9 +240,34 @@ const Admin = () => {
               <p className="text-gray-600 text-lg">Manage tenancy applications and track performance</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button variant="outline" onClick={() => fetchApplications(true)} disabled={refreshing} className="shadow-sm hover:shadow-md transition-shadow">
-                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                Refresh
+              <Button 
+                variant="outline" 
+                onClick={handleManualRefresh} 
+                disabled={refreshing} 
+                className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-3"
+              >
+                <div className="relative w-4 h-4">
+                  <svg className="w-4 h-4 transform -rotate-90" viewBox="0 0 36 36">
+                    <path
+                      d="M18 2.0845 A 15.9155 15.9155 0 0 1 18 33.9155"
+                      fill="none"
+                      stroke="#e5e7eb"
+                      strokeWidth="2"
+                    />
+                    <path
+                      d="M18 2.0845 A 15.9155 15.9155 0 0 1 18 33.9155"
+                      fill="none"
+                      stroke="#f97316"
+                      strokeWidth="2"
+                      strokeDasharray={`${progress}, 100`}
+                      className="transition-all duration-1000 ease-linear"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="text-xs font-medium text-gray-600">{timeLeft}</span>
+                  </div>
+                </div>
+                {refreshing ? 'Refreshing...' : 'Refresh'}
               </Button>
               <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
                 <Download className="h-4 w-4 mr-2" />
