@@ -240,22 +240,34 @@ const Admin = () => {
               <p className="text-gray-600 text-lg">Manage tenancy applications and track performance</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <Button 
-                variant="outline" 
-                onClick={handleManualRefresh} 
-                disabled={refreshing} 
-                className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-3 relative overflow-hidden"
-                style={{
-                  background: `conic-gradient(#f97316 0deg ${progress * 3.6}deg, transparent ${progress * 3.6}deg 360deg)`,
-                  padding: '2px'
-                }}
-              >
-                <div className="bg-white rounded-md px-3 py-2 flex items-center gap-2">
+              <div className="relative">
+                <svg 
+                  className="absolute inset-0 w-full h-full transform -rotate-90 pointer-events-none"
+                  viewBox="0 0 100 100"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="48"
+                    fill="none"
+                    stroke="#f97316"
+                    strokeWidth="4"
+                    strokeDasharray={`${progress * 3.01592} 301.592`}
+                    strokeLinecap="round"
+                    className="transition-all duration-1000 ease-linear"
+                  />
+                </svg>
+                <Button 
+                  variant="outline" 
+                  onClick={handleManualRefresh} 
+                  disabled={refreshing} 
+                  className="shadow-sm hover:shadow-md transition-shadow flex items-center gap-2 relative"
+                >
                   <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
                   <span className="text-xs font-medium opacity-50">{timeLeft}s</span>
                   <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
-                </div>
-              </Button>
+                </Button>
+              </div>
               <Button variant="outline" onClick={() => downloadCSV(generateCSV(filteredApplications), 'all-applications.csv')} className="shadow-sm hover:shadow-md transition-shadow">
                 <Download className="h-4 w-4 mr-2" />
                 Export All
