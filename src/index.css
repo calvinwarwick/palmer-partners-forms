@@ -330,6 +330,14 @@ button[class*="bg-blue"] {
   top: -8px;
   right: -8px;
   z-index: 10;
+  transform: scale(0);
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease-out;
+}
+
+.step-badge.animate-in {
+  transform: scale(1);
+  opacity: 1;
 }
 
 /* Terms and conditions styling */

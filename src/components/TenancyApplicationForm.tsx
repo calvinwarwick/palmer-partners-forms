@@ -417,7 +417,7 @@ const TenancyApplicationForm = () => {
                 }`}>
                   <Icon className="h-5 w-5" />
                   {isStepCompleted(step) && step < currentStep && (
-                    <div className="step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6">
+                    <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) ? 'animate-in' : ''}`}>
                       <Check className="h-3 w-3" />
                     </div>
                   )}
@@ -438,7 +438,7 @@ const TenancyApplicationForm = () => {
                 }`}>
                   <Icon className="h-5 w-5" />
                   {isStepCompleted(step) && step < currentStep && (
-                    <div className="step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6">
+                    <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) ? 'animate-in' : ''}`}>
                       <Check className="h-3 w-3" />
                     </div>
                   )}
