@@ -38,6 +38,12 @@ const PersonalInfoStep = ({
       }
     ];
 
+    // Ensure we have at least one applicant
+    if (applicants.length === 0) {
+      return;
+    }
+
+    // Fill data for existing applicants
     applicants.forEach((applicant, index) => {
       if (testData[index]) {
         Object.entries(testData[index]).forEach(([field, value]) => {
