@@ -1,4 +1,3 @@
-
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { useState, useRef, useEffect } from "react";
 import { format } from "date-fns";
+import type { DateRange } from "react-day-picker";
 
 interface TenancyApplication {
   id: string;
@@ -52,7 +52,7 @@ const ApplicationsTable = ({
 }: ApplicationsTableProps) => {
   const navigate = useNavigate();
   const { generatePdf, isGenerating } = usePdfGeneration();
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const checkboxRef = useRef<HTMLButtonElement>(null);
   
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
@@ -146,30 +146,35 @@ const ApplicationsTable = ({
                 <SelectItem value="this_week">This week</SelectItem>
                 <SelectItem value="this_month">This month</SelectItem>
                 <SelectItem value="last_month">Last month</SelectItem>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <SelectItem value="custom">Custom range</SelectItem>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      initialFocus
-                      mode="range"
-                      defaultMonth={dateRange.from}
-                      selected={dateRange}
-                      onSelect={setDateRange}
-                      numberOfMonths={2}
-                    />
-                    <div className="p-3 border-t">
-                      <div className="text-sm text-gray-600">
-                        {dateRange.from && dateRange.to ? (
-                          `${format(dateRange.from, "MMM dd, yyyy")} - ${format(dateRange.to, "MMM dd, yyyy")}`
-                        ) : (
-                          "Select date range"
-                        )}
+                <div className="px-2 py-1">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="ghost" className="w-full justify-start text-sm font-normal">
+                        Custom range
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        initialFocus
+                        mode="range"
+                        defaultMonth={dateRange?.from}
+                        selected={dateRange}
+                        onSelect={setDateRange}
+                        numberOfMonths={2}
+                        className="pointer-events-auto"
+                      />
+                      <div className="p-3 border-t">
+                        <div className="text-sm text-gray-600">
+                          {dateRange?.from && dateRange?.to ? (
+                            `${format(dateRange.from, "MMM dd, yyyy")} - ${format(dateRange.to, "MMM dd, yyyy")}`
+                          ) : (
+                            "Select date range"
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
+                    </PopoverContent>
+                  </Popover>
+                </div>
               </SelectContent>
             </Select>
           </div>
