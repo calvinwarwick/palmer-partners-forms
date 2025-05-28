@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Eye, Mail, Download, MoreHorizontal, User } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useNavigate } from "react-router-dom";
 
 interface TenancyApplication {
@@ -41,6 +42,10 @@ const ApplicationsTable = ({
 
   const handleViewApplicants = (applicationId: string) => {
     navigate(`/applicants?application=${applicationId}`);
+  };
+
+  const handleViewApplicant = (applicationId: string, applicantId: string) => {
+    navigate(`/applicants?application=${applicationId}&applicant=${applicantId}`);
   };
 
   return (
@@ -105,9 +110,34 @@ const ApplicationsTable = ({
               
               <TableCell>
                 <div className="flex items-center space-x-2">
-                  <Badge variant="outline" className="text-xs">
-                    {application.applicants?.length || 0} {application.applicants?.length === 1 ? 'applicant' : 'applicants'}
-                  </Badge>
+                  <HoverCard>
+                    <HoverCardTrigger asChild>
+                      <Badge variant="outline" className="text-xs cursor-pointer hover:bg-orange-50">
+                        {application.applicants?.length || 0} {application.applicants?.length === 1 ? 'applicant' : 'applicants'}
+                      </Badge>
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-80 bg-white shadow-lg border z-50">
+                      <div className="space-y-2">
+                        <h4 className="font-semibold text-sm">Applicants</h4>
+                        {application.applicants?.map((applicant, index) => (
+                          <div 
+                            key={index}
+                            className="flex items-center justify-between p-2 rounded hover:bg-gray-50 cursor-pointer"
+                            onClick={() => handleViewApplicant(application.id, applicant.id)}
+                          >
+                            <div className="flex items-center space-x-2">
+                              <User className="h-4 w-4 text-gray-400" />
+                              <div>
+                                <p className="text-sm font-medium">{applicant.firstName} {applicant.lastName}</p>
+                                <p className="text-xs text-gray-500">{applicant.email}</p>
+                              </div>
+                            </div>
+                            <span className="text-xs text-orange-500">View →</span>
+                          </div>
+                        ))}
+                      </div>
+                    </HoverCardContent>
+                  </HoverCard>
                   <Button
                     variant="outline"
                     size="sm"
@@ -137,14 +167,14 @@ const ApplicationsTable = ({
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
                       <DropdownMenuItem>
                         <Mail className="h-4 w-4 mr-2" />
                         Send Email
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Download className="h-4 w-4 mr-2" />
-                        Download PDF
+                        Generate PDF
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

@@ -2,134 +2,151 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { TestTube } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
+import { TestTube } from "lucide-react";
 
 interface PropertyDetailsStepProps {
   propertyPreferences: PropertyPreferences;
   onUpdatePreferences: (field: keyof PropertyPreferences, value: string) => void;
-  onFillAllTestData?: () => void;
+  onFillAllTestData: () => void;
 }
 
-const PropertyDetailsStep = ({ propertyPreferences, onUpdatePreferences, onFillAllTestData }: PropertyDetailsStepProps) => {
-  const fillTestData = () => {
-    onUpdatePreferences("streetAddress", "123 Orchard House, New Cut");
-    onUpdatePreferences("postcode", "IP7 5DA");
-    onUpdatePreferences("maxRent", "2500");
-    onUpdatePreferences("moveInDate", "2024-06-01");
-    onUpdatePreferences("latestMoveInDate", "2024-06-15");
-    onUpdatePreferences("initialTenancyTerm", "1 year");
-    onUpdatePreferences("propertyType", "apartment");
-    onUpdatePreferences("preferredLocation", "Central London");
-    onUpdatePreferences("additionalRequests", "Pet-friendly property preferred");
-  };
-
+const PropertyDetailsStep = ({ 
+  propertyPreferences, 
+  onUpdatePreferences,
+  onFillAllTestData 
+}: PropertyDetailsStepProps) => {
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-start">
+      <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold mb-2">Proposed Rental Property Details</h3>
-          <p className="text-muted-foreground mb-6">Please provide the details of the property you are applying for.</p>
+          <h2 className="text-2xl font-bold text-gray-900">Property Details</h2>
+          <p className="text-gray-600 mt-1">Tell us about your ideal property</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-            <TestTube className="h-4 w-4" />
-            Fill Step Data
-          </Button>
-          {onFillAllTestData && (
-            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
-              <TestTube className="h-4 w-4" />
-              Fill All Form Data
-            </Button>
-          )}
+        <Button 
+          type="button" 
+          variant="outline" 
+          size="sm" 
+          onClick={onFillAllTestData}
+          className="flex items-center gap-2"
+        >
+          <TestTube className="h-4 w-4" />
+          Fill Test Data
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <Label htmlFor="propertyType">Property Type</Label>
+          <Select
+            value={propertyPreferences.propertyType}
+            onValueChange={(value) => onUpdatePreferences("propertyType", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select property type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="apartment">Apartment</SelectItem>
+              <SelectItem value="house">House</SelectItem>
+              <SelectItem value="studio">Studio</SelectItem>
+              <SelectItem value="room">Room</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="streetAddress">Street Address</Label>
+          <Input
+            id="streetAddress"
+            value={propertyPreferences.streetAddress}
+            onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
+            placeholder="eg 123 Orchard House, New Cut"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="postcode">Postcode</Label>
+          <Input
+            id="postcode"
+            value={propertyPreferences.postcode}
+            onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
+            placeholder="IP7 5DA"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="maxRent">Maximum Rent (per month)</Label>
+          <Input
+            id="maxRent"
+            type="number"
+            value={propertyPreferences.maxRent}
+            onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
+            placeholder="2500"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="preferredLocation">Preferred Location</Label>
+          <Input
+            id="preferredLocation"
+            value={propertyPreferences.preferredLocation}
+            onChange={(e) => onUpdatePreferences("preferredLocation", e.target.value)}
+            placeholder="Central London"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="moveInDate">Preferred Move-in Date</Label>
+          <Input
+            id="moveInDate"
+            type="date"
+            value={propertyPreferences.moveInDate}
+            onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="latestMoveInDate">Latest Move-in Date</Label>
+          <Input
+            id="latestMoveInDate"
+            type="date"
+            value={propertyPreferences.latestMoveInDate}
+            onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="initialTenancyTerm">Initial Tenancy Term</Label>
+          <Select
+            value={propertyPreferences.initialTenancyTerm}
+            onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select tenancy term" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="6 months">6 months</SelectItem>
+              <SelectItem value="1 year">1 year</SelectItem>
+              <SelectItem value="18 months">18 months</SelectItem>
+              <SelectItem value="2 years">2 years</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
-      
-      <Card className="border-0 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-base font-medium">Property Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div>
-            <Label htmlFor="streetAddress" className="form-label">Address *</Label>
-            <Input
-              id="streetAddress"
-              value={propertyPreferences.streetAddress}
-              onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
-              placeholder="e.g., Orchard House, New Cut"
-              className="form-control"
-              required
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="postcode" className="form-label">Postcode *</Label>
-            <Input
-              id="postcode"
-              value={propertyPreferences.postcode}
-              onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
-              placeholder="e.g., IP7 5DA"
-              className="form-control"
-              required
-            />
-          </div>
-          
-          <div>
-            <Label htmlFor="rentalAmount" className="form-label">Rental amount (£) *</Label>
-            <Input
-              id="rentalAmount"
-              type="number"
-              value={propertyPreferences.maxRent}
-              onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
-              placeholder="e.g., 2500"
-              className="form-control"
-              required
-            />
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="preferredMoveIn" className="form-label">Preferred move-in date *</Label>
-              <Input
-                id="preferredMoveIn"
-                type="date"
-                value={propertyPreferences.moveInDate}
-                onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-                className="form-control"
-                required
-              />
-            </div>
-            <div>
-              <Label htmlFor="latestMoveIn" className="form-label">Latest move-in date</Label>
-              <Input
-                id="latestMoveIn"
-                type="date"
-                value={propertyPreferences.latestMoveInDate}
-                onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-                className="form-control"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <Label htmlFor="tenancyTerm" className="form-label">Preferred initial tenancy term *</Label>
-            <select
-              id="tenancyTerm"
-              value={propertyPreferences.initialTenancyTerm}
-              onChange={(e) => onUpdatePreferences("initialTenancyTerm", e.target.value)}
-              className="form-select"
-              required
-            >
-              <option value="">Select term</option>
-              <option value="6 months">6 months</option>
-              <option value="1 year">1 year</option>
-              <option value="2 years">2 years</option>
-              <option value="3 years">3 years</option>
-            </select>
-          </div>
-        </CardContent>
-      </Card>
+
+      <div>
+        <Label htmlFor="additionalRequests">Additional Requests</Label>
+        <Textarea
+          id="additionalRequests"
+          value={propertyPreferences.additionalRequests}
+          onChange={(e) => onUpdatePreferences("additionalRequests", e.target.value)}
+          placeholder="Any specific requirements or requests..."
+          rows={3}
+        />
+      </div>
     </div>
   );
 };
