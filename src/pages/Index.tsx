@@ -142,7 +142,9 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-24">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23f1f5f9\" fill-opacity=\"0.4\"%3E%3Ccircle cx=\"7\" cy=\"7\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-50"></div>
+        <div className="absolute inset-0 opacity-50" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1f5f9' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent leading-tight">
@@ -151,7 +153,7 @@ const Index = () => {
               <span className="text-blue-600">Home</span>
             </h2>
             <p className="text-xl md:text-2xl mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Whether you're looking to buy, sell, rent, or let, we connect you with London's finest properties
+              Whether you are looking to buy, sell, rent, or let, we connect you with London&apos;s finest properties
             </p>
             
             {/* Enhanced Search Bar */}
@@ -259,7 +261,7 @@ const Index = () => {
           <div className="text-center mb-16">
             <h3 className="text-4xl font-bold text-gray-900 mb-4">Featured Properties</h3>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Discover exceptional properties for sale and rent across London's most desirable locations
+              Discover exceptional properties for sale and rent across London&apos;s most desirable locations
             </p>
             <div className="mt-6">
               <Badge variant="secondary" className="text-lg px-6 py-2 bg-blue-50 text-blue-700 border-blue-200">
@@ -298,7 +300,7 @@ const Index = () => {
             <div className="text-center mb-16">
               <h3 className="text-4xl font-bold text-gray-900 mb-6">Why Choose Palmer & Partners?</h3>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                Leading London's property market with expertise in both sales and lettings across the capital's most prestigious areas
+                Leading London&apos;s property market with expertise in both sales and lettings across the capital&apos;s most prestigious areas
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -307,7 +309,7 @@ const Index = () => {
                   <Award className="h-8 w-8 text-white mx-auto mt-2" />
                 </div>
                 <h4 className="text-2xl font-semibold mb-4 text-gray-900">Premium Portfolio</h4>
-                <p className="text-gray-600 leading-relaxed">Exclusive access to London's finest properties for sale and rent in prime locations including Kensington, Chelsea, and Mayfair</p>
+                <p className="text-gray-600 leading-relaxed">Exclusive access to London&apos;s finest properties for sale and rent in prime locations including Kensington, Chelsea, and Mayfair</p>
               </div>
               <div className="text-center group">
                 <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-2xl w-20 h-20 mx-auto mb-6 group-hover:from-blue-700 group-hover:to-purple-700 transition-all">
@@ -330,12 +332,14 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 text-white py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\"60\" height=\"60\" viewBox=\"0 0 60 60\" xmlns=\"http://www.w3.org/2000/svg\"%3E%3Cg fill=\"none\" fill-rule=\"evenodd\"%3E%3Cg fill=\"%23ffffff\" fill-opacity=\"0.1\"%3E%3Ccircle cx=\"7\" cy=\"7\" r=\"1\"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }}></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-4xl mx-auto">
             <h3 className="text-4xl md:text-5xl font-bold mb-6">Ready to Make Your Move?</h3>
             <p className="text-xl md:text-2xl mb-10 opacity-90 leading-relaxed">
-              Whether buying, selling, renting, or letting - start your property journey with London's trusted experts
+              Whether buying, selling, renting, or letting - start your property journey with London&apos;s trusted experts
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/application">
@@ -404,7 +408,7 @@ const Index = () => {
                 </div>
               </div>
               <p className="text-gray-300 leading-relaxed max-w-md">
-                London's premier estate agency specializing in luxury sales and lettings across the capital's most prestigious neighborhoods.
+                London&apos;s premier estate agency specializing in luxury sales and lettings across the capital&apos;s most prestigious neighborhoods.
               </p>
             </div>
             <div>
