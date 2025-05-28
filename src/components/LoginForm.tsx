@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -24,44 +25,12 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
 
-  const createDemoUser = async () => {
-    try {
-      console.log("Creating demo user...");
-      const { error } = await signUp("demo@example.com", "demo123456", {
-        first_name: "Demo",
-        last_name: "User",
-      });
-      
-      if (error && error.message.includes("User already registered")) {
-        console.log("Demo user already exists, that's fine");
-        return true;
-      }
-      
-      if (error) {
-        console.error("Error creating demo user:", error);
-        return false;
-      }
-      
-      console.log("Demo user created successfully");
-      return true;
-    } catch (error) {
-      console.error("Exception creating demo user:", error);
-      return false;
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
       if (isLogin) {
-        // If trying to login with demo credentials, ensure demo user exists first
-        if (email === "demo@example.com" && password === "demo123456") {
-          console.log("Demo login attempt detected, ensuring demo user exists...");
-          await createDemoUser();
-        }
-        
         const { error } = await signIn(email, password);
         if (error) {
           console.error("Login error:", error);
@@ -90,13 +59,10 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     }
   };
 
-  const fillDemoCredentials = async () => {
-    setEmail("demo@example.com");
+  const fillDemoCredentials = () => {
+    setEmail("demo.user@test.com");
     setPassword("demo123456");
-    
-    // Pre-create the demo user when they click the demo button
-    console.log("Pre-creating demo user...");
-    await createDemoUser();
+    toast.info("Demo credentials filled. You can now sign in or create this account if it doesn't exist.");
   };
 
   return (
@@ -217,9 +183,11 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
                   onClick={fillDemoCredentials}
                   className="w-full text-left p-2 text-xs bg-white rounded border hover:bg-gray-50 transition-colors"
                 >
-                  <strong>Demo User:</strong> demo@example.com / demo123456
+                  <strong>Demo User:</strong> demo.user@test.com / demo123456
                 </button>
-                <p className="text-xs text-gray-500 mt-2">Click to auto-fill demo credentials</p>
+                <p className="text-xs text-gray-500 mt-2">
+                  Click to auto-fill demo credentials. If the account doesn't exist, switch to "Sign up" to create it first.
+                </p>
               </div>
             )}
           </CardContent>
