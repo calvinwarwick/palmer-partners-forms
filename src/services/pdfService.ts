@@ -1,364 +1,206 @@
 import jsPDF from 'jspdf';
+import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
+import { supabase } from '@/integrations/supabase/client';
+import { format } from 'date-fns';
 
-interface TenancyApplicationData {
-  applicants: any[];
-  propertyPreferences: any;
-  additionalDetails: any;
-  dataSharing: any;
+interface PdfData {
+  applicants: Applicant[];
+  propertyPreferences: PropertyPreferences;
+  additionalDetails: AdditionalDetails;
+  dataSharing: { utilities: boolean; insurance: boolean };
   signature: string;
   submittedAt: string;
+  applicationId?: string;
 }
 
-export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array => {
-  const { applicants, propertyPreferences, additionalDetails, dataSharing, signature, submittedAt } = data;
+interface ActivityLog {
+  id: string;
+  action: string;
+  user_identifier: string | null;
+  ip_address: string | null;
+  created_at: string;
+  details: any;
+}
+
+export const generatePdf = async (data: PdfData): Promise<Blob> => {
   const doc = new jsPDF();
+  let yPosition = 20;
   
-  // Header with dark background
-  doc.setFillColor(64, 64, 64); // Dark grey
-  doc.rect(0, 0, 210, 25, 'F');
-  
-  doc.setFontSize(18);
-  doc.setTextColor(255, 255, 255);
-  doc.text('Palmer & Partners', 15, 16);
-  
-  // Main title - centered
+  // Helper function to add text with word wrapping
+  const addText = (text: string, x: number, y: number, maxWidth?: number): number => {
+    if (maxWidth) {
+      const lines = doc.splitTextToSize(text, maxWidth);
+      doc.text(lines, x, y);
+      return y + (lines.length * 6);
+    } else {
+      doc.text(text, x, y);
+      return y + 6;
+    }
+  };
+
+  // Helper function to check if we need a new page
+  const checkNewPage = (requiredSpace: number): number => {
+    if (yPosition + requiredSpace > 280) {
+      doc.addPage();
+      return 20;
+    }
+    return yPosition;
+  };
+
+  // Title
   doc.setFontSize(20);
-  doc.setTextColor(0, 0, 0);
-  doc.text('Tenancy Application', 105, 40, { align: 'center' });
-  
-  let yPosition = 60;
-  
-  // Property Details Section
-  doc.setFillColor(64, 64, 64); // Dark grey
-  doc.rect(15, yPosition - 5, 180, 12, 'F');
-  doc.setFontSize(12);
-  doc.setTextColor(255, 255, 255);
-  // Center the title vertically in the container (container height is 12)
-  doc.text('Property Details', 105, yPosition + 1, { align: 'center' });
-  
-  yPosition += 20;
-  
-  const propertyRows = [
-    ['Street Address', propertyPreferences.streetAddress || 'Not specified'],
-    ['Postcode', propertyPreferences.postcode || 'Not specified'],
-    ['Rental Amount', propertyPreferences.maxRent ? `£${propertyPreferences.maxRent}` : 'Not specified'],
-    ['Preferred Move-in Date', propertyPreferences.moveInDate || 'Not specified'],
-    ['Latest Move-in Date', propertyPreferences.latestMoveInDate || 'Not specified'],
-    ['Initial Tenancy Term', propertyPreferences.initialTenancyTerm || 'Not specified'],
-    ['Has Pets', additionalDetails.pets || 'No'],
-    ['Pet Details', additionalDetails.petDetails || '-'],
-    ['Under 18s', additionalDetails.under18Count || '0'],
-    ['Under 18s Details', additionalDetails.childrenAges || '-'],
-    ['Conditions of Offer', additionalDetails.conditionsOfOffer || '-'],
-    ['Deposit Type', additionalDetails.depositType || 'Not specified'],
-    ['UK/ROI Passport', additionalDetails.ukPassport || 'Not specified'],
-    ['Adverse Credit', additionalDetails.adverseCredit || 'Not specified'],
-    ['Adverse Credit Details', additionalDetails.adverseCreditDetails || 'n/a'],
-    ['Requires Guarantor', additionalDetails.guarantorRequired || 'Not specified']
-  ];
-  
-  doc.setTextColor(0, 0, 0);
+  doc.setFont('helvetica', 'bold');
+  yPosition = addText('Tenancy Application', 20, yPosition);
+  yPosition += 10;
+
+  // Personal Information Section
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  yPosition = checkNewPage(30);
+  yPosition = addText('Personal Information', 20, yPosition);
+  yPosition += 5;
+
   doc.setFontSize(10);
-  
-  propertyRows.forEach((row, index) => {
-    const isEven = index % 2 === 0;
-    if (isEven) {
-      doc.setFillColor(245, 245, 245);
-      doc.rect(15, yPosition - 2, 180, 10, 'F');
-    }
+  doc.setFont('helvetica', 'normal');
+
+  data.applicants.forEach((applicant, index) => {
+    yPosition = checkNewPage(40);
     
     doc.setFont('helvetica', 'bold');
-    doc.text(row[0], 20, yPosition + 4);
+    yPosition = addText(`Applicant ${index + 1}`, 20, yPosition);
+    yPosition += 3;
+    
     doc.setFont('helvetica', 'normal');
-    doc.text(row[1], 105, yPosition + 4);
-    yPosition += 10;
+    yPosition = addText(`Name: ${applicant.firstName} ${applicant.lastName}`, 25, yPosition);
+    yPosition = addText(`Email: ${applicant.email}`, 25, yPosition);
+    yPosition = addText(`Phone: ${applicant.phone}`, 25, yPosition);
+    yPosition = addText(`Date of Birth: ${applicant.dateOfBirth}`, 25, yPosition);
+    yPosition = addText(`Current Address: ${applicant.currentAddress}`, 25, yPosition, 150);
+    yPosition = addText(`Previous Address: ${applicant.previousAddress || 'N/A'}`, 25, yPosition, 150);
+    yPosition = addText(`Employment Status: ${applicant.employmentStatus}`, 25, yPosition);
+    
+    if (applicant.employerName) {
+      yPosition = addText(`Employer: ${applicant.employerName}`, 25, yPosition);
+    }
+    if (applicant.jobTitle) {
+      yPosition = addText(`Job Title: ${applicant.jobTitle}`, 25, yPosition);
+    }
+    if (applicant.annualIncome) {
+      yPosition = addText(`Annual Income: £${applicant.annualIncome}`, 25, yPosition);
+    }
+    
+    yPosition += 5;
   });
-  
-  yPosition += 15;
-  
-  // Check if we need a new page
-  if (yPosition > 220) {
-    doc.addPage();
-    yPosition = 30;
+
+  // Property Preferences Section
+  yPosition = checkNewPage(40);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  yPosition = addText('Property Preferences', 20, yPosition);
+  yPosition += 5;
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  yPosition = addText(`Property Address: ${data.propertyPreferences.streetAddress}`, 25, yPosition, 150);
+  yPosition = addText(`Postcode: ${data.propertyPreferences.postcode}`, 25, yPosition);
+  yPosition = addText(`Maximum Rent: £${data.propertyPreferences.maxRent}`, 25, yPosition);
+  yPosition = addText(`Preferred Move-in Date: ${data.propertyPreferences.moveInDate}`, 25, yPosition);
+  yPosition = addText(`Property Type: ${data.propertyPreferences.propertyType}`, 25, yPosition);
+  yPosition = addText(`Bedrooms: ${data.propertyPreferences.bedrooms}`, 25, yPosition);
+  yPosition += 10;
+
+  // Additional Details Section
+  yPosition = checkNewPage(40);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  yPosition = addText('Additional Details', 20, yPosition);
+  yPosition += 5;
+
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'normal');
+  yPosition = addText(`Pets: ${data.additionalDetails.pets ? 'Yes' : 'No'}`, 25, yPosition);
+  if (data.additionalDetails.petDetails) {
+    yPosition = addText(`Pet Details: ${data.additionalDetails.petDetails}`, 25, yPosition, 150);
   }
-  
-  // Applicant Details Section
-  applicants.forEach((applicant, index) => {
-    doc.setFillColor(64, 64, 64);
-    doc.rect(15, yPosition - 5, 180, 12, 'F');
-    doc.setFontSize(12);
-    doc.setTextColor(255, 255, 255);
-    // Center the title vertically in the container
-    doc.text(`Applicant - #${index + 1}`, 105, yPosition + 1, { align: 'center' });
-    
-    yPosition += 20;
-    
-    const applicantRows = [
-      ['First Name', applicant.firstName || 'Not specified'],
-      ['Last Name', applicant.lastName || 'Not specified'],
-      ['Date of Birth', applicant.dateOfBirth || 'Not specified'],
-      ['Email Address', applicant.email || 'Not specified'],
-      ['Mobile Number', applicant.phone || 'Not specified'],
-    ];
-    
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    
-    applicantRows.forEach((row, rowIndex) => {
-      const isEven = rowIndex % 2 === 0;
-      if (isEven) {
-        doc.setFillColor(245, 245, 245);
-        doc.rect(15, yPosition - 2, 180, 10, 'F');
-      }
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text(row[0], 20, yPosition + 4);
-      doc.setFont('helvetica', 'normal');
-      doc.text(row[1], 105, yPosition + 4);
-      yPosition += 10;
-    });
-    
-    yPosition += 15;
-    
-    // Check if we need a new page
-    if (yPosition > 220) {
-      doc.addPage();
-      yPosition = 30;
-    }
-    
-    // Employment Details with grey header
-    doc.setFillColor(200, 200, 200);
-    doc.rect(15, yPosition - 5, 180, 8, 'F');
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-    doc.setFont('helvetica', 'bold');
-    // Center the title vertically in the container (container height is 8)
-    doc.text('Employment Details', 105, yPosition - 1, { align: 'center' });
-    
-    yPosition += 15;
-    
-    const employmentRows = [
-      ['Contract Type', applicant.employment || 'Not specified'],
-      ['Company Name', applicant.companyName || '-'],
-      ['Job Title', applicant.jobTitle || 'Not specified'],
-      ['Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '-'],
-      ['Length of Service', applicant.lengthOfService || '']
-    ];
-    
-    doc.setFont('helvetica', 'normal');
-    
-    employmentRows.forEach((row, rowIndex) => {
-      const isEven = rowIndex % 2 === 0;
-      if (isEven) {
-        doc.setFillColor(245, 245, 245);
-        doc.rect(15, yPosition - 2, 180, 10, 'F');
-      }
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text(row[0], 20, yPosition + 4);
-      doc.setFont('helvetica', 'normal');
-      doc.text(row[1], 105, yPosition + 4);
-      yPosition += 10;
-    });
-    
-    yPosition += 15;
-    
-    // Check if we need a new page
-    if (yPosition > 200) {
-      doc.addPage();
-      yPosition = 30;
-    }
-    
-    // Current Property Details with grey header
-    doc.setFillColor(200, 200, 200);
-    doc.rect(15, yPosition - 5, 180, 8, 'F');
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-    doc.setFont('helvetica', 'bold');
-    // Center the title vertically in the container
-    doc.text('Current Property Details', 105, yPosition - 1, { align: 'center' });
-    
-    yPosition += 15;
-    
-    const currentPropertyRows = [
-      ['Postcode', applicant.previousPostcode || 'Not specified'],
-      ['Street Address', applicant.previousAddress || 'Not specified'],
-      ['Move In Date', applicant.moveInDate || 'Not specified'],
-      ['Vacate Date', applicant.vacateDate || 'Not specified'],
-      ['Current Property Status', applicant.currentPropertyStatus || 'Not specified'],
-      ['Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : 'Not specified'],
-    ];
-    
-    doc.setFont('helvetica', 'normal');
-    
-    currentPropertyRows.forEach((row, rowIndex) => {
-      const isEven = rowIndex % 2 === 0;
-      if (isEven) {
-        doc.setFillColor(245, 245, 245);
-        doc.rect(15, yPosition - 2, 180, 10, 'F');
-      }
-      
-      doc.setFont('helvetica', 'bold');
-      doc.text(row[0], 20, yPosition + 4);
-      doc.setFont('helvetica', 'normal');
-      doc.text(row[1], 105, yPosition + 4);
-      yPosition += 10;
-    });
-    
-    yPosition += 15;
-  });
-  
-  // Check if we need a new page
-  if (yPosition > 180) {
-    doc.addPage();
-    yPosition = 30;
+  yPosition = addText(`Smoking: ${data.additionalDetails.smoking ? 'Yes' : 'No'}`, 25, yPosition);
+  if (data.additionalDetails.additionalInfo) {
+    yPosition = addText(`Additional Information:`, 25, yPosition);
+    yPosition = addText(data.additionalDetails.additionalInfo, 25, yPosition, 150);
   }
-  
+  yPosition += 10;
+
   // Data Sharing Section
-  doc.setFillColor(64, 64, 64);
-  doc.rect(15, yPosition - 5, 180, 12, 'F');
-  doc.setFontSize(12);
-  doc.setTextColor(255, 255, 255);
-  // Center the title vertically in the container
-  doc.text('Data Sharing', 105, yPosition + 1, { align: 'center' });
-  
-  yPosition += 20;
-  
-  const dataSharingRows = [
-    ['Accept Utilities', dataSharing.utilities ? 'Yes' : 'No'],
-    ['Accept Insurance', dataSharing.insurance ? 'Yes' : 'No'],
-  ];
-  
-  doc.setTextColor(0, 0, 0);
+  yPosition = checkNewPage(25);
+  doc.setFontSize(16);
+  doc.setFont('helvetica', 'bold');
+  yPosition = addText('Data Sharing Preferences', 20, yPosition);
+  yPosition += 5;
+
   doc.setFontSize(10);
-  
-  dataSharingRows.forEach((row, rowIndex) => {
-    const isEven = rowIndex % 2 === 0;
-    if (isEven) {
-      doc.setFillColor(245, 245, 245);
-      doc.rect(15, yPosition - 2, 180, 10, 'F');
-    }
-    
-    doc.setFont('helvetica', 'bold');
-    doc.text(row[0], 20, yPosition + 4);
-    doc.setFont('helvetica', 'normal');
-    doc.text(row[1], 105, yPosition + 4);
-    yPosition += 10;
-  });
-  
-  yPosition += 15;
-  
+  doc.setFont('helvetica', 'normal');
+  yPosition = addText(`Share with Utilities: ${data.dataSharing.utilities ? 'Yes' : 'No'}`, 25, yPosition);
+  yPosition = addText(`Share with Insurance: ${data.dataSharing.insurance ? 'Yes' : 'No'}`, 25, yPosition);
+  yPosition += 10;
+
   // Signature Section
-  doc.setFillColor(64, 64, 64);
-  doc.rect(15, yPosition - 5, 180, 12, 'F');
-  doc.setFontSize(12);
-  doc.setTextColor(255, 255, 255);
-  // Center the title vertically in the container
-  doc.text('Signature', 105, yPosition + 1, { align: 'center' });
-  
-  yPosition += 20;
-  
-  // Check if signature is a base64 image
-  const isSignatureImage = signature && signature.startsWith('data:image/');
-  
-  if (isSignatureImage) {
-    try {
-      // Add signature image with proper sizing
-      doc.addImage(signature, 'PNG', 20, yPosition, 80, 30);
-      yPosition += 35;
-      
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Digital Signature', 20, yPosition);
-      yPosition += 10;
-    } catch (error) {
-      console.error('Error adding signature image:', error);
-      // Fallback to text
-      doc.setTextColor(0, 0, 0);
-      doc.setFontSize(10);
-      doc.setFont('helvetica', 'bold');
-      doc.text('Signature:', 20, yPosition + 4);
-      doc.setFont('helvetica', 'normal');
-      doc.text(signature || 'Not provided', 105, yPosition + 4);
-      yPosition += 10;
-    }
-  } else {
-    // Text signature
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Signature:', 20, yPosition + 4);
-    doc.setFont('helvetica', 'normal');
-    doc.text(signature || 'Not provided', 105, yPosition + 4);
-    yPosition += 10;
-  }
-  
+  yPosition = checkNewPage(25);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('Submitted At:', 20, yPosition + 4);
+  yPosition = addText('Digital Signature', 20, yPosition);
+  yPosition += 5;
+
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text(new Date(submittedAt).toLocaleDateString('en-GB') + ' - ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), 105, yPosition + 4);
-  
-  yPosition += 20;
-  
+  yPosition = addText(`Signature: ${data.signature}`, 25, yPosition);
+  yPosition = addText(`Submitted: ${format(new Date(data.submittedAt), 'MMMM dd, yyyy HH:mm')}`, 25, yPosition);
+  yPosition += 15;
+
   // Activity Log Section
-  if (yPosition > 200) {
-    doc.addPage();
-    yPosition = 30;
-  }
-  
-  doc.setFillColor(64, 64, 64);
-  doc.rect(15, yPosition - 5, 180, 12, 'F');
-  doc.setFontSize(12);
-  doc.setTextColor(255, 255, 255);
-  doc.text('Activity Log', 105, yPosition + 1, { align: 'center' });
-  
-  yPosition += 20;
-  
-  // Mock activity log data - in real implementation, this would be passed in the data
-  const activityLogs = [
-    ['Form Opened', new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), '192.168.1.100'],
-    ['Form Submitted', new Date(submittedAt).toLocaleDateString('en-GB') + ' ' + new Date(submittedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), '192.168.1.100'],
-    ['PDF Generated', new Date().toLocaleDateString('en-GB') + ' ' + new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }), '10.0.0.1']
-  ];
-  
-  doc.setTextColor(0, 0, 0);
-  doc.setFontSize(9);
-  
-  // Activity log headers
-  doc.setFillColor(220, 220, 220);
-  doc.rect(15, yPosition - 2, 180, 8, 'F');
-  doc.setFont('helvetica', 'bold');
-  doc.text('Action', 20, yPosition + 2);
-  doc.text('Timestamp', 80, yPosition + 2);
-  doc.text('IP Address', 140, yPosition + 2);
-  yPosition += 8;
-  
-  doc.setFont('helvetica', 'normal');
-  activityLogs.forEach((log, index) => {
-    const isEven = index % 2 === 0;
-    if (isEven) {
-      doc.setFillColor(245, 245, 245);
-      doc.rect(15, yPosition - 1, 180, 7, 'F');
+  if (data.applicationId) {
+    try {
+      const { data: activityLogs, error } = await supabase
+        .from('activity_logs')
+        .select('*')
+        .eq('application_id', data.applicationId)
+        .order('created_at', { ascending: false });
+
+      if (!error && activityLogs && activityLogs.length > 0) {
+        yPosition = checkNewPage(40);
+        doc.setFontSize(16);
+        doc.setFont('helvetica', 'bold');
+        yPosition = addText('Activity Log', 20, yPosition);
+        yPosition += 5;
+
+        doc.setFontSize(9);
+        doc.setFont('helvetica', 'normal');
+
+        activityLogs.forEach((log: ActivityLog) => {
+          yPosition = checkNewPage(15);
+          
+          const timestamp = format(new Date(log.created_at), 'MMM dd, yyyy HH:mm:ss');
+          yPosition = addText(`${timestamp} - ${log.action}`, 25, yPosition);
+          
+          if (log.user_identifier) {
+            yPosition = addText(`  User: ${log.user_identifier}`, 25, yPosition);
+          }
+          
+          if (log.ip_address) {
+            yPosition = addText(`  IP: ${log.ip_address}`, 25, yPosition);
+          }
+          
+          if (log.details && Object.keys(log.details).length > 0) {
+            const detailsText = JSON.stringify(log.details, null, 2);
+            yPosition = addText(`  Details: ${detailsText}`, 25, yPosition, 150);
+          }
+          
+          yPosition += 3;
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching activity logs for PDF:', error);
+      // Continue without activity logs if there's an error
     }
-    
-    doc.text(log[0], 20, yPosition + 3);
-    doc.text(log[1], 80, yPosition + 3);
-    doc.text(log[2], 140, yPosition + 3);
-    yPosition += 7;
-  });
-  
-  // Footer on all pages
-  const pageCount = (doc as any).internal.pages.length - 1;
-  for (let i = 1; i <= pageCount; i++) {
-    doc.setPage(i);
-    doc.setFontSize(8);
-    doc.setTextColor(128, 128, 128);
-    doc.text('Palmer & Partners - Tenancy Application', 20, 285);
-    doc.text(`Page ${i} of ${pageCount}`, 180, 285);
   }
-  
-  // Generate PDF as Uint8Array properly
-  const pdfArrayBuffer = doc.output('arraybuffer');
-  return new Uint8Array(pdfArrayBuffer);
+
+  return doc.output('blob');
 };

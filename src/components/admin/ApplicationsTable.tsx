@@ -7,13 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2, Clock } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { useState, useRef, useEffect } from "react";
 import { format, formatDistanceToNow } from "date-fns";
 import type { DateRange } from "react-day-picker";
+import ApplicationActivityModal from "./ApplicationActivityModal";
 
 interface TenancyApplication {
   id: string;
@@ -52,6 +53,8 @@ const ApplicationsTable = ({
   const { generatePdf, isGenerating } = usePdfGeneration();
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [selectedApplicationForActivity, setSelectedApplicationForActivity] = useState<TenancyApplication | null>(null);
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   const switchRef = useRef<HTMLButtonElement>(null);
   
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
@@ -98,6 +101,11 @@ const ApplicationsTable = ({
     const filename = `${primaryApplicant?.firstName || 'Unknown'}_${primaryApplicant?.lastName || 'Applicant'}_Application.pdf`;
     
     await generatePdf(pdfData, filename);
+  };
+
+  const handleViewActivity = (application: TenancyApplication) => {
+    setSelectedApplicationForActivity(application);
+    setIsActivityModalOpen(true);
   };
 
   const handleDateRangeSelect = (range: DateRange | undefined) => {
@@ -293,6 +301,16 @@ const ApplicationsTable = ({
                         Preview
                       </Button>
                       
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewActivity(application)}
+                        className="h-8"
+                      >
+                        <Clock className="h-4 w-4 mr-1" />
+                        Activity
+                      </Button>
+                      
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="outline" size="sm" className="h-8 w-8 p-0">
@@ -325,6 +343,13 @@ const ApplicationsTable = ({
           </p>
         </div>
       )}
+
+      {/* Activity Modal */}
+      <ApplicationActivityModal
+        application={selectedApplicationForActivity}
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+      />
     </div>
   );
 };
