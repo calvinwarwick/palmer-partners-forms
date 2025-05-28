@@ -97,16 +97,22 @@
 }
 
 .form-floating > .form-control:focus ~ label {
-  @apply text-primary;
+  @apply text-orange-500;
 }
 
 .form-control:focus,
 .form-select:focus {
-  @apply ring-2 ring-ring ring-offset-2;
+  @apply ring-2 ring-orange-500 ring-offset-2;
   background-color: transparent !important;
 }
 
-/* Ensure select options have proper background */
+/* Ensure select options have proper background and increased spacing */
+.form-select {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
 .form-select option {
   @apply bg-background text-foreground;
+  padding: 0.75rem;
 }
