@@ -4,24 +4,14 @@ import jsPDF from 'jspdf';
 interface TenancyApplicationData {
   applicants: any[];
   propertyPreferences: any;
+  additionalDetails: any;
+  dataSharing: any;
   signature: string;
   submittedAt: string;
-  propertyDetails?: {
-    streetAddress: string;
-    postcode: string;
-    rentalAmount: string;
-    preferredMoveInDate: string;
-    latestMoveInDate: string;
-    initialTenancyTerm: string;
-    hasPets: string;
-    under18s: string;
-    conditionsOfOffer: string;
-    depositType: string;
-  };
 }
 
 export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array => {
-  const { applicants, propertyPreferences, signature, submittedAt, propertyDetails } = data;
+  const { applicants, propertyPreferences, additionalDetails, dataSharing, signature, submittedAt } = data;
   const doc = new jsPDF();
   
   // Header with orange bar
@@ -48,31 +38,13 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   
   yPosition += 20;
   
-  // Property details table
-  const propertyData = propertyDetails || {
-    streetAddress: propertyPreferences.preferredLocation || 'Not specified',
-    postcode: 'Not specified',
-    rentalAmount: `£${propertyPreferences.maxRent || '0'}.00`,
-    preferredMoveInDate: propertyPreferences.moveInDate || 'Not specified',
-    latestMoveInDate: 'Not specified',
-    initialTenancyTerm: '1 year',
-    hasPets: 'No',
-    under18s: 'None',
-    conditionsOfOffer: '-',
-    depositType: 'Traditional deposit'
-  };
-  
   const propertyRows = [
-    ['Street Address', propertyData.streetAddress],
-    ['Postcode', propertyData.postcode],
-    ['Rental Amount', propertyData.rentalAmount],
-    ['Preferred Move-in Date', propertyData.preferredMoveInDate],
-    ['Latest Move-in Date', propertyData.latestMoveInDate],
-    ['Initial Tenancy Term', propertyData.initialTenancyTerm],
-    ['Has Pets', propertyData.hasPets],
-    ['Under 18s', propertyData.under18s],
-    ['Conditions of Offer', propertyData.conditionsOfOffer],
-    ['Deposit Type', propertyData.depositType]
+    ['Street Address', propertyPreferences.streetAddress || 'Not specified'],
+    ['Postcode', propertyPreferences.postcode || 'Not specified'],
+    ['Rental Amount', propertyPreferences.rentalAmount ? `£${propertyPreferences.rentalAmount}` : 'Not specified'],
+    ['Preferred Move-in Date', propertyPreferences.moveInDate || 'Not specified'],
+    ['Latest Move-in Date', propertyPreferences.latestMoveInDate || 'Not specified'],
+    ['Initial Tenancy Term', propertyPreferences.tenancyTerm || 'Not specified']
   ];
   
   doc.setTextColor(0, 0, 0);
@@ -85,7 +57,6 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
       doc.rect(15, yPosition - 2, 180, 10, 'F');
     }
     
-    doc.setFont('helvetica', 'normal');
     doc.text(row[0], 20, yPosition + 4);
     doc.text(row[1], 105, yPosition + 4);
     yPosition += 10;
@@ -100,21 +71,21 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   }
   
   // Applicant Details Section
-  doc.setFillColor(64, 64, 64);
-  doc.rect(15, yPosition - 5, 180, 12, 'F');
-  doc.setFontSize(12);
-  doc.setTextColor(255, 255, 255);
-  doc.text('Applicant Details', 20, yPosition + 3);
-  
-  yPosition += 20;
-  
   applicants.forEach((applicant, index) => {
+    doc.setFillColor(64, 64, 64);
+    doc.rect(15, yPosition - 5, 180, 12, 'F');
+    doc.setFontSize(12);
+    doc.setTextColor(255, 255, 255);
+    doc.text(`Applicant ${index + 1} Details`, 20, yPosition + 3);
+    
+    yPosition += 20;
+    
     const applicantRows = [
-      ['First Name', applicant.firstName],
-      ['Last Name', applicant.lastName],
+      ['First Name', applicant.firstName || 'Not specified'],
+      ['Last Name', applicant.lastName || 'Not specified'],
       ['Date of Birth', applicant.dateOfBirth || 'Not specified'],
-      ['Email Address', applicant.email],
-      ['Mobile Number', applicant.phone],
+      ['Email Address', applicant.email || 'Not specified'],
+      ['Mobile Number', applicant.phone || 'Not specified'],
     ];
     
     doc.setTextColor(0, 0, 0);
@@ -150,11 +121,11 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     yPosition += 20;
     
     const employmentRows = [
-      ['Contract Type', applicant.employment || 'N/A'],
-      ['Company Name', '-'],
-      ['Job Title', '-'],
-      ['Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '-'],
-      ['Length of Service', '-'],
+      ['Contract Type', applicant.employment || 'Not specified'],
+      ['Company Name', applicant.companyName || 'Not specified'],
+      ['Job Title', applicant.jobTitle || 'Not specified'],
+      ['Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : 'Not specified'],
+      ['Length of Service', applicant.lengthOfService || 'Not specified'],
     ];
     
     doc.setTextColor(0, 0, 0);
@@ -190,12 +161,12 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
     yPosition += 20;
     
     const currentPropertyRows = [
-      ['Postcode', propertyData.postcode],
-      ['Street Address', applicant.previousAddress || propertyData.streetAddress],
-      ['Move In Date', '10th February 2025'],
-      ['Vacate Date', '10th February 2025'],
-      ['Current Property Status', 'Rented Privately'],
-      ['Current Rental Amount', propertyData.rentalAmount],
+      ['Street Address', applicant.previousAddress || 'Not specified'],
+      ['Postcode', applicant.previousPostcode || 'Not specified'],
+      ['Move In Date', applicant.moveInDate || 'Not specified'],
+      ['Vacate Date', applicant.vacateDate || 'Not specified'],
+      ['Current Property Status', applicant.currentPropertyStatus || 'Not specified'],
+      ['Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : 'Not specified'],
     ];
     
     doc.setTextColor(0, 0, 0);
@@ -212,6 +183,8 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
       doc.text(row[1], 105, yPosition + 4);
       yPosition += 10;
     });
+    
+    yPosition += 10;
   });
   
   // Check if we need a new page
@@ -230,15 +203,58 @@ export const generateApplicationPDF = (data: TenancyApplicationData): Uint8Array
   yPosition += 20;
   
   const additionalRows = [
-    ['UK/ROI Passport', 'No'],
-    ['Adverse Credit', 'No'],
-    ['Requires Guarantor', 'No'],
+    ['UK/ROI Passport', additionalDetails.ukPassport || 'Not specified'],
+    ['Adverse Credit', additionalDetails.adverseCredit || 'Not specified'],
+    ['Adverse Credit Details', additionalDetails.adverseCreditDetails || 'N/A'],
+    ['Requires Guarantor', additionalDetails.guarantorRequired || 'Not specified'],
+    ['Pets', additionalDetails.pets || 'Not specified'],
+    ['Under 18s Count', additionalDetails.under18Count || 'Not specified'],
+    ['Children Ages', additionalDetails.childrenAges || 'N/A'],
+    ['Conditions of Offer', additionalDetails.conditionsOfOffer || 'None'],
+    ['Deposit Type', additionalDetails.depositType || 'Not specified'],
   ];
   
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(10);
   
   additionalRows.forEach((row, rowIndex) => {
+    const isEven = rowIndex % 2 === 0;
+    if (isEven) {
+      doc.setFillColor(245, 245, 245);
+      doc.rect(15, yPosition - 2, 180, 10, 'F');
+    }
+    
+    doc.text(row[0], 20, yPosition + 4);
+    doc.text(row[1], 105, yPosition + 4);
+    yPosition += 10;
+  });
+  
+  yPosition += 15;
+  
+  // Check if we need a new page
+  if (yPosition > 220) {
+    doc.addPage();
+    yPosition = 30;
+  }
+  
+  // Data Sharing Section
+  doc.setFillColor(64, 64, 64);
+  doc.rect(15, yPosition - 5, 180, 12, 'F');
+  doc.setFontSize(12);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Data Sharing Preferences', 20, yPosition + 3);
+  
+  yPosition += 20;
+  
+  const dataSharingRows = [
+    ['Utilities Data Sharing', dataSharing.utilities ? 'Yes' : 'No'],
+    ['Insurance Data Sharing', dataSharing.insurance ? 'Yes' : 'No'],
+  ];
+  
+  doc.setTextColor(0, 0, 0);
+  doc.setFontSize(10);
+  
+  dataSharingRows.forEach((row, rowIndex) => {
     const isEven = rowIndex % 2 === 0;
     if (isEven) {
       doc.setFillColor(245, 245, 245);

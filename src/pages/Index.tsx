@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, MapPin, Home, FileText, Phone, Mail, Award, Shield, Clock, Star, Bed, Bath, Square, Eye, Heart } from "lucide-react";
 import OptimizedCard from "@/components/optimized/OptimizedCard";
+import ThemeToggle from "@/components/ThemeToggle";
 
 // Enhanced mock property data for both sales and lettings
 const mockProperties = [
@@ -109,9 +109,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-background shadow-sm border-b border-border">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-3">
@@ -119,18 +119,19 @@ const Index = () => {
                 <Home className="h-8 w-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Palmer & Partners</h1>
-                <p className="text-gray-600 font-medium">Premium Estate Agents</p>
+                <h1 className="text-2xl font-bold text-foreground">Palmer & Partners</h1>
+                <p className="text-muted-foreground font-medium">Premium Estate Agents</p>
               </div>
             </div>
             <nav className="hidden md:flex items-center space-x-8">
-              <Link to="/" className="text-blue-600 font-semibold">Properties</Link>
-              <a href="#sales" className="text-gray-700 hover:text-blue-600 transition-colors">Sales</a>
-              <a href="#lettings" className="text-gray-700 hover:text-blue-600 transition-colors">Lettings</a>
-              <a href="#about" className="text-gray-700 hover:text-blue-600 transition-colors">About</a>
-              <a href="#contact" className="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
+              <Link to="/" className="text-primary font-semibold">Properties</Link>
+              <a href="#sales" className="text-muted-foreground hover:text-primary transition-colors">Sales</a>
+              <a href="#lettings" className="text-muted-foreground hover:text-primary transition-colors">Lettings</a>
+              <a href="#about" className="text-muted-foreground hover:text-primary transition-colors">About</a>
+              <a href="#contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</a>
+              <ThemeToggle />
               <Link to="/login">
-                <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">Login</Button>
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary/10">Login</Button>
               </Link>
               <Link to="/application">
                 <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">Get Started</Button>
@@ -141,36 +142,36 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50 py-24">
+      <section className="relative bg-gradient-to-br from-background via-muted/50 to-muted py-24">
         <div className="absolute inset-0 opacity-50" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1f5f9' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f1f5f9' fill-opacity='0.4'%3E%3Ccircle cx='7' cy='7' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
         }}></div>
         <div className="container mx-auto px-4 text-center relative">
           <div className="max-w-5xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent leading-tight">
+            <h2 className="text-5xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-foreground via-primary to-primary bg-clip-text text-transparent leading-tight">
               Find Your Perfect
               <br />
-              <span className="text-blue-600">Home</span>
+              <span className="text-primary">Home</span>
             </h2>
-            <p className="text-xl md:text-2xl mb-12 text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Whether you are looking to buy, sell, rent, or let, we connect you with London&apos;s finest properties
+            <p className="text-xl md:text-2xl mb-12 text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Whether you&apos;re looking to buy, sell, rent, or let, we connect you with London&apos;s finest properties
             </p>
             
             {/* Enhanced Search Bar */}
-            <div className="bg-white p-8 rounded-3xl shadow-2xl max-w-6xl mx-auto border border-gray-100">
+            <div className="bg-card p-8 rounded-3xl shadow-2xl max-w-6xl mx-auto border border-border">
               <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div className="relative md:col-span-2">
-                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
                   <Input
                     type="text"
                     placeholder="Enter location or postcode..."
                     value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
-                    className="pl-12 py-4 text-gray-900 border-gray-200 focus:border-blue-500 rounded-xl h-14"
+                    className="pl-12 py-4 text-foreground border-border focus:border-primary rounded-xl h-14"
                   />
                 </div>
                 <select 
-                  className="px-4 py-4 border border-gray-200 rounded-xl text-gray-900 focus:border-blue-500 h-14"
+                  className="px-4 py-4 border border-border rounded-xl text-foreground focus:border-primary h-14 bg-background"
                   value={saleTypeFilter}
                   onChange={(e) => {
                     setSaleTypeFilter(e.target.value);
@@ -182,7 +183,7 @@ const Index = () => {
                   <option value="pcm">To Rent</option>
                 </select>
                 <select 
-                  className="px-4 py-4 border border-gray-200 rounded-xl text-gray-900 focus:border-blue-500 h-14"
+                  className="px-4 py-4 border border-border rounded-xl text-foreground focus:border-primary h-14 bg-background"
                   value={typeFilter}
                   onChange={(e) => {
                     setTypeFilter(e.target.value);
@@ -204,7 +205,7 @@ const Index = () => {
       </section>
 
       {/* Sales & Lettings Tabs */}
-      <section className="py-16 bg-white">
+      <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="flex justify-center mb-12">
             <div className="bg-gray-100 p-2 rounded-2xl">

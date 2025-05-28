@@ -1,10 +1,10 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info } from "lucide-react";
+import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
@@ -207,21 +207,24 @@ const TenancyApplicationForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-6">
-          <Link to="/" className="flex items-center text-blue-600 hover:text-blue-700 transition-colors mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Properties
-          </Link>
+          <div className="flex items-center justify-between mb-4">
+            <Link to="/" className="flex items-center text-primary hover:text-primary/80 transition-colors">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Properties
+            </Link>
+            <ThemeToggle />
+          </div>
           
           <div className="flex items-center space-x-4 mb-4">
-            <Home className="h-6 w-6 text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-900">Tenancy Application</h1>
+            <Home className="h-6 w-6 text-primary" />
+            <h1 className="text-2xl font-bold text-foreground">Tenancy Application</h1>
           </div>
 
           <div className="mb-6">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
+            <div className="flex justify-between text-sm text-muted-foreground mb-2">
               <span>Step {currentStep} of {totalSteps}</span>
               <span>{Math.round(progress)}% Complete</span>
             </div>
@@ -232,7 +235,7 @@ const TenancyApplicationForm = () => {
             {[
               { step: 1, icon: Building, label: "Property Details" },
               { step: 2, icon: User, label: "Personal Info" },
-              { step: 3, icon: FileText, label: "Employment" },
+              { step: 3, icon: Briefcase, label: "Employment" },
               { step: 4, icon: MapPin, label: "Current Address" },
               { step: 5, icon: Info, label: "Additional Details" },
               { step: 6, icon: CheckCircle, label: "Terms & Sign" }
@@ -240,12 +243,12 @@ const TenancyApplicationForm = () => {
               <div key={step} className="flex flex-col items-center min-w-0 flex-1">
                 <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
                   currentStep >= step 
-                    ? "bg-blue-600 text-white" 
-                    : "bg-gray-200 text-gray-400"
+                    ? "bg-primary text-primary-foreground" 
+                    : "bg-muted text-muted-foreground"
                 }`}>
                   <Icon className="h-5 w-5" />
                 </div>
-                <span className="text-xs text-gray-600 text-center px-1">{label}</span>
+                <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
               </div>
             ))}
           </div>
@@ -255,7 +258,7 @@ const TenancyApplicationForm = () => {
           <CardContent className="pt-6">
             {renderStepContent()}
             
-            <div className="flex justify-between mt-8 pt-6 border-t">
+            <div className="flex justify-between mt-8 pt-6 border-t border-border">
               <Button
                 variant="outline"
                 onClick={goToPrevious}
