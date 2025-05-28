@@ -32,7 +32,8 @@ export const generatePDFInWorker = async (data: any): Promise<Uint8Array> => {
     `;
 
     const blob = new Blob([workerScript], { type: 'application/javascript' });
-    const worker = new Worker(URL.createObjectURL(blob));
+    const workerUrl = URL.createObjectURL(blob);
+    const worker = new Worker(workerUrl);
 
     worker.onmessage = (e) => {
       if (e.data.error) {
@@ -49,7 +50,7 @@ export const generatePDFInWorker = async (data: any): Promise<Uint8Array> => {
         resolve(e.data.result);
       }
       worker.terminate();
-      URL.revokeObjectURL(blob);
+      URL.revokeObjectURL(workerUrl);
     };
 
     worker.onerror = () => {
@@ -63,7 +64,7 @@ export const generatePDFInWorker = async (data: any): Promise<Uint8Array> => {
         }
       });
       worker.terminate();
-      URL.revokeObjectURL(blob);
+      URL.revokeObjectURL(workerUrl);
     };
 
     worker.postMessage(data);
