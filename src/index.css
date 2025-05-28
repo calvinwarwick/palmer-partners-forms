@@ -66,6 +66,29 @@
   @apply block text-sm font-medium text-muted-foreground mb-2;
 }
 
+/* Mobile-first responsive design for form inputs */
+@media (max-width: 640px) {
+  .form-control,
+  .form-select {
+    @apply text-base; /* Prevents zoom on iOS */
+    min-height: 44px; /* Touch-friendly size */
+  }
+  
+  /* Better spacing on mobile */
+  .container {
+    @apply px-3;
+  }
+  
+  /* Stack form elements on mobile */
+  .flex-col.lg\:flex-row {
+    @apply space-y-3;
+  }
+  
+  .flex-col.lg\:flex-row > * {
+    @apply w-full;
+  }
+}
+
 /* Remove any focus states that use blue colors */
 input:focus,
 select:focus,
@@ -74,7 +97,7 @@ textarea:focus {
   outline: none !important;
 }
 
-/* Override any blue colors in the UI */
+/* Override any blue colors in the UI with orange */
 .focus\:ring-blue-500:focus {
   @apply ring-orange-500;
 }
@@ -101,4 +124,24 @@ textarea:focus {
 
 .text-blue-800 {
   @apply text-orange-800;
+}
+
+/* Ensure buttons are touch-friendly on mobile */
+@media (max-width: 640px) {
+  .btn,
+  button {
+    min-height: 44px;
+    @apply text-base;
+  }
+}
+
+/* Improve card spacing on mobile */
+@media (max-width: 640px) {
+  .card {
+    @apply mx-2;
+  }
+  
+  .card-content {
+    @apply p-4;
+  }
 }
