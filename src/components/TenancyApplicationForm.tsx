@@ -55,7 +55,9 @@ const TenancyApplicationForm = () => {
       vacateDate: "",
       currentRentalAmount: "",
       reference1Name: "",
-      reference1Contact: ""
+      reference1Contact: "",
+      pets: "",
+      petDetails: ""
     }
   ]);
 
@@ -101,7 +103,9 @@ const TenancyApplicationForm = () => {
         vacateDate: "",
         currentRentalAmount: "",
         reference1Name: "",
-        reference1Contact: ""
+        reference1Contact: "",
+        pets: "",
+        petDetails: ""
       };
       setApplicants([...applicants, newApplicant]);
     }
@@ -139,7 +143,9 @@ const TenancyApplicationForm = () => {
           vacateDate: "",
           currentRentalAmount: "",
           reference1Name: "",
-          reference1Contact: ""
+          reference1Contact: "",
+          pets: "",
+          petDetails: ""
         });
       }
       setApplicants(newApplicants);
@@ -203,7 +209,9 @@ const TenancyApplicationForm = () => {
         vacateDate: "2024-05-30",
         currentRentalAmount: "1800",
         reference1Name: "Mike Johnson",
-        reference1Contact: "mike.johnson@techsolutions.com"
+        reference1Contact: "mike.johnson@techsolutions.com",
+        pets: "yes",
+        petDetails: "1 cat"
       },
       {
         firstName: "Sarah",
@@ -223,7 +231,9 @@ const TenancyApplicationForm = () => {
         vacateDate: "2024-05-30",
         currentRentalAmount: "1600",
         reference1Name: "Lisa Brown",
-        reference1Contact: "lisa.brown@designstudio.com"
+        reference1Contact: "lisa.brown@designstudio.com",
+        pets: "no",
+        petDetails: ""
       }
     ];
 
@@ -444,15 +454,25 @@ const TenancyApplicationForm = () => {
             {renderStepContent()}
             
             <div className="flex justify-between mt-8 pt-6 border-t border-border">
-              <Button
-                variant="outline"
-                onClick={goToPrevious}
-                disabled={isFirstStep || isSubmitting}
-                className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
-              >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Previous
-              </Button>
+              {isFirstStep ? (
+                <a
+                  href="https://palmerpartners.com"
+                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-orange-500 bg-background hover:bg-orange-500 hover:text-white text-orange-500 h-10 px-4 py-2"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Palmer & Partners
+                </a>
+              ) : (
+                <Button
+                  variant="outline"
+                  onClick={goToPrevious}
+                  disabled={isSubmitting}
+                  className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Previous
+                </Button>
+              )}
               
               {!isLastStep ? (
                 <Button
