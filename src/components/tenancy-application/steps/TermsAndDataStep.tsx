@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,8 @@ interface TermsAndDataStepProps {
   onTermsChange: (accepted: boolean) => void;
   signature?: string;
   onSignatureChange?: (signature: string) => void;
+  fullName?: string;
+  onFullNameChange?: (name: string) => void;
   onTermsAccepted?: any;
   onFillAllTestData?: () => void;
 }
@@ -26,7 +29,9 @@ const TermsAndDataStep = ({
   termsAccepted, 
   onTermsChange,
   signature,
-  onSignatureChange
+  onSignatureChange,
+  fullName,
+  onFullNameChange
 }: TermsAndDataStepProps) => {
   const handleDataSharingChange = (field: string, value: boolean) => {
     if (onUpdateDataSharing) {
@@ -215,6 +220,8 @@ const TermsAndDataStep = ({
         <SignaturePad
           value={signature}
           onChange={onSignatureChange}
+          fullName={fullName}
+          onFullNameChange={onFullNameChange}
           width={800}
           height={200}
         />

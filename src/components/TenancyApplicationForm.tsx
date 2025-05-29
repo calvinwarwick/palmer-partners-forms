@@ -11,6 +11,15 @@ import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
 import { Applicant, PropertyPreferences, AdditionalDetails, Application } from "@/domain/types/Applicant";
 import { validateAndHighlightFields, highlightInvalidField } from "@/utils/fieldValidation";
 
+// Import step components
+import ApplicationSuccess from "@/components/tenancy-application/ApplicationSuccess";
+import PropertyDetailsStep from "@/components/tenancy-application/steps/PropertyDetailsStep";
+import PersonalInfoStep from "@/components/tenancy-application/steps/PersonalInfoStep";
+import EmploymentStep from "@/components/tenancy-application/steps/EmploymentStep";
+import CurrentAddressStep from "@/components/tenancy-application/steps/CurrentAddressStep";
+import AdditionalDetailsStep from "@/components/tenancy-application/steps/AdditionalDetailsStep";
+import TermsAndDataStep from "@/components/tenancy-application/steps/TermsAndDataStep";
+
 const TenancyApplicationForm = () => {
   const totalSteps = 6;
   const { currentStep, progress, goToNext, goToPrevious, canProceed, isFirstStep, isLastStep } = useMultiStepForm(totalSteps);
@@ -276,7 +285,8 @@ const TenancyApplicationForm = () => {
         propertyPreferences, 
         additionalDetails, 
         signature, 
-        termsAccepted
+        termsAccepted,
+        fullName
       );
       
       // Highlight each invalid field with a delay

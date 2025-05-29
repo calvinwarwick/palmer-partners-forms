@@ -21,7 +21,8 @@ export const validateAndHighlightFields = (
   propertyPreferences: any,
   additionalDetails: any,
   signature: string,
-  termsAccepted: boolean
+  termsAccepted: boolean,
+  fullName?: string
 ): string[] => {
   const invalidFields: string[] = [];
 
@@ -70,6 +71,7 @@ export const validateAndHighlightFields = (
     case 6:
       if (!termsAccepted) invalidFields.push('terms');
       if (!signature.trim()) invalidFields.push('signature');
+      if (!fullName?.trim()) invalidFields.push('fullName');
       break;
   }
 

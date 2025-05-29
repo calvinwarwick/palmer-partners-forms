@@ -1,16 +1,28 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, PenTool } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Trash2 } from 'lucide-react';
 
 interface SignaturePadProps {
   value?: string;
   onChange?: (signature: string) => void;
+  fullName?: string;
+  onFullNameChange?: (name: string) => void;
   width?: number;
   height?: number;
 }
 
-const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignaturePadProps) => {
+const SignaturePad = ({ 
+  value, 
+  onChange, 
+  fullName = "",
+  onFullNameChange,
+  width = 600, 
+  height = 200 
+}: SignaturePadProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
@@ -156,7 +168,7 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
 
   return (
     <div ref={containerRef} className="w-full">
-      <Card className="w-full border border-gray-200 bg-gray-50">
+      <Card className="w-full border border-gray-300 bg-gray-50">
         <CardHeader className="pb-4">
           <CardTitle className="text-lg text-black">
             Digital Signature Required
@@ -167,7 +179,7 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
         </CardHeader>
         <CardContent className="space-y-4">
           <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${
-            hasSignature ? 'border-2 border-green-500' : 'border border-gray-200'
+            hasSignature ? 'border-2 border-green-500' : 'border border-gray-300'
           }`}>
             <canvas
               ref={canvasRef}
@@ -189,11 +201,27 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
             {!hasSignature && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center text-gray-400">
-                  <PenTool className="h-8 w-8 mx-auto mb-2 opacity-50" />
                   <p className="text-sm">Sign here</p>
                 </div>
               </div>
             )}
+          </div>
+          
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
+                Type full name *
+              </Label>
+              <Input
+                id="fullName"
+                name="fullName"
+                type="text"
+                value={fullName}
+                onChange={(e) => onFullNameChange?.(e.target.value)}
+                placeholder="Enter your full name"
+                className="mt-1"
+              />
+            </div>
           </div>
           
           <div className="flex gap-2 justify-center flex-wrap">
