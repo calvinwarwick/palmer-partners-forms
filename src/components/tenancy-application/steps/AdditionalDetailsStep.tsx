@@ -1,13 +1,16 @@
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { RefreshCw, Info } from "lucide-react";
 import { AdditionalDetails } from "@/domain/types/Applicant";
+import { PetDetails } from "./PetDetails";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
+import { HelpCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: AdditionalDetails;
@@ -16,279 +19,431 @@ interface AdditionalDetailsStepProps {
   maxRent: string;
 }
 
-const AdditionalDetailsStep = ({ 
-  additionalDetails, 
-  onUpdateDetails, 
-  onFillAllTestData,
-  maxRent 
-}: AdditionalDetailsStepProps) => {
-  const weeklyRent = maxRent ? Math.round(parseFloat(maxRent) / 4.33) : 0;
-  const holdingDeposit = weeklyRent;
-  const traditionalDeposit = Math.round(weeklyRent * 5);
+interface GuarantorData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  dateOfBirth: string;
+  contractType: string;
+  companyName: string;
+  jobTitle: string;
+  annualSalary: string;
+  lengthOfService: string;
+  streetAddress: string;
+  postcode: string;
+}
+
+const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails, onFillAllTestData, maxRent }: AdditionalDetailsStepProps) => {
+  // Initialize guarantor data from additionalDetails or use empty defaults
+  const guarantorData: GuarantorData = additionalDetails.guarantorDetails ? 
+    JSON.parse(additionalDetails.guarantorDetails) : 
+    {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      dateOfBirth: '',
+      contractType: '',
+      companyName: '',
+      jobTitle: '',
+      annualSalary: '',
+      lengthOfService: '',
+      streetAddress: '',
+      postcode: ''
+    };
+
+  const handleGuarantorChange = (field: keyof GuarantorData, value: string) => {
+    const updatedGuarantor = { ...guarantorData, [field]: value };
+    onUpdateDetails('guarantorDetails', JSON.stringify(updatedGuarantor));
+  };
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-foreground">Additional Details</h2>
-        <Button
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Additional Details</h2>
+          <p className="text-muted-foreground">Provide additional information for your application</p>
+        </div>
+        <Button 
+          onClick={onFillAllTestData}
           variant="outline"
           size="sm"
-          onClick={onFillAllTestData}
-          className="flex items-center gap-2 fill progress-fill border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+          className="hidden md:flex"
         >
-          <RefreshCw className="h-4 w-4" />
           Fill Test Data
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormFieldWithTooltip
-          label="Do you have a UK passport?"
-          tooltip="A UK passport helps with identity verification and right to rent checks"
-          required
-          htmlFor="ukPassport"
-        >
-          <Select
-            value={additionalDetails.ukPassport}
-            onValueChange={(value) => onUpdateDetails("ukPassport", value)}
-          >
-            <SelectTrigger className="form-control">
-              <SelectValue placeholder="Select an option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormFieldWithTooltip>
-
-        <FormFieldWithTooltip
-          label="Do you have any adverse credit history?"
-          tooltip="This includes CCJs, defaults, missed payments, or bankruptcy history"
-          required
-          htmlFor="adverseCredit"
-        >
-          <Select
-            value={additionalDetails.adverseCredit}
-            onValueChange={(value) => onUpdateDetails("adverseCredit", value)}
-          >
-            <SelectTrigger className="form-control">
-              <SelectValue placeholder="Select an option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormFieldWithTooltip>
-      </div>
-
-      {additionalDetails.adverseCredit === "yes" && (
-        <div>
-          <FormFieldWithTooltip
-            label="Please provide details of your adverse credit history"
-            tooltip="Include details of any CCJs, defaults, missed payments, or other credit issues"
-            required
-            htmlFor="adverseCreditDetails"
-          >
-            <Textarea
-              id="adverseCreditDetails"
-              value={additionalDetails.adverseCreditDetails}
-              onChange={(e) => onUpdateDetails("adverseCreditDetails", e.target.value)}
-              placeholder="Please provide details..."
-              className="form-control min-h-[100px]"
-            />
-          </FormFieldWithTooltip>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormFieldWithTooltip
-          label="Will you require a guarantor?"
-          tooltip="A guarantor is someone who guarantees to pay rent if you're unable to"
-          required
-          htmlFor="guarantorRequired"
-        >
-          <Select
-            value={additionalDetails.guarantorRequired}
-            onValueChange={(value) => onUpdateDetails("guarantorRequired", value)}
-          >
-            <SelectTrigger className="form-control">
-              <SelectValue placeholder="Select an option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormFieldWithTooltip>
-
-        <FormFieldWithTooltip
-          label="Do you have any pets?"
-          tooltip="Some properties have pet restrictions"
-          required
-          htmlFor="pets"
-        >
-          <Select
-            value={additionalDetails.pets}
-            onValueChange={(value) => onUpdateDetails("pets", value)}
-          >
-            <SelectTrigger className="form-control">
-              <SelectValue placeholder="Select an option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="yes">Yes</SelectItem>
-              <SelectItem value="no">No</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormFieldWithTooltip>
-      </div>
-
-      {additionalDetails.pets === "yes" && (
-        <div>
-          <FormFieldWithTooltip
-            label="Please provide details about your pets"
-            tooltip="Include type and number of pets"
-            required
-            htmlFor="petDetails"
-          >
-            <Textarea
-              id="petDetails"
-              value={additionalDetails.petDetails || ""}
-              onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
-              placeholder="e.g., 1 cat, 2 dogs, etc."
-              className="form-control min-h-[100px]"
-            />
-          </FormFieldWithTooltip>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <FormFieldWithTooltip
-          label="Number of children under 18"
-          tooltip="Include any children who will be living in the property"
-          htmlFor="under18Count"
-        >
-          <Select
-            value={additionalDetails.under18Count}
-            onValueChange={(value) => onUpdateDetails("under18Count", value)}
-          >
-            <SelectTrigger className="form-control">
-              <SelectValue placeholder="Select number" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="0">0</SelectItem>
-              <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem>
-              <SelectItem value="3">3</SelectItem>
-              <SelectItem value="4">4</SelectItem>
-              <SelectItem value="5+">5+</SelectItem>
-            </SelectContent>
-          </Select>
-        </FormFieldWithTooltip>
-
-        {additionalDetails.under18Count && additionalDetails.under18Count !== "0" && (
-          <FormFieldWithTooltip
-            label="Ages of children"
-            tooltip="Please list the ages of all children under 18"
-            htmlFor="childrenAges"
-          >
-            <Input
-              id="childrenAges"
-              value={additionalDetails.childrenAges}
-              onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
-              placeholder="e.g., 5, 8, 12"
-              className="form-control"
-            />
-          </FormFieldWithTooltip>
-        )}
-      </div>
-
-      <div>
-        <FormFieldWithTooltip
-          label="Conditions of offer"
-          tooltip="Any special conditions or requirements for your tenancy offer"
-          htmlFor="conditionsOfOffer"
-        >
-          <Textarea
-            id="conditionsOfOffer"
-            value={additionalDetails.conditionsOfOffer}
-            onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
-            placeholder="Any special conditions or requirements..."
-            className="form-control min-h-[100px]"
-          />
-        </FormFieldWithTooltip>
-      </div>
-
-      <div>
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold text-foreground mb-2">Deposit</h3>
-          <p className="text-sm text-muted-foreground mb-6">
-            Please select which deposit option you would prefer to use. Please note that a deposit replacement can only be offered upon agreement from the landlord of your preferred property.
-          </p>
-        </div>
-
-        <FormFieldWithTooltip
-          label="Deposit type"
-          tooltip="Choose between a deposit replacement service or traditional deposit payment"
-          required
-          htmlFor="depositType"
-        >
-          <RadioGroup
-            value={additionalDetails.depositType}
-            onValueChange={(value) => onUpdateDetails("depositType", value)}
-            className="space-y-4"
-          >
-            <div className="flex items-start space-x-3 p-4 border border-input rounded-lg">
-              <RadioGroupItem value="replacement" id="replacement" className="mt-1" />
-              <div className="flex-1">
-                <Label htmlFor="replacement" className="font-medium text-foreground cursor-pointer">
-                  Deposit replacement
-                </Label>
-                <p className="text-sm text-muted-foreground mt-1">
-                  I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. You can find more information about Reposit's deposit replacement scheme here.
-                </p>
+      <div className="grid gap-6">
+        {/* UK/ROI Passport */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              UK/ROI Passport
+              <FormFieldWithTooltip tooltip="Do you have a UK or Republic of Ireland passport?">
+                <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
+              </FormFieldWithTooltip>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <RadioGroup
+              value={additionalDetails.ukPassport}
+              onValueChange={(value) => onUpdateDetails('ukPassport', value)}
+              className="flex flex-row space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="ukPassport-yes" />
+                <Label htmlFor="ukPassport-yes">Yes</Label>
               </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="ukPassport-no" />
+                <Label htmlFor="ukPassport-no">No</Label>
+              </div>
+            </RadioGroup>
+          </CardContent>
+        </Card>
+
+        {/* Adverse Credit */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              Adverse Credit
+              <FormFieldWithTooltip tooltip="Do you have any adverse credit history such as CCJs, defaults, or bankruptcy?">
+                <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
+              </FormFieldWithTooltip>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <RadioGroup
+              value={additionalDetails.adverseCredit}
+              onValueChange={(value) => onUpdateDetails('adverseCredit', value)}
+              className="flex flex-row space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="adverseCredit-yes" />
+                <Label htmlFor="adverseCredit-yes">Yes</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="adverseCredit-no" />
+                <Label htmlFor="adverseCredit-no">No</Label>
+              </div>
+            </RadioGroup>
+
+            {additionalDetails.adverseCredit === 'yes' && (
+              <div>
+                <Label htmlFor="adverseCreditDetails">Please provide details of your adverse credit history</Label>
+                <Textarea
+                  id="adverseCreditDetails"
+                  value={additionalDetails.adverseCreditDetails}
+                  onChange={(e) => onUpdateDetails('adverseCreditDetails', e.target.value)}
+                  placeholder="Describe your adverse credit history..."
+                  rows={3}
+                />
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Guarantor Required */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              Guarantor Required
+              <FormFieldWithTooltip tooltip="If required, can you supply a guarantor for this proposed tenancy?">
+                <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
+              </FormFieldWithTooltip>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <RadioGroup
+              value={additionalDetails.guarantorRequired}
+              onValueChange={(value) => onUpdateDetails('guarantorRequired', value)}
+              className="flex flex-row space-x-4"
+            >
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="yes" id="guarantorRequired-yes" />
+                <Label htmlFor="guarantorRequired-yes">Yes</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="no" id="guarantorRequired-no" />
+                <Label htmlFor="guarantorRequired-no">No</Label>
+              </div>
+            </RadioGroup>
+
+            {/* Guarantor Details Section */}
+            {additionalDetails.guarantorRequired === 'yes' && (
+              <Card className="mt-4 bg-gray-50 dark:bg-gray-900">
+                <CardHeader>
+                  <CardTitle className="text-lg">Guarantor Details</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Personal Information */}
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="guarantor-firstName">
+                          First name <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="guarantor-firstName"
+                          value={guarantorData.firstName}
+                          onChange={(e) => handleGuarantorChange('firstName', e.target.value)}
+                          placeholder="Enter first name"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-lastName">
+                          Last name <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="guarantor-lastName"
+                          value={guarantorData.lastName}
+                          onChange={(e) => handleGuarantorChange('lastName', e.target.value)}
+                          placeholder="Enter last name"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-dateOfBirth">
+                          Date of birth <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="guarantor-dateOfBirth"
+                          type="date"
+                          value={guarantorData.dateOfBirth}
+                          onChange={(e) => handleGuarantorChange('dateOfBirth', e.target.value)}
+                          placeholder="dd/mm/yyyy"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="guarantor-email">
+                          Email address <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="guarantor-email"
+                          type="email"
+                          value={guarantorData.email}
+                          onChange={(e) => handleGuarantorChange('email', e.target.value)}
+                          placeholder="Enter email address"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-phone">Mobile number</Label>
+                        <div className="flex">
+                          <div className="flex items-center px-3 border border-r-0 border-input bg-muted rounded-l-md">
+                            <Badge variant="outline" className="text-xs">🇬🇧</Badge>
+                          </div>
+                          <Input
+                            id="guarantor-phone"
+                            value={guarantorData.phone}
+                            onChange={(e) => handleGuarantorChange('phone', e.target.value)}
+                            placeholder="07400 123456"
+                            className="rounded-l-none"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Employment Details */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-base">Guarantor Employment Details</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <Label htmlFor="guarantor-contractType">
+                          Contract Type <span className="text-red-500">*</span>
+                        </Label>
+                        <Select
+                          value={guarantorData.contractType}
+                          onValueChange={(value) => handleGuarantorChange('contractType', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select an option" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="full-time">Full Time</SelectItem>
+                            <SelectItem value="part-time">Part Time</SelectItem>
+                            <SelectItem value="contract">Contract</SelectItem>
+                            <SelectItem value="self-employed">Self Employed</SelectItem>
+                            <SelectItem value="retired">Retired</SelectItem>
+                            <SelectItem value="unemployed">Unemployed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-companyName">Company name</Label>
+                        <Input
+                          id="guarantor-companyName"
+                          value={guarantorData.companyName}
+                          onChange={(e) => handleGuarantorChange('companyName', e.target.value)}
+                          placeholder="Enter company name"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-jobTitle">Job title</Label>
+                        <Input
+                          id="guarantor-jobTitle"
+                          value={guarantorData.jobTitle}
+                          onChange={(e) => handleGuarantorChange('jobTitle', e.target.value)}
+                          placeholder="Enter job title"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="guarantor-annualSalary">Annual salary</Label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">£</span>
+                          <Input
+                            id="guarantor-annualSalary"
+                            value={guarantorData.annualSalary}
+                            onChange={(e) => handleGuarantorChange('annualSalary', e.target.value)}
+                            placeholder="Enter annual salary"
+                            className="pl-8"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-lengthOfService">Length of service</Label>
+                        <Select
+                          value={guarantorData.lengthOfService}
+                          onValueChange={(value) => handleGuarantorChange('lengthOfService', value)}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select an option" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="less-than-6-months">Less than 6 months</SelectItem>
+                            <SelectItem value="6-months-to-1-year">6 months to 1 year</SelectItem>
+                            <SelectItem value="1-2-years">1-2 years</SelectItem>
+                            <SelectItem value="2-5-years">2-5 years</SelectItem>
+                            <SelectItem value="5-plus-years">5+ years</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div className="space-y-4">
+                    <h4 className="font-semibold text-base">Guarantor Address</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="guarantor-streetAddress">
+                          Street address <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="guarantor-streetAddress"
+                          value={guarantorData.streetAddress}
+                          onChange={(e) => handleGuarantorChange('streetAddress', e.target.value)}
+                          placeholder="Enter street address"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="guarantor-postcode">
+                          Postcode <span className="text-red-500">*</span>
+                        </Label>
+                        <Input
+                          id="guarantor-postcode"
+                          value={guarantorData.postcode}
+                          onChange={(e) => handleGuarantorChange('postcode', e.target.value)}
+                          placeholder="Enter postcode"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Pets */}
+        <PetDetails 
+          pets={additionalDetails.pets}
+          petDetails={additionalDetails.petDetails}
+          onPetsChange={(value) => onUpdateDetails('pets', value)}
+          onPetDetailsChange={(value) => onUpdateDetails('petDetails', value)}
+        />
+
+        {/* Under 18s */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Under 18s</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Label htmlFor="under18Count">Number of occupants under 18</Label>
+              <Select
+                value={additionalDetails.under18Count}
+                onValueChange={(value) => onUpdateDetails('under18Count', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select number" />
+                </SelectTrigger>
+                <SelectContent>
+                  {[0, 1, 2, 3, 4, 5].map(num => (
+                    <SelectItem key={num} value={num.toString()}>{num}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
-            <div className="flex items-start space-x-3 p-4 border border-input rounded-lg">
-              <RadioGroupItem value="traditional" id="traditional" className="mt-1" />
-              <div className="flex-1">
-                <Label htmlFor="traditional" className="font-medium text-foreground cursor-pointer">
-                  Traditional deposit
-                </Label>
-                <p className="text-sm text-muted-foreground mt-1">
-                  I would like to provide a traditional deposit equivalent to 5 weeks' rent{traditionalDeposit > 0 ? ` (£${traditionalDeposit})` : ''} and I will ensure the full amount is paid before the tenancy begins.
-                </p>
+            {additionalDetails.under18Count && parseInt(additionalDetails.under18Count) > 0 && (
+              <div>
+                <Label htmlFor="childrenAges">Ages of children</Label>
+                <Input
+                  id="childrenAges"
+                  value={additionalDetails.childrenAges}
+                  onChange={(e) => onUpdateDetails('childrenAges', e.target.value)}
+                  placeholder="e.g., 5, 8, 12"
+                />
               </div>
-            </div>
-          </RadioGroup>
-        </FormFieldWithTooltip>
+            )}
+          </CardContent>
+        </Card>
 
-        {additionalDetails.depositType === "replacement" && (
-          <Alert className="mt-4 border-blue-200 bg-blue-50">
-            <Info className="h-4 w-4 text-blue-600" />
-            <AlertTitle className="text-blue-800 font-semibold">Deposit Replacement Information</AlertTitle>
-            <AlertDescription className="text-blue-700 text-sm mt-2 space-y-2">
-              <p>If you have chosen to apply for a property using a Deposit Replacement product supplied by Reposit Group Ltd, the following terms and conditions shall apply:</p>
-              <ul className="list-disc pl-4 space-y-1">
-                <li>The tenant shall pay a service fee equal to 1 weeks rent to Reposit Group Ltd prior to the commencement of the tenancy as well as any renewal fees as notified by Reposit Group Ltd</li>
-                <li>Palmer & Partners may receive a commission from Reposit in relation to any sums paid by the tenant to Reposit Group Ltd</li>
-                <li>Palmer & Partners will share the tenant's private contact information with Reposit for the purposes of setting up the Deposit Replacement Product.</li>
-                <li>In the event that a tenancy has been agreed using a Deposit Replacement option, no keys will be released until Palmer & Partners are in receipt of confirmation from Reposit that all necessary payments and documents have been completed</li>
-                <li>By confirming that you would like to apply for your chosen property using a Deposit Replacement option, you agree to the above terms and conditions.</li>
-              </ul>
-            </AlertDescription>
-          </Alert>
-        )}
+        {/* Conditions of Offer */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Conditions of Offer</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Label htmlFor="conditionsOfOffer">Any special conditions or requests?</Label>
+            <Textarea
+              id="conditionsOfOffer"
+              value={additionalDetails.conditionsOfOffer}
+              onChange={(e) => onUpdateDetails('conditionsOfOffer', e.target.value)}
+              placeholder="Enter any special conditions or requests..."
+              rows={3}
+            />
+          </CardContent>
+        </Card>
 
-        {maxRent && (
-          <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
-            <p className="text-sm text-orange-800">
-              <strong>Please note:</strong> The above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
-            </p>
-          </div>
-        )}
+        {/* Deposit Type */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Deposit Type</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Select
+              value={additionalDetails.depositType}
+              onValueChange={(value) => onUpdateDetails('depositType', value)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select deposit type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="traditional">Traditional Deposit</SelectItem>
+                <SelectItem value="deposit-replacement">Deposit Replacement Scheme</SelectItem>
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
