@@ -9,14 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
 import { Applicant, PropertyPreferences, AdditionalDetails, Application } from "@/domain/types/Applicant";
-
-import PropertyDetailsStep from "./tenancy-application/steps/PropertyDetailsStep";
-import PersonalInfoStep from "./tenancy-application/steps/PersonalInfoStep";
-import EmploymentStep from "./tenancy-application/steps/EmploymentStep";
-import CurrentAddressStep from "./tenancy-application/steps/CurrentAddressStep";
-import AdditionalDetailsStep from "./tenancy-application/steps/AdditionalDetailsStep";
-import TermsAndDataStep from "./tenancy-application/steps/TermsAndDataStep";
-import ApplicationSuccess from "./tenancy-application/ApplicationSuccess";
+import { validateAndHighlightFields, highlightInvalidField } from "@/utils/fieldValidation";
 
 const TenancyApplicationForm = () => {
   const totalSteps = 6;
@@ -271,8 +264,27 @@ const TenancyApplicationForm = () => {
   };
 
   const handleNext = () => {
-    if (canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted)) {
+    const canProceedToNext = canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
+    
+    if (canProceedToNext) {
       goToNext();
+    } else {
+      // Get invalid fields and highlight them
+      const invalidFields = validateAndHighlightFields(
+        currentStep, 
+        applicants, 
+        propertyPreferences, 
+        additionalDetails, 
+        signature, 
+        termsAccepted
+      );
+      
+      // Highlight each invalid field with a delay
+      invalidFields.forEach((fieldId, index) => {
+        setTimeout(() => {
+          highlightInvalidField(fieldId);
+        }, index * 500); // 500ms delay between each highlight
+      });
     }
   };
 
@@ -468,7 +480,7 @@ const TenancyApplicationForm = () => {
               {!isLastStep ? (
                 <Button
                   onClick={handleNext}
-                  disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
+                  disabled={isSubmitting}
                   className="bg-orange-500 hover:bg-orange-600 text-white"
                 >
                   Next

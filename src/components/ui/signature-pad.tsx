@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -167,7 +166,9 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+          <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${
+            hasSignature ? 'border-2 border-green-500' : 'border border-gray-200'
+          }`}>
             <canvas
               ref={canvasRef}
               onMouseDown={startDrawing}
@@ -207,12 +208,6 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
               Clear
             </Button>
           </div>
-          
-          {hasSignature && (
-            <div className="text-center">
-              <p className="text-sm text-green-600 font-medium">✓ Signature captured successfully</p>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
