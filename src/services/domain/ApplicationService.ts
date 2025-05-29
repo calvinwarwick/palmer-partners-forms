@@ -110,70 +110,67 @@ export const sendApplicationConfirmation = async (
       submittedAt: new Date().toISOString()
     };
     
+    console.log('Generating PDF for confirmation email...');
     const pdfBytes = await generateApplicationPDF(applicationData);
-    const pdfBase64 = btoa(String.fromCharCode(...pdfBytes));
+    console.log('PDF generated, size:', pdfBytes.length, 'bytes');
+    
+    // Convert to base64 string properly
+    const uint8Array = new Uint8Array(pdfBytes);
+    let binaryString = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    const pdfBase64 = btoa(binaryString);
+    console.log('PDF converted to base64, length:', pdfBase64.length);
     
     const html = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
-        <div style="background-color: #ff6600; padding: 20px; text-align: center;">
-          <h1 style="color: white; margin: 0; font-size: 28px;">Palmer & Partners</h1>
-          <p style="color: white; margin: 5px 0 0 0; font-size: 16px;">Property Management Services</p>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        </style>
+      </head>
+      <body>
+        <div style="background-color: #3a3a3a; padding: 20px 0;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: white;">
+            
+            <!-- Header with logo -->
+            <div style="background-color: #3a3a3a; padding: 20px; text-align: left;">
+              <div style="display: inline-block; background-color: #ff6600; padding: 10px; border-radius: 5px;">
+                <span style="color: white; font-size: 24px; font-weight: bold;">P&</span>
+              </div>
+              <span style="color: white; font-size: 20px; margin-left: 10px; vertical-align: top; line-height: 44px;">Palmer & Partners</span>
+              <div style="color: #ff6600; font-size: 12px; margin-top: 5px;">Independent Estate & Letting Agents</div>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 30px; background-color: #f5f5f5;">
+              <h2 style="color: #333; margin: 0 0 20px 0; font-size: 18px;">Tenancy Application</h2>
+              
+              <p style="color: #333; margin: 0 0 15px 0; font-size: 14px;">Dear ${primaryApplicant.firstName}</p>
+              
+              <p style="color: #333; margin: 0 0 15px 0; font-size: 14px;">A tenancy application form has been submitted.</p>
+              
+              <p style="color: #333; margin: 0 0 15px 0; font-size: 14px;">Please refer to the PDF attached to this email.</p>
+              
+              <p style="color: #333; margin: 0 0 5px 0; font-size: 14px;">Thanks,</p>
+              <p style="color: #333; margin: 0; font-size: 14px;"><span style="background-color: #ffeb3b; padding: 2px 4px;">Palmer</span> & Partners</p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #ddd;">
+              <p style="color: #666; margin: 0; font-size: 12px;">© 2025 <span style="background-color: #ffeb3b; padding: 1px 3px;">Palmer</span> & Partners. All rights reserved.</p>
+            </div>
+            
+          </div>
         </div>
-        
-        <div style="padding: 30px;">
-          <h2 style="color: #333333; border-bottom: 2px solid #ff6600; padding-bottom: 10px;">Application Confirmation</h2>
-          
-          <p style="color: #333333; line-height: 1.6;">Dear ${primaryApplicant.firstName} ${primaryApplicant.lastName},</p>
-          
-          <div style="background-color: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin: 20px 0;">
-            <h3 style="color: #28a745; margin: 0 0 10px 0;">✓ Application Successfully Received</h3>
-            <p style="margin: 0; color: #333333;">
-              Thank you for submitting your tenancy application. We have received all your details and will begin processing immediately.
-            </p>
-          </div>
-          
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="color: #333333; margin: 0 0 15px 0;">Next Steps</h3>
-            <ul style="color: #666666; line-height: 1.6; margin: 0; padding-left: 20px;">
-              <li>Our team will review your application within <strong>2-3 business days</strong></li>
-              <li>We may contact you for additional information or references</li>
-              <li>You will receive an update via email or phone once review is complete</li>
-            </ul>
-          </div>
-          
-          <div style="background-color: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 20px 0;">
-            <h3 style="color: #856404; margin: 0 0 10px 0;">📎 Your Application Copy</h3>
-            <p style="margin: 0; color: #856404;">
-              A complete copy of your application form is attached to this email for your records.
-            </p>
-          </div>
-          
-          <div style="margin: 30px 0;">
-            <h3 style="color: #333333; margin: 0 0 15px 0;">Contact Information</h3>
-            <p style="color: #666666; line-height: 1.6; margin: 0;">
-              <strong>Email:</strong> ${primaryApplicant.email}<br>
-              <strong>Phone:</strong> ${primaryApplicant.phone}
-            </p>
-          </div>
-          
-          <p style="color: #333333; line-height: 1.6;">
-            If you have any questions or need to update your application, please don't hesitate to contact us.
-          </p>
-          
-          <p style="color: #333333; line-height: 1.6; margin-top: 30px;">
-            Best regards,<br>
-            <strong>The Palmer & Partners Team</strong>
-          </p>
-        </div>
-        
-        <div style="background-color: #404040; padding: 20px; text-align: center; color: white;">
-          <p style="margin: 0; font-size: 14px;">Palmer & Partners Property Management</p>
-          <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.8;">Professional Property Services</p>
-        </div>
-      </div>
+      </body>
+      </html>
     `;
 
-    return sendEmail({
+    const emailResult = await sendEmail({
       to: primaryApplicant.email,
       subject: "Application Received - Palmer & Partners",
       html,
@@ -183,16 +180,57 @@ export const sendApplicationConfirmation = async (
         type: 'application/pdf'
       }
     });
+
+    console.log('Email send result:', emailResult);
+    return emailResult;
   } catch (error) {
-    console.error('Error generating PDF for confirmation email:', error);
+    console.error('Error in sendApplicationConfirmation:', error);
     // Send email without attachment as fallback
     const fallbackHtml = `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h1>Application Confirmation</h1>
-        <p>Dear ${primaryApplicant.firstName} ${primaryApplicant.lastName},</p>
-        <p>Thank you for submitting your tenancy application. We have received your details and will review within 2-3 business days.</p>
-        <p>Best regards,<br>Palmer & Partners</p>
-      </div>
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        </style>
+      </head>
+      <body>
+        <div style="background-color: #3a3a3a; padding: 20px 0;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: white;">
+            
+            <!-- Header with logo -->
+            <div style="background-color: #3a3a3a; padding: 20px; text-align: left;">
+              <div style="display: inline-block; background-color: #ff6600; padding: 10px; border-radius: 5px;">
+                <span style="color: white; font-size: 24px; font-weight: bold;">P&</span>
+              </div>
+              <span style="color: white; font-size: 20px; margin-left: 10px; vertical-align: top; line-height: 44px;">Palmer & Partners</span>
+              <div style="color: #ff6600; font-size: 12px; margin-top: 5px;">Independent Estate & Letting Agents</div>
+            </div>
+            
+            <!-- Content -->
+            <div style="padding: 30px; background-color: #f5f5f5;">
+              <h2 style="color: #333; margin: 0 0 20px 0; font-size: 18px;">Tenancy Application</h2>
+              
+              <p style="color: #333; margin: 0 0 15px 0; font-size: 14px;">Dear ${primaryApplicant.firstName}</p>
+              
+              <p style="color: #333; margin: 0 0 15px 0; font-size: 14px;">A tenancy application form has been submitted.</p>
+              
+              <p style="color: #333; margin: 0 0 15px 0; font-size: 14px;">We will review your application and get back to you within 2-3 business days.</p>
+              
+              <p style="color: #333; margin: 0 0 5px 0; font-size: 14px;">Thanks,</p>
+              <p style="color: #333; margin: 0; font-size: 14px;"><span style="background-color: #ffeb3b; padding: 2px 4px;">Palmer</span> & Partners</p>
+            </div>
+            
+            <!-- Footer -->
+            <div style="background-color: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #ddd;">
+              <p style="color: #666; margin: 0; font-size: 12px;">© 2025 <span style="background-color: #ffeb3b; padding: 1px 3px;">Palmer</span> & Partners. All rights reserved.</p>
+            </div>
+            
+          </div>
+        </div>
+      </body>
+      </html>
     `;
     
     return sendEmail({
@@ -221,12 +259,22 @@ export const sendAdminNotification = async (
       submittedAt: new Date().toISOString()
     };
     
+    console.log('Generating PDF for admin notification...');
     const pdfBytes = await generateApplicationPDF(applicationData);
-    const pdfBase64 = btoa(String.fromCharCode(...pdfBytes));
+    console.log('PDF generated for admin, size:', pdfBytes.length, 'bytes');
     
+    // Convert to base64 string properly
+    const uint8Array = new Uint8Array(pdfBytes);
+    let binaryString = '';
+    for (let i = 0; i < uint8Array.length; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    const pdfBase64 = btoa(binaryString);
+    console.log('Admin PDF converted to base64, length:', pdfBase64.length);
+
     const html = formatApplicationForEmail(applicants, propertyPreferences, signature);
 
-    return sendEmail({
+    const emailResult = await sendEmail({
       to: "admin@palmerpartners.com",
       subject: `New Application: ${applicants[0].firstName} ${applicants[0].lastName} - ${propertyPreferences.propertyType}`,
       html,
@@ -236,8 +284,11 @@ export const sendAdminNotification = async (
         type: 'application/pdf'
       }
     });
+
+    console.log('Admin email send result:', emailResult);
+    return emailResult;
   } catch (error) {
-    console.error('Error generating PDF for admin notification:', error);
+    console.error('Error in sendAdminNotification:', error);
     // Send email without attachment as fallback
     const fallbackHtml = formatApplicationForEmail(applicants, propertyPreferences, signature);
     

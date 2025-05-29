@@ -40,6 +40,7 @@ const handler = async (req: Request): Promise<Response> => {
     const { to, subject, html, attachment }: EmailRequest = await req.json();
 
     console.log("Sending email to:", to);
+    console.log("Has attachment:", !!attachment);
 
     const emailPayload: any = {
       from: "Palmer & Partners <noreply@palmerpartners.uk>",
@@ -50,12 +51,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Add attachment if provided
     if (attachment) {
+      console.log("Adding attachment:", attachment.filename, "Type:", attachment.type, "Content length:", attachment.content.length);
+      
       emailPayload.attachments = [{
         filename: attachment.filename,
         content: attachment.content,
         type: attachment.type,
       }];
-      console.log("Email includes attachment:", attachment.filename);
     }
 
     const emailResponse = await resend.emails.send(emailPayload);
@@ -71,6 +73,7 @@ const handler = async (req: Request): Promise<Response> => {
     });
   } catch (error: any) {
     console.error("Error sending email:", error);
+    console.error("Error details:", error.message, error.stack);
     return new Response(
       JSON.stringify({ error: error.message }),
       {
