@@ -82,6 +82,7 @@ const TenancyApplicationForm = () => {
   });
 
   const [signature, setSignature] = useState("");
+  const [fullName, setFullName] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const addApplicant = () => {
@@ -263,6 +264,7 @@ const TenancyApplicationForm = () => {
 
     // Fill Terms and Data
     setSignature("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="); // Minimal test signature
+    setFullName("John Smith");
     setTermsAccepted(true);
     setDataSharing({
       utilities: true,
@@ -401,6 +403,8 @@ const TenancyApplicationForm = () => {
             onTermsChange={setTermsAccepted}
             signature={signature}
             onSignatureChange={setSignature}
+            fullName={fullName}
+            onFullNameChange={setFullName}
             onFillAllTestData={fillAllTestData}
           />
         );
