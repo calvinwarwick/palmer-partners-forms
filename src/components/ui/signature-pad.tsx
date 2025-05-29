@@ -1,10 +1,9 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Maximize2, X } from 'lucide-react';
+import { Trash2, Maximize2, X, Pen } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SignaturePadProps {
@@ -219,6 +218,7 @@ const SignaturePad = ({
             {!hasSignature && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center text-gray-400">
+                  <Pen className="h-6 w-6 mx-auto mb-2" />
                   <p className="text-lg">Sign here</p>
                 </div>
               </div>
@@ -278,6 +278,7 @@ const SignaturePad = ({
               {!hasSignature && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center text-gray-400">
+                    <Pen className="h-5 w-5 mx-auto mb-2" />
                     <p className="text-sm">Sign here</p>
                   </div>
                 </div>
