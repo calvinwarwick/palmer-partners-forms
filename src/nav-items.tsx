@@ -7,7 +7,7 @@ export const navItems = [
   },
   {
     title: "Application",
-    to: "/application", 
+    to: "/tenancy-application", 
     icon: "fileText",
   },
   {
