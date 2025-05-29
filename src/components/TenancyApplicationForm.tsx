@@ -429,34 +429,44 @@ const TenancyApplicationForm = () => {
             <Progress value={progress} className="h-3 bg-gray-200" />
           </div>
 
-          {/* Enhanced Desktop step indicators */}
-          <div className="hidden md:flex justify-between mb-10 overflow-visible bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-            {allSteps.map(({ step, icon: Icon, label }, index) => (
-              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative step-indicator">
-                {/* Connection line */}
-                {index < allSteps.length - 1 && (
-                  <div className={`absolute top-5 left-1/2 w-full h-0.5 z-0 ${
-                    currentStep > step ? "bg-orange-500" : "bg-gray-200"
-                  }`} style={{ transform: 'translateX(50%)' }} />
-                )}
-                
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 relative z-10 border-2 transition-all duration-300 shadow-sm ${
-                  currentStep === step 
-                    ? "bg-orange-500 text-white border-orange-500 shadow-lg scale-110" 
-                    : currentStep > step
-                      ? "bg-orange-500 text-white border-orange-500"
-                      : "bg-white text-gray-400 border-gray-200"
-                }`}>
-                  <Icon className="h-6 w-6" />
-                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
-                    <Check className="h-3 w-3" />
+          {/* Enhanced Desktop step indicators with proper connection lines */}
+          <div className="hidden md:block mb-10 overflow-visible bg-white rounded-xl p-8 shadow-sm border border-gray-100">
+            <div className="relative flex justify-between items-center">
+              {/* Background connection line */}
+              <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-200 transform -translate-y-1/2 z-0"></div>
+              
+              {/* Progress connection line */}
+              <div 
+                className="absolute top-1/2 left-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 transform -translate-y-1/2 z-1 transition-all duration-500 ease-out"
+                style={{ 
+                  width: `${((currentStep - 1) / (totalSteps - 1)) * 100}%`
+                }}
+              ></div>
+
+              {allSteps.map(({ step, icon: Icon, label }, index) => (
+                <div key={step} className="flex flex-col items-center relative z-10 step-indicator">
+                  <div className={`w-14 h-14 rounded-full flex items-center justify-center mb-4 relative border-2 transition-all duration-300 shadow-sm bg-white ${
+                    currentStep === step 
+                      ? "border-orange-500 shadow-lg scale-110" 
+                      : currentStep > step
+                        ? "border-orange-500"
+                        : "border-gray-200"
+                  }`}>
+                    <Icon className={`h-7 w-7 transition-colors duration-300 ${
+                      currentStep >= step ? "text-orange-500" : "text-gray-400"
+                    }`} />
+                    {isStepCompleted(step) && step < currentStep && (
+                      <div className="step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white animate-in">
+                        <Check className="h-3 w-3" />
+                      </div>
+                    )}
                   </div>
+                  <span className={`text-sm text-center px-2 font-medium transition-colors ${
+                    currentStep >= step ? "text-orange-600" : "text-gray-500"
+                  }`}>{label}</span>
                 </div>
-                <span className={`text-sm text-center px-2 font-medium transition-colors ${
-                  currentStep >= step ? "text-orange-600" : "text-gray-500"
-                }`}>{label}</span>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* Enhanced Mobile step indicators */}
@@ -471,9 +481,11 @@ const TenancyApplicationForm = () => {
                       : "bg-white text-gray-400 border-gray-200"
                 }`}>
                   <Icon className="h-6 w-6" />
-                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
-                    <Check className="h-3 w-3" />
-                  </div>
+                  {isStepCompleted(step) && step < currentStep && (
+                    <div className="step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white animate-in">
+                      <Check className="h-3 w-3" />
+                    </div>
+                  )}
                 </div>
                 <span className={`text-xs text-center px-1 font-medium ${
                   currentStep >= step ? "text-orange-600" : "text-gray-500"
