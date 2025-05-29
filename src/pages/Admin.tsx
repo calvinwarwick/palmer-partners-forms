@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +9,7 @@ import AdminStats from "@/components/admin/AdminStats";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
+import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
 
 interface TenancyApplication {
   id: string;
@@ -32,6 +32,7 @@ const Admin = () => {
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
+  const [customDateRange, setCustomDateRange] = useState<{ from: Date; to: Date } | null>(null);
 
   useEffect(() => {
     fetchApplications();
@@ -39,7 +40,7 @@ const Admin = () => {
 
   useEffect(() => {
     filterApplications();
-  }, [applications, searchTerm, dateFilter]);
+  }, [applications, searchTerm, dateFilter, customDateRange]);
 
   const fetchApplications = async () => {
     try {
@@ -100,6 +101,14 @@ const Admin = () => {
             const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
             const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
             return submitDate >= lastMonth && submitDate < thisMonth;
+          case "custom":
+            if (customDateRange?.from && customDateRange?.to) {
+              return isWithinInterval(submitDate, {
+                start: startOfDay(customDateRange.from),
+                end: endOfDay(customDateRange.to)
+              });
+            }
+            return true;
           default:
             return true;
         }
@@ -220,32 +229,17 @@ const Admin = () => {
 
           <TabsContent value="applications" className="space-y-4 sm:space-y-6">
             {/* Applications Table */}
-            <Card className="shadow-sm border border-gray-200 overflow-hidden">
-              <CardContent className="p-0">
-                {filteredApplications.length > 0 ? (
-                  <ApplicationsTable
-                    applications={filteredApplications}
-                    selectedApplications={selectedApplications}
-                    onSelectApplication={handleSelectApplication}
-                    onSelectAll={handleSelectAll}
-                    onBulkExport={handleBulkExport}
-                    searchTerm={searchTerm}
-                    onSearchChange={setSearchTerm}
-                    dateFilter={dateFilter}
-                    onDateFilterChange={setDateFilter}
-                  />
-                ) : (
-                  <div className="text-center py-12 sm:py-16 bg-white">
-                    <div className="text-gray-400 mb-4">
-                      <svg className="mx-auto h-12 sm:h-16 w-12 sm:w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <p className="text-gray-500 mb-4 text-base sm:text-lg">No applications found.</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+            <ApplicationsTable
+              applications={filteredApplications}
+              selectedApplications={selectedApplications}
+              onSelectApplication={handleSelectApplication}
+              onSelectAll={handleSelectAll}
+              onBulkExport={handleBulkExport}
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              dateFilter={dateFilter}
+              onDateFilterChange={setDateFilter}
+            />
           </TabsContent>
 
           <TabsContent value="applicants">
