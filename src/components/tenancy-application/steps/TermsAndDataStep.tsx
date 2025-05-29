@@ -1,8 +1,8 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import SignaturePad from "@/components/ui/signature-pad";
 
 interface TermsAndDataStepProps {
   dataSharing: {
@@ -14,7 +14,7 @@ interface TermsAndDataStepProps {
   termsAccepted: boolean;
   onTermsChange: (accepted: boolean) => void;
   signature?: string;
-  onSignatureChange?: any;
+  onSignatureChange?: (signature: string) => void;
   onTermsAccepted?: any;
   onFillAllTestData?: () => void;
 }
@@ -24,7 +24,9 @@ const TermsAndDataStep = ({
   onDataSharingChange,
   onUpdateDataSharing,
   termsAccepted, 
-  onTermsChange 
+  onTermsChange,
+  signature,
+  onSignatureChange
 }: TermsAndDataStepProps) => {
   const handleDataSharingChange = (field: string, value: boolean) => {
     if (onUpdateDataSharing) {
@@ -206,6 +208,23 @@ const TermsAndDataStep = ({
               I have read and agree to the terms and conditions *
             </Label>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Digital Signature</CardTitle>
+          <CardDescription>
+            Please provide your signature below to complete the application
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <SignaturePad
+            value={signature}
+            onChange={onSignatureChange}
+            width={500}
+            height={150}
+          />
         </CardContent>
       </Card>
     </div>

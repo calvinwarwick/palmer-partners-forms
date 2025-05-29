@@ -260,7 +260,7 @@ const TenancyApplicationForm = () => {
     });
 
     // Fill Terms and Data
-    setSignature("John Smith");
+    setSignature("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="); // Minimal test signature
     setTermsAccepted(true);
     setDataSharing({
       utilities: true,

@@ -257,11 +257,45 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   
   if (data.signature && data.signature.startsWith('data:image/')) {
     addTableRow('Full name', data.applicants[0]?.firstName + ' ' + data.applicants[0]?.lastName || '');
-    addTableRow('Signature', 'Digital Signature (Image)');
+    
+    // Add signature image
+    yPosition = checkNewPage(30);
+    
+    // Create signature row with image
+    doc.setFillColor(240, 240, 240);
+    doc.rect(20, yPosition - 2, 60, 25, 'F');
+    
+    doc.setFillColor(255, 255, 255);
+    doc.rect(80, yPosition - 2, 110, 25, 'F');
+    
+    // Borders
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.5);
+    doc.rect(20, yPosition - 2, 60, 25, 'S');
+    doc.rect(80, yPosition - 2, 110, 25, 'S');
+    
+    // Label
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(0, 0, 0);
+    doc.text('Signature', 23, yPosition + 8);
+    
+    try {
+      // Add signature image
+      doc.addImage(data.signature, 'PNG', 83, yPosition + 1, 50, 20);
+    } catch (error) {
+      console.error('Error adding signature image to PDF:', error);
+      // Fallback to text
+      doc.setFont('helvetica', 'normal');
+      doc.text('Digital Signature (Image)', 83, yPosition + 8);
+    }
+    
+    yPosition += 25;
   } else {
-    addTableRow('Full name', data.signature || '');
+    addTableRow('Full name', data.applicants[0]?.firstName + ' ' + data.applicants[0]?.lastName || '');
     addTableRow('Signature', data.signature || '');
   }
+  
   addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'));
 
   // Activity Log Section (if available)

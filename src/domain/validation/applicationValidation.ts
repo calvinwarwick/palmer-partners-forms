@@ -1,4 +1,3 @@
-
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validatePropertyDetails = (preferences: PropertyPreferences): boolean => {
@@ -64,7 +63,7 @@ export const validateStep = (
     case 5:
       return validateAdditionalDetails(additionalDetails);
     case 6:
-      return validateTermsAndSignature(signature, termsAccepted);
+      return termsAccepted && signature.trim() !== '';
     default:
       return false;
   }
