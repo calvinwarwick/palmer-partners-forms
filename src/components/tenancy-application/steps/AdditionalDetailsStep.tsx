@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { AdditionalDetails } from "@/domain/types/Applicant";
 import { PetDetails } from "./PetDetails";
-import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HelpCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -81,9 +81,16 @@ const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails, onFillAllTe
           <CardHeader>
             <CardTitle className="flex items-center">
               UK/ROI Passport
-              <FormFieldWithTooltip tooltip="Do you have a UK or Republic of Ireland passport?">
-                <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
-              </FormFieldWithTooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-sm">Do you have a UK or Republic of Ireland passport?</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -109,9 +116,16 @@ const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails, onFillAllTe
           <CardHeader>
             <CardTitle className="flex items-center">
               Adverse Credit
-              <FormFieldWithTooltip tooltip="Do you have any adverse credit history such as CCJs, defaults, or bankruptcy?">
-                <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
-              </FormFieldWithTooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-sm">Do you have any adverse credit history such as CCJs, defaults, or bankruptcy?</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -150,9 +164,16 @@ const AdditionalDetailsStep = ({ additionalDetails, onUpdateDetails, onFillAllTe
           <CardHeader>
             <CardTitle className="flex items-center">
               Guarantor Required
-              <FormFieldWithTooltip tooltip="If required, can you supply a guarantor for this proposed tenancy?">
-                <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
-              </FormFieldWithTooltip>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <HelpCircle className="h-4 w-4 ml-2 help-tooltip" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-xs">
+                    <p className="text-sm">If required, can you supply a guarantor for this proposed tenancy?</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
