@@ -167,3 +167,42 @@ button[class*="bg-blue"] {
 .terms-content p:last-child {
   @apply mb-0;
 }
+
+/* Consistent alert and message styling */
+.alert,
+[role="alert"],
+.error-message,
+.info-message,
+.warning-message,
+.success-message,
+.message-banner,
+.alert-banner {
+  @apply bg-gray-100 text-black border border-gray-200 rounded-md p-3 mb-4;
+}
+
+/* Override any existing alert color variants */
+.alert-destructive,
+.alert-warning,
+.alert-info,
+.alert-success {
+  @apply bg-gray-100 text-black border-gray-200;
+}
+
+/* Ensure all text in alerts is black */
+.alert *,
+[role="alert"] *,
+.error-message *,
+.info-message *,
+.warning-message *,
+.success-message *,
+.message-banner *,
+.alert-banner * {
+  @apply text-black;
+}
+
+/* Specific shadcn alert overrides */
+.alert .alert-title,
+.alert .alert-description,
+[data-sonner-toast] {
+  @apply text-black;
+}
