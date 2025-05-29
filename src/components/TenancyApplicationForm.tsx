@@ -312,32 +312,14 @@ const TenancyApplicationForm = () => {
     return canProceed(step, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
   };
 
-  // Function to determine which steps to show on mobile
-  const getMobileVisibleSteps = () => {
-    const steps = [
-      { step: 1, icon: Building, label: "Property Details" },
-      { step: 2, icon: User, label: "Personal Info" },
-      { step: 3, icon: Briefcase, label: "Employment" },
-      { step: 4, icon: MapPin, label: "Current Address" },
-      { step: 5, icon: Info, label: "Additional Details" },
-      { step: 6, icon: CheckCircle, label: "Terms & Sign" }
-    ];
-
-    // On mobile, show max 3 steps: previous, current, next
-    const visibleSteps = [];
-    
-    if (currentStep > 1) {
-      visibleSteps.push(steps[currentStep - 2]); // Previous step
-    }
-    
-    visibleSteps.push(steps[currentStep - 1]); // Current step
-    
-    if (currentStep < totalSteps) {
-      visibleSteps.push(steps[currentStep]); // Next step
-    }
-
-    return { allSteps: steps, visibleSteps };
-  };
+  const allSteps = [
+    { step: 1, icon: Home, label: "Property Details" },
+    { step: 2, icon: User, label: "Personal Info" },
+    { step: 3, icon: Briefcase, label: "Employment" },
+    { step: 4, icon: MapPin, label: "Current Address" },
+    { step: 5, icon: Info, label: "Additional Details" },
+    { step: 6, icon: CheckCircle, label: "Terms & Sign" }
+  ];
 
   if (isSubmitted) {
     return <ApplicationSuccess applicants={applicants} />;
@@ -408,70 +390,35 @@ const TenancyApplicationForm = () => {
     }
   };
 
-  const { allSteps, visibleSteps } = getMobileVisibleSteps();
-
   return (
     <div className="min-h-screen bg-gray-50 py-6">
       <div className="container mx-auto px-4 max-w-4xl">
-        {/* Header with Palmer & Partners branding */}
+        {/* Simple header matching the design */}
         <div className="mb-8">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Palmer <span className="text-orange-500">&</span> Partners
-            </h1>
-            <div className="w-full h-1 bg-orange-500 mb-6"></div>
-            <h2 className="text-2xl font-semibold text-gray-800">Tenancy Application</h2>
+          <div className="flex items-center mb-6">
+            <Home className="h-6 w-6 text-orange-500 mr-3" />
+            <h1 className="text-xl font-semibold text-gray-900">Tenancy Application</h1>
           </div>
 
-          <div className="mb-8">
-            <div className="flex justify-between text-sm text-gray-600 mb-3">
-              <span className="font-medium">Step {currentStep} of {totalSteps}</span>
-              <span className="font-medium">{Math.round(progress)}% Complete</span>
+          {/* Progress bar */}
+          <div className="mb-6">
+            <div className="flex justify-between text-sm text-gray-600 mb-2">
+              <span>Step {currentStep} of {totalSteps}</span>
+              <span>{Math.round(progress)}% Complete</span>
             </div>
-            <Progress value={progress} className="h-2 bg-gray-200" />
+            <Progress value={progress} className="h-2" />
           </div>
 
-          {/* Enhanced Desktop step indicators */}
-          <div className="hidden md:flex justify-between mb-8 bg-white rounded-lg p-6 shadow-sm border">
-            {allSteps.map(({ step, icon: Icon, label }, index) => (
-              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative">
-                {/* Connection line */}
-                {index < allSteps.length - 1 && (
-                  <div className={`absolute top-6 left-1/2 w-full h-0.5 z-0 ${
-                    currentStep > step ? "bg-orange-500" : "bg-gray-300"
-                  }`} style={{ transform: 'translateX(50%)' }} />
-                )}
-                
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 relative z-10 border-2 transition-all duration-300 ${
+          {/* Step indicators */}
+          <div className="flex justify-between mb-8">
+            {allSteps.map(({ step, icon: Icon, label }) => (
+              <div key={step} className="flex flex-col items-center flex-1">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
                   currentStep === step 
-                    ? "bg-orange-500 text-white border-orange-500 shadow-lg" 
+                    ? "bg-orange-500 text-white" 
                     : currentStep > step
-                      ? "bg-orange-500 text-white border-orange-500"
-                      : "bg-white text-gray-400 border-gray-300"
-                }`}>
-                  {currentStep > step ? (
-                    <Check className="h-6 w-6" />
-                  ) : (
-                    <Icon className="h-6 w-6" />
-                  )}
-                </div>
-                <span className={`text-sm text-center px-2 font-medium ${
-                  currentStep >= step ? "text-orange-600" : "text-gray-500"
-                }`}>{label}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Mobile step indicators */}
-          <div className="flex md:hidden justify-center mb-6 bg-white rounded-lg p-4 shadow-sm border space-x-6">
-            {visibleSteps.map(({ step, icon: Icon, label }) => (
-              <div key={step} className="flex flex-col items-center">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border-2 transition-all duration-300 ${
-                  currentStep === step 
-                    ? "bg-orange-500 text-white border-orange-500" 
-                    : currentStep > step
-                      ? "bg-orange-500 text-white border-orange-500"
-                      : "bg-white text-gray-400 border-gray-300"
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-200 text-gray-400"
                 }`}>
                   {currentStep > step ? (
                     <Check className="h-5 w-5" />
@@ -479,7 +426,7 @@ const TenancyApplicationForm = () => {
                     <Icon className="h-5 w-5" />
                   )}
                 </div>
-                <span className={`text-xs text-center font-medium ${
+                <span className={`text-xs text-center ${
                   currentStep >= step ? "text-orange-600" : "text-gray-500"
                 }`}>{label}</span>
               </div>
@@ -487,7 +434,7 @@ const TenancyApplicationForm = () => {
           </div>
         </div>
 
-        <Card className="shadow-lg border-0 bg-white">
+        <Card className="shadow-sm border bg-white">
           <CardContent className="p-8">
             {renderStepContent()}
             
