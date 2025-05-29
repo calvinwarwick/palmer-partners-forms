@@ -177,7 +177,7 @@ button[class*="bg-blue"] {
 .success-message,
 .message-banner,
 .alert-banner {
-  @apply bg-gray-100 text-black border border-gray-200 rounded-md p-3 mb-4;
+  @apply bg-gray-100 text-black border border-gray-200 rounded-md p-3 mb-4 flex items-start gap-3;
 }
 
 /* Override any existing alert color variants */
@@ -198,6 +198,24 @@ button[class*="bg-blue"] {
 .message-banner *,
 .alert-banner * {
   @apply text-black;
+}
+
+/* Icon alignment in alerts */
+.alert svg,
+[role="alert"] svg,
+.error-message svg,
+.info-message svg,
+.warning-message svg,
+.success-message svg,
+.message-banner svg,
+.alert-banner svg {
+  @apply flex-shrink-0 mt-0.5;
+}
+
+/* Alert content wrapper for proper text alignment */
+.alert > div:last-child,
+[role="alert"] > div:last-child {
+  @apply flex-1;
 }
 
 /* Specific shadcn alert overrides */
