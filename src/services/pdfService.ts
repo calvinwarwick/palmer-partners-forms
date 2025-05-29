@@ -18,6 +18,11 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   const doc = new jsPDF();
   let yPosition = 20;
   
+  // Add Lexend font (using Helvetica as fallback since custom fonts require additional setup)
+  // For now, we'll use Helvetica but set the font size to 12px as requested
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(12);
+  
   // Helper function to add text with proper centering
   const addText = (text: string, x: number, y: number, maxWidth?: number, align: 'left' | 'center' = 'left'): number => {
     if (maxWidth) {
@@ -53,9 +58,12 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a styled section header (H4 styling)
+  // Helper function to add a styled section header (H4 styling) with 10px top margin
   const addSectionHeader = (title: string) => {
-    yPosition = checkNewPage(20);
+    yPosition = checkNewPage(30); // Increased space for margin
+    
+    // Add 10px top margin
+    yPosition += 10;
     
     // H4 styling with rounded corners and border
     doc.setFillColor(32, 32, 32); // #202020
@@ -66,13 +74,14 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setLineWidth(2);
     doc.line(15, yPosition + 10, 195, yPosition + 10);
     
-    // White text, centered, size 12
+    // White text, centered, size 12, Lexend font
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     yPosition = addText(title, 0, yPosition + 3, 0, 'center');
     yPosition += 15;
     doc.setTextColor(0, 0, 0); // reset to black
+    doc.setFontSize(12); // reset to 12px Lexend
   };
 
   // Helper function to add subsection headers within tables (Employment Details, etc.)
@@ -94,6 +103,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 4, 0, 'center');
     yPosition += 8;
+    doc.setFontSize(12); // reset to 12px
+    doc.setFont('helvetica', 'normal'); // reset to normal
   };
 
   // Helper function to add a table row with borders
@@ -108,19 +119,19 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(255, 255, 255); // white
     doc.rect(60, yPosition - 2, 135, 10, 'F'); // 75% of 180px = 135px
     
-    // Borders for both cells
+    // Borders for both cells (#ddd)
     doc.setDrawColor(221, 221, 221); // #ddd
     doc.setLineWidth(0.5);
     doc.rect(15, yPosition - 2, 45, 10, 'S'); // left cell border
     doc.rect(60, yPosition - 2, 135, 10, 'S'); // right cell border
     
-    // Label text (left column) - bold
-    doc.setFontSize(9);
+    // Label text (left column) - bold, 12px Lexend
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
     yPosition = addText(label, 23, yPosition + 3); // 8px padding from left
     
-    // Value text (right column) - normal
+    // Value text (right column) - normal, 12px Lexend
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(0, 0, 0);
     yPosition = addText(value || '-', 68, yPosition - 6, 125); // 8px padding from left edge of right column
@@ -149,12 +160,16 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   doc.rect(10, yPosition + 8, 190, 1, 'F');
   yPosition += 20;
   
-  // Main title
+  // Main title - 20px for title, then reset to 12px Lexend
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
   yPosition = addText('Tenancy Application', 0, yPosition, 0, 'center');
   yPosition += 20;
+  
+  // Reset to 12px Lexend for body text
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal');
 
   // Property Details Section
   addSectionHeader('Property Details');
@@ -253,16 +268,10 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
       addTableRow(label, value);
     });
 
-    // Page break after each applicant except the last
-    if (index < data.applicants.length - 1) {
-      doc.addPage();
-      yPosition = 20;
-    }
+    // Page break after each applicant
+    doc.addPage();
+    yPosition = 20;
   });
-
-  // Page break before data sharing
-  doc.addPage();
-  yPosition = 20;
 
   // Data Sharing Section
   addSectionHeader('Data Sharing');
@@ -289,7 +298,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   doc.addPage();
   yPosition = 20;
 
-  // Terms & Conditions Section
+  // Terms & Conditions Section with 10px font size
   addSectionHeader('Terms and conditions');
   yPosition = checkNewPage(20);
   
@@ -344,7 +353,8 @@ Palmer & Partners are fully compliant with all relevant Data Protection and G.D.
 Complaints Procedure
 Should a tenant/applicant have any problems with Palmer & Partners' services you should write to the branch manager. This complaint will be acknowledged within 3 working days of receipt and an investigation undertaken. A formal written outcome of the investigation will be sent to you. If you remain dissatisfied, you should write to the Managing Director – the same time limits apply. Following the Managing Director's investigation, a written statement expressing Palmer & Partners' final view will be sent to you, including any offer made. This letter will confirm that, should still remain dissatisfied, you are entitled to refer the matter to The Property Ombudsman (TPO) for review within six months. The TPO will only review complaints made by consumers and only once the in-house complaints procedure has been completed.`;
 
-  doc.setFontSize(8);
+  // Set font size to 10px for Terms and Conditions
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(0, 0, 0);
   yPosition = addText(termsText, 15, yPosition, 180);
@@ -360,9 +370,14 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
         .order('created_at', { ascending: false });
 
       if (!error && activityLogs && activityLogs.length > 0) {
+        // Page break before history
+        doc.addPage();
+        yPosition = 20;
+        
         addSectionHeader('History');
         
-        doc.setFontSize(9);
+        // Reset to 12px for activity log entries
+        doc.setFontSize(12);
         doc.setFont('helvetica', 'normal');
 
         activityLogs.forEach((log: any) => {
