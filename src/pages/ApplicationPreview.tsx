@@ -166,9 +166,10 @@ const ApplicationPreview = () => {
 
   const SectionHeader = ({ title }: { title: string }) => (
     <h4 
-      className="text-white text-center text-xs p-2 mb-0 rounded-t-md"
+      className="text-white text-center text-xs p-2 rounded-t-md"
       style={{
         margin: 0,
+        marginBottom: 0, // Explicitly no bottom margin
         color: 'white',
         background: '#202020',
         padding: '5px 10px',

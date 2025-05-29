@@ -57,9 +57,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a black header section
+  // Helper function to add a black header section (NO bottom margin)
   const addSectionHeader = (title: string) => {
-    yPosition = checkNewPage(20);
+    yPosition = checkNewPage(15);
     
     // Black header background
     doc.setFillColor(0, 0, 0);
@@ -70,14 +70,14 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 3, 0, 'center');
-    yPosition += 10;
+    yPosition += 2; // Reduced from 10 to 2 to remove bottom margin
     doc.setTextColor(0, 0, 0); // reset to black
     doc.setFont('helvetica', 'normal');
   };
 
-  // Helper function to add subsection headers (Employment Details, etc.)
+  // Helper function to add subsection headers (NO bottom margin)
   const addSubsectionHeader = (title: string) => {
-    yPosition = checkNewPage(12);
+    yPosition = checkNewPage(10);
     
     // Light grey background for subsection
     doc.setFillColor(200, 200, 200);
@@ -93,7 +93,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 4, 0, 'center');
-    yPosition += 8;
+    yPosition += 0; // Removed bottom margin completely
     doc.setFont('helvetica', 'normal');
   };
 
@@ -170,8 +170,6 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     addTableRow(label, value);
   });
 
-  yPosition += 10;
-
   // Applicant sections
   data.applicants.forEach((applicant, index) => {
     yPosition = checkNewPage(40);
@@ -237,8 +235,6 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     additionalInfoRows.forEach(([label, value]) => {
       addTableRow(label, value);
     });
-
-    yPosition += 10;
   });
 
   // Data Sharing Section
@@ -249,8 +245,6 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   ].forEach(([label, value]) => {
     addTableRow(label, value);
   });
-
-  yPosition += 10;
 
   // Signature Section
   addSectionHeader('Signature');
@@ -308,8 +302,6 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
         .order('created_at', { ascending: false });
 
       if (!error && activityLogs && activityLogs.length > 0) {
-        yPosition += 10;
-        
         addSectionHeader('History');
         
         activityLogs.forEach((log: any) => {
