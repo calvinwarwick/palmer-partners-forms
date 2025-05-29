@@ -1,13 +1,15 @@
 
-export const highlightInvalidField = (elementId: string) => {
+export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
   const element = document.getElementById(elementId) || document.querySelector(`[name="${elementId}"]`);
   if (!element) return;
 
   // Add red border class
   element.classList.add('border-red-500', 'border-2');
   
-  // Scroll to the element
-  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Only scroll to the first element
+  if (shouldScroll) {
+    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
   
   // Remove the red border after 3 seconds
   setTimeout(() => {
@@ -37,25 +39,25 @@ export const validateAndHighlightFields = (
     
     case 2:
       applicants.forEach((applicant, index) => {
-        if (!applicant.firstName) invalidFields.push(`firstName-${index}`);
-        if (!applicant.lastName) invalidFields.push(`lastName-${index}`);
-        if (!applicant.email) invalidFields.push(`email-${index}`);
-        if (!applicant.phone) invalidFields.push(`phone-${index}`);
+        if (!applicant.firstName) invalidFields.push(`firstName-${applicant.id}`);
+        if (!applicant.lastName) invalidFields.push(`lastName-${applicant.id}`);
+        if (!applicant.email) invalidFields.push(`email-${applicant.id}`);
+        if (!applicant.phone) invalidFields.push(`phone-${applicant.id}`);
       });
       break;
     
     case 3:
       applicants.forEach((applicant, index) => {
-        if (!applicant.employment) invalidFields.push(`employment-${index}`);
-        if (!applicant.annualIncome) invalidFields.push(`annualIncome-${index}`);
+        if (!applicant.employment) invalidFields.push(`employment-${applicant.id}`);
+        if (!applicant.annualIncome) invalidFields.push(`annualIncome-${applicant.id}`);
       });
       break;
     
     case 4:
       applicants.forEach((applicant, index) => {
-        if (!applicant.previousAddress) invalidFields.push(`previousAddress-${index}`);
-        if (!applicant.previousPostcode) invalidFields.push(`previousPostcode-${index}`);
-        if (!applicant.currentPropertyStatus) invalidFields.push(`currentPropertyStatus-${index}`);
+        if (!applicant.previousAddress) invalidFields.push(`previousAddress-${applicant.id}`);
+        if (!applicant.previousPostcode) invalidFields.push(`previousPostcode-${applicant.id}`);
+        if (!applicant.currentPropertyStatus) invalidFields.push(`currentPropertyStatus-${applicant.id}`);
       });
       break;
     
@@ -76,4 +78,20 @@ export const validateAndHighlightFields = (
   }
 
   return invalidFields;
+};
+
+export const handleValidationErrors = (invalidFields: string[]) => {
+  if (invalidFields.length === 0) return;
+
+  // Immediately scroll to and highlight the first invalid field
+  highlightInvalidField(invalidFields[0], true);
+
+  // After 1 second, highlight all other invalid fields (without scrolling)
+  if (invalidFields.length > 1) {
+    setTimeout(() => {
+      invalidFields.slice(1).forEach(fieldId => {
+        highlightInvalidField(fieldId, false);
+      });
+    }, 1000);
+  }
 };

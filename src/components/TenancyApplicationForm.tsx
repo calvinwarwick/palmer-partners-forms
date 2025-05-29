@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
 import { Applicant, PropertyPreferences, AdditionalDetails, Application } from "@/domain/types/Applicant";
-import { validateAndHighlightFields, highlightInvalidField } from "@/utils/fieldValidation";
+import { validateAndHighlightFields, handleValidationErrors } from "@/utils/fieldValidation";
 
 // Import step components
 import ApplicationSuccess from "@/components/tenancy-application/ApplicationSuccess";
