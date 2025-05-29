@@ -53,86 +53,68 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a styled section header with new CSS styling
+  // Helper function to add a styled section header matching HTML h4
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(20);
     
-    // Dark background header with rounded corners and border - matching new CSS
-    doc.setFillColor(32, 32, 32); // #202020
-    // Create rounded rectangle effect by drawing main rectangle
-    doc.rect(10, yPosition - 3, 190, 14, 'F');
-    
-    // Add black border at bottom (2px solid black)
-    doc.setFillColor(0, 0, 0); // black
-    doc.rect(10, yPosition + 9, 190, 2, 'F');
-    
-    // White text, centered, 12px font size
-    doc.setTextColor(255, 255, 255); // white text
-    doc.setFontSize(12);
+    // Section header styling matching HTML h4
+    doc.setFontSize(14);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText(title, 0, yPosition + 6, 0, 'center');
-    yPosition += 15;
-    doc.setTextColor(0, 0, 0); // reset to black
+    doc.setTextColor(0, 0, 0);
+    yPosition = addText(title, 15, yPosition);
+    yPosition += 10;
   };
 
-  // Helper function to add a subsection header
-  const addSubSectionHeader = (title: string) => {
+  // Helper function to add subsection headers within tables (Employment Details, etc.)
+  const addTableSubsectionRow = (title: string) => {
     yPosition = checkNewPage(12);
     
-    // Same styling as main section headers but smaller
+    // Section header row styling - matches HTML class="section-header"
     doc.setFillColor(32, 32, 32); // #202020
-    doc.rect(10, yPosition - 3, 190, 12, 'F');
+    doc.rect(15, yPosition - 3, 180, 12, 'F');
     
-    // Add black border at bottom
-    doc.setFillColor(0, 0, 0); // black
-    doc.rect(10, yPosition + 7, 190, 2, 'F');
-    
+    // White text, centered, bold
+    doc.setTextColor(255, 255, 255);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(255, 255, 255); // white text
     yPosition = addText(title, 0, yPosition + 4, 0, 'center');
-    yPosition += 12;
+    yPosition += 8;
     doc.setTextColor(0, 0, 0); // reset to black
   };
 
-  // Helper function to add a table row with new styling
-  const addTableRow = (label: string, value: string, isOdd = false) => {
+  // Helper function to add a table row matching HTML structure
+  const addTableRow = (label: string, value: string) => {
     yPosition = checkNewPage(12);
     
-    // Left column with #f2f2f2 background (label column)
+    // Left column (th) with #f2f2f2 background - 25% width
     doc.setFillColor(242, 242, 242); // #f2f2f2
-    doc.rect(10, yPosition - 2, 70, 10, 'F');
+    doc.rect(15, yPosition - 2, 45, 10, 'F'); // 25% of 180px = 45px
     
-    // Right column with white background (value column)
-    if (isOdd) {
-      doc.setFillColor(249, 250, 251); // gray-50 for alternating
-    } else {
-      doc.setFillColor(255, 255, 255); // white
-    }
-    doc.rect(80, yPosition - 2, 120, 10, 'F');
+    // Right column (td) with white background - 75% width  
+    doc.setFillColor(255, 255, 255); // white
+    doc.rect(60, yPosition - 2, 135, 10, 'F'); // 75% of 180px = 135px
     
-    // Label text (left column)
-    doc.setFontSize(10);
+    // Label text (left column) - bold
+    doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55); // gray-800
-    yPosition = addText(label, 15, yPosition + 3); // 8px padding + 2px for text positioning
+    doc.setTextColor(0, 0, 0);
+    yPosition = addText(label, 18, yPosition + 3); // 8px padding from left
     
-    // Value text (right column)
+    // Value text (right column) - normal
     doc.setFont('helvetica', 'normal');
-    doc.setTextColor(17, 24, 39); // gray-900
-    yPosition = addText(value || '-', 85, yPosition - 6, 110); // 5px padding from left edge of right column
+    doc.setTextColor(0, 0, 0);
+    yPosition = addText(value || '-', 63, yPosition - 6, 130); // 3px padding from left edge of right column
     yPosition += 2;
-    doc.setTextColor(0, 0, 0); // reset
   };
 
-  // Header with logo and title - matching preview exactly
+  // Header with logo and title
   yPosition = checkNewPage(40);
   
-  // Logo area with grey background
-  doc.setFillColor(229, 231, 235); // gray-200 background for logo area
+  // Logo area with grey background - matching HTML design
+  doc.setFillColor(229, 231, 235); // gray-200 background
   doc.rect(10, yPosition - 8, 190, 25, 'F');
   
-  // Orange logo box centered within the grey area
+  // Logo placeholder - we'll use text since we can't easily load external images in jsPDF
   doc.setFillColor(249, 115, 22); // orange-500 for logo background
   doc.rect(80, yPosition - 5, 50, 18, 'F');
   
@@ -142,7 +124,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   doc.setFont('helvetica', 'bold');
   yPosition = addText('PALMER & PARTNERS', 0, yPosition + 5, 0, 'center');
   
-  // Orange line exactly like preview
+  // Orange line
   doc.setFillColor(249, 115, 22); // orange-500
   doc.rect(10, yPosition + 8, 190, 1, 'F');
   yPosition += 20;
@@ -156,8 +138,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
 
   // Property Details Section
   addSectionHeader('Property Details');
-  let rowCount = 0;
-  [
+  
+  // Property details table rows
+  const propertyRows = [
     ['Street Address', data.propertyPreferences.streetAddress || ''],
     ['Postcode', data.propertyPreferences.postcode || ''],
     ['Rental Amount', data.propertyPreferences.maxRent ? `£${data.propertyPreferences.maxRent}` : ''],
@@ -165,13 +148,26 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     ['Latest Move-in Date', data.propertyPreferences.latestMoveInDate || ''],
     ['Initial Tenancy Term', data.propertyPreferences.initialTenancyTerm || ''],
     ['Has Pets', data.additionalDetails.pets === 'yes' ? 'Yes' : 'No'],
-    ['Under 18s', data.additionalDetails.under18Count || '0'],
-    ...(data.additionalDetails.under18Count && data.additionalDetails.under18Count !== '0' ? [['Under 18s Details', data.additionalDetails.childrenAges || '']] : []),
+    ['Under 18s', data.additionalDetails.under18Count || '0']
+  ];
+
+  // Only show Under 18s Details if there are more than 1 under 18s
+  if (data.additionalDetails.under18Count && parseInt(data.additionalDetails.under18Count) > 1 && data.additionalDetails.childrenAges) {
+    propertyRows.push(['Under 18s Details', data.additionalDetails.childrenAges]);
+  }
+
+  propertyRows.push(
     ['Conditions of Offer', data.additionalDetails.conditionsOfOffer || ''],
     ['Deposit Type', data.additionalDetails.depositType || '']
-  ].forEach(([label, value], index) => {
-    addTableRow(label, value, index % 2 === 1);
+  );
+
+  propertyRows.forEach(([label, value]) => {
+    addTableRow(label, value);
   });
+
+  // Page break after property details
+  doc.addPage();
+  yPosition = 20;
 
   // Applicant sections
   data.applicants.forEach((applicant, index) => {
@@ -184,24 +180,24 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
       ['Date of Birth', applicant.dateOfBirth || ''],
       ['Email Address', applicant.email || ''],
       ['Mobile Number', applicant.phone || '']
-    ].forEach(([label, value], rowIndex) => {
-      addTableRow(label, value, rowIndex % 2 === 1);
+    ].forEach(([label, value]) => {
+      addTableRow(label, value);
     });
 
     // Employment Details subsection
-    addSubSectionHeader('Employment Details');
+    addTableSubsectionRow('Employment Details');
     [
       ['Contract Type', applicant.employment || ''],
       ['Company Name', applicant.companyName || ''],
       ['Job Title', applicant.jobTitle || ''],
       ['Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : ''],
       ['Length of Service', applicant.lengthOfService || '']
-    ].forEach(([label, value], rowIndex) => {
-      addTableRow(label, value, rowIndex % 2 === 1);
+    ].forEach(([label, value]) => {
+      addTableRow(label, value);
     });
 
     // Current Property Details subsection
-    addSubSectionHeader('Current Property Details');
+    addTableSubsectionRow('Current Property Details');
     [
       ['Postcode', applicant.previousPostcode || ''],
       ['Street Address', applicant.previousAddress || ''],
@@ -209,36 +205,72 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
       ['Vacate Date', applicant.vacateDate || ''],
       ['Current Property Status', applicant.currentPropertyStatus || ''],
       ['Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '']
-    ].forEach(([label, value], rowIndex) => {
-      addTableRow(label, value, rowIndex % 2 === 1);
+    ].forEach(([label, value]) => {
+      addTableRow(label, value);
     });
 
     // Additional Information subsection
-    addSubSectionHeader('Additional Information');
+    addTableSubsectionRow('Additional Information');
+    
     const additionalInfoRows = [
       ['UK/ROI Passport', data.additionalDetails.ukPassport === 'yes' ? 'Yes' : 'No'],
-      ['Adverse Credit', data.additionalDetails.adverseCredit === 'yes' ? 'Yes' : 'No'],
-      ...(data.additionalDetails.adverseCredit === 'yes' ? [['Adverse Credit Details', data.additionalDetails.adverseCreditDetails || '']] : []),
-      ['Requires Guarantor', data.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No'],
-      ...(data.additionalDetails.pets === 'yes' && data.additionalDetails.petDetails ? [['Pet Details', data.additionalDetails.petDetails]] : [])
+      ['Adverse Credit', data.additionalDetails.adverseCredit === 'yes' ? 'Yes' : 'No']
     ];
     
-    additionalInfoRows.forEach(([label, value], rowIndex) => {
-      addTableRow(label, value, rowIndex % 2 === 1);
+    // Only show Adverse Credit Details if applicant has adverse credit
+    if (data.additionalDetails.adverseCredit === 'yes' && data.additionalDetails.adverseCreditDetails) {
+      additionalInfoRows.push(['Adverse Credit Details', data.additionalDetails.adverseCreditDetails]);
+    }
+    
+    additionalInfoRows.push(['Requires Guarantor', data.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No']);
+    
+    // Add pet details if pets exist
+    if (data.additionalDetails.pets === 'yes' && data.additionalDetails.petDetails) {
+      additionalInfoRows.push(['Pet Details', data.additionalDetails.petDetails]);
+    }
+    
+    additionalInfoRows.forEach(([label, value]) => {
+      addTableRow(label, value);
     });
+
+    // Page break after each applicant except the last
+    if (index < data.applicants.length - 1) {
+      doc.addPage();
+      yPosition = 20;
+    }
   });
+
+  // Page break before data sharing
+  doc.addPage();
+  yPosition = 20;
 
   // Data Sharing Section
   addSectionHeader('Data Sharing');
   [
     ['Accept Utilities', data.dataSharing.utilities ? 'Yes' : 'No'],
     ['Accept Insurance', data.dataSharing.insurance ? 'Yes' : 'No']
-  ].forEach(([label, value], index) => {
-    addTableRow(label, value, index % 2 === 1);
+  ].forEach(([label, value]) => {
+    addTableRow(label, value);
   });
 
+  // Signature Section
+  addSectionHeader('Signature');
+  
+  if (data.signature && data.signature.startsWith('data:image/')) {
+    addTableRow('Full name', data.applicants[0]?.firstName + ' ' + data.applicants[0]?.lastName || '');
+    addTableRow('Signature', 'Digital Signature (Image)');
+  } else {
+    addTableRow('Full name', data.signature || '');
+    addTableRow('Signature', data.signature || '');
+  }
+  addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'));
+
+  // Page break before terms
+  doc.addPage();
+  yPosition = 20;
+
   // Terms & Conditions Section
-  addSectionHeader('Terms & Conditions');
+  addSectionHeader('Terms and conditions');
   yPosition = checkNewPage(20);
   
   const termsText = `Terms & Conditions
@@ -298,18 +330,6 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
   yPosition = addText(termsText, 15, yPosition, 180);
   yPosition += 20;
 
-  // Signature Section
-  addSectionHeader('Signature');
-  yPosition = checkNewPage(15);
-  
-  if (data.signature && data.signature.startsWith('data:image/')) {
-    addTableRow('Signature Type', 'Digital Signature', false);
-  } else {
-    addTableRow('Full Name', data.signature || '', false);
-    addTableRow('Signature', data.signature || '', true);
-  }
-  addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'), false);
-
   // Activity Log Section (if available)
   if (data.applicationId) {
     try {
@@ -325,41 +345,14 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
 
-        activityLogs.forEach((log: any, index: number) => {
+        activityLogs.forEach((log: any) => {
           yPosition = checkNewPage(15);
-          
-          // Left column with #f2f2f2 background for action
-          doc.setFillColor(242, 242, 242); // #f2f2f2
-          doc.rect(10, yPosition - 2, 95, 12, 'F');
-          
-          // Right column for timestamp and IP
-          if (index % 2 === 0) {
-            doc.setFillColor(249, 250, 251); // gray-50
-          } else {
-            doc.setFillColor(255, 255, 255); // white
-          }
-          doc.rect(105, yPosition - 2, 95, 12, 'F');
           
           const timestamp = format(new Date(log.created_at), 'do-MMM-yyyy h:mm aa');
           const action = log.action;
           const ipAddress = log.ip_address ? `IP: ${log.ip_address}` : '';
           
-          // Add action in left column
-          doc.setFont('helvetica', 'bold');
-          doc.setTextColor(17, 24, 39); // gray-900
-          yPosition = addText(action, 15, yPosition + 3);
-          
-          // Add timestamp and IP in right column
-          doc.setFont('helvetica', 'normal');
-          doc.setTextColor(107, 114, 128); // gray-500
-          yPosition = addText(timestamp, 110, yPosition - 6);
-          
-          if (ipAddress) {
-            doc.setTextColor(75, 85, 99); // gray-600
-            yPosition = addText(ipAddress, 110, yPosition);
-          }
-          
-          yPosition += 5;
+          addTableRow(action, `${timestamp}${ipAddress ? ' - ' + ipAddress : ''}`);
         });
       }
     } catch (error) {
