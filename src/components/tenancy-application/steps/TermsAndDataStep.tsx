@@ -211,22 +211,14 @@ const TermsAndDataStep = ({
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Digital Signature</CardTitle>
-          <CardDescription>
-            Please provide your signature below to complete the application
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <SignaturePad
-            value={signature}
-            onChange={onSignatureChange}
-            width={500}
-            height={150}
-          />
-        </CardContent>
-      </Card>
+      <div className="w-full">
+        <SignaturePad
+          value={signature}
+          onChange={onSignatureChange}
+          width={800}
+          height={200}
+        />
+      </div>
     </div>
   );
 };
