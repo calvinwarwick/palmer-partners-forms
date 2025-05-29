@@ -1,9 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import { User, Globe, Clock, Mail, FileText, Eye } from "lucide-react";
+import { User, Globe, Clock, Mail, FileText, Eye, Activity } from "lucide-react";
 
 interface ActivityLog {
   id: string;
@@ -54,7 +55,6 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
 
       if (error) throw error;
       
-      // Transform the Supabase data to match our ActivityLog interface
       const transformedLogs: ActivityLog[] = (data || []).map(log => ({
         id: log.id,
         action: log.action,
@@ -68,7 +68,7 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
       setActivityLogs(transformedLogs);
     } catch (error) {
       console.error('Error fetching activity logs:', error);
-      // For now, show some mock data
+      // Mock data for demonstration
       setActivityLogs([
         {
           id: '1',
@@ -87,15 +87,6 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
           user_agent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
           details: { viewed_by: 'admin' },
           created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          id: '3',
-          action: 'Email Sent',
-          user_identifier: 'System',
-          ip_address: null,
-          user_agent: null,
-          details: { email_type: 'confirmation', recipient: application.applicants[0]?.email },
-          created_at: new Date(Date.now() - 5 * 60 * 1000).toISOString()
         }
       ]);
     } finally {
@@ -112,7 +103,7 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
       case 'email sent':
         return <Mail className="h-4 w-4 text-orange-600" />;
       default:
-        return <Clock className="h-4 w-4 text-gray-600" />;
+        return <Activity className="h-4 w-4 text-gray-600" />;
     }
   };
 
@@ -141,28 +132,31 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {/* Application Summary */}
-          <div className="bg-gray-50 rounded-lg p-4">
+          <div className="bg-gray-50 rounded-lg p-4 border">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
               <div>
                 <span className="font-medium text-gray-700">Application ID:</span>
-                <p className="text-gray-900 font-mono text-xs">{application.id}</p>
+                <p className="text-gray-900 font-mono text-xs mt-1">{application.id}</p>
               </div>
               <div>
                 <span className="font-medium text-gray-700">Submitted:</span>
-                <p className="text-gray-900">{format(new Date(application.submitted_at), 'MMM dd, yyyy HH:mm')}</p>
+                <p className="text-gray-900 mt-1">{format(new Date(application.submitted_at), 'dd MMM yyyy, HH:mm')}</p>
               </div>
               <div>
                 <span className="font-medium text-gray-700">Property:</span>
-                <p className="text-gray-900">{application.property_preferences?.streetAddress || 'N/A'}</p>
+                <p className="text-gray-900 mt-1">{application.property_preferences?.streetAddress || 'N/A'}</p>
               </div>
             </div>
           </div>
 
           {/* Activity Timeline */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Activity Timeline</h3>
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              Activity Timeline
+            </h3>
             
             {loading ? (
               <div className="flex items-center justify-center py-8">
@@ -170,43 +164,44 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
               </div>
             ) : activityLogs.length > 0 ? (
               <div className="space-y-3">
-                {activityLogs.map((log, index) => (
-                  <div key={log.id} className="border rounded-lg p-4 bg-white">
+                {activityLogs.map((log) => (
+                  <div key={log.id} className="border rounded-lg p-4 bg-white hover:bg-gray-50 transition-colors">
                     <div className="flex items-start justify-between">
-                      <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 mt-1">
+                      <div className="flex items-start gap-3 flex-1">
+                        <div className="flex-shrink-0 mt-0.5">
                           {getActionIcon(log.action)}
                         </div>
-                        <div className="flex-grow">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="font-medium text-gray-900">{log.action}</span>
+                        <div className="flex-grow min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-semibold text-gray-900">{log.action}</span>
                             {getActionBadge(log.action)}
                           </div>
                           
-                          <div className="text-sm text-gray-600 space-y-1">
+                          <div className="text-sm text-gray-600 space-y-2">
                             {log.user_identifier && (
-                              <div className="flex items-center gap-1">
-                                <User className="h-3 w-3" />
-                                <span>{log.user_identifier}</span>
+                              <div className="flex items-center gap-2">
+                                <User className="h-3 w-3 text-gray-400" />
+                                <span className="font-medium">{log.user_identifier}</span>
                               </div>
                             )}
                             
                             {log.ip_address && (
-                              <div className="flex items-center gap-1">
-                                <Globe className="h-3 w-3" />
-                                <span>IP: {log.ip_address}</span>
+                              <div className="flex items-center gap-2">
+                                <Globe className="h-3 w-3 text-gray-400" />
+                                <span className="font-mono text-xs">{log.ip_address}</span>
                               </div>
                             )}
                             
                             {log.user_agent && (
-                              <div className="text-xs text-gray-500 max-w-md truncate">
-                                {log.user_agent}
+                              <div className="text-xs text-gray-500 bg-gray-50 rounded p-2 border truncate">
+                                <span className="font-medium">User Agent:</span> {log.user_agent}
                               </div>
                             )}
                             
                             {log.details && Object.keys(log.details).length > 0 && (
-                              <div className="text-xs bg-gray-50 rounded p-2 mt-2">
-                                <pre className="whitespace-pre-wrap text-gray-700">
+                              <div className="text-xs bg-blue-50 rounded p-2 border border-blue-200">
+                                <span className="font-medium text-blue-900">Details:</span>
+                                <pre className="whitespace-pre-wrap text-blue-800 mt-1">
                                   {JSON.stringify(log.details, null, 2)}
                                 </pre>
                               </div>
@@ -215,19 +210,19 @@ const ApplicationActivityModal = ({ application, isOpen, onClose }: ApplicationA
                         </div>
                       </div>
                       
-                      <div className="text-xs text-gray-500 whitespace-nowrap ml-4">
-                        {format(new Date(log.created_at), 'MMM dd, yyyy')}
-                        <br />
-                        {format(new Date(log.created_at), 'HH:mm:ss')}
+                      <div className="text-xs text-gray-500 whitespace-nowrap ml-4 text-right">
+                        <div className="font-medium">{format(new Date(log.created_at), 'dd MMM yyyy')}</div>
+                        <div className="text-gray-400">{format(new Date(log.created_at), 'HH:mm:ss')}</div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-500">
-                <Clock className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                <p>No activity logs found for this application.</p>
+              <div className="text-center py-12 text-gray-500 bg-gray-50 rounded-lg border-2 border-dashed border-gray-200">
+                <Activity className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                <p className="text-lg font-medium">No activity logs found</p>
+                <p className="text-sm">Activity will appear here as actions are performed on this application.</p>
               </div>
             )}
           </div>

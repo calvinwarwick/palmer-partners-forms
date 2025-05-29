@@ -226,8 +226,8 @@ const ApplicantsTab = () => {
   };
 
   const handleViewApplicant = (applicant: Applicant) => {
-    // Navigate to applicant details page
-    console.log('View applicant details:', applicant);
+    // Navigate to the application preview page for this applicant's application
+    navigate(`/application-preview/${applicant.applicationId}`);
   };
 
   const handleGenerateApplicantPdf = async (applicant: Applicant) => {
@@ -432,7 +432,8 @@ const ApplicantsTab = () => {
                         onClick={() => handleViewApplicant(applicant)}
                         className="h-8"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-4 w-4 mr-1" />
+                        View
                       </Button>
                       
                       <DropdownMenu>
@@ -444,7 +445,7 @@ const ApplicantsTab = () => {
                         <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
                           <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
                             <Eye className="h-4 w-4 mr-2" />
-                            View Details
+                            View Application
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleGenerateApplicantPdf(applicant)}>
                             <Download className="h-4 w-4 mr-2" />
