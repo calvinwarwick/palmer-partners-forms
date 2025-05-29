@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -266,7 +265,7 @@ const ApplicantsTab = () => {
                   ref={checkboxRef}
                   checked={isAllSelected}
                   onCheckedChange={handleSelectAll}
-                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 border-gray-400"
+                  className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                 />
               )}
               <span className="text-sm font-semibold text-gray-900">
@@ -375,7 +374,7 @@ const ApplicantsTab = () => {
                       <Checkbox
                         checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
                         onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
-                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                        className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                       />
                       <div>
                         <p className="font-medium text-gray-900 text-sm">
@@ -458,7 +457,7 @@ const ApplicantsTab = () => {
                       <Checkbox
                         checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
                         onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
-                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                        className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                       />
                     </TableCell>
                     

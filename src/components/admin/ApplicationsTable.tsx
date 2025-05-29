@@ -130,7 +130,7 @@ const ApplicationsTable = ({
                   ref={checkboxRef}
                   checked={isAllSelected}
                   onCheckedChange={onSelectAll}
-                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                  className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                 />
               )}
               <span className="text-sm font-semibold text-gray-900">
@@ -239,7 +239,7 @@ const ApplicationsTable = ({
                       <Checkbox
                         checked={selectedApplications.includes(application.id)}
                         onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
-                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                        className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                       />
                       <div>
                         <p className="font-medium text-gray-900 text-sm">
@@ -320,7 +320,7 @@ const ApplicationsTable = ({
                       <Checkbox
                         checked={selectedApplications.includes(application.id)}
                         onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
-                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                        className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                       />
                     </TableCell>
                     
