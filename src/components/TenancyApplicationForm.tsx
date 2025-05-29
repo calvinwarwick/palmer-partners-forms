@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -416,86 +415,102 @@ const TenancyApplicationForm = () => {
   const { allSteps, visibleSteps } = getMobileVisibleSteps();
 
   return (
-    <div className="min-h-screen bg-background py-16">
-      <div className="container mx-auto px-4 max-w-4xl">
-        <div className="mb-6">
-          <div className="flex items-center space-x-4 mb-4">
-            <Home className="h-6 w-6 text-orange-500" />
-            <h1 className="text-2xl font-bold text-foreground">Tenancy Application</h1>
-          </div>
-
-          <div className="mb-6">
-            <div className="flex justify-between text-sm text-muted-foreground mb-2">
-              <span>Step {currentStep} of {totalSteps}</span>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 py-8">
+      <div className="container mx-auto px-4 max-w-5xl">
+        <div className="mb-8">
+          <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="p-3 bg-orange-500 rounded-full shadow-lg">
+              <Home className="h-8 w-8 text-white" />
             </div>
-            <Progress value={progress} className="h-2" />
+            <h1 className="text-3xl font-bold text-gray-900">Tenancy Application</h1>
           </div>
 
-          {/* Desktop step indicators */}
-          <div className="hidden md:flex justify-between mb-8 overflow-visible">
-            {allSteps.map(({ step, icon: Icon, label }) => (
+          <div className="mb-8">
+            <div className="flex justify-between text-sm text-gray-600 mb-3">
+              <span className="font-medium">Step {currentStep} of {totalSteps}</span>
+              <span className="font-medium">{Math.round(progress)}% Complete</span>
+            </div>
+            <Progress value={progress} className="h-3 bg-gray-200" />
+          </div>
+
+          {/* Enhanced Desktop step indicators */}
+          <div className="hidden md:flex justify-between mb-10 overflow-visible bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+            {allSteps.map(({ step, icon: Icon, label }, index) => (
               <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative step-indicator">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 relative ${
-                  currentStep >= step 
-                    ? "bg-orange-500 text-white" 
-                    : "bg-muted text-muted-foreground"
+                {/* Connection line */}
+                {index < allSteps.length - 1 && (
+                  <div className={`absolute top-5 left-1/2 w-full h-0.5 z-0 ${
+                    currentStep > step ? "bg-orange-500" : "bg-gray-200"
+                  }`} style={{ transform: 'translateX(50%)' }} />
+                )}
+                
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 relative z-10 border-2 transition-all duration-300 shadow-sm ${
+                  currentStep === step 
+                    ? "bg-orange-500 text-white border-orange-500 shadow-lg scale-110" 
+                    : currentStep > step
+                      ? "bg-orange-500 text-white border-orange-500"
+                      : "bg-white text-gray-400 border-gray-200"
                 }`}>
-                  <Icon className="h-5 w-5" />
-                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
+                  <Icon className="h-6 w-6" />
+                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
                     <Check className="h-3 w-3" />
                   </div>
                 </div>
-                <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
+                <span className={`text-sm text-center px-2 font-medium transition-colors ${
+                  currentStep >= step ? "text-orange-600" : "text-gray-500"
+                }`}>{label}</span>
               </div>
             ))}
           </div>
 
-          {/* Mobile step indicators */}
-          <div className="flex md:hidden justify-center mb-8 overflow-visible space-x-4">
+          {/* Enhanced Mobile step indicators */}
+          <div className="flex md:hidden justify-center mb-8 overflow-visible bg-white rounded-lg p-4 shadow-sm border border-gray-100 space-x-6">
             {visibleSteps.map(({ step, icon: Icon, label }) => (
               <div key={step} className="flex flex-col items-center relative step-indicator mobile-visible">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 relative ${
-                  currentStep >= step 
-                    ? "bg-orange-500 text-white" 
-                    : "bg-muted text-muted-foreground"
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 relative border-2 transition-all duration-300 ${
+                  currentStep === step 
+                    ? "bg-orange-500 text-white border-orange-500 shadow-lg" 
+                    : currentStep > step
+                      ? "bg-orange-500 text-white border-orange-500"
+                      : "bg-white text-gray-400 border-gray-200"
                 }`}>
-                  <Icon className="h-5 w-5" />
-                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
+                  <Icon className="h-6 w-6" />
+                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
                     <Check className="h-3 w-3" />
                   </div>
                 </div>
-                <span className="text-xs text-muted-foreground text-center px-1">{label}</span>
+                <span className={`text-xs text-center px-1 font-medium ${
+                  currentStep >= step ? "text-orange-600" : "text-gray-500"
+                }`}>{label}</span>
               </div>
             ))}
           </div>
         </div>
 
-        <Card className="my-16">
-          <CardContent className="pt-6">
+        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardContent className="pt-8 pb-6">
             {renderStepContent()}
             
-            <div className="flex justify-between mt-8 pt-6 border-t border-border">
-              {/* Only show previous button if not on first step */}
+            <div className="flex justify-between mt-10 pt-8 border-t border-gray-100">
               {!isFirstStep && (
                 <Button
                   variant="outline"
                   onClick={goToPrevious}
                   disabled={isSubmitting}
-                  className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white"
+                  className="border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400 px-6 py-3 font-medium"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Previous
                 </Button>
               )}
               
-              {/* Empty div to maintain spacing when no previous button */}
               {isFirstStep && <div></div>}
               
               {!isLastStep ? (
                 <Button
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 font-medium shadow-lg"
                 >
                   Next
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -504,7 +519,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleSubmit}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 text-white"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 font-medium shadow-lg"
                 >
                   {isSubmitting ? (
                     <>
@@ -513,7 +528,7 @@ const TenancyApplicationForm = () => {
                     </>
                   ) : (
                     <>
-                      Submit
+                      Submit Application
                       <CheckCircle className="h-4 w-4 ml-2" />
                     </>
                   )}

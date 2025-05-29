@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { TestTube } from "lucide-react";
+import { TestTube, User, Calendar } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 
@@ -59,21 +59,27 @@ const PersonalInfoStep = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-4">
-          <h3 className="text-lg font-semibold">Personal Information</h3>
-          <Badge variant="secondary" className="bg-gray-100 text-gray-600 hover:bg-gray-200">
+          <div className="p-2 bg-orange-100 rounded-lg">
+            <User className="h-6 w-6 text-orange-600" />
+          </div>
+          <div>
+            <h3 className="text-2xl font-bold text-gray-900">Personal Information</h3>
+            <p className="text-gray-600 mt-1">Tell us about the people who will be living in the property</p>
+          </div>
+          <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-200 font-medium">
             {applicants.length} of 5 applicants
           </Badge>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2 border-orange-200 text-orange-600 hover:bg-orange-50">
             <TestTube className="h-4 w-4" />
             Fill Step Data
           </Button>
           {onFillAllTestData && (
-            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600">
               <TestTube className="h-4 w-4" />
               Fill All Form Data
             </Button>
@@ -87,77 +93,83 @@ const PersonalInfoStep = ({
       />
       
       {applicants.map((applicant, index) => (
-        <Card key={applicant.id} className="border-0 shadow-sm">
-          <CardHeader className="pb-4">
+        <Card key={applicant.id} className="border-2 border-orange-100 shadow-md hover:shadow-lg transition-all duration-200 bg-gradient-to-br from-white to-orange-50/30">
+          <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
             <div className="flex justify-between items-center">
-              <CardTitle className="text-base font-medium">Applicant {index + 1}</CardTitle>
+              <CardTitle className="text-lg font-semibold flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <User className="h-5 w-5" />
+                </div>
+                Applicant {index + 1}
+                {applicant.firstName && applicant.lastName && (
+                  <span className="text-orange-100 font-normal">
+                    - {applicant.firstName} {applicant.lastName}
+                  </span>
+                )}
+              </CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor={`firstName-${applicant.id}`} className="form-label">First Name *</Label>
+          <CardContent className="space-y-6 p-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor={`firstName-${applicant.id}`} className="form-label text-gray-700 font-medium">First Name *</Label>
                 <Input
                   id={`firstName-${applicant.id}`}
                   value={applicant.firstName}
                   onChange={(e) => onUpdateApplicant(applicant.id, "firstName", e.target.value)}
-                  placeholder="First Name"
-                  className="form-control"
+                  placeholder="Enter first name"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor={`lastName-${applicant.id}`} className="form-label">Last Name *</Label>
+              <div className="space-y-2">
+                <Label htmlFor={`lastName-${applicant.id}`} className="form-label text-gray-700 font-medium">Last Name *</Label>
                 <Input
                   id={`lastName-${applicant.id}`}
                   value={applicant.lastName}
                   onChange={(e) => onUpdateApplicant(applicant.id, "lastName", e.target.value)}
-                  placeholder="Last Name"
-                  className="form-control"
+                  placeholder="Enter last name"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
                 />
               </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor={`email-${applicant.id}`} className="form-label">Email *</Label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <Label htmlFor={`email-${applicant.id}`} className="form-label text-gray-700 font-medium">Email Address *</Label>
                 <Input
                   id={`email-${applicant.id}`}
                   type="email"
                   value={applicant.email}
                   onChange={(e) => onUpdateApplicant(applicant.id, "email", e.target.value)}
-                  placeholder="Email"
-                  className="form-control"
+                  placeholder="Enter email address"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
                 />
               </div>
-              <div>
-                <Label htmlFor={`phone-${applicant.id}`} className="form-label">Phone *</Label>
+              <div className="space-y-2">
+                <Label htmlFor={`phone-${applicant.id}`} className="form-label text-gray-700 font-medium">Phone Number *</Label>
                 <Input
                   id={`phone-${applicant.id}`}
                   type="tel"
                   value={applicant.phone}
                   onChange={(e) => onUpdateApplicant(applicant.id, "phone", e.target.value)}
-                  placeholder="Phone"
-                  className="form-control"
+                  placeholder="Enter phone number"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
                 />
               </div>
             </div>
-            <div>
-              <Label htmlFor={`dob-${applicant.id}`} className="form-label">Date of Birth</Label>
+            <div className="space-y-2">
+              <Label htmlFor={`dob-${applicant.id}`} className="form-label text-gray-700 font-medium">Date of Birth</Label>
               <div className="date-input-container">
-                <div className="date-input-icon">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                </div>
+                <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
                 <Input
                   id={`dob-${applicant.id}`}
                   type="date"
                   value={applicant.dateOfBirth}
                   onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
-                  className="form-control"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
             </div>

@@ -65,17 +65,17 @@ button[class*="bg-blue"] {
   @apply bg-orange-500 text-white hover:bg-orange-600;
 }
 
-/* Applicant details section styling */
+/* Enhanced applicant cards styling */
 .applicant-details-section {
-  @apply p-3 bg-gray-50/70 rounded-md border border-gray-100;
+  @apply p-4 bg-gradient-to-br from-orange-50 to-white rounded-lg border-2 border-orange-100 shadow-sm;
 }
 
 .applicant-details-section h3 {
-  @apply text-sm font-medium text-gray-700 mb-1;
+  @apply text-base font-semibold text-orange-800 mb-2;
 }
 
 .applicant-details-section p {
-  @apply text-xs text-gray-500 mb-2;
+  @apply text-sm text-gray-600 mb-3;
 }
 
 /* Progress bar effects */
@@ -127,7 +127,7 @@ button[class*="bg-blue"] {
   transition-duration: 15s;
 }
 
-/* Step badges */
+/* Enhanced step badges with improved animation */
 .step-indicator {
   position: relative;
   overflow: visible;
@@ -135,29 +135,55 @@ button[class*="bg-blue"] {
 
 .step-badge {
   position: absolute;
-  top: -8px;
-  right: -8px;
-  z-index: 10;
+  top: -10px;
+  right: -10px;
+  z-index: 20;
   transform: scale(0);
   opacity: 0;
-  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease-out;
+  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
   pointer-events: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .step-badge.animate-in {
   transform: scale(1);
   opacity: 1;
+  animation: bounce-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounce-in {
+  0% {
+    transform: scale(0) rotate(-180deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2) rotate(-90deg);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+/* Enhanced form styling with better borders */
+.form-section-border {
+  @apply border-2 border-orange-100 rounded-xl bg-gradient-to-br from-white to-orange-50/50 shadow-sm;
+}
+
+.form-section-header {
+  @apply bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl p-4;
 }
 
 /* Terms and conditions styling */
 .terms-content {
   max-height: 400px;
   overflow-y: auto;
-  @apply border border-gray-200 rounded-lg p-6 bg-gray-50;
+  @apply border-2 border-orange-100 rounded-lg p-6 bg-gradient-to-br from-orange-50 to-white;
 }
 
 .terms-content h3 {
-  @apply font-semibold text-gray-900 mb-3;
+  @apply font-semibold text-orange-800 mb-3;
 }
 
 .terms-content p {
@@ -168,7 +194,7 @@ button[class*="bg-blue"] {
   @apply mb-0;
 }
 
-/* Consistent alert and message styling */
+/* Enhanced alert and message styling with better visual hierarchy */
 .alert,
 [role="alert"],
 .error-message,
@@ -177,7 +203,7 @@ button[class*="bg-blue"] {
 .success-message,
 .message-banner,
 .alert-banner {
-  @apply bg-gray-100 text-black border border-gray-200 rounded-md p-3 mb-4;
+  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 border-2 border-orange-200 rounded-lg p-4 mb-4 shadow-sm;
 }
 
 /* Override any existing alert color variants */
@@ -185,10 +211,10 @@ button[class*="bg-blue"] {
 .alert-warning,
 .alert-info,
 .alert-success {
-  @apply bg-gray-100 text-black border-gray-200;
+  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 border-orange-200;
 }
 
-/* Ensure all text in alerts is black */
+/* Ensure all text in alerts is properly colored */
 .alert *,
 [role="alert"] *,
 .error-message *,
@@ -197,12 +223,34 @@ button[class*="bg-blue"] {
 .success-message *,
 .message-banner *,
 .alert-banner * {
-  @apply text-black;
+  @apply text-orange-800;
 }
 
 /* Specific shadcn alert overrides */
 .alert .alert-title,
 .alert .alert-description,
 [data-sonner-toast] {
-  @apply text-black;
+  @apply text-orange-800;
+}
+
+/* Enhanced card hover effects */
+.hover-lift {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.15);
+}
+
+/* Step connection lines enhancement */
+.step-connection-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #f97316 10%, #f97316 90%, transparent 100%);
+  z-index: 1;
+  transform: translateY(-50%);
 }
