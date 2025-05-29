@@ -162,13 +162,15 @@ const ApplicationPreview = () => {
 
         {/* Application Preview */}
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Logo Header */}
-          <div className="text-center py-6">
-            <img 
-              src="/lovable-uploads/6428db9d-5582-4e09-970d-e10b1b3afe27.png" 
-              alt="Company Logo" 
-              className="mx-auto h-16 mb-4"
-            />
+          {/* Logo Header with grey background */}
+          <div className="text-center py-6 bg-gray-200">
+            <div className="inline-block bg-orange-500 px-8 py-4 rounded">
+              <img 
+                src="/lovable-uploads/6428db9d-5582-4e09-970d-e10b1b3afe27.png" 
+                alt="Company Logo" 
+                className="h-12"
+              />
+            </div>
           </div>
           
           {/* Orange line */}

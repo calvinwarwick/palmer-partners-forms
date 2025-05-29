@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
@@ -108,31 +107,33 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setTextColor(0, 0, 0); // reset
   };
 
-  // Header with logo and title - exactly like preview
+  // Header with logo and title - matching preview exactly
   yPosition = checkNewPage(40);
   
-  // Logo area with grey background
-  doc.setFillColor(229, 231, 235); // gray-200 background for logo
-  doc.rect(80, yPosition - 8, 50, 20, 'F');
+  // Logo area with grey background - matching the preview page
+  doc.setFillColor(229, 231, 235); // gray-200 background for logo area
+  doc.rect(10, yPosition - 8, 190, 25, 'F');
   
-  // Logo area (centered) - using the new logo
-  doc.setFillColor(249, 115, 22); // orange-500 placeholder for logo
-  doc.rect(85, yPosition - 5, 40, 15, 'F');
+  // Orange logo box centered within the grey area
+  doc.setFillColor(249, 115, 22); // orange-500 for logo background
+  doc.rect(80, yPosition - 5, 50, 18, 'F');
+  
+  // Logo text centered in orange box
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  yPosition = addText('PALMER & PARTNERS', 0, yPosition + 5, 0, 'center'); // centered
+  yPosition = addText('PALMER & PARTNERS', 0, yPosition + 5, 0, 'center');
   
   // Orange line exactly like preview
   doc.setFillColor(249, 115, 22); // orange-500
-  doc.rect(10, yPosition + 5, 190, 1, 'F');
+  doc.rect(10, yPosition + 8, 190, 1, 'F');
   yPosition += 20;
   
   // Main title - exactly like preview
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  yPosition = addText('Tenancy Application', 0, yPosition, 0, 'center'); // centered
+  yPosition = addText('Tenancy Application', 0, yPosition, 0, 'center');
   yPosition += 20;
 
   // Property Details Section
@@ -293,7 +294,7 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
   }
   addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'), false);
 
-  // Activity Log Section (if available) - styled like the image
+  // Activity Log Section (if available) - styled like the image with IP addresses
   if (data.applicationId) {
     try {
       const { data: activityLogs, error } = await supabase

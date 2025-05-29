@@ -10,16 +10,30 @@ interface TermsAndDataStepProps {
     insurance: boolean;
   };
   onDataSharingChange: (field: string, value: boolean) => void;
+  onUpdateDataSharing?: (field: "utilities" | "insurance", value: boolean) => void;
   termsAccepted: boolean;
   onTermsChange: (accepted: boolean) => void;
+  signature?: string;
+  onSignatureChange?: any;
+  onTermsAccepted?: any;
+  onFillAllTestData?: () => void;
 }
 
 const TermsAndDataStep = ({ 
   dataSharing, 
-  onDataSharingChange, 
+  onDataSharingChange,
+  onUpdateDataSharing,
   termsAccepted, 
   onTermsChange 
 }: TermsAndDataStepProps) => {
+  const handleDataSharingChange = (field: string, value: boolean) => {
+    if (onUpdateDataSharing) {
+      onUpdateDataSharing(field as "utilities" | "insurance", value);
+    } else {
+      onDataSharingChange(field, value);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Data Sharing & Terms</h3>
@@ -44,7 +58,7 @@ const TermsAndDataStep = ({
             <Switch
               id="utilities"
               checked={dataSharing.utilities}
-              onCheckedChange={(checked) => onDataSharingChange('utilities', checked)}
+              onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
             />
           </div>
           
@@ -60,7 +74,7 @@ const TermsAndDataStep = ({
             <Switch
               id="insurance"
               checked={dataSharing.insurance}
-              onCheckedChange={(checked) => onDataSharingChange('insurance', checked)}
+              onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
             />
           </div>
         </CardContent>
