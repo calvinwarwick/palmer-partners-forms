@@ -78,52 +78,6 @@ button[class*="bg-blue"] {
   @apply text-xs text-gray-500 mb-2;
 }
 
-/* Consistent alert and message styling */
-.alert,
-.alert-info,
-.alert-warning,
-.alert-success,
-.alert-error,
-.info-message,
-.warning-message,
-.help-message,
-.notice,
-.notification,
-.message-box,
-.form-notice,
-.form-alert,
-.bg-blue-50,
-.bg-yellow-50,
-.bg-green-50,
-.bg-red-50,
-.bg-gray-50,
-.text-blue-800,
-.text-yellow-800,
-.text-green-800,
-.text-red-800 {
-  @apply bg-gray-100 text-gray-700 border border-gray-200 rounded-md p-3 mb-3;
-}
-
-/* Override specific alert component backgrounds */
-[class*="bg-blue-"],
-[class*="bg-yellow-"],
-[class*="bg-green-"],
-[class*="bg-red-"],
-[class*="bg-orange-"] {
-  background-color: rgb(243 244 246) !important; /* gray-100 */
-  color: rgb(55 65 81) !important; /* gray-700 */
-  border-color: rgb(229 231 235) !important; /* gray-200 */
-}
-
-/* Ensure alert text colors are consistent */
-.alert *,
-.alert-info *,
-.alert-warning *,
-.alert-success *,
-.alert-error * {
-  @apply text-gray-700;
-}
-
 /* Progress bar effects */
 .fill {
   position: relative;
