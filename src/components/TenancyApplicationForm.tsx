@@ -374,11 +374,11 @@ const TenancyApplicationForm = () => {
         return (
           <TermsAndDataStep
             dataSharing={dataSharing}
-            onUpdateDataSharing={updateDataSharing}
+            onDataSharingChange={updateDataSharing}
+            termsAccepted={termsAccepted}
+            onTermsChange={setTermsAccepted}
             signature={signature}
             onSignatureChange={setSignature}
-            termsAccepted={termsAccepted}
-            onTermsAccepted={setTermsAccepted}
             onFillAllTestData={fillAllTestData}
           />
         );
