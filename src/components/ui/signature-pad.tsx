@@ -1,9 +1,10 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2, Maximize2, X, Pen } from 'lucide-react';
+import { Trash2, Maximize2, X, Pen, FileText } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SignaturePadProps {
@@ -29,7 +30,41 @@ const SignaturePad = ({
   const [hasSignature, setHasSignature] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width, height });
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [showPdfPreview, setShowPdfPreview] = useState(false);
+  const [orientation, setOrientation] = useState<'portrait' | 'landscape'>('portrait');
   const isMobile = useIsMobile();
+
+  // Handle orientation changes
+  useEffect(() => {
+    const handleOrientationChange = () => {
+      if (isFullscreen) {
+        const isLandscape = window.innerWidth > window.innerHeight;
+        setOrientation(isLandscape ? 'landscape' : 'portrait');
+        
+        // Update canvas size based on orientation
+        if (isLandscape) {
+          setCanvasSize({ 
+            width: window.innerWidth - 40, 
+            height: window.innerHeight - 120 
+          });
+        } else {
+          setCanvasSize({ 
+            width: window.innerWidth - 40, 
+            height: window.innerHeight - 120 
+          });
+        }
+      }
+    };
+
+    handleOrientationChange(); // Initial check
+    window.addEventListener('resize', handleOrientationChange);
+    window.addEventListener('orientationchange', handleOrientationChange);
+    
+    return () => {
+      window.removeEventListener('resize', handleOrientationChange);
+      window.removeEventListener('orientationchange', handleOrientationChange);
+    };
+  }, [isFullscreen]);
 
   // Handle responsive canvas sizing
   useEffect(() => {
@@ -41,19 +76,24 @@ const SignaturePad = ({
         const newHeight = newWidth * aspectRatio;
         
         setCanvasSize({ width: newWidth, height: newHeight });
-      } else if (isFullscreen) {
-        // Fullscreen mode - use screen dimensions
-        setCanvasSize({ 
-          width: window.innerWidth - 40, 
-          height: window.innerHeight - 120 
-        });
       }
     };
 
-    updateCanvasSize();
-    window.addEventListener('resize', updateCanvasSize);
-    return () => window.removeEventListener('resize', updateCanvasSize);
+    if (!isFullscreen) {
+      updateCanvasSize();
+      window.addEventListener('resize', updateCanvasSize);
+      return () => window.removeEventListener('resize', updateCanvasSize);
+    }
   }, [width, height, isFullscreen]);
+
+  // Check if signature exists and show PDF preview
+  useEffect(() => {
+    if (value && value.startsWith('data:image/') && hasSignature && !isDrawing) {
+      setShowPdfPreview(true);
+    } else {
+      setShowPdfPreview(false);
+    }
+  }, [value, hasSignature, isDrawing]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -124,6 +164,7 @@ const SignaturePad = ({
     if (!ctx) return;
 
     setIsDrawing(true);
+    setShowPdfPreview(false); // Hide preview while drawing
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
     
@@ -169,6 +210,7 @@ const SignaturePad = ({
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     setHasSignature(false);
+    setShowPdfPreview(false);
     if (onChange) {
       onChange('');
     }
@@ -178,12 +220,46 @@ const SignaturePad = ({
     setIsFullscreen(!isFullscreen);
   };
 
+  // PDF Preview Component
+  const PdfPreview = () => (
+    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div className="flex items-center gap-2 mb-3">
+        <FileText className="h-5 w-5 text-green-600" />
+        <h4 className="font-medium text-green-800">Signature Accepted</h4>
+      </div>
+      <p className="text-sm text-green-700 mb-3">
+        Your signature has been captured and will be included in the PDF application document.
+      </p>
+      <div className="flex items-center gap-2">
+        <div className="flex-1 bg-white border border-green-300 rounded p-2">
+          <div className="text-xs text-gray-600 mb-1">Preview:</div>
+          <img 
+            src={value} 
+            alt="Signature preview" 
+            className="max-w-full h-16 object-contain border border-gray-200 rounded"
+          />
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={clearSignature}
+          className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+        >
+          <Trash2 className="h-4 w-4 mr-2" />
+          Try Again
+        </Button>
+      </div>
+    </div>
+  );
+
   // Fullscreen overlay component
   if (isFullscreen) {
     return (
       <div className="fixed inset-0 z-50 bg-white flex flex-col">
         <div className="flex justify-between items-center p-4 border-b">
-          <h3 className="text-lg font-semibold">Digital Signature</h3>
+          <h3 className="text-lg font-semibold">
+            Digital Signature {orientation === 'landscape' ? '(Landscape Mode)' : ''}
+          </h3>
           <Button
             variant="outline"
             size="sm"
@@ -196,47 +272,59 @@ const SignaturePad = ({
         </div>
         
         <div className="flex-1 p-4 flex flex-col">
-          <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm flex-1 ${
-            hasSignature ? 'border-2 border-green-500' : 'border-2 border-black'
-          }`}>
-            <canvas
-              ref={canvasRef}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-              className="cursor-crosshair w-full h-full block touch-none"
-              style={{ 
-                width: '100%', 
-                height: '100%'
-              }}
-            />
-            
-            {!hasSignature && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="text-center text-gray-400">
-                  <Pen className="h-6 w-6 mx-auto mb-2" />
-                  <p className="text-lg">Sign here</p>
-                </div>
+          {showPdfPreview ? (
+            <div className="flex-1 flex items-center justify-center">
+              <PdfPreview />
+            </div>
+          ) : (
+            <>
+              <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm flex-1 ${
+                hasSignature ? 'border-2 border-green-500' : 'border-2 border-black'
+              }`}>
+                <canvas
+                  ref={canvasRef}
+                  onMouseDown={startDrawing}
+                  onMouseMove={draw}
+                  onMouseUp={stopDrawing}
+                  onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawing}
+                  onTouchMove={draw}
+                  onTouchEnd={stopDrawing}
+                  className="cursor-crosshair w-full h-full block touch-none"
+                  style={{ 
+                    width: '100%', 
+                    height: '100%',
+                    transform: orientation === 'landscape' ? 'none' : 'none'
+                  }}
+                />
+                
+                {!hasSignature && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="text-center text-gray-400">
+                      <Pen className="h-6 w-6 mx-auto mb-2" />
+                      <p className="text-lg">Sign here</p>
+                      {orientation === 'landscape' && (
+                        <p className="text-sm mt-1">Landscape mode active</p>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          
-          <div className="flex justify-end mt-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clearSignature}
-              disabled={!hasSignature}
-              className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Clear
-            </Button>
-          </div>
+              
+              <div className="flex justify-end mt-4">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearSignature}
+                  disabled={!hasSignature}
+                  className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );
@@ -254,51 +342,55 @@ const SignaturePad = ({
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="relative">
-            <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${
-              hasSignature ? 'border-2 border-green-500' : 'border-2 border-black'
-            }`}>
-              <canvas
-                ref={canvasRef}
-                onMouseDown={startDrawing}
-                onMouseMove={draw}
-                onMouseUp={stopDrawing}
-                onMouseLeave={stopDrawing}
-                onTouchStart={startDrawing}
-                onTouchMove={draw}
-                onTouchEnd={stopDrawing}
-                className="cursor-crosshair w-full block touch-none"
-                style={{ 
-                  width: '100%', 
-                  height: `${canvasSize.height}px`,
-                  minHeight: '150px'
-                }}
-              />
-              
-              {!hasSignature && (
-                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                  <div className="text-center text-gray-400">
-                    <Pen className="h-5 w-5 mx-auto mb-2" />
-                    <p className="text-sm">Sign here</p>
+          {showPdfPreview ? (
+            <PdfPreview />
+          ) : (
+            <div className="relative">
+              <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${
+                hasSignature ? 'border-2 border-green-500' : 'border-2 border-black'
+              }`}>
+                <canvas
+                  ref={canvasRef}
+                  onMouseDown={startDrawing}
+                  onMouseMove={draw}
+                  onMouseUp={stopDrawing}
+                  onMouseLeave={stopDrawing}
+                  onTouchStart={startDrawing}
+                  onTouchMove={draw}
+                  onTouchEnd={stopDrawing}
+                  className="cursor-crosshair w-full block touch-none"
+                  style={{ 
+                    width: '100%', 
+                    height: `${canvasSize.height}px`,
+                    minHeight: '150px'
+                  }}
+                />
+                
+                {!hasSignature && (
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="text-center text-gray-400">
+                      <Pen className="h-5 w-5 mx-auto mb-2" />
+                      <p className="text-sm">Sign here</p>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+              
+              {/* Clear button positioned at bottom right */}
+              <div className="absolute bottom-2 right-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={clearSignature}
+                  disabled={!hasSignature}
+                  className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Clear
+                </Button>
+              </div>
             </div>
-            
-            {/* Clear button positioned at bottom right */}
-            <div className="absolute bottom-2 right-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={clearSignature}
-                disabled={!hasSignature}
-                className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Clear
-              </Button>
-            </div>
-          </div>
+          )}
           
           <div className="space-y-4">
             <div>
@@ -316,7 +408,7 @@ const SignaturePad = ({
               />
             </div>
             
-            {isMobile && (
+            {isMobile && !showPdfPreview && (
               <div className="flex justify-center">
                 <Button
                   variant="outline"
