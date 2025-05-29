@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { TestTube, User, Calendar } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
@@ -69,9 +68,6 @@ const PersonalInfoStep = ({
             <h3 className="text-2xl font-bold text-gray-900">Personal Information</h3>
             <p className="text-gray-600 mt-1">Tell us about the people who will be living in the property</p>
           </div>
-          <Badge variant="secondary" className="bg-orange-100 text-orange-700 hover:bg-orange-200 font-medium">
-            {applicants.length} of 5 applicants
-          </Badge>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2 border-orange-200 text-orange-600 hover:bg-orange-50">

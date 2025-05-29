@@ -156,29 +156,6 @@ const PropertyDetailsStep = ({
           </div>
         </div>
       </div>
-
-      <div className="form-section">
-        <h3 className="text-xl font-semibold text-gray-900 mb-6">Applicant Details</h3>
-        <p className="text-gray-600 mb-6">Please select the number of adults who will be staying at the property and provide details for each applicant below.</p>
-        
-        <div className="space-y-2">
-          <Label htmlFor="applicantCount" className="form-label">
-            How many adults will be living in the property? Please ensure you provide details for each applicant below. <span className="text-red-500">*</span>
-          </Label>
-          <Select>
-            <SelectTrigger id="applicantCount" className="form-select">
-              <SelectValue placeholder="Select an option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem>
-              <SelectItem value="3">3</SelectItem>
-              <SelectItem value="4">4</SelectItem>
-              <SelectItem value="5">5</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
     </div>
   );
 };
