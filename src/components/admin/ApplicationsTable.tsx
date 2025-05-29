@@ -1,7 +1,8 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -54,14 +55,14 @@ const ApplicationsTable = ({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [selectedApplicationForActivity, setSelectedApplicationForActivity] = useState<TenancyApplication | null>(null);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
-  const switchRef = useRef<HTMLButtonElement>(null);
+  const checkboxRef = useRef<HTMLButtonElement>(null);
   
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
   const isIndeterminate = selectedApplications.length > 0 && selectedApplications.length < applications.length;
 
   useEffect(() => {
-    if (switchRef.current) {
-      (switchRef.current as any).indeterminate = isIndeterminate;
+    if (checkboxRef.current) {
+      (checkboxRef.current as any).indeterminate = isIndeterminate;
     }
   }, [isIndeterminate]);
 
@@ -74,11 +75,11 @@ const ApplicationsTable = ({
     
     // Determine site based on postcode
     if (postcode.startsWith('co') || postcode.includes('colchester')) {
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Colchester</Badge>;
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">Colchester</Badge>;
     } else if (postcode.startsWith('ip') || postcode.includes('ipswich')) {
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Ipswich</Badge>;
+      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">Ipswich</Badge>;
     } else {
-      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Other</Badge>;
+      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200 text-xs">Other</Badge>;
     }
   };
 
@@ -118,44 +119,69 @@ const ApplicationsTable = ({
 
   return (
     <div className="space-y-4">
-      {/* Search and Filter Controls - Darkened background */}
-      <div className="bg-gray-100 border border-gray-200 rounded-lg p-4">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          {/* Left side - Selection and title */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center space-x-3">
+      {/* Search and Filter Controls - Mobile-friendly */}
+      <div className="bg-gray-100 border border-gray-200 rounded-lg p-3 sm:p-4">
+        <div className="space-y-4">
+          {/* Title and Selection Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
               {applications.length > 0 && (
-                <Switch
-                  ref={switchRef}
+                <Checkbox
+                  ref={checkboxRef}
                   checked={isAllSelected}
                   onCheckedChange={onSelectAll}
+                  className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                 />
               )}
               <span className="text-sm font-semibold text-gray-900">
                 Applications ({applications.length})
               </span>
+              {selectedApplications.length > 0 && (
+                <span className="text-xs text-gray-600 bg-orange-50 px-2 py-1 rounded-full border border-orange-200">
+                  {selectedApplications.length} selected
+                </span>
+              )}
             </div>
+
+            {/* Bulk Actions - Mobile friendly */}
             {selectedApplications.length > 0 && (
-              <span className="text-sm text-gray-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                {selectedApplications.length} selected
-              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onBulkExport}
+                  className="h-8 text-xs border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Export
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  Delete
+                </Button>
+              </div>
             )}
           </div>
 
-          {/* Center - Search and Date Filter */}
-          <div className="flex items-center gap-3">
-            <div className="relative">
+          {/* Search and Filter Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Search applications..."
                 value={searchTerm}
                 onChange={(e) => onSearchChange(e.target.value)}
-                className="search-input w-64 h-9 text-sm pl-10"
+                className="search-input h-9 text-sm pl-10"
               />
             </div>
             
             <Select value={dateFilter} onValueChange={onDateFilterChange}>
-              <SelectTrigger className="w-36 h-9 text-sm">
+              <SelectTrigger className="w-full sm:w-36 h-9 text-sm">
                 <CalendarIcon className="h-3 w-3 mr-1" />
                 <SelectValue />
               </SelectTrigger>
@@ -197,113 +223,61 @@ const ApplicationsTable = ({
               </SelectContent>
             </Select>
           </div>
-
-          {/* Right side - Bulk Actions - Only show when items are selected */}
-          {selectedApplications.length > 0 && (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={onBulkExport}
-                className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export CSV
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table - Mobile responsive */}
       {applications.length > 0 ? (
         <div className="border rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-100 border-b-0">
-                <TableHead className="w-12">
-                  <span className="sr-only">Select</span>
-                </TableHead>
-                <TableHead className="font-semibold">Primary Applicant</TableHead>
-                <TableHead className="font-semibold">Property</TableHead>
-                <TableHead className="font-semibold">Submitted</TableHead>
-                <TableHead className="font-semibold">Site</TableHead>
-                <TableHead className="font-semibold">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          {/* Mobile Card View */}
+          <div className="block sm:hidden">
+            <div className="space-y-3 p-4">
               {applications.map((application) => (
-                <TableRow key={application.id} className="hover:bg-gray-50 border-b">
-                  <TableCell>
-                    <Switch
-                      checked={selectedApplications.includes(application.id)}
-                      onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
-                    />
-                  </TableCell>
-                  
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {application.applicants?.[0]?.firstName} {application.applicants?.[0]?.lastName}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {application.applicants?.[0]?.email}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {application.applicants?.[0]?.phone}
-                      </p>
+                <div key={application.id} className="bg-white border rounded-lg p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        checked={selectedApplications.includes(application.id)}
+                        onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
+                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">
+                          {application.applicants?.[0]?.firstName} {application.applicants?.[0]?.lastName}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {application.applicants?.[0]?.email}
+                        </p>
+                      </div>
                     </div>
-                  </TableCell>
-                  
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {application.property_preferences?.streetAddress || 'N/A'}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {application.property_preferences?.postcode}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        £{application.property_preferences?.maxRent}/month
-                      </p>
-                    </div>
-                  </TableCell>
-                  
-                  <TableCell>
-                    <p className="text-sm text-gray-900">
-                      {formatTimeAgo(application.submitted_at)}
-                    </p>
-                  </TableCell>
-                  
-                  <TableCell>
                     {getSiteBadge(application)}
-                  </TableCell>
+                  </div>
                   
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
+                  <div className="text-xs text-gray-600">
+                    <p className="font-medium">{application.property_preferences?.streetAddress || 'N/A'}</p>
+                    <p>{application.property_preferences?.postcode}</p>
+                    <p>£{application.property_preferences?.maxRent}/month</p>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-xs text-gray-500">
+                      {formatTimeAgo(application.submitted_at)}
+                    </span>
+                    <div className="flex items-center gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handlePreviewApplication(application.id)}
-                        className="h-8"
+                        className="h-7 text-xs"
                       >
-                        <Eye className="h-4 w-4 mr-1" />
-                        Preview
+                        <Eye className="h-3 w-3 mr-1" />
+                        View
                       </Button>
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant="outline" size="sm" className="h-7 w-7 p-0">
+                            <MoreHorizontal className="h-3 w-3" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
@@ -318,11 +292,112 @@ const ApplicationsTable = ({
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-100 border-b-0">
+                  <TableHead className="w-12">
+                    <span className="sr-only">Select</span>
+                  </TableHead>
+                  <TableHead className="font-semibold">Primary Applicant</TableHead>
+                  <TableHead className="font-semibold">Property</TableHead>
+                  <TableHead className="font-semibold">Submitted</TableHead>
+                  <TableHead className="font-semibold">Site</TableHead>
+                  <TableHead className="font-semibold">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {applications.map((application) => (
+                  <TableRow key={application.id} className="hover:bg-gray-50 border-b">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedApplications.includes(application.id)}
+                        onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
+                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                      />
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {application.applicants?.[0]?.firstName} {application.applicants?.[0]?.lastName}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {application.applicants?.[0]?.email}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {application.applicants?.[0]?.phone}
+                        </p>
+                      </div>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {application.property_preferences?.streetAddress || 'N/A'}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {application.property_preferences?.postcode}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          £{application.property_preferences?.maxRent}/month
+                        </p>
+                      </div>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <p className="text-sm text-gray-900">
+                        {formatTimeAgo(application.submitted_at)}
+                      </p>
+                    </TableCell>
+                    
+                    <TableCell>
+                      {getSiteBadge(application)}
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePreviewApplication(application.id)}
+                          className="h-8"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          Preview
+                        </Button>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                            <DropdownMenuItem onClick={() => handleViewActivity(application)}>
+                              <Clock className="h-4 w-4 mr-2" />
+                              View Activity
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
+                              <Download className="h-4 w-4 mr-2" />
+                              Generate PDF
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       ) : (
         <div className="text-center py-16 bg-white border rounded-lg">

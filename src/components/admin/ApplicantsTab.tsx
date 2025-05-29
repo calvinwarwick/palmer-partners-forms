@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -217,11 +218,11 @@ const ApplicantsTab = () => {
 
     // Determine site based on postcode
     if (postcode.startsWith('co') || postcode.includes('colchester')) {
-      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Colchester</Badge>;
+      return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">Colchester</Badge>;
     } else if (postcode.startsWith('ip') || postcode.includes('ipswich')) {
-      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Ipswich</Badge>;
+      return <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 text-xs">Ipswich</Badge>;
     } else {
-      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">Other</Badge>;
+      return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200 text-xs">Other</Badge>;
     }
   };
 
@@ -254,12 +255,12 @@ const ApplicantsTab = () => {
 
   return (
     <div className="space-y-4">
-      {/* Search and Filter Controls - Always visible */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          {/* Left side - Selection and title */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center space-x-3">
+      {/* Search and Filter Controls - Mobile-friendly */}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
+        <div className="space-y-4">
+          {/* Title and Selection Row */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
               {filteredApplicants.length > 0 && (
                 <Checkbox
                   ref={checkboxRef}
@@ -271,28 +272,52 @@ const ApplicantsTab = () => {
               <span className="text-sm font-semibold text-gray-900">
                 Applicants ({filteredApplicants.length})
               </span>
+              {selectedApplicants.length > 0 && (
+                <span className="text-xs text-gray-600 bg-orange-50 px-2 py-1 rounded-full border border-orange-200">
+                  {selectedApplicants.length} selected
+                </span>
+              )}
             </div>
+
+            {/* Bulk Actions - Mobile friendly */}
             {selectedApplicants.length > 0 && (
-              <span className="text-sm text-gray-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
-                {selectedApplicants.length} selected
-              </span>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBulkExport}
+                  className="h-8 text-xs border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
+                >
+                  <Download className="h-3 w-3 mr-1" />
+                  Export
+                </Button>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="h-3 w-3 mr-1" />
+                  Delete
+                </Button>
+              </div>
             )}
           </div>
 
-          {/* Center - Search and Date Filter */}
-          <div className="flex items-center gap-3">
-            <div className="relative">
+          {/* Search and Filter Row */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
                 placeholder="Search applicants..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input w-64 h-9 text-sm pl-10"
+                className="search-input h-9 text-sm pl-10"
               />
             </div>
             
             <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-36 h-9 text-sm">
+              <SelectTrigger className="w-full sm:w-36 h-9 text-sm">
                 <CalendarIcon className="h-3 w-3 mr-1" />
                 <SelectValue />
               </SelectTrigger>
@@ -334,112 +359,62 @@ const ApplicantsTab = () => {
               </SelectContent>
             </Select>
           </div>
-
-          {/* Right side - Bulk Actions - Only show when items are selected */}
-          {selectedApplicants.length > 0 && (
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleBulkExport}
-                className="h-9 border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export CSV
-              </Button>
-              
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-9 border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
-              </Button>
-            </div>
-          )}
         </div>
       </div>
 
-      {/* Table */}
+      {/* Table - Mobile responsive */}
       {filteredApplicants.length > 0 ? (
         <div className="border rounded-lg overflow-hidden">
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-gray-50">
-                <TableHead className="w-12">
-                  <span className="sr-only">Select</span>
-                </TableHead>
-                <TableHead className="font-semibold">Name</TableHead>
-                <TableHead className="font-semibold">Contact</TableHead>
-                <TableHead className="font-semibold">Date of Birth</TableHead>
-                <TableHead className="font-semibold">Submitted</TableHead>
-                <TableHead className="font-semibold">Site</TableHead>
-                <TableHead className="font-semibold">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          {/* Mobile Card View */}
+          <div className="block sm:hidden">
+            <div className="space-y-3 p-4">
               {filteredApplicants.map((applicant) => (
-                <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50">
-                  <TableCell>
-                    <Checkbox
-                      checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
-                      onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
-                      className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                    />
-                  </TableCell>
-                  
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {applicant.firstName} {applicant.lastName}
-                      </p>
+                <div key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="bg-white border rounded-lg p-4 space-y-3">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-3">
+                      <Checkbox
+                        checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
+                        onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
+                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                      />
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">
+                          {applicant.firstName} {applicant.lastName}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {applicant.email}
+                        </p>
+                        <p className="text-xs text-gray-600">
+                          {applicant.phone}
+                        </p>
+                      </div>
                     </div>
-                  </TableCell>
-                  
-                  <TableCell>
-                    <div>
-                      <p className="text-sm text-gray-600">
-                        {applicant.email}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {applicant.phone}
-                      </p>
-                    </div>
-                  </TableCell>
-                  
-                  <TableCell>
-                    <p className="text-sm text-gray-900">
-                      {applicant.dateOfBirth}
-                    </p>
-                  </TableCell>
-                  
-                  <TableCell>
-                    <p className="text-sm text-gray-900">
-                      {formatTimeAgo(applicant.createdAt)}
-                    </p>
-                  </TableCell>
-                  
-                  <TableCell>
                     {getSiteBadge(applicant)}
-                  </TableCell>
+                  </div>
                   
-                  <TableCell>
-                    <div className="flex items-center space-x-2">
+                  <div className="text-xs text-gray-600">
+                    <p>DOB: {applicant.dateOfBirth}</p>
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2">
+                    <span className="text-xs text-gray-500">
+                      {formatTimeAgo(applicant.createdAt)}
+                    </span>
+                    <div className="flex items-center gap-2">
                       <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleViewApplicant(applicant)}
-                        className="h-8"
+                        className="h-7 text-xs"
                       >
-                        <Eye className="h-4 w-4 mr-1" />
+                        <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
                       
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
+                          <Button variant="outline" size="sm" className="h-7 w-7 p-0">
+                            <MoreHorizontal className="h-3 w-3" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
@@ -454,11 +429,110 @@ const ApplicantsTab = () => {
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>
-                  </TableCell>
-                </TableRow>
+                  </div>
+                </div>
               ))}
-            </TableBody>
-          </Table>
+            </div>
+          </div>
+
+          {/* Desktop Table View */}
+          <div className="hidden sm:block">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50">
+                  <TableHead className="w-12">
+                    <span className="sr-only">Select</span>
+                  </TableHead>
+                  <TableHead className="font-semibold">Name</TableHead>
+                  <TableHead className="font-semibold">Contact</TableHead>
+                  <TableHead className="font-semibold">Date of Birth</TableHead>
+                  <TableHead className="font-semibold">Submitted</TableHead>
+                  <TableHead className="font-semibold">Site</TableHead>
+                  <TableHead className="font-semibold">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredApplicants.map((applicant) => (
+                  <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50">
+                    <TableCell>
+                      <Checkbox
+                        checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
+                        onCheckedChange={(checked) => handleSelectApplicant(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`, !!checked)}
+                        className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                      />
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div>
+                        <p className="font-medium text-gray-900">
+                          {applicant.firstName} {applicant.lastName}
+                        </p>
+                      </div>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div>
+                        <p className="text-sm text-gray-600">
+                          {applicant.email}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          {applicant.phone}
+                        </p>
+                      </div>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <p className="text-sm text-gray-900">
+                        {applicant.dateOfBirth}
+                      </p>
+                    </TableCell>
+                    
+                    <TableCell>
+                      <p className="text-sm text-gray-900">
+                        {formatTimeAgo(applicant.createdAt)}
+                      </p>
+                    </TableCell>
+                    
+                    <TableCell>
+                      {getSiteBadge(applicant)}
+                    </TableCell>
+                    
+                    <TableCell>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewApplicant(applicant)}
+                          className="h-8"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
+                        
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
+                            <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Application
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleGenerateApplicantPdf(applicant)}>
+                              <Download className="h-4 w-4 mr-2" />
+                              Generate PDF
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       ) : (
         <div className="text-center py-16 bg-white border rounded-lg">

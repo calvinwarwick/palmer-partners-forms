@@ -183,40 +183,42 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+      <div className="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8 max-w-7xl">
+        {/* Header - Mobile optimized */}
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col gap-2 sm:gap-4">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
-              <p className="text-gray-600 text-lg">Manage tenancy applications and track performance</p>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Dashboard</h1>
+              <p className="text-gray-600 text-sm sm:text-base lg:text-lg">Manage tenancy applications and track performance</p>
             </div>
           </div>
         </div>
 
-        {/* Statistics */}
-        <AdminStats applications={applications} />
+        {/* Statistics - Mobile responsive */}
+        <div className="mb-4 sm:mb-6">
+          <AdminStats applications={applications} />
+        </div>
 
-        {/* Tabs */}
+        {/* Tabs - Mobile optimized */}
         <Tabs defaultValue="applications" className="w-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-50 rounded-lg p-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 sm:mb-6">
+            <TabsList className="grid w-full grid-cols-2 h-10 sm:h-12 bg-gray-50 rounded-lg p-1">
               <TabsTrigger 
                 value="applications" 
-                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+                className="text-sm sm:text-base lg:text-lg font-medium h-8 sm:h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applications
               </TabsTrigger>
               <TabsTrigger 
                 value="applicants" 
-                className="text-lg font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+                className="text-sm sm:text-base lg:text-lg font-medium h-8 sm:h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applicants
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="applications" className="space-y-6">
+          <TabsContent value="applications" className="space-y-4 sm:space-y-6">
             {/* Applications Table */}
             <Card className="shadow-sm border border-gray-200 overflow-hidden">
               <CardContent className="p-0">
@@ -233,13 +235,13 @@ const Admin = () => {
                     onDateFilterChange={setDateFilter}
                   />
                 ) : (
-                  <div className="text-center py-16 bg-white">
+                  <div className="text-center py-12 sm:py-16 bg-white">
                     <div className="text-gray-400 mb-4">
-                      <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <svg className="mx-auto h-12 sm:h-16 w-12 sm:w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <p className="text-gray-500 mb-4 text-lg">No applications found.</p>
+                    <p className="text-gray-500 mb-4 text-base sm:text-lg">No applications found.</p>
                   </div>
                 )}
               </CardContent>
