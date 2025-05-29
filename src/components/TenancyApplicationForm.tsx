@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -116,6 +115,10 @@ const TenancyApplicationForm = () => {
 
   const updateAdditionalDetails = (field: keyof AdditionalDetails, value: string) => {
     setAdditionalDetails(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleDataSharingChange = (field: string, value: boolean) => {
+    setDataSharing(prev => ({ ...prev, [field]: value }));
   };
 
   const fillAllTestData = () => {
@@ -236,7 +239,7 @@ const TenancyApplicationForm = () => {
   };
 
   if (isSubmitted) {
-    return <ApplicationSuccess />;
+    return <ApplicationSuccess applicants={applicants} />;
   }
 
   const stepTitles = [
@@ -300,7 +303,7 @@ const TenancyApplicationForm = () => {
           <TermsAndDataStep
             dataSharing={dataSharing}
             termsAccepted={termsAccepted}
-            onDataSharingChange={setDataSharing}
+            onDataSharingChange={handleDataSharingChange}
             onTermsAcceptedChange={setTermsAccepted}
           />
         );
