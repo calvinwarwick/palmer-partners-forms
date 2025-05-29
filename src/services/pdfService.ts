@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,8 +17,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   const doc = new jsPDF();
   let yPosition = 20;
   
-  // Add Lexend font (using Helvetica as fallback since custom fonts require additional setup)
-  // For now, we'll use Helvetica but set the font size to 12px as requested
+  // Set default font to Helvetica (closest to Lexend) with 12px size
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(12);
   
@@ -74,14 +72,14 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setLineWidth(2);
     doc.line(15, yPosition + 10, 195, yPosition + 10);
     
-    // White text, centered, size 12, Lexend font
+    // White text, centered, size 12, Lexend font (Helvetica fallback)
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'normal');
     yPosition = addText(title, 0, yPosition + 3, 0, 'center');
     yPosition += 15;
     doc.setTextColor(0, 0, 0); // reset to black
-    doc.setFontSize(12); // reset to 12px Lexend
+    doc.setFontSize(12); // reset to 12px
   };
 
   // Helper function to add subsection headers within tables (Employment Details, etc.)
@@ -125,13 +123,13 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.rect(15, yPosition - 2, 45, 10, 'S'); // left cell border
     doc.rect(60, yPosition - 2, 135, 10, 'S'); // right cell border
     
-    // Label text (left column) - bold, 12px Lexend
+    // Label text (left column) - bold, 12px Lexend (Helvetica fallback)
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
     yPosition = addText(label, 23, yPosition + 3); // 8px padding from left
     
-    // Value text (right column) - normal, 12px Lexend
+    // Value text (right column) - normal, 12px Lexend (Helvetica fallback)
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(0, 0, 0);
     yPosition = addText(value || '-', 68, yPosition - 6, 125); // 8px padding from left edge of right column
