@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Maximize2, X } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface SignaturePadProps {
   value?: string;
@@ -28,24 +29,32 @@ const SignaturePad = ({
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width, height });
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const isMobile = useIsMobile();
 
   // Handle responsive canvas sizing
   useEffect(() => {
     const updateCanvasSize = () => {
-      if (containerRef.current) {
+      if (containerRef.current && !isFullscreen) {
         const containerWidth = containerRef.current.clientWidth - 32; // Account for padding
         const aspectRatio = height / width;
         const newWidth = Math.min(containerWidth, width);
         const newHeight = newWidth * aspectRatio;
         
         setCanvasSize({ width: newWidth, height: newHeight });
+      } else if (isFullscreen) {
+        // Fullscreen mode - use screen dimensions
+        setCanvasSize({ 
+          width: window.innerWidth - 40, 
+          height: window.innerHeight - 120 
+        });
       }
     };
 
     updateCanvasSize();
     window.addEventListener('resize', updateCanvasSize);
     return () => window.removeEventListener('resize', updateCanvasSize);
-  }, [width, height]);
+  }, [width, height, isFullscreen]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -166,6 +175,73 @@ const SignaturePad = ({
     }
   };
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
+  // Fullscreen overlay component
+  if (isFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 bg-white flex flex-col">
+        <div className="flex justify-between items-center p-4 border-b">
+          <h3 className="text-lg font-semibold">Digital Signature</h3>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={toggleFullscreen}
+            className="flex items-center gap-2"
+          >
+            <X className="h-4 w-4" />
+            Exit Fullscreen
+          </Button>
+        </div>
+        
+        <div className="flex-1 p-4 flex flex-col">
+          <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm flex-1 ${
+            hasSignature ? 'border-2 border-green-500' : 'border-2 border-black'
+          }`}>
+            <canvas
+              ref={canvasRef}
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onMouseLeave={stopDrawing}
+              onTouchStart={startDrawing}
+              onTouchMove={draw}
+              onTouchEnd={stopDrawing}
+              className="cursor-crosshair w-full h-full block touch-none"
+              style={{ 
+                width: '100%', 
+                height: '100%'
+              }}
+            />
+            
+            {!hasSignature && (
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="text-center text-gray-400">
+                  <p className="text-lg">Sign here</p>
+                </div>
+              </div>
+            )}
+          </div>
+          
+          <div className="flex justify-end mt-4">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearSignature}
+              disabled={!hasSignature}
+              className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Clear
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div ref={containerRef} className="w-full">
       <Card className="w-full border border-gray-300 bg-gray-50">
@@ -178,33 +254,49 @@ const SignaturePad = ({
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${
-            hasSignature ? 'border-2 border-green-500' : 'border border-gray-300'
-          }`}>
-            <canvas
-              ref={canvasRef}
-              onMouseDown={startDrawing}
-              onMouseMove={draw}
-              onMouseUp={stopDrawing}
-              onMouseLeave={stopDrawing}
-              onTouchStart={startDrawing}
-              onTouchMove={draw}
-              onTouchEnd={stopDrawing}
-              className="cursor-crosshair w-full block touch-none"
-              style={{ 
-                width: '100%', 
-                height: `${canvasSize.height}px`,
-                minHeight: '150px'
-              }}
-            />
-            
-            {!hasSignature && (
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="text-center text-gray-400">
-                  <p className="text-sm">Sign here</p>
+          <div className="relative">
+            <div className={`relative bg-white rounded-lg overflow-hidden shadow-sm transition-colors duration-300 ${
+              hasSignature ? 'border-2 border-green-500' : 'border-2 border-black'
+            }`}>
+              <canvas
+                ref={canvasRef}
+                onMouseDown={startDrawing}
+                onMouseMove={draw}
+                onMouseUp={stopDrawing}
+                onMouseLeave={stopDrawing}
+                onTouchStart={startDrawing}
+                onTouchMove={draw}
+                onTouchEnd={stopDrawing}
+                className="cursor-crosshair w-full block touch-none"
+                style={{ 
+                  width: '100%', 
+                  height: `${canvasSize.height}px`,
+                  minHeight: '150px'
+                }}
+              />
+              
+              {!hasSignature && (
+                <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                  <div className="text-center text-gray-400">
+                    <p className="text-sm">Sign here</p>
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+            
+            {/* Clear button positioned at bottom right */}
+            <div className="absolute bottom-2 right-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearSignature}
+                disabled={!hasSignature}
+                className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            </div>
           </div>
           
           <div className="space-y-4">
@@ -222,19 +314,20 @@ const SignaturePad = ({
                 className="mt-1"
               />
             </div>
-          </div>
-          
-          <div className="flex gap-2 justify-center flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={clearSignature}
-              disabled={!hasSignature}
-              className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300"
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Clear
-            </Button>
+            
+            {isMobile && (
+              <div className="flex justify-center">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={toggleFullscreen}
+                  className="border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300"
+                >
+                  <Maximize2 className="h-4 w-4 mr-2" />
+                  Fullscreen Signature
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
