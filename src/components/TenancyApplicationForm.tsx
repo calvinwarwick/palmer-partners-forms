@@ -487,7 +487,7 @@ const TenancyApplicationForm = () => {
                     </>
                   ) : (
                     <>
-                      Submit Application
+                      Submit
                       <CheckCircle className="h-4 w-4 ml-2" />
                     </>
                   )}

@@ -2,7 +2,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Trash2, Download, PenTool } from 'lucide-react';
+import { Trash2, PenTool } from 'lucide-react';
 
 interface SignaturePadProps {
   value?: string;
@@ -155,22 +155,11 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
     }
   };
 
-  const downloadSignature = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const link = document.createElement('a');
-    link.download = 'signature.png';
-    link.href = canvas.toDataURL('image/png', 1.0);
-    link.click();
-  };
-
   return (
     <div ref={containerRef} className="w-full">
-      <Card className="w-full border-2 border-dashed border-orange-200 bg-orange-50/30">
+      <Card className="w-full border border-gray-200 bg-gray-50">
         <CardHeader className="pb-4">
-          <CardTitle className="text-lg flex items-center gap-2 text-orange-700">
-            <PenTool className="h-5 w-5" />
+          <CardTitle className="text-lg text-black">
             Digital Signature Required
           </CardTitle>
           <p className="text-sm text-gray-600">
@@ -178,7 +167,7 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="relative bg-white border-2 border-gray-200 rounded-lg overflow-hidden shadow-sm">
+          <div className="relative bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
             <canvas
               ref={canvasRef}
               onMouseDown={startDrawing}
@@ -217,17 +206,6 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
               <Trash2 className="h-4 w-4 mr-2" />
               Clear
             </Button>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={downloadSignature}
-              disabled={!hasSignature}
-              className="border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-300"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download
-            </Button>
           </div>
           
           {hasSignature && (
@@ -235,12 +213,6 @@ const SignaturePad = ({ value, onChange, width = 600, height = 200 }: SignatureP
               <p className="text-sm text-green-600 font-medium">✓ Signature captured successfully</p>
             </div>
           )}
-          
-          <div className="text-xs text-gray-500 text-center space-y-1">
-            <p>• Draw your signature using your mouse or finger</p>
-            <p>• Use the Clear button to start over if needed</p>
-            <p>• Your signature will be saved automatically when you draw</p>
-          </div>
         </CardContent>
       </Card>
     </div>
