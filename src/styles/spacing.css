@@ -1,5 +1,5 @@
 
-/* Override all spacing utilities to use 10px */
+/* Override all spacing utilities to use reduced spacing */
 .space-y-1 > :not([hidden]) ~ :not([hidden]),
 .space-y-2 > :not([hidden]) ~ :not([hidden]),
 .space-y-3 > :not([hidden]) ~ :not([hidden]),
@@ -8,15 +8,30 @@
 .space-y-6 > :not([hidden]) ~ :not([hidden]),
 .space-y-7 > :not([hidden]) ~ :not([hidden]),
 .space-y-8 > :not([hidden]) ~ :not([hidden]) {
-  margin-top: 10px !important;
+  margin-top: 8px !important;
   margin-bottom: 0 !important;
 }
 
-/* Ensure all form elements have consistent spacing */
+/* Ensure all form elements have consistent reduced spacing */
+.form-control,
+.form-select {
+  margin-bottom: 0 !important;
+}
+
 .form-control + *,
 .form-select + *,
 input + *,
 select + *,
 textarea + * {
-  margin-top: 10px !important;
+  margin-top: 8px !important;
+}
+
+/* Specific spacing for date input containers */
+.date-input-container {
+  margin-bottom: 0 !important;
+}
+
+/* Grid gap override for form layouts */
+.grid.gap-4 {
+  gap: 12px !important;
 }
