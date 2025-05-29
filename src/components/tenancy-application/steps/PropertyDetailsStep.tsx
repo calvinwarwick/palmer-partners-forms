@@ -55,116 +55,118 @@ const PropertyDetailsStep = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="streetAddress" className="text-sm font-medium text-gray-700">
-            Address <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="streetAddress"
-            value={propertyPreferences.streetAddress}
-            onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
-            placeholder="Rental property address"
-            className="h-11 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="postcode" className="text-sm font-medium text-gray-700">
-            Postcode <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="postcode"
-            value={propertyPreferences.postcode}
-            onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
-            placeholder="Rental property postcode"
-            className="h-11 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="maxRent" className="text-sm font-medium text-gray-700">
-            Rental amount <span className="text-red-500">*</span>
-          </Label>
-          <div className="relative">
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
+      <div className="form-section">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-2">
+            <Label htmlFor="streetAddress" className="form-label">
+              Address <span className="text-red-500">*</span>
+            </Label>
             <Input
-              id="maxRent"
-              type="number"
-              value={propertyPreferences.maxRent}
-              onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
-              placeholder=""
-              className="h-11 pl-8 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              id="streetAddress"
+              value={propertyPreferences.streetAddress}
+              onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
+              placeholder="Rental property address"
+              className="form-control"
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="postcode" className="form-label">
+              Postcode <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="postcode"
+              value={propertyPreferences.postcode}
+              onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
+              placeholder="Rental property postcode"
+              className="form-control"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="maxRent" className="form-label">
+              Rental amount <span className="text-red-500">*</span>
+            </Label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10">£</span>
+              <Input
+                id="maxRent"
+                type="number"
+                value={propertyPreferences.maxRent}
+                onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
+                placeholder=""
+                className="form-control pl-8"
+                required
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+          <div className="space-y-2">
+            <Label htmlFor="moveInDate" className="form-label">
+              Preferred move-in date <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="moveInDate"
+              type="date"
+              value={propertyPreferences.moveInDate}
+              onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+              className="form-control"
+              placeholder="dd/mm/yyyy"
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="latestMoveInDate" className="form-label">
+              Latest move-in date <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="latestMoveInDate"
+              type="date"
+              value={propertyPreferences.latestMoveInDate}
+              onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
+              className="form-control"
+              placeholder="dd/mm/yyyy"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="initialTenancyTerm" className="form-label">
+              Preferred initial tenancy term <span className="text-red-500">*</span>
+            </Label>
+            <Select 
+              value={propertyPreferences.initialTenancyTerm} 
+              onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
+            >
+              <SelectTrigger id="initialTenancyTerm" className="form-select">
+                <SelectValue placeholder="Select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="6 months">6 months</SelectItem>
+                <SelectItem value="1 year">1 year</SelectItem>
+                <SelectItem value="18 months">18 months</SelectItem>
+                <SelectItem value="2 years">2 years</SelectItem>
+                <SelectItem value="flexible">Flexible</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="moveInDate" className="text-sm font-medium text-gray-700">
-            Preferred move-in date <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="moveInDate"
-            type="date"
-            value={propertyPreferences.moveInDate}
-            onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-            className="h-11 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-            placeholder="dd/mm/yyyy"
-            required
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="latestMoveInDate" className="text-sm font-medium text-gray-700">
-            Latest move-in date <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="latestMoveInDate"
-            type="date"
-            value={propertyPreferences.latestMoveInDate}
-            onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-            className="h-11 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-            placeholder="dd/mm/yyyy"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="initialTenancyTerm" className="text-sm font-medium text-gray-700">
-            Preferred initial tenancy term <span className="text-red-500">*</span>
-          </Label>
-          <Select 
-            value={propertyPreferences.initialTenancyTerm} 
-            onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
-          >
-            <SelectTrigger id="initialTenancyTerm" className="h-11 border-gray-300 focus:border-orange-500 focus:ring-orange-500">
-              <SelectValue placeholder="Select an option" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="6 months">6 months</SelectItem>
-              <SelectItem value="1 year">1 year</SelectItem>
-              <SelectItem value="18 months">18 months</SelectItem>
-              <SelectItem value="2 years">2 years</SelectItem>
-              <SelectItem value="flexible">Flexible</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="mt-12">
+      <div className="form-section">
         <h3 className="text-xl font-semibold text-gray-900 mb-6">Applicant Details</h3>
-        <p className="text-gray-600 mb-6">Please select the number of adults who will be staying at the property and provide details for each applicant.</p>
+        <p className="text-gray-600 mb-6">Please select the number of adults who will be staying at the property and provide details for each applicant below.</p>
         
         <div className="space-y-2">
-          <Label htmlFor="applicantCount" className="text-sm font-medium text-gray-700">
+          <Label htmlFor="applicantCount" className="form-label">
             How many adults will be living in the property? Please ensure you provide details for each applicant below. <span className="text-red-500">*</span>
           </Label>
           <Select>
-            <SelectTrigger id="applicantCount" className="h-11 border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+            <SelectTrigger id="applicantCount" className="form-select">
               <SelectValue placeholder="Select an option" />
             </SelectTrigger>
             <SelectContent>
