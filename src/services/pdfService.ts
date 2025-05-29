@@ -57,7 +57,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a black header section (NO bottom margin)
+  // Helper function to add a black header section with spacing after
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(15);
     
@@ -70,12 +70,12 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 3, 0, 'center');
-    yPosition += 2; // Reduced from 10 to 2 to remove bottom margin
+    yPosition += 2;
     doc.setTextColor(0, 0, 0); // reset to black
     doc.setFont('helvetica', 'normal');
   };
 
-  // Helper function to add subsection headers (NO bottom margin)
+  // Helper function to add subsection headers
   const addSubsectionHeader = (title: string) => {
     yPosition = checkNewPage(10);
     
@@ -93,7 +93,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 4, 0, 'center');
-    yPosition += 0; // Removed bottom margin completely
+    yPosition += 0;
     doc.setFont('helvetica', 'normal');
   };
 
@@ -127,6 +127,11 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.text(wrappedValue, 83, yPosition + 3);
     
     yPosition += 10;
+  };
+
+  // Helper function to add section spacing
+  const addSectionSpacing = () => {
+    yPosition += 15; // Add 15 units of space after each section
   };
 
   // Main title
@@ -169,6 +174,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   propertyRows.forEach(([label, value]) => {
     addTableRow(label, value);
   });
+
+  // Add spacing after Property Details section
+  addSectionSpacing();
 
   // Applicant sections
   data.applicants.forEach((applicant, index) => {
@@ -235,6 +243,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     additionalInfoRows.forEach(([label, value]) => {
       addTableRow(label, value);
     });
+
+    // Add spacing after each Applicant section
+    addSectionSpacing();
   });
 
   // Data Sharing Section
@@ -245,6 +256,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   ].forEach(([label, value]) => {
     addTableRow(label, value);
   });
+
+  // Add spacing after Data Sharing section
+  addSectionSpacing();
 
   // Signature Section
   addSectionHeader('Signature');
@@ -291,6 +305,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   }
   
   addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'));
+
+  // Add spacing after Signature section
+  addSectionSpacing();
 
   // Activity Log Section (if available)
   if (data.applicationId) {
