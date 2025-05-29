@@ -279,7 +279,7 @@ const TenancyApplicationForm = () => {
     if (canProceedToNext) {
       goToNext();
     } else {
-      // Get invalid fields and highlight them
+      // Get invalid fields and handle validation highlighting
       const invalidFields = validateAndHighlightFields(
         currentStep, 
         applicants, 
@@ -290,12 +290,8 @@ const TenancyApplicationForm = () => {
         fullName
       );
       
-      // Highlight each invalid field with a delay
-      invalidFields.forEach((fieldId, index) => {
-        setTimeout(() => {
-          highlightInvalidField(fieldId);
-        }, index * 500); // 500ms delay between each highlight
-      });
+      // Use the new handleValidationErrors function
+      handleValidationErrors(invalidFields);
     }
   };
 
