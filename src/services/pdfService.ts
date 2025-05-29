@@ -1,3 +1,4 @@
+
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
@@ -52,57 +53,74 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a styled section header
+  // Helper function to add a styled section header with new CSS styling
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(20);
     
-    // Dark background header - matching preview exactly
-    doc.setFillColor(31, 41, 55); // gray-800
-    doc.rect(10, yPosition - 3, 190, 12, 'F');
+    // Dark background header with rounded corners and border - matching new CSS
+    doc.setFillColor(32, 32, 32); // #202020
+    // Create rounded rectangle effect by drawing main rectangle
+    doc.rect(10, yPosition - 3, 190, 14, 'F');
+    
+    // Add black border at bottom (2px solid black)
+    doc.setFillColor(0, 0, 0); // black
+    doc.rect(10, yPosition + 9, 190, 2, 'F');
+    
+    // White text, centered, 12px font size
     doc.setTextColor(255, 255, 255); // white text
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    // Center text vertically in the rectangle (rectangle height is 12, so center at yPosition + 3)
-    yPosition = addText(title, 0, yPosition + 6, 0, 'center'); // centered vertically and horizontally
-    yPosition += 12;
+    yPosition = addText(title, 0, yPosition + 6, 0, 'center');
+    yPosition += 15;
     doc.setTextColor(0, 0, 0); // reset to black
   };
 
   // Helper function to add a subsection header
   const addSubSectionHeader = (title: string) => {
     yPosition = checkNewPage(12);
-    doc.setFillColor(229, 231, 235); // gray-200
+    
+    // Same styling as main section headers but smaller
+    doc.setFillColor(32, 32, 32); // #202020
     doc.rect(10, yPosition - 3, 190, 12, 'F');
+    
+    // Add black border at bottom
+    doc.setFillColor(0, 0, 0); // black
+    doc.rect(10, yPosition + 7, 190, 2, 'F');
+    
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(31, 41, 55); // gray-800
-    // Center text vertically in the rectangle (rectangle height is 12, so center at yPosition + 3)
-    yPosition = addText(title, 0, yPosition + 6, 0, 'center'); // centered vertically and horizontally
-    yPosition += 7;
+    doc.setTextColor(255, 255, 255); // white text
+    yPosition = addText(title, 0, yPosition + 4, 0, 'center');
+    yPosition += 12;
     doc.setTextColor(0, 0, 0); // reset to black
   };
 
-  // Helper function to add a table row - matching preview styling exactly
+  // Helper function to add a table row with new styling
   const addTableRow = (label: string, value: string, isOdd = false) => {
     yPosition = checkNewPage(12);
     
-    // Alternating row colors - matching preview page exactly
+    // Left column with #f2f2f2 background (label column)
+    doc.setFillColor(242, 242, 242); // #f2f2f2
+    doc.rect(10, yPosition - 2, 70, 10, 'F');
+    
+    // Right column with white background (value column)
     if (isOdd) {
-      doc.setFillColor(249, 250, 251); // gray-50
-      doc.rect(10, yPosition - 2, 190, 10, 'F');
+      doc.setFillColor(249, 250, 251); // gray-50 for alternating
     } else {
       doc.setFillColor(255, 255, 255); // white
-      doc.rect(10, yPosition - 2, 190, 10, 'F');
     }
+    doc.rect(80, yPosition - 2, 120, 10, 'F');
     
+    // Label text (left column)
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(31, 41, 55); // gray-800
-    yPosition = addText(label, 15, yPosition + 3);
+    yPosition = addText(label, 15, yPosition + 3); // 8px padding + 2px for text positioning
     
+    // Value text (right column)
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(17, 24, 39); // gray-900
-    yPosition = addText(value || '-', 80, yPosition - 6, 110);
+    yPosition = addText(value || '-', 85, yPosition - 6, 110); // 5px padding from left edge of right column
     yPosition += 2;
     doc.setTextColor(0, 0, 0); // reset
   };
@@ -110,7 +128,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   // Header with logo and title - matching preview exactly
   yPosition = checkNewPage(40);
   
-  // Logo area with grey background - matching the preview page
+  // Logo area with grey background
   doc.setFillColor(229, 231, 235); // gray-200 background for logo area
   doc.rect(10, yPosition - 8, 190, 25, 'F');
   
@@ -129,7 +147,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   doc.rect(10, yPosition + 8, 190, 1, 'F');
   yPosition += 20;
   
-  // Main title - exactly like preview
+  // Main title
   doc.setTextColor(0, 0, 0);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
@@ -285,8 +303,6 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
   yPosition = checkNewPage(15);
   
   if (data.signature && data.signature.startsWith('data:image/')) {
-    // For digital signatures, we'd need to embed the image
-    // For now, just indicate it's a digital signature
     addTableRow('Signature Type', 'Digital Signature', false);
   } else {
     addTableRow('Full Name', data.signature || '', false);
@@ -294,7 +310,7 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
   }
   addTableRow('Submitted At', format(new Date(data.submittedAt), 'do MMMM yyyy - h:mm aa'), false);
 
-  // Activity Log Section (if available) - styled like the image with IP addresses
+  // Activity Log Section (if available)
   if (data.applicationId) {
     try {
       const { data: activityLogs, error } = await supabase
@@ -312,33 +328,37 @@ Should a tenant/applicant have any problems with Palmer & Partners' services you
         activityLogs.forEach((log: any, index: number) => {
           yPosition = checkNewPage(15);
           
-          // Alternating row colors like the image
+          // Left column with #f2f2f2 background for action
+          doc.setFillColor(242, 242, 242); // #f2f2f2
+          doc.rect(10, yPosition - 2, 95, 12, 'F');
+          
+          // Right column for timestamp and IP
           if (index % 2 === 0) {
             doc.setFillColor(249, 250, 251); // gray-50
-            doc.rect(10, yPosition - 2, 190, 12, 'F');
+          } else {
+            doc.setFillColor(255, 255, 255); // white
           }
+          doc.rect(105, yPosition - 2, 95, 12, 'F');
           
           const timestamp = format(new Date(log.created_at), 'do-MMM-yyyy h:mm aa');
           const action = log.action;
-          const ipAddress = log.ip_address ? `IP Address: ${log.ip_address}` : '';
+          const ipAddress = log.ip_address ? `IP: ${log.ip_address}` : '';
           
-          // Add icon placeholder (small colored square)
-          doc.setFillColor(100, 100, 100); // gray icon placeholder
-          doc.rect(15, yPosition + 1, 8, 8, 'F');
-          
+          // Add action in left column
           doc.setFont('helvetica', 'bold');
           doc.setTextColor(17, 24, 39); // gray-900
-          yPosition = addText(action, 28, yPosition + 3);
+          yPosition = addText(action, 15, yPosition + 3);
           
-          if (ipAddress) {
-            doc.setFont('helvetica', 'normal');
-            doc.setTextColor(75, 85, 99); // gray-600
-            yPosition = addText(ipAddress, 28, yPosition);
-          }
-          
+          // Add timestamp and IP in right column
           doc.setFont('helvetica', 'normal');
           doc.setTextColor(107, 114, 128); // gray-500
-          yPosition = addText(timestamp, 150, yPosition - (ipAddress ? 6 : 0));
+          yPosition = addText(timestamp, 110, yPosition - 6);
+          
+          if (ipAddress) {
+            doc.setTextColor(75, 85, 99); // gray-600
+            yPosition = addText(ipAddress, 110, yPosition);
+          }
+          
           yPosition += 5;
         });
       }
