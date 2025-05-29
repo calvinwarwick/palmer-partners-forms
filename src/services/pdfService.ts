@@ -53,36 +53,50 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a styled section header matching HTML h4
+  // Helper function to add a styled section header (H4 styling)
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(20);
     
-    // Section header styling matching HTML h4
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(0, 0, 0);
-    yPosition = addText(title, 15, yPosition);
-    yPosition += 10;
+    // H4 styling with rounded corners and border
+    doc.setFillColor(32, 32, 32); // #202020
+    doc.roundedRect(15, yPosition - 5, 180, 15, 2.5, 2.5, 'F'); // rounded corners top only
+    
+    // Black border bottom
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(2);
+    doc.line(15, yPosition + 10, 195, yPosition + 10);
+    
+    // White text, centered, size 12
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
+    yPosition = addText(title, 0, yPosition + 3, 0, 'center');
+    yPosition += 15;
+    doc.setTextColor(0, 0, 0); // reset to black
   };
 
   // Helper function to add subsection headers within tables (Employment Details, etc.)
   const addTableSubsectionRow = (title: string) => {
     yPosition = checkNewPage(12);
     
-    // Section header row styling - matches HTML class="section-header"
-    doc.setFillColor(32, 32, 32); // #202020
-    doc.rect(15, yPosition - 3, 180, 12, 'F');
+    // Section header row styling - light grey background
+    doc.setFillColor(216, 216, 216); // rgb(216, 216, 216)
+    doc.rect(15, yPosition - 2, 180, 10, 'F');
     
-    // White text, centered, bold
-    doc.setTextColor(255, 255, 255);
+    // Border for table cell
+    doc.setDrawColor(221, 221, 221); // #ddd
+    doc.setLineWidth(0.5);
+    doc.rect(15, yPosition - 2, 180, 10, 'S');
+    
+    // Black text, centered, bold, size 10
+    doc.setTextColor(0, 0, 0);
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 4, 0, 'center');
     yPosition += 8;
-    doc.setTextColor(0, 0, 0); // reset to black
   };
 
-  // Helper function to add a table row matching HTML structure
+  // Helper function to add a table row with borders
   const addTableRow = (label: string, value: string) => {
     yPosition = checkNewPage(12);
     
@@ -94,23 +108,29 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(255, 255, 255); // white
     doc.rect(60, yPosition - 2, 135, 10, 'F'); // 75% of 180px = 135px
     
+    // Borders for both cells
+    doc.setDrawColor(221, 221, 221); // #ddd
+    doc.setLineWidth(0.5);
+    doc.rect(15, yPosition - 2, 45, 10, 'S'); // left cell border
+    doc.rect(60, yPosition - 2, 135, 10, 'S'); // right cell border
+    
     // Label text (left column) - bold
     doc.setFontSize(9);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    yPosition = addText(label, 18, yPosition + 3); // 8px padding from left
+    yPosition = addText(label, 23, yPosition + 3); // 8px padding from left
     
     // Value text (right column) - normal
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(0, 0, 0);
-    yPosition = addText(value || '-', 63, yPosition - 6, 130); // 3px padding from left edge of right column
+    yPosition = addText(value || '-', 68, yPosition - 6, 125); // 8px padding from left edge of right column
     yPosition += 2;
   };
 
   // Header with logo and title
   yPosition = checkNewPage(40);
   
-  // Logo area with grey background - matching HTML design
+  // Logo area with grey background
   doc.setFillColor(229, 231, 235); // gray-200 background
   doc.rect(10, yPosition - 8, 190, 25, 'F');
   
