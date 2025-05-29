@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -450,15 +449,8 @@ const TenancyApplicationForm = () => {
             {renderStepContent()}
             
             <div className="flex justify-between mt-8 pt-6 border-t border-border">
-              {isFirstStep ? (
-                <a
-                  href="https://palmerpartners.com"
-                  className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-orange-500 bg-background hover:bg-orange-500 hover:text-white text-orange-500 h-10 px-4 py-2"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Palmer & Partners
-                </a>
-              ) : (
+              {/* Only show previous button if not on first step */}
+              {!isFirstStep && (
                 <Button
                   variant="outline"
                   onClick={goToPrevious}
@@ -469,6 +461,9 @@ const TenancyApplicationForm = () => {
                   Previous
                 </Button>
               )}
+              
+              {/* Empty div to maintain spacing when no previous button */}
+              {isFirstStep && <div></div>}
               
               {!isLastStep ? (
                 <Button

@@ -1,0 +1,78 @@
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 640px) {
+  .form-control,
+  .form-select {
+    @apply text-base;
+    min-height: 48px;
+    padding: 0.875rem;
+    margin-bottom: 10px !important;
+  }
+  
+  input[type="date"] {
+    padding-left: 2.75rem !important;
+  }
+  
+  .date-input-container {
+    margin-bottom: 10px !important;
+  }
+  
+  .container {
+    @apply px-4;
+  }
+  
+  .mobile-form-grid {
+    gap: 10px !important;
+  }
+  
+  .mobile-form-grid > * {
+    @apply w-full;
+    margin-bottom: 10px !important;
+  }
+  
+  .card {
+    @apply mx-1;
+  }
+  
+  .card-content {
+    @apply p-4;
+  }
+  
+  .step-indicator {
+    min-width: 60px;
+    display: none;
+  }
+  
+  .step-indicator.mobile-visible {
+    display: flex;
+  }
+  
+  .step-indicator span {
+    font-size: 0.65rem;
+    line-height: 1.1;
+  }
+
+  .mobile-checkbox {
+    @apply w-3.5 h-3.5;
+    min-width: 14px !important;
+    min-height: 14px !important;
+  }
+
+  .btn,
+  button {
+    min-height: 48px;
+    @apply text-base;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .form-control,
+  .form-select {
+    min-height: 44px;
+  }
+  
+  .container {
+    @apply px-6;
+  }
+}

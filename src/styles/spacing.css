@@ -1,0 +1,22 @@
+
+/* Override all spacing utilities to use 10px */
+.space-y-1 > :not([hidden]) ~ :not([hidden]),
+.space-y-2 > :not([hidden]) ~ :not([hidden]),
+.space-y-3 > :not([hidden]) ~ :not([hidden]),
+.space-y-4 > :not([hidden]) ~ :not([hidden]),
+.space-y-5 > :not([hidden]) ~ :not([hidden]),
+.space-y-6 > :not([hidden]) ~ :not([hidden]),
+.space-y-7 > :not([hidden]) ~ :not([hidden]),
+.space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 10px !important;
+  margin-bottom: 0 !important;
+}
+
+/* Ensure all form elements have consistent spacing */
+.form-control + *,
+.form-select + *,
+input + *,
+select + *,
+textarea + * {
+  margin-top: 10px !important;
+}

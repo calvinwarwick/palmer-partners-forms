@@ -1,0 +1,70 @@
+
+/* Form spacing and styling */
+.form-control,
+.form-select {
+  @apply w-full px-3 py-3 border border-input bg-transparent rounded-md text-foreground;
+  @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
+  background-color: transparent !important;
+  margin-bottom: 10px !important;
+}
+
+.form-select {
+  @apply bg-white;
+}
+
+.form-select option {
+  @apply bg-white text-foreground;
+  padding: 0.75rem;
+}
+
+/* Improved label styling */
+.form-label {
+  @apply block text-sm font-medium text-muted-foreground;
+}
+
+/* Helper tooltip styling */
+.help-tooltip {
+  @apply text-orange-500 hover:text-orange-600 cursor-help;
+}
+
+/* Date input specific styling with icon inside */
+.date-input-container {
+  @apply relative;
+  margin-bottom: 10px !important;
+}
+
+.date-input-icon {
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-primary pointer-events-none z-10;
+}
+
+input[type="date"] {
+  @apply pl-10;
+  direction: ltr;
+  padding-left: 2.75rem !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+input[type="date"]::-webkit-inner-spin-button {
+  display: none;
+}
+
+/* Fix search input padding to prevent icon overlap */
+.search-input {
+  padding-left: 2.75rem !important;
+}
+
+/* Signature input full width styling */
+.signature-input {
+  @apply w-full;
+  width: 100% !important;
+}
