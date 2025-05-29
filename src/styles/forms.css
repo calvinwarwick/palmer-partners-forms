@@ -6,7 +6,8 @@
   @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
   @apply disabled:cursor-not-allowed disabled:opacity-50;
   background-color: transparent !important;
-  margin-bottom: 10px !important;
+  height: 2.75rem !important; /* Consistent height for all inputs */
+  margin-bottom: 0 !important; /* Remove margin as FormFieldWithTooltip handles spacing */
 }
 
 .form-select {
@@ -20,7 +21,7 @@
 
 /* Improved label styling */
 .form-label {
-  @apply block text-sm font-medium text-muted-foreground;
+  @apply block text-sm font-medium text-muted-foreground mb-2;
 }
 
 /* Helper tooltip styling */
@@ -31,7 +32,6 @@
 /* Date input specific styling with icon inside */
 .date-input-container {
   @apply relative;
-  margin-bottom: 10px !important;
 }
 
 .date-input-icon {
@@ -42,6 +42,7 @@ input[type="date"] {
   @apply pl-10;
   direction: ltr;
   padding-left: 2.75rem !important;
+  height: 2.75rem !important; /* Match other inputs */
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
@@ -61,10 +62,27 @@ input[type="date"]::-webkit-inner-spin-button {
 /* Fix search input padding to prevent icon overlap */
 .search-input {
   padding-left: 2.75rem !important;
+  height: 2.75rem !important; /* Match other inputs */
 }
 
 /* Signature input full width styling */
 .signature-input {
   @apply w-full;
   width: 100% !important;
+  min-height: 120px !important; /* Consistent signature pad height */
+}
+
+/* Input component override for consistent sizing */
+.form-field input,
+.form-field select,
+.form-field textarea {
+  height: 2.75rem !important;
+  font-size: 0.875rem !important; /* Consistent font size */
+  line-height: 1.25rem !important;
+}
+
+.form-field textarea {
+  min-height: 4rem !important; /* Minimum height for textareas */
+  height: auto !important; /* Allow textareas to expand */
+  resize: vertical !important;
 }

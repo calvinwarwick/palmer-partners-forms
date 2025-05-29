@@ -239,6 +239,8 @@ const Admin = () => {
               onSearchChange={setSearchTerm}
               dateFilter={dateFilter}
               onDateFilterChange={setDateFilter}
+              customDateRange={customDateRange}
+              onCustomDateRangeChange={setCustomDateRange}
             />
           </TabsContent>
 
