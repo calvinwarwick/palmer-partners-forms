@@ -411,14 +411,16 @@ const TenancyApplicationForm = () => {
   const { allSteps, visibleSteps } = getMobileVisibleSteps();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-50 py-8">
-      <div className="container mx-auto px-4 max-w-5xl">
+    <div className="min-h-screen bg-gray-50 py-6">
+      <div className="container mx-auto px-4 max-w-4xl">
+        {/* Header with Palmer & Partners branding */}
         <div className="mb-8">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="p-3 bg-orange-500 rounded-full shadow-lg">
-              <Home className="h-8 w-8 text-white" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900">Tenancy Application</h1>
+          <div className="text-center mb-6">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              Palmer <span className="text-orange-500">&</span> Partners
+            </h1>
+            <div className="w-full h-1 bg-orange-500 mb-6"></div>
+            <h2 className="text-2xl font-semibold text-gray-800">Tenancy Application</h2>
           </div>
 
           <div className="mb-8">
@@ -426,56 +428,58 @@ const TenancyApplicationForm = () => {
               <span className="font-medium">Step {currentStep} of {totalSteps}</span>
               <span className="font-medium">{Math.round(progress)}% Complete</span>
             </div>
-            <Progress value={progress} className="h-3 bg-gray-200" />
+            <Progress value={progress} className="h-2 bg-gray-200" />
           </div>
 
           {/* Enhanced Desktop step indicators */}
-          <div className="hidden md:flex justify-between mb-10 overflow-visible bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className="hidden md:flex justify-between mb-8 bg-white rounded-lg p-6 shadow-sm border">
             {allSteps.map(({ step, icon: Icon, label }, index) => (
-              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative step-indicator">
+              <div key={step} className="flex flex-col items-center min-w-0 flex-1 relative">
                 {/* Connection line */}
                 {index < allSteps.length - 1 && (
-                  <div className={`absolute top-5 left-1/2 w-full h-0.5 z-0 ${
-                    currentStep > step ? "bg-orange-500" : "bg-gray-200"
+                  <div className={`absolute top-6 left-1/2 w-full h-0.5 z-0 ${
+                    currentStep > step ? "bg-orange-500" : "bg-gray-300"
                   }`} style={{ transform: 'translateX(50%)' }} />
                 )}
                 
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 relative z-10 border-2 transition-all duration-300 shadow-sm ${
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-3 relative z-10 border-2 transition-all duration-300 ${
                   currentStep === step 
-                    ? "bg-orange-500 text-white border-orange-500 shadow-lg scale-110" 
+                    ? "bg-orange-500 text-white border-orange-500 shadow-lg" 
                     : currentStep > step
                       ? "bg-orange-500 text-white border-orange-500"
-                      : "bg-white text-gray-400 border-gray-200"
+                      : "bg-white text-gray-400 border-gray-300"
                 }`}>
-                  <Icon className="h-6 w-6" />
-                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
-                    <Check className="h-3 w-3" />
-                  </div>
+                  {currentStep > step ? (
+                    <Check className="h-6 w-6" />
+                  ) : (
+                    <Icon className="h-6 w-6" />
+                  )}
                 </div>
-                <span className={`text-sm text-center px-2 font-medium transition-colors ${
+                <span className={`text-sm text-center px-2 font-medium ${
                   currentStep >= step ? "text-orange-600" : "text-gray-500"
                 }`}>{label}</span>
               </div>
             ))}
           </div>
 
-          {/* Enhanced Mobile step indicators */}
-          <div className="flex md:hidden justify-center mb-8 overflow-visible bg-white rounded-lg p-4 shadow-sm border border-gray-100 space-x-6">
+          {/* Mobile step indicators */}
+          <div className="flex md:hidden justify-center mb-6 bg-white rounded-lg p-4 shadow-sm border space-x-6">
             {visibleSteps.map(({ step, icon: Icon, label }) => (
-              <div key={step} className="flex flex-col items-center relative step-indicator mobile-visible">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center mb-2 relative border-2 transition-all duration-300 ${
+              <div key={step} className="flex flex-col items-center">
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 border-2 transition-all duration-300 ${
                   currentStep === step 
-                    ? "bg-orange-500 text-white border-orange-500 shadow-lg" 
+                    ? "bg-orange-500 text-white border-orange-500" 
                     : currentStep > step
                       ? "bg-orange-500 text-white border-orange-500"
-                      : "bg-white text-gray-400 border-gray-200"
+                      : "bg-white text-gray-400 border-gray-300"
                 }`}>
-                  <Icon className="h-6 w-6" />
-                  <div className={`step-badge bg-green-500 hover:bg-green-600 text-white rounded-full flex items-center justify-center w-6 h-6 border-2 border-white ${isStepCompleted(step) && step < currentStep ? 'animate-in' : ''}`}>
-                    <Check className="h-3 w-3" />
-                  </div>
+                  {currentStep > step ? (
+                    <Check className="h-5 w-5" />
+                  ) : (
+                    <Icon className="h-5 w-5" />
+                  )}
                 </div>
-                <span className={`text-xs text-center px-1 font-medium ${
+                <span className={`text-xs text-center font-medium ${
                   currentStep >= step ? "text-orange-600" : "text-gray-500"
                 }`}>{label}</span>
               </div>
@@ -483,17 +487,17 @@ const TenancyApplicationForm = () => {
           </div>
         </div>
 
-        <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-          <CardContent className="pt-8 pb-6">
+        <Card className="shadow-lg border-0 bg-white">
+          <CardContent className="p-8">
             {renderStepContent()}
             
-            <div className="flex justify-between mt-10 pt-8 border-t border-gray-100">
+            <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
               {!isFirstStep && (
                 <Button
                   variant="outline"
                   onClick={goToPrevious}
                   disabled={isSubmitting}
-                  className="border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400 px-6 py-3 font-medium"
+                  className="border-gray-300 text-gray-600 hover:bg-gray-50 px-6 py-2"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Previous
@@ -506,7 +510,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 font-medium shadow-lg"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2"
                 >
                   Next
                   <ArrowRight className="h-4 w-4 ml-2" />
@@ -515,7 +519,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   onClick={handleSubmit}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-3 font-medium shadow-lg"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2"
                 >
                   {isSubmitting ? (
                     <>
