@@ -1,149 +1,197 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
-import { RefreshCw } from "lucide-react";
 
 interface TermsAndDataStepProps {
   dataSharing: {
     utilities: boolean;
     insurance: boolean;
   };
-  onUpdateDataSharing: (field: 'utilities' | 'insurance', value: boolean) => void;
-  signature: string;
-  onSignatureChange: (signature: string) => void;
+  onDataSharingChange: (field: string, value: boolean) => void;
   termsAccepted: boolean;
-  onTermsAccepted: (accepted: boolean) => void;
-  onFillAllTestData: () => void;
+  onTermsChange: (accepted: boolean) => void;
 }
 
-const TermsAndDataStep = ({
-  dataSharing,
-  onUpdateDataSharing,
-  signature,
-  onSignatureChange,
-  termsAccepted,
-  onTermsAccepted,
-  onFillAllTestData
+const TermsAndDataStep = ({ 
+  dataSharing, 
+  onDataSharingChange, 
+  termsAccepted, 
+  onTermsChange 
 }: TermsAndDataStepProps) => {
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">Terms & Digital Signature</h3>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onFillAllTestData}
-          className="text-orange-500 border-orange-500 hover:bg-orange-500 hover:text-white transition-colors"
-        >
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Fill Test Data
-        </Button>
-      </div>
-
-      {/* Data Sharing Preferences */}
+      <h3 className="text-lg font-semibold">Data Sharing & Terms</h3>
+      
       <Card>
         <CardHeader>
           <CardTitle className="text-base">Data Sharing Preferences</CardTitle>
           <CardDescription>
-            Help us provide you with additional services by sharing your application data with trusted partners.
+            Choose whether you'd like us to share your information with trusted partners
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex items-start space-x-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="utilities" className="font-medium">
+                Utilities Information Sharing
+              </Label>
+              <p className="text-sm text-gray-600 mt-1">
+                Share your contact details with utility providers for easier setup
+              </p>
+            </div>
             <Switch
               id="utilities"
               checked={dataSharing.utilities}
-              onCheckedChange={(checked) => onUpdateDataSharing('utilities', checked)}
-              className="mt-1"
+              onCheckedChange={(checked) => onDataSharingChange('utilities', checked)}
             />
-            <div className="space-y-1">
-              <Label htmlFor="utilities" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Share data with utility providers for connection quotes
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Get competitive quotes for gas, electricity, and broadband services.
-              </p>
-            </div>
           </div>
           
-          <div className="flex items-start space-x-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="insurance" className="font-medium">
+                Insurance Information Sharing
+              </Label>
+              <p className="text-sm text-gray-600 mt-1">
+                Share your details with insurance providers for quotes
+              </p>
+            </div>
             <Switch
               id="insurance"
               checked={dataSharing.insurance}
-              onCheckedChange={(checked) => onUpdateDataSharing('insurance', checked)}
-              className="mt-1"
+              onCheckedChange={(checked) => onDataSharingChange('insurance', checked)}
             />
-            <div className="space-y-1">
-              <Label htmlFor="insurance" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                Share data with insurance providers for rental protection quotes
-              </Label>
-              <p className="text-xs text-muted-foreground">
-                Receive tailored insurance quotes to protect your tenancy and belongings.
-              </p>
-            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Terms and Conditions */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Terms and Conditions</CardTitle>
+          <CardTitle className="text-base">Terms & Conditions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="terms-content">
-            <h3>Application Terms</h3>
-            <p>
-              By submitting this application, you confirm that all information provided is true and accurate to the best of your knowledge. 
-              Any false or misleading information may result in the rejection of your application.
-            </p>
-            
-            <h3>Data Protection</h3>
-            <p>
-              Your personal data will be processed in accordance with our Privacy Policy and applicable data protection laws. 
-              We will only use your information for the purposes of processing your tenancy application and related services.
-            </p>
-            
-            <h3>Application Processing</h3>
-            <p>
-              We aim to process all applications within 2-3 business days. You will be contacted via the email address provided 
-              with updates on your application status.
-            </p>
+          <div className="max-h-64 overflow-y-auto p-4 border border-gray-200 rounded-lg bg-gray-50 text-sm">
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Terms & Conditions</h4>
+                <p className="text-gray-700 mb-2">
+                  If your offer is accepted by the landlord of your chosen property, the "Holding Deposit" will become payable. Upon receipt of this payment Palmer & Partners will commence the referencing process. This is usually done via an online form sent to your email address. This form must be completed within 72 hours to avoid the failure of your tenancy application.
+                </p>
+                <p className="text-gray-700 font-semibold mb-2">
+                  Important: all rent, and deposit must be paid in full and received by Palmer & Partners in cleared funds prior to the start of your tenancy.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Holding Deposit</h4>
+                <p className="text-gray-700 mb-2">
+                  Upon acceptance of your application by the landlord of your chosen property, a holding deposit equal to 1 weeks' rent will be taken; this amount will be offset against the total deposit owed.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Referencing Information</h4>
+                <p className="text-gray-700 mb-2">
+                  Before being able to advise our landlord to grant a tenancy by signing a tenancy agreement, Palmer & Partners will need to complete a full reference check on any proposed tenant named overleaf. We use an independent reference provider to carry out this service. A successful reference check is dependent on, but not limited to, the following criteria:
+                </p>
+                <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                  <li>Named tenants must a combined minimum UK based annual salary greater than 30 x monthly rent (excluding bonus/commission). Alternatively, if a tenant has UK based savings in excess of this sum and they have been in place for over 3 months, there are circumstances where this can be considered in lieu of income.</li>
+                  <li>If you are self-employed, you must have at least 2 completed tax years of accounts confirming average annual income greater than 30 x monthly rent.</li>
+                  <li>Any guarantor must earn in excess of 36 x monthly rent per year or have UK based savings in excess of this sum (these savings must have been in place for over 3 months).</li>
+                  <li>Named tenants must have no County Court Judgements (CCJ) or Bankruptcy and not be in an Individual Voluntary Arrangement (IVA) or similar agreement.</li>
+                  <li>A successful "previous landlord reference" where your previous landlord/agent must confirm that you have always paid your rent on time, kept the property in good order and that you are free to leave the tenancy.</li>
+                </ul>
+                <p className="text-gray-700 mt-2">
+                  Should a tenant or guarantor fail a credit check due to inaccurate or misleading information, fail to fill in the referencing forms within the stipulated time frame or withdraw from the application process for any reason, the above "Holding Deposit" is non-refundable. Should the landlord withdraw from the application process prior to the start date of the tenancy, any deposit or rent paid will be refunded to the tenant in full.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Change of Occupancy</h4>
+                <p className="text-gray-700 mb-2">
+                  If the tenant wishes to change the identity of any tenant named on the current tenancy agreement, upon receipt of consent from the landlord, Palmer & Partners will draw up a new tenancy agreement to be signed by all parties. An administration charge of £50.00 + VAT (£60.00 Inc. VAT) will be charged for this service. Any new reference required will be charged at £50.00 + VAT (£60.00 Inc. VAT). Additionally, there will be a charge of £50.00 + VAT (£60.00 Inc. VAT) to re-register any Deposit in the new tenant's name(s).
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Missed Appointments</h4>
+                <p className="text-gray-700 mb-2">
+                  In the event that an appointment is missed by the tenant (e.g., where it has been arranged that a tenant will be present to allow a contractor to access the property), any charges levied to the landlord or agent by a third party for this missed appointment will be passed directly on to the tenant.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Consequences of Early Termination</h4>
+                <p className="text-gray-700 mb-2">
+                  If the tenant wishes to terminate the tenancy prior to the end of a fixed term, upon receiving written permission from the landlord (such permission does not have to be granted), the tenant will remain liable for all rent, bills, charges and costs payable under the terms of the contract until the term expires of the property is re-let, whichever is earlier. Should the property be re-let during the fixed term, the tenant will also be responsible for any remarketing fees that have been or will be incurred by the landlord for finding a new tenant (usually a sum equal to one month's rent per year or part year of the tenancy remaining) as well as any costs incurred by the landlord in having to pay for additional referencing or obtaining a new Inventory/Schedule of Condition report. Furthermore, the tenant is responsible for any other reasonable costs (e.g., telephone lines, satellite television contracts, TV licensing, cleaning, administration fees, etc.) incurred until the end of the term or until when the property is re-let. For the avoidance of doubt, this clause shall not take effect if the tenant is operating a pre-agreed "break clause" contained in the contract.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Right to Rent Check</h4>
+                <p className="text-gray-700 mb-2">
+                  Under the Immigration Act 2014, Palmer & Partners are required to check that all tenants have a legal "Right to Rent" in the UK. The tenant must provide us with original documents as proof of their "Right to Rent". If the tenant is a resident of the UK, a passport will be sufficient proof. However, if the tenant is not a resident in the UK, additional documentation or "share code" will be required; a list of admissible documents is available upon request.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Management of the Property</h4>
+                <p className="text-gray-700 mb-2">
+                  You will be advised at the start of your tenancy who is managing the property i.e., Palmer & Partners, the landlord or a 3rd party. Where the property is managed by Palmer & Partners, we will need to obtain the landlord's consent before authorising or arranging any repair.
+                </p>
+                <p className="text-gray-700 mb-2">
+                  When we manage a property AND hold keys, we can provide access to our contractors (with your prior permission). However, where we do NOT hold keys or a contractor is unable to collect keys, it is the tenant's responsibility to provide access.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Insurance</h4>
+                <p className="text-gray-700 mb-2">
+                  It is the tenant's responsibility to insure their personal belongings with a reputable insurer for the duration of the tenancy. Palmer & Partners work alongside two financial services companies: Colchester Mortgages and Ipswich Mortgages. We will ask the appropriate company (based on the property location) to contact you to discuss your insurance options. Any data passed to the above company will be held in line with their GDPR procedures.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Utilities</h4>
+                <p className="text-gray-700 mb-2">
+                  If your new property is managed by Palmer & Partners, we may disclose your name and contact information to any incumbent utility providers, water company and local authority. This may be done directly or via One Utility Bill Ltd (OUB). OUB will contact you on or around your move-in day to inform you of who currently supplies the utilities to your new home. Additionally, in line with the tenancy start date, OUB will transfer the Council Tax and water account into your name. Furthermore, OUB, existing utility suppliers and the local authority may contact you directly to discuss their services, products and prices. OUB will only use any tenants' details for the purposes of utility switching and not in any other way. Any data passed to OUB, or incumbent utility provider will be held in line with their GDPR procedures.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Taxation</h4>
+                <p className="text-gray-700 mb-2">
+                  If rent is paid directly to the landlord's bank account and the landlord is resident overseas, the tenant will be responsible for applying the provisions of the HM Revenue and Customs Non-Residential Landlords scheme for taxing UK income and should ask for advice on this. This provision does NOT apply where rent is paid to Palmer & Partners.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Data Protection</h4>
+                <p className="text-gray-700 mb-2">
+                  Palmer & Partners are fully compliant with all relevant Data Protection and G.D.P.R. legislation. Palmer & Partners reserve the right to pass on any relevant information held on you (current and future contact information, referencing results and tenancy performance details) to your landlord, local authority, utility companies, tenancy deposit schemes, debt collection agencies or the police.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-gray-900 mb-2">Complaints Procedure</h4>
+                <p className="text-gray-700">
+                  Should a tenant/applicant have any problems with Palmer & Partners' services you should write to the branch manager. This complaint will be acknowledged within 3 working days of receipt and an investigation undertaken. A formal written outcome of the investigation will be sent to you. If you remain dissatisfied, you should write to the Managing Director – the same time limits apply. Following the Managing Director's investigation, a written statement expressing Palmer & Partners' final view will be sent to you, including any offer made. This letter will confirm that, should still remain dissatisfied, you are entitled to refer the matter to The Property Ombudsman (TPO) for review within six months. The TPO will only review complaints made by consumers and only once the in-house complaints procedure has been completed.
+                </p>
+              </div>
+            </div>
           </div>
           
-          <div className="flex items-start space-x-3">
-            <Switch
+          <div className="flex items-center space-x-2">
+            <Checkbox
               id="terms"
               checked={termsAccepted}
-              onCheckedChange={(checked) => onTermsAccepted(checked)}
-              className="mt-1"
+              onCheckedChange={onTermsChange}
             />
-            <Label htmlFor="terms" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              I accept the terms and conditions and confirm that all information provided is accurate *
+            <Label htmlFor="terms" className="text-sm">
+              I have read and agree to the terms and conditions *
             </Label>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Digital Signature */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Digital Signature *</CardTitle>
-          <CardDescription>
-            Please type your full name as your digital signature
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Input
-            value={signature}
-            onChange={(e) => onSignatureChange(e.target.value)}
-            placeholder="Type your full name here"
-            className="w-full text-lg signature-input"
-            required
-          />
         </CardContent>
       </Card>
     </div>
