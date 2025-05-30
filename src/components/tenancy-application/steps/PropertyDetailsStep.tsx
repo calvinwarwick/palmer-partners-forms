@@ -2,10 +2,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { TestTube, Calendar } from "lucide-react";
+import { TestTube, Home, MapPin, Calendar, PoundSterling } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
 
 interface PropertyDetailsStepProps {
@@ -19,132 +18,134 @@ const PropertyDetailsStep = ({
   onUpdatePreferences,
   onFillAllTestData,
 }: PropertyDetailsStepProps) => {
-
   return (
-    <div className="space-y-8 font-lexend">
+    <div className="space-y-8">
       <div>
-        <h3 className="text-2xl font-bold text-dark-grey mb-2">Rental Property Details</h3>
-        <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Property Preferences</h3>
+        <p className="text-light-grey mb-4">Tell us about your ideal rental property</p>
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="streetAddress" className="form-label text-gray-700 font-medium">
-              Address <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="streetAddress"
-              name="streetAddress"
-              value={propertyPreferences.streetAddress}
-              onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
-              placeholder="Rental property address"
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-              required
-            />
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Home className="h-5 w-5" />
+            </div>
+            Property Requirements
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="propertyType" className="text-sm font-medium text-gray-700 mb-2 block">
+                Property Type <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="propertyType"
+                value={propertyPreferences.propertyType}
+                onChange={(e) => onUpdatePreferences("propertyType", e.target.value)}
+                className="flex h-11 w-full rounded-md bg-white px-3 py-3 text-sm border border-gray-200 focus:border-orange-500 focus:ring-orange-500 focus:outline-none focus:ring-1"
+                required
+              >
+                <option value="">Select property type</option>
+                <option value="House">House</option>
+                <option value="Flat/Apartment">Flat/Apartment</option>
+                <option value="Studio">Studio</option>
+                <option value="Maisonette">Maisonette</option>
+                <option value="Bungalow">Bungalow</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bedrooms" className="text-sm font-medium text-gray-700 mb-2 block">
+                Number of Bedrooms <span className="text-red-500">*</span>
+              </Label>
+              <select
+                id="bedrooms"
+                value={propertyPreferences.bedrooms}
+                onChange={(e) => onUpdatePreferences("bedrooms", e.target.value)}
+                className="flex h-11 w-full rounded-md bg-white px-3 py-3 text-sm border border-gray-200 focus:border-orange-500 focus:ring-orange-500 focus:outline-none focus:ring-1"
+                required
+              >
+                <option value="">Select bedrooms</option>
+                <option value="Studio">Studio</option>
+                <option value="1">1 Bedroom</option>
+                <option value="2">2 Bedrooms</option>
+                <option value="3">3 Bedrooms</option>
+                <option value="4">4 Bedrooms</option>
+                <option value="5+">5+ Bedrooms</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="maxRent" className="text-sm font-medium text-gray-700 mb-2 block">
+                Maximum Monthly Rent (£) <span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10 font-semibold text-orange-500">£</span>
+                <Input
+                  id="maxRent"
+                  type="number"
+                  value={propertyPreferences.maxRent}
+                  onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
+                  placeholder="e.g., 1500"
+                  className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-9"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="moveInDate" className="text-sm font-medium text-gray-700 mb-2 block">
+                Preferred Move-in Date
+              </Label>
+              <div className="relative">
+                <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 pointer-events-none z-10" />
+                <Input
+                  id="moveInDate"
+                  type="date"
+                  value={propertyPreferences.moveInDate}
+                  onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+                  className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                />
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="postcode" className="form-label text-gray-700 font-medium">
-              Postcode <span className="text-red-500">*</span>
+            <Label htmlFor="preferredArea" className="text-sm font-medium text-gray-700 mb-2 block">
+              Preferred Area/Postcode <span className="text-red-500">*</span>
             </Label>
-            <Input
-              id="postcode"
-              name="postcode"
-              value={propertyPreferences.postcode}
-              onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
-              placeholder="Rental property postcode"
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="maxRent" className="form-label text-gray-700 font-medium">
-              Rental amount <span className="text-red-500">*</span>
-            </Label>
-            <div className="currency-input-container">
-              <span className="currency-input-icon text-orange-500">£</span>
+            <div className="relative">
+              <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 pointer-events-none z-10" />
               <Input
-                id="maxRent"
-                name="maxRent"
-                type="number"
-                value={propertyPreferences.maxRent}
-                onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
-                placeholder=""
-                className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                id="preferredArea"
+                value={propertyPreferences.preferredArea}
+                onChange={(e) => onUpdatePreferences("preferredArea", e.target.value)}
+                placeholder="e.g., Central London, SW1A 1AA"
+                className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
                 required
               />
             </div>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="space-y-2">
-            <Label htmlFor="moveInDate" className="form-label text-gray-700 font-medium">
-              Preferred move-in date <span className="text-red-500">*</span>
-            </Label>
-            <div className="date-input-container">
-              <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-              <Input
-                id="moveInDate"
-                name="moveInDate"
-                type="date"
-                value={propertyPreferences.moveInDate}
-                onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                placeholder="dd/mm/yyyy"
-                required
-              />
-            </div>
-          </div>
 
           <div className="space-y-2">
-            <Label htmlFor="latestMoveInDate" className="form-label text-gray-700 font-medium">
-              Latest move-in date <span className="text-red-500">*</span>
+            <Label htmlFor="additionalRequirements" className="text-sm font-medium text-gray-700 mb-2 block">
+              Additional Requirements
             </Label>
-            <div className="date-input-container">
-              <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-              <Input
-                id="latestMoveInDate"
-                name="latestMoveInDate"
-                type="date"
-                value={propertyPreferences.latestMoveInDate}
-                onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                placeholder="dd/mm/yyyy"
-              />
-            </div>
+            <Textarea
+              id="additionalRequirements"
+              value={propertyPreferences.additionalRequirements}
+              onChange={(e) => onUpdatePreferences("additionalRequirements", e.target.value)}
+              placeholder="e.g., Pet-friendly, parking space, garden, furnished..."
+              className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
+            />
           </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="initialTenancyTerm" className="form-label text-gray-700 font-medium">
-              Preferred initial tenancy term <span className="text-red-500">*</span>
-            </Label>
-            <Select 
-              value={propertyPreferences.initialTenancyTerm} 
-              onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
-            >
-              <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                <SelectValue placeholder="Please select an option" />
-              </SelectTrigger>
-              <SelectContent className="bg-white border-gray-300 z-50">
-                <SelectItem value="6 months">6 months</SelectItem>
-                <SelectItem value="1 year">1 year</SelectItem>
-                <SelectItem value="18 months">18 months</SelectItem>
-                <SelectItem value="2 years">2 years</SelectItem>
-                <SelectItem value="flexible">Flexible</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
