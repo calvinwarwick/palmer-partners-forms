@@ -6,10 +6,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle, TestTube, Info, User } from "lucide-react";
+import { User } from "lucide-react";
 import { AdditionalDetails, Applicant } from "@/domain/types/Applicant";
-import { Button } from "@/components/ui/button";
+import PassportPhotoUpload from "@/components/tenancy-application/PassportPhotoUpload";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: AdditionalDetails;
@@ -29,6 +28,12 @@ const AdditionalDetailsStep = ({
   onUpdateApplicant
 }: AdditionalDetailsStepProps) => {
 
+  const handlePassportPhotoUpload = (applicantId: string, file: File) => {
+    // For now, we'll store the file name. In a real app, you'd upload to storage
+    onUpdateApplicant(applicantId, "passportPhoto" as keyof Applicant, file.name);
+    console.log(`Passport photo uploaded for applicant ${applicantId}:`, file.name);
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -37,10 +42,26 @@ const AdditionalDetailsStep = ({
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
+      {/* Passport Photo Upload for Each Applicant */}
+      <div className="space-y-6">
+        <h4 className="text-lg font-semibold text-dark-grey">Passport Photos</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {applicants.map((applicant, index) => (
+            <PassportPhotoUpload
+              key={applicant.id}
+              applicantName={applicant.firstName && applicant.lastName 
+                ? `${applicant.firstName} ${applicant.lastName}` 
+                : `Applicant ${index + 1}`}
+              onPhotoUpload={(file) => handlePassportPhotoUpload(applicant.id, file)}
+            />
+          ))}
+        </div>
+      </div>
+
       {/* Adverse Credit Details for Individual Applicants */}
       {applicants.map((applicant, index) => (
         applicant.adverseCredit === "yes" && (
-          <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
+          <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
             <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
               <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
                 <div className="p-2 bg-white/20 rounded-lg">
@@ -57,13 +78,14 @@ const AdditionalDetailsStep = ({
             <CardContent className="space-y-6 p-6">
               <div>
                 <Label className="text-sm font-medium text-gray-700 mb-2 block">
-                  Adverse Credit Details:
+                  Please provide details about your adverse credit history:
                 </Label>
                 <Textarea
                   value={applicant.adverseCreditDetails}
                   onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
                   placeholder="Please provide details about adverse credit history..."
-                  className="min-h-[100px] bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="min-h-[120px] bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             </CardContent>
@@ -72,7 +94,7 @@ const AdditionalDetailsStep = ({
       ))}
 
       {/* Pets Section */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
@@ -95,6 +117,7 @@ const AdditionalDetailsStep = ({
                   onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
                   placeholder="Please describe your pets (type, number, etc.)..."
                   className="min-h-[80px]"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             )}
@@ -103,7 +126,7 @@ const AdditionalDetailsStep = ({
       </Card>
 
       {/* Children Section */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardContent className="p-6">
           <div className="space-y-4">
             <div>
@@ -135,6 +158,7 @@ const AdditionalDetailsStep = ({
                   onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
                   placeholder="e.g., 5, 8, 12"
                   className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             )}
@@ -143,7 +167,7 @@ const AdditionalDetailsStep = ({
       </Card>
 
       {/* Deposit Section */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardContent className="p-6">
           <div className="space-y-4">
             <Label className="text-base font-medium text-dark-grey flex items-center">
@@ -172,7 +196,7 @@ const AdditionalDetailsStep = ({
       </Card>
 
       {/* Conditions of Offer */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardContent className="p-6">
           <div className="space-y-4">
             <Label className="text-base font-medium text-dark-grey mb-3 block">
@@ -183,6 +207,7 @@ const AdditionalDetailsStep = ({
               onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
               placeholder="Please mention any specific conditions, requests, or additional information..."
               className="min-h-[100px] bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
             />
           </div>
         </CardContent>

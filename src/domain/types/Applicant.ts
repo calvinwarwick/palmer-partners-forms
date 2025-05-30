@@ -1,4 +1,3 @@
-
 export interface Applicant {
   id: string;
   firstName: string;
@@ -25,6 +24,7 @@ export interface Applicant {
   adverseCredit?: string;
   adverseCreditDetails?: string;
   guarantorRequired?: string;
+  passportPhoto?: string;
 }
 
 export interface PropertyPreferences {

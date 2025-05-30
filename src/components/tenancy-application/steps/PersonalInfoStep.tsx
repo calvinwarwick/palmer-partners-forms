@@ -1,13 +1,14 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { User, Calendar, Shield, Info } from "lucide-react";
-import { Applicant } from "@/domain/types/Applicant";
-import ApplicantCountSelector from "./ApplicantCountSelector";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Calendar, User, Plus, Trash2, Users, ShieldCheck } from "lucide-react";
+import { Applicant } from "@/domain/types/Applicant";
+import ApplicantCountSelector from "@/components/tenancy-application/steps/ApplicantCountSelector";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -18,33 +19,33 @@ interface PersonalInfoStepProps {
   onGuarantorOpen: (applicant: Applicant) => void;
 }
 
-const PersonalInfoStep = ({
-  applicants,
-  onAddApplicant,
-  onRemoveApplicant,
-  onUpdateApplicant,
+const PersonalInfoStep = ({ 
+  applicants, 
+  onAddApplicant, 
+  onRemoveApplicant, 
+  onUpdateApplicant, 
   onApplicantCountChange,
-  onGuarantorOpen,
+  onGuarantorOpen
 }: PersonalInfoStepProps) => {
 
   return (
     <div className="space-y-8">
       <div>
         <h3 className="text-2xl font-bold text-dark-grey mb-2">Personal Information</h3>
-        <p className="text-light-grey mb-4">Tell us about the people who will be living in the property</p>
+        <p className="text-light-grey mb-4">Please provide details for all applicants</p>
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
-      <ApplicantCountSelector
-        applicantCount={applicants.length}
-        onApplicantCountChange={onApplicantCountChange}
+      <ApplicantCountSelector 
+        count={applicants.length} 
+        onCountChange={onApplicantCountChange} 
       />
-      
+
       {applicants.map((applicant, index) => (
-        <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <Card key={applicant.id} className="border border-gray-200" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <CardTitle className="text-lg font-semibold flex items-center justify-between text-white">
+              <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-lg">
                   <User className="h-5 w-5" />
                 </div>
@@ -54,157 +55,193 @@ const PersonalInfoStep = ({
                     - {applicant.firstName} {applicant.lastName}
                   </span>
                 )}
-              </CardTitle>
-            </div>
+              </div>
+              {applicants.length > 1 && (
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  onClick={() => onRemoveApplicant(applicant.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white"
+                >
+                  <Trash2 className="h-4 w-4 mr-1" />
+                  Remove
+                </Button>
+              )}
+            </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor={`firstName-${applicant.id}`} className="form-label text-gray-700 font-medium">First Name <span className="text-red-500">*</span></Label>
+            {/* First Name, Last Name, DOB Row */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="form-field">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block flex items-center">
+                  First Name <span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
-                  id={`firstName-${applicant.id}`}
                   value={applicant.firstName}
                   onChange={(e) => onUpdateApplicant(applicant.id, "firstName", e.target.value)}
                   placeholder="Enter first name"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                   style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor={`lastName-${applicant.id}`} className="form-label text-gray-700 font-medium">Last Name <span className="text-red-500">*</span></Label>
+
+              <div className="form-field">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block flex items-center">
+                  Last Name <span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
-                  id={`lastName-${applicant.id}`}
                   value={applicant.lastName}
                   onChange={(e) => onUpdateApplicant(applicant.id, "lastName", e.target.value)}
                   placeholder="Enter last name"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                   style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required
                 />
               </div>
+
+              <div className="form-field">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block flex items-center">
+                  Date of Birth <span className="text-red-500 ml-1">*</span>
+                </Label>
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+                  <Input
+                    type="date"
+                    value={applicant.dateOfBirth}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
+                    className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor={`email-${applicant.id}`} className="form-label text-gray-700 font-medium">Email Address <span className="text-red-500">*</span></Label>
+
+            {/* Contact Information */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="form-field">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block flex items-center">
+                  Email <span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
-                  id={`email-${applicant.id}`}
                   type="email"
                   value={applicant.email}
                   onChange={(e) => onUpdateApplicant(applicant.id, "email", e.target.value)}
                   placeholder="Enter email address"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                   style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor={`phone-${applicant.id}`} className="form-label text-gray-700 font-medium">Phone Number <span className="text-red-500">*</span></Label>
+
+              <div className="form-field">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block flex items-center">
+                  Phone Number <span className="text-red-500 ml-1">*</span>
+                </Label>
                 <Input
-                  id={`phone-${applicant.id}`}
                   type="tel"
                   value={applicant.phone}
                   onChange={(e) => onUpdateApplicant(applicant.id, "phone", e.target.value)}
                   placeholder="Enter phone number"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`dob-${applicant.id}`} className="form-label text-gray-700 font-medium">Date of Birth</Label>
-              <div className="date-input-container">
-                <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                <Input
-                  id={`dob-${applicant.id}`}
-                  type="date"
-                  value={applicant.dateOfBirth}
-                  onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                   style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             </div>
 
-            {/* Additional Details Section */}
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-lg font-semibold text-dark-grey mb-4">Additional Details</h4>
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <Label className="form-label text-gray-700 font-medium">
-                      Do you hold a UK or Republic of Ireland passport? <span className="text-red-500">*</span>
-                    </Label>
-                  </div>
-                  <Switch
-                    checked={applicant.ukPassport === "yes"}
-                    onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "ukPassport", checked ? "yes" : "no")}
+            {/* UK Passport */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-medium text-dark-grey flex items-center">
+                  Do you have a UK passport? <span className="text-red-500 ml-1">*</span>
+                </Label>
+                <Switch
+                  checked={applicant.ukPassport === "yes"}
+                  onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "ukPassport", checked ? "yes" : "no")}
+                />
+              </div>
+            </div>
+
+            {/* Adverse Credit */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-medium text-dark-grey flex items-center">
+                  Do you have any adverse credit history? <span className="text-red-500 ml-1">*</span>
+                </Label>
+                <Switch
+                  checked={applicant.adverseCredit === "yes"}
+                  onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
+                />
+              </div>
+              
+              {/* Adverse Credit Details - Show directly underneath */}
+              {applicant.adverseCredit === "yes" && (
+                <div className="mt-4">
+                  <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                    Please provide details about your adverse credit history:
+                  </Label>
+                  <Textarea
+                    value={applicant.adverseCreditDetails}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
+                    placeholder="Please provide details about adverse credit history..."
+                    className="min-h-[120px] bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
+              )}
+            </div>
 
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 pr-4">
-                      <Label className="form-label text-gray-700 font-medium">
-                        Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
-                      </Label>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={applicant.adverseCredit === "yes"}
-                        onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
-                      />
-                    </div>
-                  </div>
-                  
-                  {applicant.adverseCredit === "yes" && (
-                    <div className="space-y-2 ml-4">
-                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                        Please provide details about your adverse credit history:
-                      </Label>
-                      <Textarea
-                        id={`adverseCreditDetails-${applicant.id}`}
-                        value={applicant.adverseCreditDetails || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
-                        placeholder="Please provide details about your adverse credit history..."
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                      />
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 pr-4">
-                    <Label className="form-label text-gray-700 font-medium">
-                      If required, can you supply a guarantor for this proposed tenancy? <span className="text-red-500">*</span>
-                    </Label>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={applicant.guarantorRequired === "yes"}
-                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
-                    />
-                    {applicant.guarantorRequired === "yes" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => onGuarantorOpen(applicant)}
-                        className="text-orange-600 border-orange-300 hover:bg-orange-50"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                      >
-                        <Shield className="h-4 w-4 mr-1" />
-                        Add Guarantor
-                      </Button>
-                    )}
-                  </div>
-                </div>
+            {/* Guarantor Required */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-medium text-dark-grey flex items-center">
+                  Will you require a guarantor? <span className="text-red-500 ml-1">*</span>
+                </Label>
+                <Switch
+                  checked={applicant.guarantorRequired === "yes"}
+                  onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
+                />
               </div>
+
+              {applicant.guarantorRequired === "yes" && (
+                <div className="mt-4 p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-3">
+                    <ShieldCheck className="h-4 w-4 text-orange-600" />
+                    <span className="text-sm font-medium text-orange-800">Guarantor Details Required</span>
+                  </div>
+                  <p className="text-sm text-orange-700 mb-3">
+                    You'll need to provide guarantor information. Click the button below to add guarantor details.
+                  </p>
+                  <Button
+                    type="button"
+                    onClick={() => onGuarantorOpen(applicant)}
+                    className="bg-orange-500 hover:bg-orange-600 text-white text-sm"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  >
+                    <Plus className="h-4 w-4 mr-1" />
+                    Add Guarantor Details
+                  </Button>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
       ))}
+
+      {applicants.length < 5 && (
+        <Card className="border-2 border-dashed border-gray-300 hover:border-orange-400 transition-colors" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+          <CardContent className="p-8 text-center">
+            <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-700 mb-2">Add Another Applicant</h3>
+            <p className="text-gray-500 mb-4">Add additional applicants to this tenancy application (max 5 total)</p>
+            <Button
+              onClick={onAddApplicant}
+              className="bg-orange-500 hover:bg-orange-600 text-white"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Applicant
+            </Button>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
