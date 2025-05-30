@@ -40,7 +40,7 @@ const AdditionalDetailsStep = ({
       {/* Adverse Credit Details for Individual Applicants */}
       {applicants.map((applicant, index) => (
         applicant.adverseCredit === "yes" && (
-          <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
+          <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
             <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
               <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
                 <div className="p-2 bg-white/20 rounded-lg">
@@ -71,79 +71,84 @@ const AdditionalDetailsStep = ({
         )
       ))}
 
-      {/* Pets Section */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-medium text-dark-grey flex items-center">
-                Do you have any pets? <span className="text-red-500 ml-1">*</span>
-              </Label>
-              <Switch
-                checked={additionalDetails.pets === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails("pets", checked ? "yes" : "no")}
-              />
-            </div>
-            
-            {additionalDetails.pets === "yes" && (
-              <div className="mt-4">
-                <Label className="text-sm font-medium text-dark-grey mb-2 block">
-                  Pet Details:
+      {/* Pets and Children Section - 3 columns on large screens */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Pets Section */}
+        <Card className="border border-gray-200 shadow-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <Label className="text-base font-medium text-dark-grey flex items-center">
+                  Do you have any pets? <span className="text-red-500 ml-1">*</span>
                 </Label>
-                <Textarea
-                  value={additionalDetails.petDetails}
-                  onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
-                  placeholder="Please describe your pets (type, number, etc.)..."
-                  className="min-h-[80px]"
+                <Switch
+                  checked={additionalDetails.pets === "yes"}
+                  onCheckedChange={(checked) => onUpdateDetails("pets", checked ? "yes" : "no")}
                 />
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+              
+              {additionalDetails.pets === "yes" && (
+                <div className="mt-4">
+                  <Label className="text-sm font-medium text-dark-grey mb-2 block">
+                    Pet Details:
+                  </Label>
+                  <Textarea
+                    value={additionalDetails.petDetails}
+                    onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
+                    placeholder="Please describe your pets (type, number, etc.)..."
+                    className="min-h-[80px]"
+                  />
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Children Section */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div>
-              <Label className="text-base font-medium text-dark-grey mb-3 block flex items-center">
-                Number of children under 18 <span className="text-red-500 ml-1">*</span>
-              </Label>
-              <Select value={additionalDetails.under18Count} onValueChange={(value) => onUpdateDetails("under18Count", value)}>
-                <SelectTrigger id="under18Count" className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500">
-                  <SelectValue placeholder="Select number of children" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">0</SelectItem>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem>
-                  <SelectItem value="5+">5+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {additionalDetails.under18Count && additionalDetails.under18Count !== "0" && (
-              <div>
-                <Label className="text-sm font-medium text-dark-grey mb-2 block">
-                  Ages of children:
-                </Label>
-                <Input
-                  value={additionalDetails.childrenAges}
-                  onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
-                  placeholder="e.g., 5, 8, 12"
-                  className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-                />
+        {/* Children Section */}
+        <Card className="border border-gray-200 shadow-sm lg:col-span-2" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-base font-medium text-dark-grey mb-3 block flex items-center">
+                    Number of children under 18 <span className="text-red-500 ml-1">*</span>
+                  </Label>
+                  <Select value={additionalDetails.under18Count} onValueChange={(value) => onUpdateDetails("under18Count", value)}>
+                    <SelectTrigger id="under18Count" className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                      <SelectValue placeholder="Select number of children" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="0">0</SelectItem>
+                      <SelectItem value="1">1</SelectItem>
+                      <SelectItem value="2">2</SelectItem>
+                      <SelectItem value="3">3</SelectItem>
+                      <SelectItem value="4">4</SelectItem>
+                      <SelectItem value="5+">5+</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                {additionalDetails.under18Count && additionalDetails.under18Count !== "0" && (
+                  <div>
+                    <Label className="text-sm font-medium text-dark-grey mb-2 block">
+                      Ages of children:
+                    </Label>
+                    <Input
+                      value={additionalDetails.childrenAges}
+                      onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
+                      placeholder="e.g., 5, 8, 12"
+                      className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                    />
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Deposit Section */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200 shadow-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardContent className="p-6">
           <div className="space-y-4">
             <Label className="text-base font-medium text-dark-grey flex items-center">
@@ -172,7 +177,7 @@ const AdditionalDetailsStep = ({
       </Card>
 
       {/* Conditions of Offer */}
-      <Card className="border border-gray-200 shadow-sm">
+      <Card className="border border-gray-200 shadow-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardContent className="p-6">
           <div className="space-y-4">
             <Label className="text-base font-medium text-dark-grey mb-3 block">
