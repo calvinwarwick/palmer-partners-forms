@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Applicant, PropertyPreferences, AdditionalDetails, Application } from "@/domain/types/Applicant";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
@@ -341,12 +340,8 @@ const FormProvider = ({ children }: FormProviderProps) => {
     
     if (canProceedToNext) {
       goToNext();
-      // Smooth scroll to top of the page when proceeding to next step
-      window.scrollTo({ 
-        top: 0, 
-        left: 0,
-        behavior: 'smooth' 
-      });
+      // Scroll to top of the form when proceeding to next step
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       const invalidFields = validateAndHighlightFields(
         currentStep, 
