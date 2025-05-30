@@ -7,6 +7,7 @@ select:focus,
 textarea:focus {
   @apply ring-2 ring-orange-500 ring-offset-2 border-orange-500;
   outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Orange theme overrides */
@@ -67,7 +68,9 @@ button[class*="bg-blue"] {
 
 /* Enhanced applicant cards styling */
 .applicant-details-section {
-  @apply p-4 bg-gradient-to-br from-orange-50 to-white rounded-lg border-2 border-orange-100 shadow-sm;
+  @apply p-4 bg-gradient-to-br from-orange-50 to-white rounded-lg;
+  border: 2px solid rgb(228, 228, 231) !important;
+  box-shadow: none !important;
 }
 
 .applicant-details-section h3 {
@@ -142,7 +145,7 @@ button[class*="bg-blue"] {
   opacity: 0;
   transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
   pointer-events: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: none !important;
 }
 
 .step-badge.animate-in {
@@ -168,7 +171,9 @@ button[class*="bg-blue"] {
 
 /* Enhanced form styling with better borders */
 .form-section-border {
-  @apply border-2 border-orange-100 rounded-xl bg-gradient-to-br from-white to-orange-50/50 shadow-sm;
+  @apply rounded-xl bg-gradient-to-br from-white to-orange-50/50;
+  border: 2px solid rgb(228, 228, 231) !important;
+  box-shadow: none !important;
 }
 
 .form-section-header {
@@ -179,7 +184,9 @@ button[class*="bg-blue"] {
 .terms-content {
   max-height: 400px;
   overflow-y: auto;
-  @apply border-2 border-orange-100 rounded-lg p-6 bg-gradient-to-br from-orange-50 to-white;
+  @apply rounded-lg p-6 bg-gradient-to-br from-orange-50 to-white;
+  border: 2px solid rgb(228, 228, 231) !important;
+  box-shadow: none !important;
 }
 
 .terms-content h3 {
@@ -203,7 +210,9 @@ button[class*="bg-blue"] {
 .success-message,
 .message-banner,
 .alert-banner {
-  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 border-2 border-orange-200 rounded-lg p-4 mb-4 shadow-sm;
+  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 rounded-lg p-4 mb-4;
+  border: 2px solid rgb(228, 228, 231) !important;
+  box-shadow: none !important;
 }
 
 /* Override any existing alert color variants */
@@ -211,7 +220,8 @@ button[class*="bg-blue"] {
 .alert-warning,
 .alert-info,
 .alert-success {
-  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 border-orange-200;
+  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800;
+  border-color: rgb(228, 228, 231) !important;
 }
 
 /* Ensure all text in alerts is properly colored */
@@ -235,12 +245,11 @@ button[class*="bg-blue"] {
 
 /* Enhanced card hover effects */
 .hover-lift {
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .hover-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.15);
 }
 
 /* Step connection lines enhancement */
