@@ -39,6 +39,12 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-lexend;
+    @apply bg-background text-foreground;
+    font-family: 'Lexend', sans-serif;
+  }
+  
+  /* Ensure all form elements use Lexend */
+  input, textarea, select, button, label {
+    font-family: 'Lexend', sans-serif;
   }
 }

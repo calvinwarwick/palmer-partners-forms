@@ -18,7 +18,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
   const doc = new jsPDF();
   let yPosition = 20;
   
-  // Set default font
+  // Set default font to Lexend (using helvetica as fallback since Lexend isn't natively supported in jsPDF)
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(12);
   
@@ -57,7 +57,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a black header section WITHOUT spacing after
+  // Helper function to add a black header section with border
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(15);
     
@@ -65,12 +65,16 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(0, 0, 0);
     doc.rect(20, yPosition - 5, 170, 12, 'F');
     
+    // Light grey border around header
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(1);
+    doc.rect(20, yPosition - 5, 170, 12, 'S');
+    
     // White text, centered
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 3, 0, 'center');
-    // Removed the extra spacing that was here: yPosition += 2;
     doc.setTextColor(0, 0, 0); // reset to black
     doc.setFont('helvetica', 'normal');
   };
@@ -83,8 +87,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(200, 200, 200);
     doc.rect(20, yPosition - 2, 170, 10, 'F');
     
-    // Border
-    doc.setDrawColor(0, 0, 0);
+    // Light grey border
+    doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 2, 170, 10, 'S');
     
@@ -97,7 +101,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFont('helvetica', 'normal');
   };
 
-  // Helper function to add a table row
+  // Helper function to add a table row with light grey borders
   const addTableRow = (label: string, value: string) => {
     yPosition = checkNewPage(12);
     
@@ -109,8 +113,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(255, 255, 255);
     doc.rect(80, yPosition - 2, 110, 10, 'F');
     
-    // Borders
-    doc.setDrawColor(0, 0, 0);
+    // Light grey borders
+    doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 2, 60, 10, 'S'); // left cell
     doc.rect(80, yPosition - 2, 110, 10, 'S'); // right cell
@@ -276,8 +280,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(255, 255, 255);
     doc.rect(80, yPosition - 2, 110, 25, 'F');
     
-    // Borders
-    doc.setDrawColor(0, 0, 0);
+    // Light grey borders
+    doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 2, 60, 25, 'S');
     doc.rect(80, yPosition - 2, 110, 25, 'S');
