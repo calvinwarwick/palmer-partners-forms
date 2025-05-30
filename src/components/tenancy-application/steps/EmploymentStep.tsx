@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TestTube, Briefcase, Building2, AlertCircle } from "lucide-react";
+import { TestTube, Briefcase, AlertCircle, PoundSterling } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface EmploymentStepProps {
@@ -120,8 +120,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`company-${applicant.id}`} className="form-label text-gray-700 font-medium flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-orange-500" />
+                <Label htmlFor={`company-${applicant.id}`} className="form-label text-gray-700 font-medium">
                   Company name
                 </Label>
                 <Input
@@ -147,7 +146,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`income-${applicant.id}`} className="form-label text-gray-700 font-medium">Annual salary (£) *</Label>
+                <Label htmlFor={`income-${applicant.id}`} className="form-label text-gray-700 font-medium flex items-center gap-2">
+                  <PoundSterling className="h-4 w-4 text-orange-500" />
+                  Annual salary (£) *
+                </Label>
                 <Input
                   id={`income-${applicant.id}`}
                   type="number"

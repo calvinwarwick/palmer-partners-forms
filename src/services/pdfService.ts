@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,8 +64,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(0, 0, 0);
     doc.rect(20, yPosition - 5, 170, 12, 'F');
     
-    // Light grey border around header
-    doc.setDrawColor(200, 200, 200);
+    // Much lighter grey border around header
+    doc.setDrawColor(240, 240, 240);
     doc.setLineWidth(1);
     doc.rect(20, yPosition - 5, 170, 12, 'S');
     
@@ -87,8 +86,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(200, 200, 200);
     doc.rect(20, yPosition - 2, 170, 10, 'F');
     
-    // Light grey border
-    doc.setDrawColor(200, 200, 200);
+    // Much lighter grey border
+    doc.setDrawColor(240, 240, 240);
     doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 2, 170, 10, 'S');
     
@@ -101,7 +100,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFont('helvetica', 'normal');
   };
 
-  // Helper function to add a table row with light grey borders
+  // Helper function to add a table row with much lighter grey borders
   const addTableRow = (label: string, value: string) => {
     yPosition = checkNewPage(12);
     
@@ -113,8 +112,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(255, 255, 255);
     doc.rect(80, yPosition - 2, 110, 10, 'F');
     
-    // Light grey borders
-    doc.setDrawColor(200, 200, 200);
+    // Much lighter grey borders
+    doc.setDrawColor(240, 240, 240);
     doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 2, 60, 10, 'S'); // left cell
     doc.rect(80, yPosition - 2, 110, 10, 'S'); // right cell
@@ -280,8 +279,8 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(255, 255, 255);
     doc.rect(80, yPosition - 2, 110, 25, 'F');
     
-    // Light grey borders
-    doc.setDrawColor(200, 200, 200);
+    // Much lighter grey borders
+    doc.setDrawColor(240, 240, 240);
     doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 2, 60, 25, 'S');
     doc.rect(80, yPosition - 2, 110, 25, 'S');
