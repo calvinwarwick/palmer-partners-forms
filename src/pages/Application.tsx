@@ -70,7 +70,7 @@ const Application = () => {
             <img 
               src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
               alt="Company Logo" 
-              className="h-auto w-[70%] max-w-md"
+              className="h-auto w-[60%] max-w-md"
               style={{ 
                 filter: 'brightness(0) saturate(100%)'
               }}
