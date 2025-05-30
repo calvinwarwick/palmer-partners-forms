@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -445,19 +444,6 @@ const TenancyApplicationForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 py-8 font-lexend">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Logo Section */}
-        <div className="mb-6">
-          <Card className="bg-dark-grey border-0 shadow-lg">
-            <CardContent className="p-8 flex justify-center">
-              <img 
-                src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
-                alt="Company Logo" 
-                className="h-16 w-auto"
-              />
-            </CardContent>
-          </Card>
-        </div>
-
         {/* Modern header with new color scheme */}
         <div className="mb-8">
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
@@ -467,6 +453,12 @@ const TenancyApplicationForm = () => {
                   <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-lg">
                     <Home className="h-6 w-6 text-white" />
                   </div>
+                  <img 
+                    src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
+                    alt="Company Logo" 
+                    className="h-auto"
+                    style={{ width: '150px' }}
+                  />
                   <div>
                     <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
                   </div>
