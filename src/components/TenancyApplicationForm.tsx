@@ -444,36 +444,26 @@ const TenancyApplicationForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 py-8 font-lexend">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Modern header with left alignment */}
+        {/* Redesigned header with house icon, title, step counter, and progress */}
         <div className="mb-8">
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
             <CardContent className="p-8">
-              <div className="mb-6">
-                <img 
-                  src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
-                  alt="Company Logo" 
-                  className="h-auto"
-                  style={{ 
-                    width: '150px',
-                    filter: 'brightness(0) saturate(100%)'
-                  }}
-                />
-                <div className="flex items-center space-x-4">
-                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-lg">
-                    <Home className="h-6 w-6 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
-                  </div>
+              {/* Main header row with icon and title */}
+              <div className="flex items-center space-x-4 mb-4">
+                <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-lg">
+                  <Home className="h-6 w-6 text-white" />
                 </div>
-                <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 font-lexend mt-4">
-                  Step {currentStep} of {totalSteps}
-                </Badge>
+                <div>
+                  <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
+                  <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 font-lexend text-sm">
+                    Step {currentStep} of {totalSteps}
+                  </Badge>
+                </div>
               </div>
 
-              {/* Enhanced progress bar with orange colors */}
+              {/* Progress section */}
               <div className="mb-6">
-                <div className="flex justify-between text-sm text-light-grey mb-3">
+                <div className="flex justify-between text-sm mb-3">
                   <span className="font-medium text-dark-grey">{Math.round(progress)}% Complete</span>
                   <span className="text-light-grey">{totalSteps - currentStep + 1} steps remaining</span>
                 </div>
