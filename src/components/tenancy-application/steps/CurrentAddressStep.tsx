@@ -39,37 +39,40 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
           <CardContent className="space-y-6 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor={`streetAddress-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">Street address <span className="text-red-500">*</span></Label>
+                <Label htmlFor={`streetAddress-${applicant.id}`} className="form-label text-gray-700 font-medium">Street address <span className="text-red-500">*</span></Label>
                 <Input
                   id={`streetAddress-${applicant.id}`}
                   value={applicant.previousAddress}
                   onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
                   placeholder="Full current address"
-                  className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`postcode-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">Postcode <span className="text-red-500">*</span></Label>
+                <Label htmlFor={`postcode-${applicant.id}`} className="form-label text-gray-700 font-medium">Postcode <span className="text-red-500">*</span></Label>
                 <Input
                   id={`postcode-${applicant.id}`}
                   value={applicant.previousPostcode}
                   onChange={(e) => onUpdateApplicant(applicant.id, "previousPostcode", e.target.value)}
                   placeholder="e.g., CO14 8LZ"
-                  className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor={`propertyStatus-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">Current property status <span className="text-red-500">*</span></Label>
+              <Label htmlFor={`propertyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">Current property status <span className="text-red-500">*</span></Label>
               <select
                 id={`propertyStatus-${applicant.id}`}
                 value={applicant.currentPropertyStatus}
                 onChange={(e) => onUpdateApplicant(applicant.id, "currentPropertyStatus", e.target.value)}
-                className="flex h-11 w-full rounded-md bg-white px-3 py-3 text-sm border border-gray-200 focus:border-orange-500 focus:ring-orange-500 focus:outline-none focus:ring-1"
+                className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 required
               >
                 <option value="">Select status</option>
@@ -83,48 +86,48 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
-                <Label htmlFor={`moveInDate-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">
+                <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
                   Move in date
                 </Label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 pointer-events-none z-10" />
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
                   <Input
                     id={`moveInDate-${applicant.id}`}
                     type="date"
                     value={applicant.moveInDate}
                     onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
-                    className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`vacateDate-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">
+                <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
                   Vacate date
                 </Label>
-                <div className="relative">
-                  <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 pointer-events-none z-10" />
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
                   <Input
                     id={`vacateDate-${applicant.id}`}
                     type="date"
                     value={applicant.vacateDate}
                     onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
-                    className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`currentRent-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">Current rental amount (£)</Label>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10 font-semibold text-orange-500">£</span>
-                  <Input
-                    id={`currentRent-${applicant.id}`}
-                    type="number"
-                    value={applicant.currentRentalAmount}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
-                    placeholder="e.g., 1200"
-                    className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-9"
-                  />
-                </div>
+                <Label htmlFor={`currentRent-${applicant.id}`} className="form-label text-gray-700 font-medium">Current rental amount (£)</Label>
+                <Input
+                  id={`currentRent-${applicant.id}`}
+                  type="number"
+                  value={applicant.currentRentalAmount}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
+                  placeholder="e.g., 1200"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                />
               </div>
             </div>
           </CardContent>
