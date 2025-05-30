@@ -62,23 +62,33 @@ const Application = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-16 max-w-4xl">
-        {/* Hero Section with Logo */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-8">
-            <img 
-              src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
-              alt="Company Logo" 
-              className="h-auto max-w-[400px] w-full"
-              style={{ 
-                filter: 'brightness(0) saturate(100%)'
-              }}
-            />
+    <div className="min-h-screen bg-gray-200">
+      {/* Palmer & Partners style header */}
+      <div className="bg-dark-grey">
+        <div className="h-2 bg-gradient-to-r from-orange-500 to-orange-600"></div>
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center space-x-4">
+            <div className="bg-orange-500 p-3 rounded-lg transform rotate-12">
+              <img 
+                src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
+                alt="Company Logo" 
+                className="h-12 w-12"
+              />
+            </div>
+            <div>
+              <h1 className="text-white text-3xl font-bold font-lexend">Palmer & Partners</h1>
+              <p className="text-gray-300 text-sm font-lexend">The leading estate agents in Essex & Suffolk</p>
+            </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-16 max-w-4xl">
+        {/* Main content section */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Tenancy Application
-          </h1>
+          </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Start your tenancy application journey with our streamlined process.
           </p>
