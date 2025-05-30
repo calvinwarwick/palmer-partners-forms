@@ -46,6 +46,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                   onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
                   placeholder="Full current address"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -58,6 +59,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                   onChange={(e) => onUpdateApplicant(applicant.id, "previousPostcode", e.target.value)}
                   placeholder="e.g., CO14 8LZ"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -70,6 +72,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                 value={applicant.currentPropertyStatus}
                 onChange={(e) => onUpdateApplicant(applicant.id, "currentPropertyStatus", e.target.value)}
                 className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 required
               >
                 <option value="">Select status</option>
@@ -94,6 +97,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                     value={applicant.moveInDate}
                     onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
                     className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
               </div>
@@ -109,6 +113,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                     value={applicant.vacateDate}
                     onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
                     className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
               </div>
@@ -121,6 +126,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                   onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
                   placeholder="e.g., 1200"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             </div>
