@@ -64,21 +64,22 @@ const Application = () => {
   return (
     <div className="min-h-screen bg-gray-200">
       {/* Palmer & Partners style header - full width, far left corner */}
-      <div className="bg-white w-full">
+      <div className="bg-dark-grey w-full">
+        <div className="h-2 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
         <div className="w-full px-6 py-4">
           <div className="flex items-center space-x-4">
-            <div className="bg-orange-500 p-2 rounded-lg transform rotate-12">
+            <div className="transform rotate-12">
               <img 
                 src="/lovable-uploads/02a095fa-4b9c-40b1-bea3-882f131a8f55.png" 
                 alt="Palmer & Partners P Logo" 
-                className="h-8 w-8"
+                className="h-12 w-12"
               />
             </div>
             <div className="flex items-center">
               <img 
                 src="/lovable-uploads/8958574e-86f0-4482-9a99-322142a0f734.png" 
                 alt="Palmer & Partners Text Logo" 
-                className="h-8"
+                className="h-10"
               />
             </div>
           </div>
