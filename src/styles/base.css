@@ -1,6 +1,6 @@
 
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap');
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,29 +8,29 @@
 @layer base {
   :root {
     --background: 0 0% 98%;
-    --foreground: 0 0% 15%;
+    --foreground: 0 0% 13%; /* Dark Grey #212121 */
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 15%;
+    --card-foreground: 0 0% 13%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 15%;
-    --primary: 25 95% 53%;
+    --popover-foreground: 0 0% 13%;
+    --primary: 25 100% 50%; /* Primary Orange #FF6F00 */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 93%;
-    --secondary-foreground: 0 0% 15%;
-    --muted: 0 0% 93%;
-    --muted-foreground: 0 0% 45%;
-    --accent: 0 0% 93%;
-    --accent-foreground: 0 0% 15%;
+    --secondary: 0 0% 62%; /* Light Grey #9E9E9E */
+    --secondary-foreground: 0 0% 13%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 62%;
+    --accent: 25 100% 50%;
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 85%;
     --input: 0 0% 85%;
-    --ring: 25 95% 53%;
-    --chart-1: 25 95% 53%;
-    --chart-2: 0 0% 45%;
-    --chart-3: 0 0% 25%;
-    --chart-4: 0 0% 65%;
-    --chart-5: 0 0% 35%;
+    --ring: 25 100% 50%;
+    --chart-1: 25 100% 50%;
+    --chart-2: 0 0% 62%;
+    --chart-3: 0 0% 13%;
+    --chart-4: 0 0% 45%;
+    --chart-5: 0 0% 25%;
     --radius: 0.75rem;
   }
 }
@@ -42,36 +42,37 @@
   
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter', 'Lexend', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-variation-settings: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
   
-  /* Enhanced typography */
+  /* Enhanced typography with Lexend */
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inter', 'Lexend', sans-serif;
+    font-family: 'Lexend', sans-serif;
     font-weight: 600;
     letter-spacing: -0.025em;
+    color: #212121;
   }
   
-  /* Ensure all form elements use Inter */
+  /* Ensure all form elements use Lexend */
   input, textarea, select, button, label {
-    font-family: 'Inter', 'Lexend', sans-serif;
+    font-family: 'Lexend', sans-serif;
   }
   
-  /* Enhanced glassmorphism effects */
+  /* Enhanced glassmorphism effects with new colors */
   .glass {
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 111, 0, 0.1);
   }
   
   .glass-dark {
-    background: rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(33, 33, 33, 0.1);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 111, 0, 0.2);
   }
 }
 
@@ -121,16 +122,18 @@
   animation: slideInRight 0.4s ease-out;
 }
 
-/* Enhanced focus states */
+/* Enhanced focus states with orange */
 .focus-ring {
   @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
 }
 
-/* Enhanced button styles */
+/* Enhanced button styles with new color scheme */
 .btn-primary {
   @apply bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200;
+  font-family: 'Lexend', sans-serif;
 }
 
 .btn-secondary {
-  @apply bg-white border-gray-200 text-gray-700 hover:bg-gray-50 font-medium shadow-sm hover:shadow-md transition-all duration-200;
+  @apply bg-white border-gray-300 text-gray-800 hover:bg-gray-50 font-medium shadow-sm hover:shadow-md transition-all duration-200;
+  font-family: 'Lexend', sans-serif;
 }

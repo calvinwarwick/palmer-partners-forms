@@ -29,11 +29,11 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
+					DEFAULT: '#FF6F00', // Primary Orange
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
+					DEFAULT: '#9E9E9E', // Light Grey
 					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
@@ -65,6 +65,22 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Custom colors from design system
+				'dark-grey': '#212121',
+				'light-grey': '#9E9E9E',
+				'orange': {
+					DEFAULT: '#FF6F00',
+					50: '#FFF3E0',
+					100: '#FFE0B2',
+					200: '#FFCC80',
+					300: '#FFB74D',
+					400: '#FFA726',
+					500: '#FF6F00',
+					600: '#F57C00',
+					700: '#EF6C00',
+					800: '#E65100',
+					900: '#BF360C',
 				}
 			},
 			borderRadius: {

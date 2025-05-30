@@ -35,56 +35,56 @@ const PropertyDetailsStep = ({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 font-lexend">
       <div>
-        <h3 className="text-xl font-semibold text-gray-900 mb-2">Proposed Rental Property Details</h3>
+        <h3 className="text-xl font-semibold text-dark-grey mb-2">Proposed Rental Property Details</h3>
         <div className="border-b border-gray-200 mb-6"></div>
-        <p className="text-gray-600">Please provide the details of the property you are applying for.</p>
+        <p className="text-light-grey">Please provide the details of the property you are applying for.</p>
       </div>
 
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="streetAddress" className="form-label">
-              Address <span className="text-red-500">*</span>
+            <Label htmlFor="streetAddress" className="form-label text-dark-grey font-medium">
+              Address <span className="text-orange-500">*</span>
             </Label>
             <Input
               id="streetAddress"
               value={propertyPreferences.streetAddress}
               onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
               placeholder="Rental property address"
-              className="form-control"
+              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="postcode" className="form-label">
-              Postcode <span className="text-red-500">*</span>
+            <Label htmlFor="postcode" className="form-label text-dark-grey font-medium">
+              Postcode <span className="text-orange-500">*</span>
             </Label>
             <Input
               id="postcode"
               value={propertyPreferences.postcode}
               onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
               placeholder="Rental property postcode"
-              className="form-control"
+              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="maxRent" className="form-label">
-              Rental amount <span className="text-red-500">*</span>
+            <Label htmlFor="maxRent" className="form-label text-dark-grey font-medium">
+              Rental amount <span className="text-orange-500">*</span>
             </Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 z-10">£</span>
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-grey z-10">£</span>
               <Input
                 id="maxRent"
                 type="number"
                 value={propertyPreferences.maxRent}
                 onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
                 placeholder=""
-                className="form-control pl-8"
+                className="form-control pl-8 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                 required
               />
             </div>
@@ -93,46 +93,46 @@ const PropertyDetailsStep = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="moveInDate" className="form-label">
-              Preferred move-in date <span className="text-red-500">*</span>
+            <Label htmlFor="moveInDate" className="form-label text-dark-grey font-medium">
+              Preferred move-in date <span className="text-orange-500">*</span>
             </Label>
             <Input
               id="moveInDate"
               type="date"
               value={propertyPreferences.moveInDate}
               onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-              className="form-control"
+              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
               placeholder="dd/mm/yyyy"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="latestMoveInDate" className="form-label">
-              Latest move-in date <span className="text-red-500">*</span>
+            <Label htmlFor="latestMoveInDate" className="form-label text-dark-grey font-medium">
+              Latest move-in date <span className="text-orange-500">*</span>
             </Label>
             <Input
               id="latestMoveInDate"
               type="date"
               value={propertyPreferences.latestMoveInDate}
               onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-              className="form-control"
+              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
               placeholder="dd/mm/yyyy"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="initialTenancyTerm" className="form-label">
-              Preferred initial tenancy term <span className="text-red-500">*</span>
+            <Label htmlFor="initialTenancyTerm" className="form-label text-dark-grey font-medium">
+              Preferred initial tenancy term <span className="text-orange-500">*</span>
             </Label>
             <Select 
               value={propertyPreferences.initialTenancyTerm} 
               onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
             >
-              <SelectTrigger id="initialTenancyTerm" className="form-select">
+              <SelectTrigger id="initialTenancyTerm" className="form-select border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                 <SelectValue placeholder="Select an option" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border-gray-300">
                 <SelectItem value="6 months">6 months</SelectItem>
                 <SelectItem value="1 year">1 year</SelectItem>
                 <SelectItem value="18 months">18 months</SelectItem>
@@ -145,12 +145,21 @@ const PropertyDetailsStep = ({
       </div>
 
       <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          onClick={fillTestData} 
+          className="flex items-center gap-2 border-light-grey text-dark-grey hover:bg-gray-50 font-lexend"
+        >
           <TestTube className="h-4 w-4" />
           Fill Step Data
         </Button>
         {onFillAllTestData && (
-          <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+          <Button 
+            size="sm" 
+            onClick={onFillAllTestData} 
+            className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-lexend"
+          >
             <TestTube className="h-4 w-4" />
             Fill All Form Data
           </Button>

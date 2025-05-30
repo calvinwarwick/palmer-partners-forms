@@ -113,7 +113,7 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
       case "approved":
         return "bg-green-500 hover:bg-green-600";
       case "pending":
-        return "bg-yellow-500 hover:bg-yellow-600";
+        return "bg-orange-500 hover:bg-orange-600";
       case "under_review":
         return "bg-blue-500 hover:bg-blue-600";
       case "rejected":
@@ -148,7 +148,7 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
       label: "Pending Review", 
       value: applications.filter(app => app.status === 'pending').length.toString(), 
       icon: Clock,
-      color: "bg-yellow-500",
+      color: "bg-orange-500",
       change: "-8%"
     },
     { 
@@ -173,19 +173,19 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 font-lexend">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Loading dashboard...</p>
+          <p className="text-light-grey font-medium">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      {/* Modern Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 shadow-sm sticky top-0 z-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 font-lexend">
+      {/* Modern Header with new color scheme */}
+      <div className="bg-white/90 backdrop-blur-sm border-b border-gray-100 shadow-sm sticky top-0 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
@@ -193,19 +193,19 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                 <Home className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Estate Agent Dashboard</h1>
-                <p className="text-gray-600">Manage applications and track performance</p>
+                <h1 className="text-2xl font-bold text-dark-grey">Estate Agent Dashboard</h1>
+                <p className="text-light-grey">Manage applications and track performance</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 font-medium px-3 py-1">
+              <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 font-medium px-3 py-1">
                 {user.role}
               </Badge>
-              <span className="text-gray-700 font-medium">Welcome, {authUser?.email || user.username}</span>
+              <span className="text-dark-grey font-medium">Welcome, {authUser?.email || user.username}</span>
               <Button 
                 variant="outline" 
                 onClick={onLogout}
-                className="bg-white hover:bg-gray-50 border-gray-200 shadow-sm"
+                className="bg-white hover:bg-gray-50 border-light-grey shadow-sm text-dark-grey"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -216,15 +216,15 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
       </div>
 
       <div className="container mx-auto px-6 py-8 max-w-7xl">
-        {/* Enhanced Stats Grid */}
+        {/* Enhanced Stats Grid with new colors */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {stats.map((stat, index) => (
-            <Card key={index} className="bg-white/70 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card key={index} className="bg-white/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600 mb-1">{stat.label}</p>
-                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-sm font-medium text-light-grey mb-1">{stat.label}</p>
+                    <p className="text-3xl font-bold text-dark-grey">{stat.value}</p>
                     <div className="flex items-center mt-2">
                       <TrendingUp className="h-4 w-4 text-green-500 mr-1" />
                       <span className="text-sm text-green-600 font-medium">{stat.change}</span>
@@ -239,22 +239,22 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
           ))}
         </div>
 
-        {/* Enhanced Main Content */}
-        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-xl">
+        {/* Enhanced Main Content with new color scheme */}
+        <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-xl">
           <CardHeader className="border-b border-gray-100 bg-white/50">
             <div className="flex justify-between items-center">
               <div>
-                <CardTitle className="text-2xl font-bold text-gray-900">Applications Management</CardTitle>
-                <CardDescription className="text-gray-600 mt-1">
+                <CardTitle className="text-2xl font-bold text-dark-grey">Applications Management</CardTitle>
+                <CardDescription className="text-light-grey mt-1">
                   View and manage all tenancy applications
                 </CardDescription>
               </div>
               <div className="flex space-x-3">
-                <Button variant="outline" className="bg-white hover:bg-gray-50 border-gray-200 shadow-sm">
+                <Button variant="outline" className="bg-white hover:bg-gray-50 border-light-grey shadow-sm text-dark-grey">
                   <Download className="h-4 w-4 mr-2" />
                   Export All
                 </Button>
-                <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg">
+                <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 shadow-lg text-white">
                   <Plus className="h-4 w-4 mr-2" />
                   New Application
                 </Button>
@@ -263,23 +263,23 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
           </CardHeader>
 
           <CardContent className="p-6">
-            {/* Enhanced Search and Filter */}
+            {/* Enhanced Search and Filter with new colors */}
             <div className="flex flex-col md:flex-row gap-4 mb-6">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-grey h-4 w-4" />
                 <Input
                   placeholder="Search applications by name, email, or address..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white border-gray-200 shadow-sm"
+                  className="pl-10 bg-white border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full md:w-48 bg-white border-gray-200 shadow-sm">
+                <SelectTrigger className="w-full md:w-48 bg-white border-gray-300 shadow-sm focus:border-orange-500 focus:ring-orange-500">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white border-gray-300">
                   <SelectItem value="all">All Statuses</SelectItem>
                   <SelectItem value="pending">Pending</SelectItem>
                   <SelectItem value="under_review">Under Review</SelectItem>
@@ -289,15 +289,15 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
               </Select>
             </div>
 
-            {/* Enhanced Applications List */}
+            {/* Enhanced Applications List with new colors */}
             <div className="space-y-4">
               {filteredApplications.map((app) => (
-                <Card key={app.id} className="bg-white border border-gray-100 hover:border-gray-200 transition-all duration-200 hover:shadow-md">
+                <Card key={app.id} className="bg-white border border-gray-200 hover:border-orange-300 transition-all duration-200 hover:shadow-md">
                   <CardContent className="p-6">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <div className="flex items-center gap-3 mb-3">
-                          <h3 className="font-bold text-lg text-gray-900">
+                          <h3 className="font-bold text-lg text-dark-grey">
                             {app.applicants?.[0]?.firstName} {app.applicants?.[0]?.lastName}
                             {app.applicants?.length > 1 && (
                               <Badge variant="outline" className="ml-2 bg-blue-50 text-blue-700 border-blue-200">
@@ -308,19 +308,19 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                         </div>
                         <div className="grid md:grid-cols-2 gap-4 text-sm">
                           <div>
-                            <p className="text-gray-600 mb-1">
-                              <span className="font-medium">Email:</span> {app.applicants?.[0]?.email}
+                            <p className="text-light-grey mb-1">
+                              <span className="font-medium text-dark-grey">Email:</span> {app.applicants?.[0]?.email}
                             </p>
-                            <p className="text-gray-600">
-                              <span className="font-medium">Phone:</span> {app.applicants?.[0]?.phone}
+                            <p className="text-light-grey">
+                              <span className="font-medium text-dark-grey">Phone:</span> {app.applicants?.[0]?.phone}
                             </p>
                           </div>
                           <div>
-                            <p className="text-gray-600 mb-1">
-                              <span className="font-medium">Property:</span> {app.property_preferences?.streetAddress || 'N/A'}
+                            <p className="text-light-grey mb-1">
+                              <span className="font-medium text-dark-grey">Property:</span> {app.property_preferences?.streetAddress || 'N/A'}
                             </p>
-                            <p className="text-gray-600">
-                              <span className="font-medium">Submitted:</span> {new Date(app.submitted_at).toLocaleDateString()}
+                            <p className="text-light-grey">
+                              <span className="font-medium text-dark-grey">Submitted:</span> {new Date(app.submitted_at).toLocaleDateString()}
                             </p>
                           </div>
                         </div>
@@ -330,10 +330,10 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                           value={app.status} 
                           onValueChange={(value) => updateApplicationStatus(app.id, value)}
                         >
-                          <SelectTrigger className="w-40 bg-white border-gray-200">
+                          <SelectTrigger className="w-40 bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                             <SelectValue />
                           </SelectTrigger>
-                          <SelectContent>
+                          <SelectContent className="bg-white border-gray-300">
                             <SelectItem value="pending">Pending</SelectItem>
                             <SelectItem value="under_review">Under Review</SelectItem>
                             <SelectItem value="approved">Approved</SelectItem>
@@ -344,7 +344,7 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
                           {getStatusIcon(app.status)}
                           <span className="ml-1 capitalize">{app.status.replace('_', ' ')}</span>
                         </Badge>
-                        <Button variant="outline" size="sm" className="bg-white hover:bg-gray-50 border-gray-200">
+                        <Button variant="outline" size="sm" className="bg-white hover:bg-gray-50 border-gray-300 text-dark-grey">
                           View Details
                         </Button>
                       </div>
@@ -356,10 +356,10 @@ const Dashboard = ({ user, onLogout }: DashboardProps) => {
               {filteredApplications.length === 0 && (
                 <div className="text-center py-16">
                   <div className="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                    <FileText className="h-8 w-8 text-gray-400" />
+                    <FileText className="h-8 w-8 text-light-grey" />
                   </div>
-                  <p className="text-gray-600 text-lg font-medium mb-2">No applications found</p>
-                  <p className="text-gray-500">
+                  <p className="text-dark-grey text-lg font-medium mb-2">No applications found</p>
+                  <p className="text-light-grey">
                     {searchTerm || statusFilter !== "all" 
                       ? "Try adjusting your search criteria" 
                       : "New applications will appear here"}
