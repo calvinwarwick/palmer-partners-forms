@@ -24,17 +24,22 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
       {applicants.map((applicant, index) => (
         <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-            <CardTitle className="text-lg font-semibold flex items-center gap-3">
+            <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
               <div className="p-2 bg-white/20 rounded-lg">
                 <Home className="h-5 w-5" />
               </div>
-              {applicant.firstName} {applicant.lastName} - Current Address
+              Applicant {index + 1}
+              {applicant.firstName && applicant.lastName && (
+                <span className="text-white font-normal">
+                  - {applicant.firstName} {applicant.lastName}
+                </span>
+              )}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor={`streetAddress-${applicant.id}`} className="form-label text-gray-700 font-medium">Street address *</Label>
+                <Label htmlFor={`streetAddress-${applicant.id}`} className="form-label text-gray-700 font-medium">Street address <span className="text-red-500">*</span></Label>
                 <Input
                   id={`streetAddress-${applicant.id}`}
                   value={applicant.previousAddress}
@@ -46,7 +51,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor={`postcode-${applicant.id}`} className="form-label text-gray-700 font-medium">Postcode *</Label>
+                <Label htmlFor={`postcode-${applicant.id}`} className="form-label text-gray-700 font-medium">Postcode <span className="text-red-500">*</span></Label>
                 <Input
                   id={`postcode-${applicant.id}`}
                   value={applicant.previousPostcode}
@@ -59,7 +64,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor={`propertyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">Current property status *</Label>
+              <Label htmlFor={`propertyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">Current property status <span className="text-red-500">*</span></Label>
               <select
                 id={`propertyStatus-${applicant.id}`}
                 value={applicant.currentPropertyStatus}

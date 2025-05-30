@@ -1,5 +1,5 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle, TestTube, Info } from "lucide-react";
+import { AlertTriangle, TestTube, Info, User } from "lucide-react";
 import { AdditionalDetails, Applicant } from "@/domain/types/Applicant";
 import { Button } from "@/components/ui/button";
 
@@ -30,102 +30,46 @@ const AdditionalDetailsStep = ({
 }: AdditionalDetailsStepProps) => {
 
   return (
-    <div className="space-y-6">
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-dark-grey mb-2">Additional Details</h2>
-        <p className="text-light-grey">Please provide some additional information about your application</p>
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Additional Details</h3>
+        <p className="text-light-grey mb-4">Please provide some additional information about your application</p>
+        <div className="border-b border-gray-200 mb-6"></div>
       </div>
-
-      {/* UK Passport Section */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-medium text-dark-grey flex items-center">
-                Do you have a UK passport? <span className="text-red-500 ml-1">*</span>
-              </Label>
-              <Switch
-                checked={additionalDetails.ukPassport === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails("ukPassport", checked ? "yes" : "no")}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Adverse Credit Section */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-medium text-dark-grey flex items-center">
-                Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500 ml-1">*</span>
-              </Label>
-              <Switch
-                checked={additionalDetails.adverseCredit === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails("adverseCredit", checked ? "yes" : "no")}
-              />
-            </div>
-            
-            {additionalDetails.adverseCredit === "yes" && (
-              <div className="mt-4">
-                <Label className="text-sm font-medium text-dark-grey mb-2 block">
-                  Please provide details:
-                </Label>
-                <Textarea
-                  value={additionalDetails.adverseCreditDetails}
-                  onChange={(e) => onUpdateDetails("adverseCreditDetails", e.target.value)}
-                  placeholder="Please provide details about your adverse credit history..."
-                  className="min-h-[100px]"
-                />
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Adverse Credit Details for Individual Applicants */}
       {applicants.map((applicant, index) => (
-        applicant.adverseCreditDetails && (
-          <Card key={applicant.id} className="border border-gray-200 shadow-sm">
-            <CardContent className="p-6">
-              <div className="bg-orange-500 text-white px-4 py-2 rounded-lg mb-4">
-                <h3 className="font-semibold text-white">Applicant {index + 1}: {applicant.firstName} {applicant.lastName}</h3>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-sm font-medium text-dark-grey mb-2 block">
-                    Adverse Credit Details:
-                  </Label>
-                  <Textarea
-                    value={applicant.adverseCreditDetails}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
-                    placeholder="Please provide details about adverse credit history..."
-                    className="min-h-[100px]"
-                  />
+        applicant.adverseCredit === "yes" && (
+          <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
+            <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+              <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+                <div className="p-2 bg-white/20 rounded-lg">
+                  <User className="h-5 w-5" />
                 </div>
+                Applicant {index + 1}
+                {applicant.firstName && applicant.lastName && (
+                  <span className="text-white font-normal">
+                    - {applicant.firstName} {applicant.lastName}
+                  </span>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              <div>
+                <Label className="text-sm font-medium text-gray-700 mb-2 block">
+                  Adverse Credit Details:
+                </Label>
+                <Textarea
+                  value={applicant.adverseCreditDetails}
+                  onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
+                  placeholder="Please provide details about adverse credit history..."
+                  className="min-h-[100px] bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                />
               </div>
             </CardContent>
           </Card>
         )
       ))}
-
-      {/* Guarantor Section */}
-      <Card className="border border-gray-200 shadow-sm">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label className="text-base font-medium text-dark-grey flex items-center">
-                Do you require a guarantor? <span className="text-red-500 ml-1">*</span>
-              </Label>
-              <Switch
-                checked={additionalDetails.guarantorRequired === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails("guarantorRequired", checked ? "yes" : "no")}
-              />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Pets Section */}
       <Card className="border border-gray-200 shadow-sm">
