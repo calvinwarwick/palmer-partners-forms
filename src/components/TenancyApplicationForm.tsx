@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check, TestTube } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
@@ -22,7 +23,15 @@ import GuarantorForm from "@/components/applicants/GuarantorForm";
 
 const TenancyApplicationForm = () => {
   const totalSteps = 6;
-  const { currentStep, progress, goToNext, goToPrevious, canProceed, isFirstStep, isLastStep } = useMultiStepForm(totalSteps);
+  const isMobile = useIsMobile();
+  
+  // Calculate progress based on completed steps, not current step
+  const calculateProgress = (current: number) => {
+    return ((current - 1) / totalSteps) * 100;
+  };
+  
+  const { currentStep, goToNext, goToPrevious, canProceed, isFirstStep, isLastStep } = useMultiStepForm(totalSteps);
+  const progress = calculateProgress(currentStep);
   const { isSubmitting, isSubmitted, submitApplication } = useApplicationSubmission();
 
   const [propertyPreferences, setPropertyPreferences] = useState<PropertyPreferences>({
@@ -59,7 +68,8 @@ const TenancyApplicationForm = () => {
       reference1Name: "",
       reference1Contact: "",
       pets: "",
-      petDetails: ""
+      petDetails: "",
+      adverseCreditDetails: ""
     }
   ]);
 
@@ -73,7 +83,8 @@ const TenancyApplicationForm = () => {
     under18Count: "",
     childrenAges: "",
     conditionsOfOffer: "",
-    depositType: ""
+    depositType: "",
+    guarantorDetails: ""
   });
 
   const [dataSharing, setDataSharing] = useState({
@@ -111,7 +122,8 @@ const TenancyApplicationForm = () => {
         reference1Name: "",
         reference1Contact: "",
         pets: "",
-        petDetails: ""
+        petDetails: "",
+        adverseCreditDetails: ""
       };
       setApplicants([...applicants, newApplicant]);
     }
@@ -151,7 +163,8 @@ const TenancyApplicationForm = () => {
           reference1Name: "",
           reference1Contact: "",
           pets: "",
-          petDetails: ""
+          petDetails: "",
+          adverseCreditDetails: ""
         });
       }
       setApplicants(newApplicants);
@@ -278,7 +291,8 @@ const TenancyApplicationForm = () => {
       under18Count: "0",
       childrenAges: "",
       conditionsOfOffer: "Standard conditions accepted",
-      depositType: "traditional"
+      depositType: "traditional",
+      guarantorDetails: ""
     });
 
     // Fill Terms and Data
@@ -340,6 +354,25 @@ const TenancyApplicationForm = () => {
     { step: 5, icon: Info, label: "Additional Details" },
     { step: 6, icon: CheckCircle, label: "Terms & Signature" }
   ];
+
+  // Filter steps for mobile view
+  const getVisibleSteps = () => {
+    if (!isMobile) return allSteps;
+    
+    const visibleSteps = [];
+    
+    // Always show current step
+    const currentStepData = allSteps.find(step => step.step === currentStep);
+    if (currentStepData) visibleSteps.push(currentStepData);
+    
+    // Show next step if not on last step
+    if (!isLastStep) {
+      const nextStepData = allSteps.find(step => step.step === currentStep + 1);
+      if (nextStepData) visibleSteps.push(nextStepData);
+    }
+    
+    return visibleSteps;
+  };
 
   if (isSubmitted) {
     return <ApplicationSuccess applicants={applicants} />;
@@ -422,7 +455,6 @@ const TenancyApplicationForm = () => {
                   </div>
                   <div>
                     <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
-                    <p className="text-light-grey">Complete your application in {totalSteps} easy steps</p>
                   </div>
                 </div>
                 <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 font-lexend">
@@ -442,9 +474,9 @@ const TenancyApplicationForm = () => {
                 />
               </div>
 
-              {/* Modern step indicators with new color scheme */}
-              <div className="grid grid-cols-6 gap-2">
-                {allSteps.map(({ step, icon: Icon, label }) => (
+              {/* Modern step indicators with mobile responsiveness */}
+              <div className={`grid gap-2 ${isMobile ? 'grid-cols-2' : 'grid-cols-6'}`}>
+                {getVisibleSteps().map(({ step, icon: Icon, label }) => (
                   <div key={step} className="text-center">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
                       currentStep === step 
@@ -510,7 +542,7 @@ const TenancyApplicationForm = () => {
                     disabled={isSubmitting}
                     className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
                   >
-                    Continue
+                    Next
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 ) : (

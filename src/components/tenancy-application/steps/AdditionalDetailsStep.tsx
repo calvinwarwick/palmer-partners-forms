@@ -1,14 +1,15 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle, TestTube, Info } from "lucide-react";
 import { AdditionalDetails, Applicant } from "@/domain/types/Applicant";
-import { PetDetails } from "./PetDetails";
-import { AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: AdditionalDetails;
@@ -22,184 +23,226 @@ interface AdditionalDetailsStepProps {
 const AdditionalDetailsStep = ({ 
   additionalDetails, 
   onUpdateDetails, 
-  onFillAllTestData, 
-  maxRent, 
-  applicants, 
-  onUpdateApplicant 
+  onFillAllTestData,
+  maxRent,
+  applicants,
+  onUpdateApplicant
 }: AdditionalDetailsStepProps) => {
 
   return (
-    <div className="space-y-6 font-lexend">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Additional Details</h2>
-        <p className="text-muted-foreground mb-4">Provide additional information for your application</p>
-        <div className="border-b border-gray-200 mb-6"></div>
+    <div className="space-y-6">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-dark-grey mb-2">Additional Details</h2>
+        <p className="text-light-grey">Please provide some additional information about your application</p>
       </div>
 
-      <div className="grid gap-6">
-        {/* UK Passport */}
-        <Card className="form-card">
-          <CardHeader>
-            <CardTitle>UK or Republic of Ireland Passport</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      {/* UK Passport Section */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="ukPassport" className="text-sm font-medium">
-                Do you hold a UK or Republic of Ireland passport?
+              <Label className="text-base font-medium text-dark-grey flex items-center">
+                Do you have a UK passport? <span className="text-red-500 ml-1">*</span>
               </Label>
               <Switch
-                id="ukPassport"
                 checked={additionalDetails.ukPassport === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails('ukPassport', checked ? "yes" : "no")}
+                onCheckedChange={(checked) => onUpdateDetails("ukPassport", checked ? "yes" : "no")}
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Adverse Credit */}
-        <Card className="form-card">
-          <CardHeader>
-            <CardTitle>Credit History</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      {/* Adverse Credit Section */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="adverseCredit" className="text-sm font-medium">
-                Do you have any current or historical adverse credit e.g., debt management, VA, CCJ or bankruptcy?
+              <Label className="text-base font-medium text-dark-grey flex items-center">
+                Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500 ml-1">*</span>
               </Label>
               <Switch
-                id="adverseCredit"
                 checked={additionalDetails.adverseCredit === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails('adverseCredit', checked ? "yes" : "no")}
+                onCheckedChange={(checked) => onUpdateDetails("adverseCredit", checked ? "yes" : "no")}
               />
             </div>
-
+            
             {additionalDetails.adverseCredit === "yes" && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="flex items-start gap-3">
-                  <AlertCircle className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Additional Information Required</h4>
-                    <p className="text-xs text-gray-600 mb-3 leading-relaxed">
-                      Please provide details about your adverse credit history. This information helps us better understand your circumstances and may not necessarily affect your application.
-                    </p>
-                  </div>
-                </div>
+              <div className="mt-4">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block">
+                  Please provide details:
+                </Label>
                 <Textarea
                   value={additionalDetails.adverseCreditDetails}
-                  onChange={(e) => onUpdateDetails('adverseCreditDetails', e.target.value)}
+                  onChange={(e) => onUpdateDetails("adverseCreditDetails", e.target.value)}
                   placeholder="Please provide details about your adverse credit history..."
-                  rows={3}
-                  className="form-control mt-2"
+                  className="min-h-[100px]"
                 />
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Guarantor Required */}
-        <Card className="form-card">
-          <CardHeader>
-            <CardTitle>Guarantor</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      {/* Adverse Credit Details for Individual Applicants */}
+      {applicants.map((applicant, index) => (
+        applicant.adverseCreditDetails && (
+          <Card key={applicant.id} className="border border-gray-200 shadow-sm">
+            <CardContent className="p-6">
+              <div className="bg-orange-500 text-white px-4 py-2 rounded-lg mb-4">
+                <h3 className="font-semibold text-white">Applicant {index + 1}: {applicant.firstName} {applicant.lastName}</h3>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label className="text-sm font-medium text-dark-grey mb-2 block">
+                    Adverse Credit Details:
+                  </Label>
+                  <Textarea
+                    value={applicant.adverseCreditDetails}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
+                    placeholder="Please provide details about adverse credit history..."
+                    className="min-h-[100px]"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )
+      ))}
+
+      {/* Guarantor Section */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label htmlFor="guarantorRequired" className="text-sm font-medium">
-                If required, can you supply a guarantor for this proposed tenancy?
+              <Label className="text-base font-medium text-dark-grey flex items-center">
+                Do you require a guarantor? <span className="text-red-500 ml-1">*</span>
               </Label>
               <Switch
-                id="guarantorRequired"
                 checked={additionalDetails.guarantorRequired === "yes"}
-                onCheckedChange={(checked) => onUpdateDetails('guarantorRequired', checked ? "yes" : "no")}
+                onCheckedChange={(checked) => onUpdateDetails("guarantorRequired", checked ? "yes" : "no")}
               />
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Pets */}
-        <PetDetails 
-          pets={additionalDetails.pets}
-          petDetails={additionalDetails.petDetails}
-          onPetsChange={(value) => onUpdateDetails('pets', value)}
-          onPetDetailsChange={(value) => onUpdateDetails('petDetails', value)}
-        />
+      {/* Pets Section */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label className="text-base font-medium text-dark-grey flex items-center">
+                Do you have any pets? <span className="text-red-500 ml-1">*</span>
+              </Label>
+              <Switch
+                checked={additionalDetails.pets === "yes"}
+                onCheckedChange={(checked) => onUpdateDetails("pets", checked ? "yes" : "no")}
+              />
+            </div>
+            
+            {additionalDetails.pets === "yes" && (
+              <div className="mt-4">
+                <Label className="text-sm font-medium text-dark-grey mb-2 block">
+                  Pet Details:
+                </Label>
+                <Textarea
+                  value={additionalDetails.petDetails}
+                  onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
+                  placeholder="Please describe your pets (type, number, etc.)..."
+                  className="min-h-[80px]"
+                />
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Under 18s */}
-        <Card className="form-card">
-          <CardHeader>
-            <CardTitle>Under 18s</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
+      {/* Children Section */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="under18Count">Number of occupants under 18</Label>
-              <Select
-                value={additionalDetails.under18Count}
-                onValueChange={(value) => onUpdateDetails('under18Count', value)}
-              >
-                <SelectTrigger className="form-select">
-                  <SelectValue placeholder="Select number" />
+              <Label className="text-base font-medium text-dark-grey mb-3 block flex items-center">
+                Number of children under 18 <span className="text-red-500 ml-1">*</span>
+              </Label>
+              <Select value={additionalDetails.under18Count} onValueChange={(value) => onUpdateDetails("under18Count", value)}>
+                <SelectTrigger id="under18Count" className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                  <SelectValue placeholder="Select number of children" />
                 </SelectTrigger>
                 <SelectContent>
-                  {[0, 1, 2, 3, 4, 5].map(num => (
-                    <SelectItem key={num} value={num.toString()}>{num}</SelectItem>
-                  ))}
+                  <SelectItem value="0">0</SelectItem>
+                  <SelectItem value="1">1</SelectItem>
+                  <SelectItem value="2">2</SelectItem>
+                  <SelectItem value="3">3</SelectItem>
+                  <SelectItem value="4">4</SelectItem>
+                  <SelectItem value="5+">5+</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-
-            {additionalDetails.under18Count && parseInt(additionalDetails.under18Count) > 0 && (
+            
+            {additionalDetails.under18Count && additionalDetails.under18Count !== "0" && (
               <div>
-                <Label htmlFor="childrenAges">Ages of children</Label>
+                <Label className="text-sm font-medium text-dark-grey mb-2 block">
+                  Ages of children:
+                </Label>
                 <Input
-                  id="childrenAges"
                   value={additionalDetails.childrenAges}
-                  onChange={(e) => onUpdateDetails('childrenAges', e.target.value)}
+                  onChange={(e) => onUpdateDetails("childrenAges", e.target.value)}
                   placeholder="e.g., 5, 8, 12"
-                  className="form-control"
+                  className="bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                 />
               </div>
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Conditions of Offer */}
-        <Card className="form-card">
-          <CardHeader>
-            <CardTitle>Conditions of Offer</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Label htmlFor="conditionsOfOffer">Any special conditions or requests?</Label>
-            <Textarea
-              id="conditionsOfOffer"
-              value={additionalDetails.conditionsOfOffer}
-              onChange={(e) => onUpdateDetails('conditionsOfOffer', e.target.value)}
-              placeholder="Enter any special conditions or requests..."
-              rows={3}
-              className="form-control"
-            />
-          </CardContent>
-        </Card>
-
-        {/* Deposit Type */}
-        <Card className="form-card">
-          <CardHeader>
-            <CardTitle>Deposit Type</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Select
-              value={additionalDetails.depositType}
-              onValueChange={(value) => onUpdateDetails('depositType', value)}
+      {/* Deposit Section */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <Label className="text-base font-medium text-dark-grey flex items-center">
+              Deposit Type <span className="text-red-500 ml-1">*</span>
+            </Label>
+            <RadioGroup 
+              value={additionalDetails.depositType} 
+              onValueChange={(value) => onUpdateDetails("depositType", value)}
+              className="space-y-3"
             >
-              <SelectTrigger className="form-select">
-                <SelectValue placeholder="Select deposit type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="traditional">Traditional Deposit</SelectItem>
-                <SelectItem value="deposit-replacement">Deposit Replacement Scheme</SelectItem>
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-      </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="traditional" id="traditional" />
+                <Label htmlFor="traditional" className="text-sm text-dark-grey cursor-pointer">
+                  Traditional Deposit - Equivalent to {maxRent ? `£${maxRent}` : '6 weeks rent'} held in a government-backed deposit protection scheme
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="zero-deposit" id="zero-deposit" />
+                <Label htmlFor="zero-deposit" className="text-sm text-dark-grey cursor-pointer">
+                  Zero Deposit Option - Pay a one-time fee equivalent to one week's rent instead of a traditional deposit
+                </Label>
+              </div>
+            </RadioGroup>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Conditions of Offer */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-4">
+            <Label className="text-base font-medium text-dark-grey mb-3 block">
+              Any specific conditions or requests?
+            </Label>
+            <Textarea
+              value={additionalDetails.conditionsOfOffer}
+              onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
+              placeholder="Please mention any specific conditions, requests, or additional information..."
+              className="min-h-[100px] bg-white border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
