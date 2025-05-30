@@ -21,15 +21,14 @@ const Application = () => {
             <img 
               src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
               alt="Company Logo" 
-              className="h-auto"
+              className="h-auto w-full max-w-md"
               style={{ 
-                width: '150px',
                 filter: 'brightness(0) saturate(100%)'
               }}
             />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Find Your Perfect Home
+            Tenancy Application
           </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Start your tenancy application journey with our streamlined process.
@@ -60,7 +59,7 @@ const Application = () => {
                 <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-white font-bold text-lg">2</span>
                 </div>
-                <h3 className="font-semibold text-gray-900 mb-2">Personal Info</h3>
+                <h3 className="font-semibold text-gray-900 mb-2">Personal Information</h3>
                 <p className="text-sm text-gray-600">Provide your personal and employment details</p>
               </div>
               <div className="text-center p-6 bg-orange-50 rounded-lg">
