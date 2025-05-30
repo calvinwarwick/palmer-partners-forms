@@ -57,7 +57,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a black header section with spacing after
+  // Helper function to add a black header section WITHOUT spacing after
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(15);
     
@@ -70,7 +70,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
     yPosition = addText(title, 0, yPosition + 3, 0, 'center');
-    yPosition += 2;
+    // Removed the extra spacing that was here: yPosition += 2;
     doc.setTextColor(0, 0, 0); // reset to black
     doc.setFont('helvetica', 'normal');
   };
