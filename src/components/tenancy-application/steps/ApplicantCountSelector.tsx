@@ -1,6 +1,8 @@
 
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Users } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ApplicantCountSelectorProps {
   applicantCount: number;
@@ -9,32 +11,43 @@ interface ApplicantCountSelectorProps {
 
 const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: ApplicantCountSelectorProps) => {
   return (
-    <div className="applicant-details-section mb-8">
-      <div>
-        <h3>Applicant Details</h3>
-      </div>
-      
-      <div>
-        <Label htmlFor="applicantCount" className="form-label">
-          How many adults will be living in the property? Please ensure you provide details for each applicant below. <span className="text-red-500">*</span>
-        </Label>
-        <Select
-          value={applicantCount.toString()}
-          onValueChange={(value) => onApplicantCountChange(parseInt(value))}
-        >
-          <SelectTrigger className="focus:ring-orange-500 focus:border-orange-500">
-            <SelectValue placeholder="Please select an option" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1">1 Applicant</SelectItem>
-            <SelectItem value="2">2 Applicants</SelectItem>
-            <SelectItem value="3">3 Applicants</SelectItem>
-            <SelectItem value="4">4 Applicants</SelectItem>
-            <SelectItem value="5">5 Applicants</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    </div>
+    <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+      <CardContent className="p-6">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-orange-500 rounded-lg">
+            <Users className="h-6 w-6 text-white" />
+          </div>
+          <div className="flex-1 space-y-4">
+            <div>
+              <h4 className="text-lg font-semibold text-dark-grey mb-1">Applicant Information</h4>
+              <Label htmlFor="applicantCount" className="text-base font-medium text-dark-grey">
+                How many adults will be living in the property? <span className="text-red-500">*</span>
+              </Label>
+              <p className="text-sm text-gray-600 mt-1">Please ensure you provide details for each applicant below.</p>
+            </div>
+            <Select
+              value={applicantCount.toString()}
+              onValueChange={(value) => onApplicantCountChange(parseInt(value))}
+            >
+              <SelectTrigger 
+                id="applicantCount" 
+                className="focus:ring-orange-500 focus:border-orange-500 bg-white"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+              >
+                <SelectValue placeholder="Please select an option" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1 Applicant</SelectItem>
+                <SelectItem value="2">2 Applicants</SelectItem>
+                <SelectItem value="3">3 Applicants</SelectItem>
+                <SelectItem value="4">4 Applicants</SelectItem>
+                <SelectItem value="5">5 Applicants</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

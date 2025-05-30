@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { User, Calendar, Shield, Info } from "lucide-react";
+import { User, Calendar, Shield } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Switch } from "@/components/ui/switch";
@@ -58,7 +58,8 @@ const PersonalInfoStep = ({
             </div>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* First Name, Last Name, and DOB on one row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="space-y-2">
                 <Label htmlFor={`firstName-${applicant.id}`} className="form-label text-gray-700 font-medium">First Name <span className="text-red-500">*</span></Label>
                 <Input
@@ -83,7 +84,22 @@ const PersonalInfoStep = ({
                   required
                 />
               </div>
+              <div className="space-y-2">
+                <Label htmlFor={`dob-${applicant.id}`} className="form-label text-gray-700 font-medium">Date of Birth</Label>
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+                  <Input
+                    id={`dob-${applicant.id}`}
+                    type="date"
+                    value={applicant.dateOfBirth}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  />
+                </div>
+              </div>
             </div>
+            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
                 <Label htmlFor={`email-${applicant.id}`} className="form-label text-gray-700 font-medium">Email Address <span className="text-red-500">*</span></Label>
@@ -109,20 +125,6 @@ const PersonalInfoStep = ({
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor={`dob-${applicant.id}`} className="form-label text-gray-700 font-medium">Date of Birth</Label>
-              <div className="date-input-container">
-                <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                <Input
-                  id={`dob-${applicant.id}`}
-                  type="date"
-                  value={applicant.dateOfBirth}
-                  onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             </div>
@@ -159,7 +161,7 @@ const PersonalInfoStep = ({
                   </div>
                   
                   {applicant.adverseCredit === "yes" && (
-                    <div className="space-y-2 ml-4">
+                    <div className="space-y-2">
                       <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="form-label text-gray-700 font-medium">
                         Please provide details about your adverse credit history:
                       </Label>
@@ -168,7 +170,7 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
                         placeholder="Please provide details about your adverse credit history..."
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       />
                     </div>
