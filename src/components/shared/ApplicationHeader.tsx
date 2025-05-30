@@ -11,7 +11,7 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
   return (
     <div className="bg-dark-grey w-full overflow-hidden">
       <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
-      <div className="w-full px-6 py-5 relative h-18 flex items-center">
+      <div className="w-full px-6 py-6 relative h-18 flex items-center">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center space-x-4">
             <div className="transform rotate-12 -my-1">
@@ -25,7 +25,7 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
               <img 
                 src="/lovable-uploads/8958574e-86f0-4482-9a99-322142a0f734.png" 
                 alt="Palmer & Partners Text Logo" 
-                className="h-8"
+                className="h-10"
               />
               <p className="text-xs text-gray-300 font-lexend mt-1">
                 The leading estate agents in Essex & Suffolk.
