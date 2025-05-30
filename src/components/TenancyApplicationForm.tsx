@@ -447,7 +447,7 @@ const TenancyApplicationForm = () => {
       <div className="container mx-auto px-4 max-w-5xl">
         {/* Logo Section */}
         <div className="mb-6">
-          <Card className="bg-white border-0 shadow-lg">
+          <Card className="bg-dark-grey border-0 shadow-lg">
             <CardContent className="p-8 flex justify-center">
               <img 
                 src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
