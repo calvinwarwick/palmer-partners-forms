@@ -19,8 +19,7 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
           </div>
           <div className="flex-1 space-y-4">
             <div>
-              <h4 className="text-lg font-semibold text-dark-grey mb-1">Applicant Information</h4>
-              <Label htmlFor="applicantCount" className="text-base font-medium text-dark-grey">
+              <Label htmlFor="applicantCount" className="text-lg font-semibold text-dark-grey mb-2">
                 How many adults will be living in the property? <span className="text-red-500">*</span>
               </Label>
               <p className="text-sm text-gray-600 mt-1">Please ensure you provide details for each applicant below.</p>
