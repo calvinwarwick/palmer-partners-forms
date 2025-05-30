@@ -66,14 +66,17 @@ const FormProvider = ({ children }: FormProviderProps) => {
 
   const [propertyPreferences, setPropertyPreferences] = useState<PropertyPreferences>({
     propertyType: "",
+    bedrooms: "",
     streetAddress: "",
     postcode: "",
     maxRent: "",
     preferredLocation: "",
+    preferredArea: "",
     moveInDate: "",
     latestMoveInDate: "",
     initialTenancyTerm: "",
-    additionalRequests: ""
+    additionalRequests: "",
+    additionalRequirements: ""
   });
 
   const [applicants, setApplicants] = useState<Applicant[]>([
@@ -233,15 +236,18 @@ const FormProvider = ({ children }: FormProviderProps) => {
     console.log('Fill All Test Data clicked - populating entire form');
     
     setPropertyPreferences({
-      propertyType: "apartment",
+      propertyType: "Flat/Apartment",
+      bedrooms: "2",
       streetAddress: "123 Orchard House, New Cut",
       postcode: "IP7 5DA",
       maxRent: "2500",
       preferredLocation: "Central London",
+      preferredArea: "Central London, SW1A 1AA",
       moveInDate: "2024-06-01",
       latestMoveInDate: "2024-06-15",
       initialTenancyTerm: "1 year",
-      additionalRequests: "Pet-friendly property preferred"
+      additionalRequests: "Pet-friendly property preferred",
+      additionalRequirements: "Pet-friendly property preferred, parking space"
     });
 
     const testData = [
