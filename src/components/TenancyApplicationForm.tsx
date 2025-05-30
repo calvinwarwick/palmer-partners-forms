@@ -445,6 +445,19 @@ const TenancyApplicationForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 py-8 font-lexend">
       <div className="container mx-auto px-4 max-w-5xl">
+        {/* Logo Section */}
+        <div className="mb-6">
+          <Card className="bg-white border-0 shadow-lg">
+            <CardContent className="p-8 flex justify-center">
+              <img 
+                src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
+                alt="Company Logo" 
+                className="h-16 w-auto"
+              />
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Modern header with new color scheme */}
         <div className="mb-8">
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
