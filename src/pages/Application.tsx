@@ -81,7 +81,9 @@ const Application = () => {
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative transition-colors duration-500 ${
+                  stepAnimations.step1.showTick ? 'bg-green-500' : 'bg-orange-500'
+                }`}>
                   <span 
                     className={`text-white font-bold text-lg transition-opacity duration-500 ${
                       stepAnimations.step1.fadeText ? 'opacity-0' : 'opacity-100'
@@ -99,7 +101,9 @@ const Application = () => {
                 <p className="text-sm text-gray-600">Enter your preferred property information</p>
               </div>
               <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative transition-colors duration-500 ${
+                  stepAnimations.step2.showTick ? 'bg-green-500' : 'bg-orange-500'
+                }`}>
                   <span 
                     className={`text-white font-bold text-lg transition-opacity duration-500 ${
                       stepAnimations.step2.fadeText ? 'opacity-0' : 'opacity-100'
@@ -117,7 +121,9 @@ const Application = () => {
                 <p className="text-sm text-gray-600">Provide your personal and employment details</p>
               </div>
               <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative transition-colors duration-500 ${
+                  stepAnimations.step3.showTick ? 'bg-green-500' : 'bg-orange-500'
+                }`}>
                   <span 
                     className={`text-white font-bold text-lg transition-opacity duration-500 ${
                       stepAnimations.step3.fadeText ? 'opacity-0' : 'opacity-100'
