@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -448,22 +449,25 @@ const TenancyApplicationForm = () => {
         <div className="mb-8">
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
             <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col items-center mb-6">
+                <img 
+                  src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
+                  alt="Company Logo" 
+                  className="h-auto mb-4"
+                  style={{ 
+                    width: '150px',
+                    filter: 'brightness(0) saturate(100%)'
+                  }}
+                />
                 <div className="flex items-center space-x-4">
                   <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-lg">
                     <Home className="h-6 w-6 text-white" />
                   </div>
-                  <img 
-                    src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
-                    alt="Company Logo" 
-                    className="h-auto"
-                    style={{ width: '150px' }}
-                  />
                   <div>
                     <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
                   </div>
                 </div>
-                <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 font-lexend">
+                <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 font-lexend mt-4">
                   Step {currentStep} of {totalSteps}
                 </Badge>
               </div>
