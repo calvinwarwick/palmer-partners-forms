@@ -11,7 +11,7 @@ interface ApplicantCountSelectorProps {
 
 const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: ApplicantCountSelectorProps) => {
   return (
-    <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+    <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
       <CardContent className="p-6">
         <div className="flex items-start gap-4">
           <div className="p-3 bg-orange-500 rounded-lg">
@@ -32,7 +32,6 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
               <SelectTrigger 
                 id="applicantCount" 
                 className="focus:ring-orange-500 focus:border-orange-500 bg-white"
-                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
               >
                 <SelectValue placeholder="Please select an option" />
               </SelectTrigger>

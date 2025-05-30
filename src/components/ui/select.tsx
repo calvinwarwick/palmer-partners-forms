@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { Check, ChevronDown, ChevronUp } from "lucide-react"
@@ -24,7 +23,6 @@ const SelectTrigger = React.forwardRef<
     )}
     style={{
       border: '1px solid rgb(228, 228, 231)',
-      boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
       height: '2.75rem',
       appearance: 'none',
       backgroundImage: 'none'
@@ -89,9 +87,6 @@ const SelectContent = React.forwardRef<
         className
       )}
       position={position}
-      style={{
-        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-      }}
       {...props}
     >
       <SelectScrollUpButton />

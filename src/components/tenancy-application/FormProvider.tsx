@@ -334,6 +334,8 @@ const FormProvider = ({ children }: FormProviderProps) => {
     
     if (canProceedToNext) {
       goToNext();
+      // Scroll to top of the form when proceeding to next step
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       const invalidFields = validateAndHighlightFields(
         currentStep, 

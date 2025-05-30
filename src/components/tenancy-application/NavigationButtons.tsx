@@ -31,7 +31,6 @@ const NavigationButtons = ({
           onClick={onPrevious}
           disabled={isSubmitting}
           className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-black px-8 py-3 font-medium font-lexend"
-          style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
@@ -45,7 +44,6 @@ const NavigationButtons = ({
           variant="outline"
           onClick={onFillTestData}
           className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 px-6 py-3 font-medium font-lexend"
-          style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
         >
           <TestTube className="h-4 w-4 mr-2" />
           Fill All Data
@@ -56,7 +54,6 @@ const NavigationButtons = ({
             onClick={onNext}
             disabled={isSubmitting}
             className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold transition-all duration-200 font-lexend"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
           >
             Next
             <ArrowRight className="h-4 w-4 ml-2" />
@@ -66,7 +63,6 @@ const NavigationButtons = ({
             onClick={onSubmit}
             disabled={!canSubmit || isSubmitting}
             className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold transition-all duration-200 font-lexend"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
           >
             {isSubmitting ? (
               <>

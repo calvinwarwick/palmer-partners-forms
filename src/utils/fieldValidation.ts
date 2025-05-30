@@ -1,4 +1,3 @@
-
 export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
   // Try multiple selectors to find the element
   let element = document.getElementById(elementId) || 
@@ -14,19 +13,17 @@ export const highlightInvalidField = (elementId: string, shouldScroll: boolean =
 
   console.log(`Highlighting field: ${elementId}`);
   
-  // Add red border classes with transition - using !important to override existing styles
-  element.style.border = '2px solid #ef4444 !important';
+  // Add red box shadow instead of border - using !important to override existing styles
+  element.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.3), 0 0 8px rgba(239, 68, 68, 0.2) !important';
   element.style.transition = 'all 0.3s ease';
-  element.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
   
   // Only scroll to the first element
   if (shouldScroll) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   
-  // Remove the red border after 2 seconds with fade effect
+  // Remove the red box shadow after 2 seconds with fade effect
   setTimeout(() => {
-    element.style.border = '';
     element.style.boxShadow = '';
     // Remove transition after animation completes
     setTimeout(() => {
