@@ -29,17 +29,14 @@ export interface Applicant {
 
 export interface PropertyPreferences {
   propertyType: string;
-  bedrooms: string;
   streetAddress: string;
   postcode: string;
   maxRent: string;
   preferredLocation: string;
-  preferredArea: string;
   moveInDate: string;
   latestMoveInDate: string;
   initialTenancyTerm: string;
   additionalRequests: string;
-  additionalRequirements: string;
 }
 
 export interface AdditionalDetails {
