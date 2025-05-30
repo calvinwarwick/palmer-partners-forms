@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -474,7 +475,7 @@ const TenancyApplicationForm = () => {
                 />
               </div>
 
-              {/* Modern step indicators with mobile responsiveness and arrows */}
+              {/* Modern step indicators with mobile responsiveness and arrows aligned with icons */}
               <div className={`flex items-center justify-center gap-2 ${isMobile ? 'flex-wrap' : ''}`}>
                 {getVisibleSteps().map(({ step, icon: Icon, label }, index) => (
                   <div key={step} className="flex items-center">
@@ -499,9 +500,11 @@ const TenancyApplicationForm = () => {
                       </div>
                     </div>
                     
-                    {/* Add arrow after each step except the last visible step */}
+                    {/* Add arrow aligned with icon center, after each step except the last visible step */}
                     {index < getVisibleSteps().length - 1 && (
-                      <ChevronRight className="h-5 w-5 text-gray-400 mx-2" />
+                      <div className="flex items-center" style={{ marginBottom: '24px' }}>
+                        <ChevronRight className="h-5 w-5 text-gray-400 mx-2" />
+                      </div>
                     )}
                   </div>
                 ))}

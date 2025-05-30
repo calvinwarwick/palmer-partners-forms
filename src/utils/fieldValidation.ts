@@ -1,20 +1,23 @@
-
 export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
   const element = document.getElementById(elementId) || document.querySelector(`[name="${elementId}"]`);
   if (!element) return;
 
-  // Add red border class
-  element.classList.add('border-red-500', 'border-2');
+  // Add red border classes with transition
+  element.classList.add('border-red-500', 'border-2', 'transition-all', 'duration-500');
   
   // Only scroll to the first element
   if (shouldScroll) {
     element.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   
-  // Remove the red border after 3 seconds
+  // Remove the red border after 2 seconds with fade effect
   setTimeout(() => {
     element.classList.remove('border-red-500', 'border-2');
-  }, 3000);
+    // Remove transition class after animation completes
+    setTimeout(() => {
+      element.classList.remove('transition-all', 'duration-500');
+    }, 500);
+  }, 2000);
 };
 
 export const validateAndHighlightFields = (
