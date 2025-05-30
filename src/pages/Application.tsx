@@ -70,8 +70,8 @@ const Application = () => {
           <div className="flex items-center space-x-4">
             <div className="bg-orange-500 p-3 rounded-lg transform rotate-12">
               <img 
-                src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
-                alt="Company Logo" 
+                src="/lovable-uploads/2ffe88f6-5299-4edd-b1b2-e44585fafe59.png" 
+                alt="Palmer & Partners Logo" 
                 className="h-12 w-12"
               />
             </div>
