@@ -31,7 +31,8 @@
   }
   
   .card {
-    @apply mx-1;
+    @apply mx-0 w-full;
+    border-radius: 0 !important;
   }
   
   .card-content {
@@ -63,6 +64,17 @@
     min-height: 48px;
     @apply text-base;
     padding: 0.75rem 1.5rem;
+  }
+
+  /* Full width containers on mobile */
+  .container.mx-auto {
+    @apply px-0 mx-0 max-w-none;
+  }
+
+  /* Remove border radius and make cards full width */
+  .rounded-lg,
+  .rounded-t-lg {
+    border-radius: 0 !important;
   }
 }
 
