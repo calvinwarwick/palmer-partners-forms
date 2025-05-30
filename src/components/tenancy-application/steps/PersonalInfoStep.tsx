@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { User, Calendar, Shield, Info } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
@@ -40,7 +41,7 @@ const PersonalInfoStep = ({
       />
       
       {applicants.map((applicant, index) => (
-        <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
+        <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
             <div className="flex justify-between items-center">
               <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
@@ -66,6 +67,7 @@ const PersonalInfoStep = ({
                   onChange={(e) => onUpdateApplicant(applicant.id, "firstName", e.target.value)}
                   placeholder="Enter first name"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -77,6 +79,7 @@ const PersonalInfoStep = ({
                   onChange={(e) => onUpdateApplicant(applicant.id, "lastName", e.target.value)}
                   placeholder="Enter last name"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -91,6 +94,7 @@ const PersonalInfoStep = ({
                   onChange={(e) => onUpdateApplicant(applicant.id, "email", e.target.value)}
                   placeholder="Enter email address"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -103,6 +107,7 @@ const PersonalInfoStep = ({
                   onChange={(e) => onUpdateApplicant(applicant.id, "phone", e.target.value)}
                   placeholder="Enter phone number"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -117,6 +122,7 @@ const PersonalInfoStep = ({
                   value={applicant.dateOfBirth}
                   onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 />
               </div>
             </div>
@@ -137,18 +143,36 @@ const PersonalInfoStep = ({
                   />
                 </div>
 
-                <div className="flex items-start justify-between">
-                  <div className="flex-1 pr-4">
-                    <Label className="form-label text-gray-700 font-medium">
-                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
-                    </Label>
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 pr-4">
+                      <Label className="form-label text-gray-700 font-medium">
+                        Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={applicant.adverseCredit === "yes"}
+                        onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={applicant.adverseCredit === "yes"}
-                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
-                    />
-                  </div>
+                  
+                  {applicant.adverseCredit === "yes" && (
+                    <div className="space-y-2 ml-4">
+                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                        Please provide details about your adverse credit history:
+                      </Label>
+                      <Textarea
+                        id={`adverseCreditDetails-${applicant.id}`}
+                        value={applicant.adverseCreditDetails || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
+                        placeholder="Please provide details about your adverse credit history..."
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-start justify-between">
@@ -168,6 +192,7 @@ const PersonalInfoStep = ({
                         size="sm"
                         onClick={() => onGuarantorOpen(applicant)}
                         className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       >
                         <Shield className="h-4 w-4 mr-1" />
                         Add Guarantor
