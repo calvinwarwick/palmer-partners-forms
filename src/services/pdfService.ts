@@ -1,3 +1,4 @@
+
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
@@ -56,7 +57,7 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     return yPosition;
   };
 
-  // Helper function to add a black header section with border
+  // Helper function to add a black header section with very light border
   const addSectionHeader = (title: string) => {
     yPosition = checkNewPage(15);
     
@@ -64,9 +65,9 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFillColor(0, 0, 0);
     doc.rect(20, yPosition - 5, 170, 12, 'F');
     
-    // Much lighter grey border around header
-    doc.setDrawColor(240, 240, 240);
-    doc.setLineWidth(1);
+    // Very light grey border around header
+    doc.setDrawColor(245, 245, 245);
+    doc.setLineWidth(0.5);
     doc.rect(20, yPosition - 5, 170, 12, 'S');
     
     // White text, centered
@@ -78,43 +79,21 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFont('helvetica', 'normal');
   };
 
-  // Helper function to add subsection headers
-  const addSubsectionHeader = (title: string) => {
-    yPosition = checkNewPage(10);
-    
-    // Light grey background for subsection
-    doc.setFillColor(200, 200, 200);
-    doc.rect(20, yPosition - 2, 170, 10, 'F');
-    
-    // Much lighter grey border
-    doc.setDrawColor(240, 240, 240);
-    doc.setLineWidth(0.5);
-    doc.rect(20, yPosition - 2, 170, 10, 'S');
-    
-    // Black text, centered, bold
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'bold');
-    yPosition = addText(title, 0, yPosition + 4, 0, 'center');
-    yPosition += 0;
-    doc.setFont('helvetica', 'normal');
-  };
-
-  // Helper function to add a table row with much lighter grey borders
+  // Helper function to add a table row with very light grey borders
   const addTableRow = (label: string, value: string) => {
     yPosition = checkNewPage(12);
     
-    // Left column (label) - light grey background
-    doc.setFillColor(240, 240, 240);
+    // Left column (label) - very light grey background
+    doc.setFillColor(245, 245, 245);
     doc.rect(20, yPosition - 2, 60, 10, 'F');
     
     // Right column (value) - white background  
     doc.setFillColor(255, 255, 255);
     doc.rect(80, yPosition - 2, 110, 10, 'F');
     
-    // Much lighter grey borders
-    doc.setDrawColor(240, 240, 240);
-    doc.setLineWidth(0.5);
+    // Very light grey borders
+    doc.setDrawColor(245, 245, 245);
+    doc.setLineWidth(0.3);
     doc.rect(20, yPosition - 2, 60, 10, 'S'); // left cell
     doc.rect(80, yPosition - 2, 110, 10, 'S'); // right cell
     
@@ -199,7 +178,25 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     });
 
     // Employment Details subsection
-    addSubsectionHeader('Employment Details');
+    yPosition = checkNewPage(15);
+    
+    // Light grey background for subsection
+    doc.setFillColor(230, 230, 230);
+    doc.rect(20, yPosition - 2, 170, 10, 'F');
+    
+    // Very light grey border
+    doc.setDrawColor(245, 245, 245);
+    doc.setLineWidth(0.3);
+    doc.rect(20, yPosition - 2, 170, 10, 'S');
+    
+    // Black text, centered, bold
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText('Employment Details', 0, yPosition + 4, 0, 'center');
+    yPosition += 0;
+    doc.setFont('helvetica', 'normal');
+
     [
       ['Contract Type', applicant.employment || ''],
       ['Company Name', applicant.companyName || ''],
@@ -211,7 +208,25 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     });
 
     // Current Property Details subsection
-    addSubsectionHeader('Current Property Details');
+    yPosition = checkNewPage(15);
+    
+    // Light grey background for subsection
+    doc.setFillColor(230, 230, 230);
+    doc.rect(20, yPosition - 2, 170, 10, 'F');
+    
+    // Very light grey border
+    doc.setDrawColor(245, 245, 245);
+    doc.setLineWidth(0.3);
+    doc.rect(20, yPosition - 2, 170, 10, 'S');
+    
+    // Black text, centered, bold
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText('Current Property Details', 0, yPosition + 4, 0, 'center');
+    yPosition += 0;
+    doc.setFont('helvetica', 'normal');
+
     [
       ['Postcode', applicant.previousPostcode || ''],
       ['Street Address', applicant.previousAddress || ''],
@@ -224,7 +239,24 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     });
 
     // Additional Information subsection
-    addSubsectionHeader('Additional Information');
+    yPosition = checkNewPage(15);
+    
+    // Light grey background for subsection
+    doc.setFillColor(230, 230, 230);
+    doc.rect(20, yPosition - 2, 170, 10, 'F');
+    
+    // Very light grey border
+    doc.setDrawColor(245, 245, 245);
+    doc.setLineWidth(0.3);
+    doc.rect(20, yPosition - 2, 170, 10, 'S');
+    
+    // Black text, centered, bold
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'bold');
+    yPosition = addText('Additional Information', 0, yPosition + 4, 0, 'center');
+    yPosition += 0;
+    doc.setFont('helvetica', 'normal');
     
     const additionalInfoRows = [
       ['UK/ROI Passport', data.additionalDetails.ukPassport === 'yes' ? 'Yes' : 'No'],
@@ -273,15 +305,15 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     yPosition = checkNewPage(30);
     
     // Create signature row with image
-    doc.setFillColor(240, 240, 240);
+    doc.setFillColor(245, 245, 245);
     doc.rect(20, yPosition - 2, 60, 25, 'F');
     
     doc.setFillColor(255, 255, 255);
     doc.rect(80, yPosition - 2, 110, 25, 'F');
     
-    // Much lighter grey borders
-    doc.setDrawColor(240, 240, 240);
-    doc.setLineWidth(0.5);
+    // Very light grey borders
+    doc.setDrawColor(245, 245, 245);
+    doc.setLineWidth(0.3);
     doc.rect(20, yPosition - 2, 60, 25, 'S');
     doc.rect(80, yPosition - 2, 110, 25, 'S');
     
