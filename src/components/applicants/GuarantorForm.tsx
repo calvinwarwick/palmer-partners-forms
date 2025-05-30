@@ -88,7 +88,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto font-lexend">
         <DialogHeader>
           <DialogTitle className="flex items-center">
             <Shield className="h-5 w-5 mr-2 text-orange-500" />
@@ -108,6 +108,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   placeholder="Enter first name"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -117,6 +118,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   placeholder="Enter last name"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -127,6 +129,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="Enter email address"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -136,6 +139,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="Enter phone number"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -145,12 +149,13 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   type="date"
                   value={guarantorData.dateOfBirth}
                   onChange={(e) => handleInputChange('dateOfBirth', e.target.value)}
+                  className="form-control"
                 />
               </div>
               <div>
                 <Label htmlFor="relationship">Relationship to Applicant</Label>
                 <Select value={guarantorData.relationship} onValueChange={(value) => handleInputChange('relationship', value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="form-select">
                     <SelectValue placeholder="Select relationship" />
                   </SelectTrigger>
                   <SelectContent>
@@ -176,6 +181,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.address}
                   onChange={(e) => handleInputChange('address', e.target.value)}
                   placeholder="Enter full address"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -185,6 +191,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.postcode}
                   onChange={(e) => handleInputChange('postcode', e.target.value)}
                   placeholder="Enter postcode"
+                  className="form-control"
                 />
               </div>
             </div>
@@ -197,7 +204,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
               <div>
                 <Label htmlFor="employment">Employment Status</Label>
                 <Select value={guarantorData.employment} onValueChange={(value) => handleInputChange('employment', value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="form-select">
                     <SelectValue placeholder="Select employment status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -216,6 +223,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.companyName}
                   onChange={(e) => handleInputChange('companyName', e.target.value)}
                   placeholder="Enter company name"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -225,6 +233,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.jobTitle}
                   onChange={(e) => handleInputChange('jobTitle', e.target.value)}
                   placeholder="Enter job title"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -234,6 +243,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.annualIncome}
                   onChange={(e) => handleInputChange('annualIncome', e.target.value)}
                   placeholder="Enter annual income"
+                  className="form-control"
                 />
               </div>
               <div>
@@ -243,6 +253,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                   value={guarantorData.lengthOfService}
                   onChange={(e) => handleInputChange('lengthOfService', e.target.value)}
                   placeholder="e.g., 2 years 3 months"
+                  className="form-control"
                 />
               </div>
             </div>
@@ -259,6 +270,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
                 onChange={(e) => handleInputChange('notes', e.target.value)}
                 placeholder="Enter any additional notes about the guarantor"
                 rows={3}
+                className="form-control"
               />
             </div>
           </div>
