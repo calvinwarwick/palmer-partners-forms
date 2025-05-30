@@ -1,3 +1,4 @@
+
 import React, { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,6 +28,7 @@ const SignaturePad = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDrawing, setIsDrawing] = useState(false);
   const [hasSignature, setHasSignature] = useState(false);
+  const [hasStartedDrawing, setHasStartedDrawing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width, height });
   const [isFullscreen, setIsFullscreen] = useState(false);
   const isMobile = useIsMobile();
@@ -88,6 +90,7 @@ const SignaturePad = ({
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         setHasSignature(true);
+        setHasStartedDrawing(true);
       };
       img.src = value;
     }
@@ -124,6 +127,7 @@ const SignaturePad = ({
     if (!ctx) return;
 
     setIsDrawing(true);
+    setHasStartedDrawing(true);
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
     
@@ -169,6 +173,7 @@ const SignaturePad = ({
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     setHasSignature(false);
+    setHasStartedDrawing(false);
     if (onChange) {
       onChange('');
     }
@@ -215,7 +220,7 @@ const SignaturePad = ({
               }}
             />
             
-            {!hasSignature && (
+            {!hasStartedDrawing && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="text-center text-gray-400">
                   <Pen className="h-6 w-6 mx-auto mb-2" />
@@ -275,7 +280,7 @@ const SignaturePad = ({
                 }}
               />
               
-              {!hasSignature && (
+              {!hasStartedDrawing && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center text-gray-400">
                     <Pen className="h-5 w-5 mx-auto mb-2" />
