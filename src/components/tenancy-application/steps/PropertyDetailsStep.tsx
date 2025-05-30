@@ -31,7 +31,7 @@ const PropertyDetailsStep = ({
       <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="streetAddress" className="form-label text-dark-grey font-medium">
+            <Label htmlFor="streetAddress" className="form-label text-gray-700 font-medium">
               Address <span className="text-red-500">*</span>
             </Label>
             <Input
@@ -40,13 +40,14 @@ const PropertyDetailsStep = ({
               value={propertyPreferences.streetAddress}
               onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
               placeholder="Rental property address"
-              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="postcode" className="form-label text-dark-grey font-medium">
+            <Label htmlFor="postcode" className="form-label text-gray-700 font-medium">
               Postcode <span className="text-red-500">*</span>
             </Label>
             <Input
@@ -55,13 +56,14 @@ const PropertyDetailsStep = ({
               value={propertyPreferences.postcode}
               onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
               placeholder="Rental property postcode"
-              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="maxRent" className="form-label text-dark-grey font-medium">
+            <Label htmlFor="maxRent" className="form-label text-gray-700 font-medium">
               Rental amount <span className="text-red-500">*</span>
             </Label>
             <div className="currency-input-container">
@@ -73,7 +75,8 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.maxRent}
                 onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
                 placeholder=""
-                className="currency-input border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 required
               />
             </div>
@@ -82,7 +85,7 @@ const PropertyDetailsStep = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="moveInDate" className="form-label text-dark-grey font-medium">
+            <Label htmlFor="moveInDate" className="form-label text-gray-700 font-medium">
               Preferred move-in date <span className="text-red-500">*</span>
             </Label>
             <div className="date-input-container">
@@ -93,7 +96,8 @@ const PropertyDetailsStep = ({
                 type="date"
                 value={propertyPreferences.moveInDate}
                 onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-                className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 placeholder="dd/mm/yyyy"
                 required
               />
@@ -101,7 +105,7 @@ const PropertyDetailsStep = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="latestMoveInDate" className="form-label text-dark-grey font-medium">
+            <Label htmlFor="latestMoveInDate" className="form-label text-gray-700 font-medium">
               Latest move-in date <span className="text-red-500">*</span>
             </Label>
             <div className="date-input-container">
@@ -112,21 +116,22 @@ const PropertyDetailsStep = ({
                 type="date"
                 value={propertyPreferences.latestMoveInDate}
                 onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-                className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 placeholder="dd/mm/yyyy"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="initialTenancyTerm" className="form-label text-dark-grey font-medium">
+            <Label htmlFor="initialTenancyTerm" className="form-label text-gray-700 font-medium">
               Preferred initial tenancy term <span className="text-red-500">*</span>
             </Label>
             <Select 
               value={propertyPreferences.initialTenancyTerm} 
               onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
             >
-              <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-select border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+              <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
                 <SelectValue placeholder="Please select an option" />
               </SelectTrigger>
               <SelectContent className="bg-white border-gray-300 z-50">

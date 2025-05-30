@@ -134,29 +134,29 @@ const PersonalInfoStep = ({
               <h4 className="text-lg font-semibold text-dark-grey mb-4">Additional Details</h4>
               <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                  <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={applicant.ukPassport === "yes"}
+                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "ukPassport", checked ? "yes" : "no")}
+                    />
                     <Label className="form-label text-gray-700 font-medium">
                       Do you hold a UK or Republic of Ireland passport? <span className="text-red-500">*</span>
                     </Label>
                   </div>
-                  <Switch
-                    checked={applicant.ukPassport === "yes"}
-                    onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "ukPassport", checked ? "yes" : "no")}
-                  />
                 </div>
 
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
-                    <div className="flex-1 pr-4">
-                      <Label className="form-label text-gray-700 font-medium">
-                        Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
-                      </Label>
-                    </div>
                     <div className="flex items-center gap-2">
                       <Switch
                         checked={applicant.adverseCredit === "yes"}
                         onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
                       />
+                      <div className="flex-1">
+                        <Label className="form-label text-gray-700 font-medium">
+                          Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
+                        </Label>
+                      </div>
                     </div>
                   </div>
                   
@@ -178,16 +178,16 @@ const PersonalInfoStep = ({
                 </div>
 
                 <div className="flex items-start justify-between">
-                  <div className="flex-1 pr-4">
-                    <Label className="form-label text-gray-700 font-medium">
-                      If required, can you supply a guarantor for this proposed tenancy? <span className="text-red-500">*</span>
-                    </Label>
-                  </div>
                   <div className="flex items-center gap-2">
                     <Switch
                       checked={applicant.guarantorRequired === "yes"}
                       onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
                     />
+                    <div className="flex-1 pr-4">
+                      <Label className="form-label text-gray-700 font-medium">
+                        If required, can you supply a guarantor for this proposed tenancy? <span className="text-red-500">*</span>
+                      </Label>
+                    </div>
                     {applicant.guarantorRequired === "yes" && (
                       <Button
                         variant="outline"
