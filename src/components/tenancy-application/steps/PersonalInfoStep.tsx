@@ -3,17 +3,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TestTube, User, Calendar } from "lucide-react";
+import { User, Calendar, Shield, Info } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
+import { Switch } from "@/components/ui/switch";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
   onAddApplicant: () => void;
   onRemoveApplicant: (id: string) => void;
   onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
-  onFillAllTestData?: () => void;
   onApplicantCountChange: (count: number) => void;
+  onGuarantorOpen: (applicant: Applicant) => void;
 }
 
 const PersonalInfoStep = ({
@@ -21,8 +22,8 @@ const PersonalInfoStep = ({
   onAddApplicant,
   onRemoveApplicant,
   onUpdateApplicant,
-  onFillAllTestData,
   onApplicantCountChange,
+  onGuarantorOpen,
 }: PersonalInfoStepProps) => {
 
   return (
@@ -42,7 +43,7 @@ const PersonalInfoStep = ({
         <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
             <div className="flex justify-between items-center">
-              <CardTitle className="text-lg font-semibold flex items-center gap-3">
+              <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
                 <div className="p-2 bg-white/20 rounded-lg">
                   <User className="h-5 w-5" />
                 </div>
@@ -123,50 +124,63 @@ const PersonalInfoStep = ({
             {/* Additional Details Section */}
             <div className="border-t border-gray-200 pt-6">
               <h4 className="text-lg font-semibold text-dark-grey mb-4">Additional Details</h4>
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor={`ukPassport-${applicant.id}`} className="form-label text-gray-700 font-medium">UK/ROI Passport *</Label>
-                  <select
-                    id={`ukPassport-${applicant.id}`}
-                    value={applicant.ukPassport || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "ukPassport", e.target.value)}
-                    className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    required
-                  >
-                    <option value="">Please select</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1">
+                    <Label className="form-label text-gray-700 font-medium">
+                      Do you hold a UK or Republic of Ireland passport? *
+                    </Label>
+                  </div>
+                  <Switch
+                    checked={applicant.ukPassport === "yes"}
+                    onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "ukPassport", checked ? "yes" : "no")}
+                  />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor={`adverseCredit-${applicant.id}`} className="form-label text-gray-700 font-medium">Adverse Credit *</Label>
-                  <select
-                    id={`adverseCredit-${applicant.id}`}
-                    value={applicant.adverseCredit || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "adverseCredit", e.target.value)}
-                    className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    required
-                  >
-                    <option value="">Please select</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 pr-4">
+                    <Label className="form-label text-gray-700 font-medium">
+                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? *
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={applicant.adverseCredit === "yes"}
+                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                    >
+                      <Info className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor={`guarantorRequired-${applicant.id}`} className="form-label text-gray-700 font-medium">Guarantor Required *</Label>
-                  <select
-                    id={`guarantorRequired-${applicant.id}`}
-                    value={applicant.guarantorRequired || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "guarantorRequired", e.target.value)}
-                    className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    required
-                  >
-                    <option value="">Please select</option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                  </select>
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 pr-4">
+                    <Label className="form-label text-gray-700 font-medium">
+                      If required, can you supply a guarantor for this proposed tenancy? *
+                    </Label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={applicant.guarantorRequired === "yes"}
+                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
+                    />
+                    {applicant.guarantorRequired === "yes" && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => onGuarantorOpen(applicant)}
+                        className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                      >
+                        <Shield className="h-4 w-4 mr-1" />
+                        Add Guarantor
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

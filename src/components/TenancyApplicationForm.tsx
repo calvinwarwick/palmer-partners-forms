@@ -18,6 +18,7 @@ import EmploymentStep from "@/components/tenancy-application/steps/EmploymentSte
 import CurrentAddressStep from "@/components/tenancy-application/steps/CurrentAddressStep";
 import AdditionalDetailsStep from "@/components/tenancy-application/steps/AdditionalDetailsStep";
 import TermsAndDataStep from "@/components/tenancy-application/steps/TermsAndDataStep";
+import GuarantorForm from "@/components/applicants/GuarantorForm";
 
 const TenancyApplicationForm = () => {
   const totalSteps = 6;
@@ -83,6 +84,9 @@ const TenancyApplicationForm = () => {
   const [signature, setSignature] = useState("");
   const [fullName, setFullName] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
+
+  const [guarantorFormOpen, setGuarantorFormOpen] = useState(false);
+  const [selectedApplicantForGuarantor, setSelectedApplicantForGuarantor] = useState<Applicant | null>(null);
 
   const addApplicant = () => {
     if (applicants.length < 5) {
@@ -173,6 +177,16 @@ const TenancyApplicationForm = () => {
 
   const updateDataSharing = (field: 'utilities' | 'insurance', value: boolean) => {
     setDataSharing(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleGuarantorOpen = (applicant: Applicant) => {
+    setSelectedApplicantForGuarantor(applicant);
+    setGuarantorFormOpen(true);
+  };
+
+  const handleGuarantorSave = () => {
+    setGuarantorFormOpen(false);
+    setSelectedApplicantForGuarantor(null);
   };
 
   const fillAllTestData = () => {
@@ -348,6 +362,7 @@ const TenancyApplicationForm = () => {
             onRemoveApplicant={removeApplicant}
             onUpdateApplicant={updateApplicant}
             onApplicantCountChange={handleApplicantCountChange}
+            onGuarantorOpen={handleGuarantorOpen}
           />
         );
       case 3:
@@ -465,17 +480,17 @@ const TenancyApplicationForm = () => {
               {renderStepContent()}
             </div>
             
-            {/* Enhanced navigation buttons with Fill All Data button */}
+            {/* Enhanced navigation buttons */}
             <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
               {!isFirstStep ? (
                 <Button
                   variant="outline"
                   onClick={goToPrevious}
                   disabled={isSubmitting}
-                  className="bg-white border-light-grey text-dark-grey hover:bg-gray-50 px-8 py-3 font-medium shadow-sm font-lexend"
+                  className="bg-white border-light-grey text-dark-grey hover:bg-white hover:border-orange-500 hover:text-black px-8 py-3 font-medium shadow-sm font-lexend"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
-                  Previous
+                  Back
                 </Button>
               ) : (
                 <div></div>
@@ -485,7 +500,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   variant="outline"
                   onClick={fillAllTestData}
-                  className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 px-6 py-3 font-medium shadow-sm font-lexend"
+                  className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-orange-700 px-6 py-3 font-medium shadow-sm font-lexend"
                 >
                   <TestTube className="h-4 w-4 mr-2" />
                   Fill All Data
@@ -523,6 +538,17 @@ const TenancyApplicationForm = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Guarantor Form Modal */}
+        {guarantorFormOpen && selectedApplicantForGuarantor && (
+          <GuarantorForm
+            applicant={selectedApplicantForGuarantor}
+            applicationId="current-application"
+            isOpen={guarantorFormOpen}
+            onClose={() => setGuarantorFormOpen(false)}
+            onSave={handleGuarantorSave}
+          />
+        )}
       </div>
     </div>
   );
