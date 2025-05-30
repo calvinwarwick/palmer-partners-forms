@@ -79,36 +79,53 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     doc.setFont('helvetica', 'normal');
   };
 
-  // Helper function to add a table row with very light grey borders
+  // Helper function to add a table row with very light grey borders and vertically centered text
   const addTableRow = (label: string, value: string) => {
     yPosition = checkNewPage(12);
     
+    const rowHeight = 10;
+    const leftColumnWidth = 60;
+    const rightColumnWidth = 110;
+    
     // Left column (label) - very light grey background
     doc.setFillColor(245, 245, 245);
-    doc.rect(20, yPosition - 2, 60, 10, 'F');
+    doc.rect(20, yPosition - 2, leftColumnWidth, rowHeight, 'F');
     
     // Right column (value) - white background  
     doc.setFillColor(255, 255, 255);
-    doc.rect(80, yPosition - 2, 110, 10, 'F');
+    doc.rect(80, yPosition - 2, rightColumnWidth, rowHeight, 'F');
     
     // Very light grey borders
     doc.setDrawColor(245, 245, 245);
     doc.setLineWidth(0.3);
-    doc.rect(20, yPosition - 2, 60, 10, 'S'); // left cell
-    doc.rect(80, yPosition - 2, 110, 10, 'S'); // right cell
+    doc.rect(20, yPosition - 2, leftColumnWidth, rowHeight, 'S'); // left cell
+    doc.rect(80, yPosition - 2, rightColumnWidth, rowHeight, 'S'); // right cell
     
-    // Label text (left column) - bold
+    // Calculate vertical center position for text
+    const textVerticalCenter = yPosition + (rowHeight / 2) - 1; // -1 to adjust for font baseline
+    
+    // Label text (left column) - bold, vertically centered
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text(label, 23, yPosition + 3);
+    doc.text(label, 23, textVerticalCenter);
     
-    // Value text (right column) - normal
+    // Value text (right column) - normal, vertically centered
     doc.setFont('helvetica', 'normal');
-    const wrappedValue = doc.splitTextToSize(value || '-', 105);
-    doc.text(wrappedValue, 83, yPosition + 3);
+    const wrappedValue = doc.splitTextToSize(value || '-', rightColumnWidth - 6);
     
-    yPosition += 10;
+    // If multiple lines, calculate starting position to center the block of text
+    if (wrappedValue.length > 1) {
+      const totalTextHeight = wrappedValue.length * 4; // Approximate line height
+      const startY = yPosition + (rowHeight - totalTextHeight) / 2 + 2;
+      wrappedValue.forEach((line: string, index: number) => {
+        doc.text(line, 83, startY + (index * 4));
+      });
+    } else {
+      doc.text(wrappedValue, 83, textVerticalCenter);
+    }
+    
+    yPosition += rowHeight;
   };
 
   // Helper function to add section spacing
@@ -180,20 +197,23 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     // Employment Details subsection
     yPosition = checkNewPage(15);
     
+    const subsectionRowHeight = 10;
+    
     // Light grey background for subsection
     doc.setFillColor(230, 230, 230);
-    doc.rect(20, yPosition - 2, 170, 10, 'F');
+    doc.rect(20, yPosition - 2, 170, subsectionRowHeight, 'F');
     
     // Very light grey border
     doc.setDrawColor(245, 245, 245);
     doc.setLineWidth(0.3);
-    doc.rect(20, yPosition - 2, 170, 10, 'S');
+    doc.rect(20, yPosition - 2, 170, subsectionRowHeight, 'S');
     
-    // Black text, centered, bold
+    // Black text, centered both horizontally and vertically, bold
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText('Employment Details', 0, yPosition + 4, 0, 'center');
+    const subsectionTextVerticalCenter = yPosition + (subsectionRowHeight / 2) - 1;
+    yPosition = addText('Employment Details', 0, subsectionTextVerticalCenter, 0, 'center');
     yPosition += 0;
     doc.setFont('helvetica', 'normal');
 
@@ -212,18 +232,19 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     
     // Light grey background for subsection
     doc.setFillColor(230, 230, 230);
-    doc.rect(20, yPosition - 2, 170, 10, 'F');
+    doc.rect(20, yPosition - 2, 170, subsectionRowHeight, 'F');
     
     // Very light grey border
     doc.setDrawColor(245, 245, 245);
     doc.setLineWidth(0.3);
-    doc.rect(20, yPosition - 2, 170, 10, 'S');
+    doc.rect(20, yPosition - 2, 170, subsectionRowHeight, 'S');
     
-    // Black text, centered, bold
+    // Black text, centered both horizontally and vertically, bold
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText('Current Property Details', 0, yPosition + 4, 0, 'center');
+    const propertySubsectionTextVerticalCenter = yPosition + (subsectionRowHeight / 2) - 1;
+    yPosition = addText('Current Property Details', 0, propertySubsectionTextVerticalCenter, 0, 'center');
     yPosition += 0;
     doc.setFont('helvetica', 'normal');
 
@@ -243,18 +264,19 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     
     // Light grey background for subsection
     doc.setFillColor(230, 230, 230);
-    doc.rect(20, yPosition - 2, 170, 10, 'F');
+    doc.rect(20, yPosition - 2, 170, subsectionRowHeight, 'F');
     
     // Very light grey border
     doc.setDrawColor(245, 245, 245);
     doc.setLineWidth(0.3);
-    doc.rect(20, yPosition - 2, 170, 10, 'S');
+    doc.rect(20, yPosition - 2, 170, subsectionRowHeight, 'S');
     
-    // Black text, centered, bold
+    // Black text, centered both horizontally and vertically, bold
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    yPosition = addText('Additional Information', 0, yPosition + 4, 0, 'center');
+    const additionalInfoTextVerticalCenter = yPosition + (subsectionRowHeight / 2) - 1;
+    yPosition = addText('Additional Information', 0, additionalInfoTextVerticalCenter, 0, 'center');
     yPosition += 0;
     doc.setFont('helvetica', 'normal');
     
@@ -304,36 +326,42 @@ export const generatePdf = async (data: PdfData): Promise<Uint8Array> => {
     // Add signature image
     yPosition = checkNewPage(30);
     
+    const signatureRowHeight = 25;
+    
     // Create signature row with image
     doc.setFillColor(245, 245, 245);
-    doc.rect(20, yPosition - 2, 60, 25, 'F');
+    doc.rect(20, yPosition - 2, 60, signatureRowHeight, 'F');
     
     doc.setFillColor(255, 255, 255);
-    doc.rect(80, yPosition - 2, 110, 25, 'F');
+    doc.rect(80, yPosition - 2, 110, signatureRowHeight, 'F');
     
     // Very light grey borders
     doc.setDrawColor(245, 245, 245);
     doc.setLineWidth(0.3);
-    doc.rect(20, yPosition - 2, 60, 25, 'S');
-    doc.rect(80, yPosition - 2, 110, 25, 'S');
+    doc.rect(20, yPosition - 2, 60, signatureRowHeight, 'S');
+    doc.rect(80, yPosition - 2, 110, signatureRowHeight, 'S');
     
-    // Label
+    // Label - vertically centered
     doc.setFontSize(10);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(0, 0, 0);
-    doc.text('Signature', 23, yPosition + 8);
+    const signatureLabelVerticalCenter = yPosition + (signatureRowHeight / 2) - 1;
+    doc.text('Signature', 23, signatureLabelVerticalCenter);
     
     try {
-      // Add signature image
-      doc.addImage(data.signature, 'PNG', 83, yPosition + 1, 50, 20);
+      // Add signature image - centered vertically in the cell
+      const imageHeight = 20;
+      const imageY = yPosition + (signatureRowHeight - imageHeight) / 2 - 1;
+      doc.addImage(data.signature, 'PNG', 83, imageY, 50, imageHeight);
     } catch (error) {
       console.error('Error adding signature image to PDF:', error);
-      // Fallback to text
+      // Fallback to text - vertically centered
       doc.setFont('helvetica', 'normal');
-      doc.text('Digital Signature (Image)', 83, yPosition + 8);
+      const fallbackTextVerticalCenter = yPosition + (signatureRowHeight / 2) - 1;
+      doc.text('Digital Signature (Image)', 83, fallbackTextVerticalCenter);
     }
     
-    yPosition += 25;
+    yPosition += signatureRowHeight;
   } else {
     addTableRow('Full name', data.applicants[0]?.firstName + ' ' + data.applicants[0]?.lastName || '');
     addTableRow('Signature', data.signature || '');
