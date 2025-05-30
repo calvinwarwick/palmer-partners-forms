@@ -13,20 +13,20 @@
     --card-foreground: 0 0% 13%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 13%;
-    --primary: 25 100% 50%; /* Primary Orange #FF6F00 */
+    --primary: 19 100% 44%; /* Updated Primary Orange #e35c00 */
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 62%; /* Light Grey #9E9E9E */
     --secondary-foreground: 0 0% 13%;
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 62%;
-    --accent: 25 100% 50%;
+    --accent: 19 100% 44%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 85%;
     --input: 0 0% 85%;
-    --ring: 25 100% 50%;
-    --chart-1: 25 100% 50%;
+    --ring: 19 100% 44%;
+    --chart-1: 19 100% 44%;
     --chart-2: 0 0% 62%;
     --chart-3: 0 0% 13%;
     --chart-4: 0 0% 45%;

@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -29,7 +28,7 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#FF6F00', // Primary Orange
+					DEFAULT: '#e35c00', // Updated Primary Orange
 					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
@@ -70,17 +69,17 @@ export default {
 				'dark-grey': '#212121',
 				'light-grey': '#9E9E9E',
 				'orange': {
-					DEFAULT: '#FF6F00',
+					DEFAULT: '#e35c00', // Updated Primary Orange
 					50: '#FFF3E0',
 					100: '#FFE0B2',
 					200: '#FFCC80',
 					300: '#FFB74D',
 					400: '#FFA726',
-					500: '#FF6F00',
-					600: '#F57C00',
-					700: '#EF6C00',
-					800: '#E65100',
-					900: '#BF360C',
+					500: '#e35c00', // Updated Primary Orange
+					600: '#cc5200',
+					700: '#b84700',
+					800: '#a33d00',
+					900: '#8f3300',
 				}
 			},
 			borderRadius: {
