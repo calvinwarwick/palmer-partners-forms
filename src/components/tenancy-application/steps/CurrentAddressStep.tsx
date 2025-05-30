@@ -13,52 +13,12 @@ interface CurrentAddressStepProps {
 }
 
 const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: CurrentAddressStepProps) => {
-  const fillTestData = () => {
-    console.log('Fill test data button clicked - Current Address');
-    console.log('Current applicants for address:', applicants);
-    
-    const testData = [
-      {
-        previousAddress: "45 Elm Street, Colchester",
-        previousPostcode: "CO1 2AB",
-        currentPropertyStatus: "Rented Privately",
-        moveInDate: "2022-01-15",
-        vacateDate: "2024-05-30",
-        currentRentalAmount: "1800"
-      },
-      {
-        previousAddress: "22 Oak Avenue, Ipswich",
-        previousPostcode: "IP2 3CD",
-        currentPropertyStatus: "Rented Privately",
-        moveInDate: "2021-03-01",
-        vacateDate: "2024-05-30",
-        currentRentalAmount: "1600"
-      }
-    ];
-
-    console.log('Filling address test data for', applicants.length, 'applicants');
-    applicants.forEach((applicant, index) => {
-      if (testData[index]) {
-        console.log(`Filling address data for applicant ${index + 1}:`, testData[index]);
-        Object.entries(testData[index]).forEach(([field, value]) => {
-          console.log(`Setting address ${field} to ${value} for applicant ${applicant.id}`);
-          onUpdateApplicant(applicant.id, field as keyof Applicant, value);
-        });
-      }
-    });
-  };
-
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <div className="p-2 bg-orange-100 rounded-lg">
-          <MapPin className="h-6 w-6 text-orange-600" />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-900">Current Address Details</h3>
-          <div className="border-b border-gray-200 mt-2 mb-4"></div>
-          <p className="text-gray-600">Tell us about your current living situation</p>
-        </div>
+      <div>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Current Address Details</h3>
+        <p className="text-light-grey mb-4">Tell us about your current living situation</p>
+        <div className="border-b border-gray-200 mb-6"></div>
       </div>
       
       {applicants.map((applicant, index) => (
@@ -162,29 +122,6 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
           </CardContent>
         </Card>
       ))}
-
-      <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={fillTestData} 
-          className="flex items-center gap-2 border-orange-200 text-orange-600 hover:bg-orange-50"
-        >
-          <TestTube className="h-4 w-4" />
-          Fill Step Data
-        </Button>
-        {onFillAllTestData && (
-          <Button 
-            variant="default" 
-            size="sm" 
-            onClick={onFillAllTestData} 
-            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600"
-          >
-            <TestTube className="h-4 w-4" />
-            Fill All Form Data
-          </Button>
-        )}
-      </div>
     </div>
   );
 };

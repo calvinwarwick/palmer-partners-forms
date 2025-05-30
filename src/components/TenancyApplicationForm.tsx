@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check, TestTube } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
@@ -213,7 +213,10 @@ const TenancyApplicationForm = () => {
         reference1Name: "Mike Johnson",
         reference1Contact: "mike.johnson@techsolutions.com",
         pets: "yes",
-        petDetails: "1 cat"
+        petDetails: "1 cat",
+        ukPassport: "yes",
+        adverseCredit: "no",
+        guarantorRequired: "no"
       },
       {
         firstName: "Sarah",
@@ -235,7 +238,10 @@ const TenancyApplicationForm = () => {
         reference1Name: "Lisa Brown",
         reference1Contact: "lisa.brown@designstudio.com",
         pets: "no",
-        petDetails: ""
+        petDetails: "",
+        ukPassport: "yes",
+        adverseCredit: "no",
+        guarantorRequired: "no"
       }
     ];
 
@@ -332,7 +338,6 @@ const TenancyApplicationForm = () => {
           <PropertyDetailsStep
             propertyPreferences={propertyPreferences}
             onUpdatePreferences={updatePropertyPreferences}
-            onFillAllTestData={fillAllTestData}
           />
         );
       case 2:
@@ -342,7 +347,6 @@ const TenancyApplicationForm = () => {
             onAddApplicant={addApplicant}
             onRemoveApplicant={removeApplicant}
             onUpdateApplicant={updateApplicant}
-            onFillAllTestData={fillAllTestData}
             onApplicantCountChange={handleApplicantCountChange}
           />
         );
@@ -351,7 +355,6 @@ const TenancyApplicationForm = () => {
           <EmploymentStep
             applicants={applicants}
             onUpdateApplicant={updateApplicant}
-            onFillAllTestData={fillAllTestData}
           />
         );
       case 4:
@@ -359,7 +362,6 @@ const TenancyApplicationForm = () => {
           <CurrentAddressStep
             applicants={applicants}
             onUpdateApplicant={updateApplicant}
-            onFillAllTestData={fillAllTestData}
           />
         );
       case 5:
@@ -367,7 +369,6 @@ const TenancyApplicationForm = () => {
           <AdditionalDetailsStep
             additionalDetails={additionalDetails}
             onUpdateDetails={updateAdditionalDetails}
-            onFillAllTestData={fillAllTestData}
             maxRent={propertyPreferences.maxRent}
             applicants={applicants}
             onUpdateApplicant={updateApplicant}
@@ -384,7 +385,6 @@ const TenancyApplicationForm = () => {
             onSignatureChange={setSignature}
             fullName={fullName}
             onFullNameChange={setFullName}
-            onFillAllTestData={fillAllTestData}
           />
         );
       default:
@@ -465,7 +465,7 @@ const TenancyApplicationForm = () => {
               {renderStepContent()}
             </div>
             
-            {/* Enhanced navigation buttons with new color scheme */}
+            {/* Enhanced navigation buttons with Fill All Data button */}
             <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
               {!isFirstStep ? (
                 <Button
@@ -481,34 +481,45 @@ const TenancyApplicationForm = () => {
                 <div></div>
               )}
               
-              {!isLastStep ? (
+              <div className="flex gap-3">
                 <Button
-                  onClick={handleNext}
-                  disabled={isSubmitting}
-                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
+                  variant="outline"
+                  onClick={fillAllTestData}
+                  className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 px-6 py-3 font-medium shadow-sm font-lexend"
                 >
-                  Continue
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  <TestTube className="h-4 w-4 mr-2" />
+                  Fill All Data
                 </Button>
-              ) : (
-                <Button
-                  onClick={handleSubmit}
-                  disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
-                >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Submit Application
-                      <CheckCircle className="h-4 w-4 ml-2" />
-                    </>
-                  )}
-                </Button>
-              )}
+                
+                {!isLastStep ? (
+                  <Button
+                    onClick={handleNext}
+                    disabled={isSubmitting}
+                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
+                  >
+                    Continue
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                ) : (
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
+                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        Submit Application
+                        <CheckCircle className="h-4 w-4 ml-2" />
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>

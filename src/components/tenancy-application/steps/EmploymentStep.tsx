@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,57 +12,15 @@ interface EmploymentStepProps {
 }
 
 const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: EmploymentStepProps) => {
-  const fillTestData = () => {
-    console.log('Fill test data button clicked - Employment');
-    console.log('Current applicants for employment:', applicants);
-    
-    const testData = [
-      {
-        employment: "Full Time",
-        companyName: "Tech Solutions Ltd",
-        jobTitle: "Software Engineer",
-        annualIncome: "45000",
-        lengthOfService: "3 years",
-        reference1Name: "Mike Johnson",
-        reference1Contact: "mike.johnson@techsolutions.com"
-      },
-      {
-        employment: "Full Time",
-        companyName: "Design Studio",
-        jobTitle: "Graphic Designer",
-        annualIncome: "38000",
-        lengthOfService: "2 years",
-        reference1Name: "Lisa Brown",
-        reference1Contact: "lisa.brown@designstudio.com"
-      }
-    ];
-
-    console.log('Filling employment test data for', applicants.length, 'applicants');
-    applicants.forEach((applicant, index) => {
-      if (testData[index]) {
-        console.log(`Filling employment data for applicant ${index + 1}:`, testData[index]);
-        Object.entries(testData[index]).forEach(([field, value]) => {
-          console.log(`Setting employment ${field} to ${value} for applicant ${applicant.id}`);
-          onUpdateApplicant(applicant.id, field as keyof Applicant, value);
-        });
-      }
-    });
-  };
-
   // Check if any applicant is self-employed
   const hasSelfEmployed = applicants.some(applicant => applicant.employment === "Self-employed");
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <div className="p-2 bg-orange-100 rounded-lg">
-          <Briefcase className="h-6 w-6 text-orange-600" />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-900">Employment Details</h3>
-          <div className="border-b border-gray-200 mt-2 mb-4"></div>
-          <p className="text-gray-600">Provide employment information for income verification</p>
-        </div>
+      <div>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Employment Details</h3>
+        <p className="text-light-grey mb-4">Provide employment information for income verification</p>
+        <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
       {hasSelfEmployed && (
@@ -198,19 +155,6 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
           </CardContent>
         </Card>
       ))}
-
-      <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2 border-orange-200 text-orange-600 hover:bg-orange-50">
-          <TestTube className="h-4 w-4" />
-          Fill Step Data
-        </Button>
-        {onFillAllTestData && (
-          <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600">
-            <TestTube className="h-4 w-4" />
-            Fill All Form Data
-          </Button>
-        )}
-      </div>
     </div>
   );
 };

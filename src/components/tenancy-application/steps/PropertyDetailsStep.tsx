@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { TestTube } from "lucide-react";
+import { TestTube, Calendar } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
 
 interface PropertyDetailsStepProps {
@@ -20,25 +20,11 @@ const PropertyDetailsStep = ({
   onFillAllTestData,
 }: PropertyDetailsStepProps) => {
 
-  const fillTestData = () => {
-    console.log('Fill test data button clicked - Property Details');
-    
-    onUpdatePreferences("propertyType", "apartment");
-    onUpdatePreferences("streetAddress", "123 Orchard House, New Cut");
-    onUpdatePreferences("postcode", "IP7 5DA");
-    onUpdatePreferences("maxRent", "2500");
-    onUpdatePreferences("preferredLocation", "Central London");
-    onUpdatePreferences("moveInDate", "2024-06-01");
-    onUpdatePreferences("latestMoveInDate", "2024-06-15");
-    onUpdatePreferences("initialTenancyTerm", "1 year");
-    onUpdatePreferences("additionalRequests", "Pet-friendly property preferred");
-  };
-
   return (
     <div className="space-y-8 font-lexend">
       <div>
-        <h3 className="text-xl font-semibold text-dark-grey mb-2">Proposed Rental Property Details</h3>
-        <p className="text-light-grey mb-6">Please provide the details of the property you are applying for.</p>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Proposed Rental Property Details</h3>
+        <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
@@ -96,29 +82,35 @@ const PropertyDetailsStep = ({
             <Label htmlFor="moveInDate" className="form-label text-dark-grey font-medium">
               Preferred move-in date <span className="text-orange-500">*</span>
             </Label>
-            <Input
-              id="moveInDate"
-              type="date"
-              value={propertyPreferences.moveInDate}
-              onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-              placeholder="dd/mm/yyyy"
-              required
-            />
+            <div className="date-input-container">
+              <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+              <Input
+                id="moveInDate"
+                type="date"
+                value={propertyPreferences.moveInDate}
+                onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+                className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                placeholder="dd/mm/yyyy"
+                required
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="latestMoveInDate" className="form-label text-dark-grey font-medium">
               Latest move-in date <span className="text-orange-500">*</span>
             </Label>
-            <Input
-              id="latestMoveInDate"
-              type="date"
-              value={propertyPreferences.latestMoveInDate}
-              onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-              className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
-              placeholder="dd/mm/yyyy"
-            />
+            <div className="date-input-container">
+              <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+              <Input
+                id="latestMoveInDate"
+                type="date"
+                value={propertyPreferences.latestMoveInDate}
+                onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
+                className="form-control border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                placeholder="dd/mm/yyyy"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -142,28 +134,6 @@ const PropertyDetailsStep = ({
             </Select>
           </div>
         </div>
-      </div>
-
-      <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={fillTestData} 
-          className="flex items-center gap-2 border-light-grey text-dark-grey hover:bg-gray-50 font-lexend"
-        >
-          <TestTube className="h-4 w-4" />
-          Fill Step Data
-        </Button>
-        {onFillAllTestData && (
-          <Button 
-            size="sm" 
-            onClick={onFillAllTestData} 
-            className="flex items-center gap-2 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-lexend"
-          >
-            <TestTube className="h-4 w-4" />
-            Fill All Form Data
-          </Button>
-        )}
       </div>
     </div>
   );

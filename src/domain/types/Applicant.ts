@@ -1,3 +1,4 @@
+
 export interface Applicant {
   id: string;
   firstName: string;
@@ -20,10 +21,9 @@ export interface Applicant {
   reference1Contact: string;
   pets: string;
   petDetails: string;
-  guarantorRequired?: string;
   ukPassport?: string;
   adverseCredit?: string;
-  adverseCreditDetails?: string;
+  guarantorRequired?: string;
 }
 
 export interface PropertyPreferences {
@@ -43,9 +43,8 @@ export interface AdditionalDetails {
   adverseCredit: string;
   adverseCreditDetails: string;
   guarantorRequired: string;
-  guarantorDetails?: string; // JSON string containing guarantor information
   pets: string;
-  petDetails?: string;
+  petDetails: string;
   under18Count: string;
   childrenAges: string;
   conditionsOfOffer: string;

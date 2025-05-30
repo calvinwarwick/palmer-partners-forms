@@ -24,50 +24,13 @@ const PersonalInfoStep = ({
   onFillAllTestData,
   onApplicantCountChange,
 }: PersonalInfoStepProps) => {
-  const fillTestData = () => {
-    console.log('Fill test data button clicked - Personal Info');
-    console.log('Current applicants:', applicants);
-    
-    const testData = [
-      {
-        firstName: "John",
-        lastName: "Smith",
-        email: "john.smith@example.com",
-        phone: "07700 900123",
-        dateOfBirth: "1990-05-15"
-      },
-      {
-        firstName: "Sarah",
-        lastName: "Johnson",
-        email: "sarah.johnson@example.com",
-        phone: "07700 900456",
-        dateOfBirth: "1988-11-22"
-      }
-    ];
-
-    // Fill data for existing applicants
-    applicants.forEach((applicant, index) => {
-      if (testData[index]) {
-        console.log(`Filling test data for applicant ${index + 1}:`, testData[index]);
-        Object.entries(testData[index]).forEach(([field, value]) => {
-          console.log(`Setting ${field} to ${value} for applicant ${applicant.id}`);
-          onUpdateApplicant(applicant.id, field as keyof Applicant, value);
-        });
-      }
-    });
-  };
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center gap-4">
-        <div className="p-2 bg-orange-100 rounded-lg">
-          <User className="h-6 w-6 text-orange-600" />
-        </div>
-        <div className="flex-1">
-          <h3 className="text-2xl font-bold text-gray-900">Personal Information</h3>
-          <div className="border-b border-gray-200 mt-2 mb-4"></div>
-          <p className="text-gray-600">Tell us about the people who will be living in the property</p>
-        </div>
+      <div>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Personal Information</h3>
+        <p className="text-light-grey mb-4">Tell us about the people who will be living in the property</p>
+        <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
       <ApplicantCountSelector
@@ -85,7 +48,7 @@ const PersonalInfoStep = ({
                 </div>
                 Applicant {index + 1}
                 {applicant.firstName && applicant.lastName && (
-                  <span className="text-orange-100 font-normal">
+                  <span className="text-white font-normal">
                     - {applicant.firstName} {applicant.lastName}
                   </span>
                 )}
@@ -156,22 +119,60 @@ const PersonalInfoStep = ({
                 />
               </div>
             </div>
+
+            {/* Additional Details Section */}
+            <div className="border-t border-gray-200 pt-6">
+              <h4 className="text-lg font-semibold text-dark-grey mb-4">Additional Details</h4>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor={`ukPassport-${applicant.id}`} className="form-label text-gray-700 font-medium">UK/ROI Passport *</Label>
+                  <select
+                    id={`ukPassport-${applicant.id}`}
+                    value={applicant.ukPassport || ""}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "ukPassport", e.target.value)}
+                    className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    required
+                  >
+                    <option value="">Please select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor={`adverseCredit-${applicant.id}`} className="form-label text-gray-700 font-medium">Adverse Credit *</Label>
+                  <select
+                    id={`adverseCredit-${applicant.id}`}
+                    value={applicant.adverseCredit || ""}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "adverseCredit", e.target.value)}
+                    className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    required
+                  >
+                    <option value="">Please select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor={`guarantorRequired-${applicant.id}`} className="form-label text-gray-700 font-medium">Guarantor Required *</Label>
+                  <select
+                    id={`guarantorRequired-${applicant.id}`}
+                    value={applicant.guarantorRequired || ""}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "guarantorRequired", e.target.value)}
+                    className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    required
+                  >
+                    <option value="">Please select</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                  </select>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
       ))}
-
-      <div className="flex gap-2 pt-4 border-t border-gray-200">
-        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2 border-orange-200 text-orange-600 hover:bg-orange-50">
-          <TestTube className="h-4 w-4" />
-          Fill Step Data
-        </Button>
-        {onFillAllTestData && (
-          <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600">
-            <TestTube className="h-4 w-4" />
-            Fill All Form Data
-          </Button>
-        )}
-      </div>
     </div>
   );
 };
