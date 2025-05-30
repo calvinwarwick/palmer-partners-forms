@@ -2,6 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { TestTube, Calendar, MapPin, User } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
@@ -13,6 +14,10 @@ interface CurrentAddressStepProps {
 }
 
 const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: CurrentAddressStepProps) => {
+  const shouldShowRentalAmount = (status: string) => {
+    return status === "Rented Privately" || status === "Rented from Council";
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -46,7 +51,6 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                   onChange={(e) => onUpdateApplicant(applicant.id, "previousAddress", e.target.value)}
                   placeholder="Full current address"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -59,7 +63,6 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                   onChange={(e) => onUpdateApplicant(applicant.id, "previousPostcode", e.target.value)}
                   placeholder="e.g., CO14 8LZ"
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   required
                 />
               </div>
@@ -67,21 +70,21 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
             
             <div className="space-y-2">
               <Label htmlFor={`propertyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">Current property status <span className="text-red-500">*</span></Label>
-              <select
-                id={`propertyStatus-${applicant.id}`}
-                value={applicant.currentPropertyStatus}
-                onChange={(e) => onUpdateApplicant(applicant.id, "currentPropertyStatus", e.target.value)}
-                className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                required
+              <Select 
+                value={applicant.currentPropertyStatus} 
+                onValueChange={(value) => onUpdateApplicant(applicant.id, "currentPropertyStatus", value)}
               >
-                <option value="">Select status</option>
-                <option value="Rented Privately">Rented Privately</option>
-                <option value="Rented from Council">Rented from Council</option>
-                <option value="Living with Family">Living with Family</option>
-                <option value="Owner Occupier">Owner Occupier</option>
-                <option value="Other">Other</option>
-              </select>
+                <SelectTrigger id={`propertyStatus-${applicant.id}`} className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500">
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-gray-300 z-50">
+                  <SelectItem value="Rented Privately">Rented Privately</SelectItem>
+                  <SelectItem value="Rented from Council">Rented from Council</SelectItem>
+                  <SelectItem value="Living with Family">Living with Family</SelectItem>
+                  <SelectItem value="Owner Occupier">Owner Occupier</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -97,7 +100,6 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                     value={applicant.moveInDate}
                     onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
                     className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
               </div>
@@ -113,22 +115,25 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
                     value={applicant.vacateDate}
                     onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
                     className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor={`currentRent-${applicant.id}`} className="form-label text-gray-700 font-medium">Current rental amount (£)</Label>
-                <Input
-                  id={`currentRent-${applicant.id}`}
-                  type="number"
-                  value={applicant.currentRentalAmount}
-                  onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
-                  placeholder="e.g., 1200"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                />
-              </div>
+              {shouldShowRentalAmount(applicant.currentPropertyStatus) && (
+                <div className="space-y-2">
+                  <Label htmlFor={`currentRent-${applicant.id}`} className="form-label text-gray-700 font-medium">Current rental amount</Label>
+                  <div className="currency-input-container">
+                    <span className="currency-input-icon text-orange-500">£</span>
+                    <Input
+                      id={`currentRent-${applicant.id}`}
+                      type="number"
+                      value={applicant.currentRentalAmount}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
+                      placeholder="e.g., 1200"
+                      className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
