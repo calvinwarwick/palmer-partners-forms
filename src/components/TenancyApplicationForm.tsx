@@ -444,10 +444,7 @@ const TenancyApplicationForm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 font-lexend">
-      <ApplicationHeader 
-        title="Application Form"
-        description="Complete your application step by step"
-      />
+      <ApplicationHeader title="Application Form" />
       
       <div className="py-8">
         <div className="container mx-auto px-4 max-w-5xl">

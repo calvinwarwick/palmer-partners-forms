@@ -1,7 +1,13 @@
 
 import React from 'react';
 
-const ApplicationHeader: React.FC = () => {
+interface ApplicationHeaderProps {
+  title?: string;
+}
+
+const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({ 
+  title
+}) => {
   return (
     <div className="bg-dark-grey w-full overflow-hidden">
       <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
@@ -26,6 +32,11 @@ const ApplicationHeader: React.FC = () => {
               </p>
             </div>
           </div>
+          {title && (
+            <div className="text-right">
+              <h1 className="text-xl font-bold text-white font-lexend">{title}</h1>
+            </div>
+          )}
         </div>
       </div>
       <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
