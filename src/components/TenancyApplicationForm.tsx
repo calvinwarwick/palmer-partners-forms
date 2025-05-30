@@ -313,12 +313,12 @@ const TenancyApplicationForm = () => {
   };
 
   const allSteps = [
-    { step: 1, icon: Home, label: "Property Details" },
-    { step: 2, icon: User, label: "Personal Info" },
-    { step: 3, icon: Briefcase, label: "Employment" },
-    { step: 4, icon: MapPin, label: "Current Address" },
-    { step: 5, icon: Info, label: "Additional Details" },
-    { step: 6, icon: CheckCircle, label: "Terms & Sign" }
+    { step: 1, icon: Home, label: "Property", description: "Property details and preferences" },
+    { step: 2, icon: User, label: "Personal", description: "Personal information" },
+    { step: 3, icon: Briefcase, label: "Employment", description: "Employment details" },
+    { step: 4, icon: MapPin, label: "Address", description: "Current address" },
+    { step: 5, icon: Info, label: "Additional", description: "Additional details" },
+    { step: 6, icon: CheckCircle, label: "Complete", description: "Terms and signature" }
   ];
 
   if (isSubmitted) {
@@ -393,82 +393,108 @@ const TenancyApplicationForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-6">
-      <div className="container mx-auto px-4 max-w-4xl">
-        {/* Simple header matching the design */}
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-blue-50 py-8">
+      <div className="container mx-auto px-4 max-w-5xl">
+        {/* Modern header with glassmorphism effect */}
         <div className="mb-8">
-          <div className="flex items-center mb-6">
-            <Home className="h-6 w-6 text-orange-500 mr-3" />
-            <h1 className="text-xl font-semibold text-gray-900">Tenancy Application</h1>
-          </div>
-
-          {/* Progress bar */}
-          <div className="mb-6">
-            <div className="flex justify-between text-sm text-gray-600 mb-2">
-              <span>Step {currentStep} of {totalSteps}</span>
-              <span>{Math.round(progress)}% Complete</span>
-            </div>
-            <Progress value={progress} className="h-2" />
-          </div>
-
-          {/* Step indicators */}
-          <div className="flex justify-between mb-8">
-            {allSteps.map(({ step, icon: Icon, label }) => (
-              <div key={step} className="flex flex-col items-center flex-1">
-                <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-2 ${
-                  currentStep === step 
-                    ? "bg-orange-500 text-white" 
-                    : currentStep > step
-                      ? "bg-orange-500 text-white"
-                      : "bg-gray-200 text-gray-400"
-                }`}>
-                  {currentStep > step ? (
-                    <Check className="h-5 w-5" />
-                  ) : (
-                    <Icon className="h-5 w-5" />
-                  )}
+          <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-xl">
+            <CardContent className="p-8">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-4">
+                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-full shadow-lg">
+                    <Home className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Tenancy Application</h1>
+                    <p className="text-gray-600">Complete your application in {totalSteps} easy steps</p>
+                  </div>
                 </div>
-                <span className={`text-xs text-center ${
-                  currentStep >= step ? "text-orange-600" : "text-gray-500"
-                }`}>{label}</span>
+                <Badge variant="outline" className="text-orange-600 border-orange-200 bg-orange-50">
+                  Step {currentStep} of {totalSteps}
+                </Badge>
               </div>
-            ))}
-          </div>
+
+              {/* Enhanced progress bar */}
+              <div className="mb-6">
+                <div className="flex justify-between text-sm text-gray-600 mb-3">
+                  <span className="font-medium">{Math.round(progress)}% Complete</span>
+                  <span className="text-gray-500">{6 - currentStep} steps remaining</span>
+                </div>
+                <Progress 
+                  value={progress} 
+                  className="h-3 bg-gray-200"
+                />
+              </div>
+
+              {/* Modern step indicators */}
+              <div className="grid grid-cols-6 gap-2">
+                {allSteps.map(({ step, icon: Icon, label, description }) => (
+                  <div key={step} className="text-center">
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
+                      currentStep === step 
+                        ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-110" 
+                        : currentStep > step
+                          ? "bg-green-500 text-white shadow-md"
+                          : "bg-gray-100 text-gray-400"
+                    }`}>
+                      {currentStep > step ? (
+                        <Check className="h-5 w-5" />
+                      ) : (
+                        <Icon className="h-5 w-5" />
+                      )}
+                    </div>
+                    <div className={`text-xs font-medium ${
+                      currentStep >= step ? "text-orange-600" : "text-gray-500"
+                    }`}>
+                      {label}
+                    </div>
+                    <div className="text-xs text-gray-400 hidden sm:block">
+                      {description}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <Card className="shadow-sm border bg-white">
-          <CardContent className="p-8">
-            {renderStepContent()}
+        {/* Main form content with enhanced styling */}
+        <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-2xl">
+          <CardContent className="p-8 md:p-12">
+            <div className="min-h-[500px]">
+              {renderStepContent()}
+            </div>
             
-            <div className="flex justify-between mt-8 pt-6 border-t border-gray-200">
-              {!isFirstStep && (
+            {/* Enhanced navigation buttons */}
+            <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
+              {!isFirstStep ? (
                 <Button
                   variant="outline"
                   onClick={goToPrevious}
                   disabled={isSubmitting}
-                  className="border-gray-300 text-gray-600 hover:bg-gray-50 px-6 py-2"
+                  className="bg-white border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 font-medium shadow-sm"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Previous
                 </Button>
+              ) : (
+                <div></div>
               )}
-              
-              {isFirstStep && <div></div>}
               
               {!isLastStep ? (
                 <Button
                   onClick={handleNext}
                   disabled={isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2"
+                  className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 >
-                  Next
+                  Continue
                   <ArrowRight className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
                 <Button
                   onClick={handleSubmit}
                   disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                  className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-2"
+                  className="bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
                 >
                   {isSubmitting ? (
                     <>
