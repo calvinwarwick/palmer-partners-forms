@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -42,25 +41,22 @@ const TermsAndDataStep = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-lexend">
       <h3 className="text-lg font-semibold">Data Sharing & Terms</h3>
       
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Data Sharing Preferences</CardTitle>
+          <CardTitle className="text-base">Data Sharing</CardTitle>
           <CardDescription>
-            Choose whether you'd like us to share your information with trusted partners
+            We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="utilities" className="font-medium">
-                Utilities Information Sharing
+                I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
               </Label>
-              <p className="text-sm text-gray-600 mt-1">
-                Share your contact details with utility providers for easier setup
-              </p>
             </div>
             <Switch
               id="utilities"
@@ -72,11 +68,8 @@ const TermsAndDataStep = ({
           <div className="flex items-center justify-between">
             <div>
               <Label htmlFor="insurance" className="font-medium">
-                Insurance Information Sharing
+                I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
               </Label>
-              <p className="text-sm text-gray-600 mt-1">
-                Share your details with insurance providers for quotes
-              </p>
             </div>
             <Switch
               id="insurance"
