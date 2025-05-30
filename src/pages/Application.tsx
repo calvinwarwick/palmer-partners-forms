@@ -1,12 +1,61 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check } from "lucide-react";
 import TenancyApplicationForm from "@/components/TenancyApplicationForm";
 
 const Application = () => {
   const [showForm, setShowForm] = useState(false);
+  const [stepAnimations, setStepAnimations] = useState({
+    step1: { showTick: false, fadeText: false },
+    step2: { showTick: false, fadeText: false },
+    step3: { showTick: false, fadeText: false }
+  });
+
+  useEffect(() => {
+    const runAnimation = () => {
+      // Reset all animations
+      setStepAnimations({
+        step1: { showTick: false, fadeText: false },
+        step2: { showTick: false, fadeText: false },
+        step3: { showTick: false, fadeText: false }
+      });
+
+      // Step 1 animation after 3 seconds
+      setTimeout(() => {
+        setStepAnimations(prev => ({
+          ...prev,
+          step1: { showTick: true, fadeText: true }
+        }));
+      }, 3000);
+
+      // Step 2 animation after 4.5 seconds (3 + 1.5)
+      setTimeout(() => {
+        setStepAnimations(prev => ({
+          ...prev,
+          step2: { showTick: true, fadeText: true }
+        }));
+      }, 4500);
+
+      // Step 3 animation after 6 seconds (3 + 1.5 + 1.5)
+      setTimeout(() => {
+        setStepAnimations(prev => ({
+          ...prev,
+          step3: { showTick: true, fadeText: true }
+        }));
+      }, 6000);
+
+      // Restart animation after 11 seconds (6 + 5)
+      setTimeout(() => {
+        runAnimation();
+      }, 11000);
+    };
+
+    if (!showForm) {
+      runAnimation();
+    }
+  }, [showForm]);
 
   if (showForm) {
     return <TenancyApplicationForm />;
@@ -21,7 +70,7 @@ const Application = () => {
             <img 
               src="/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png" 
               alt="Company Logo" 
-              className="h-auto w-full max-w-md"
+              className="h-auto w-[70%] max-w-md"
               style={{ 
                 filter: 'brightness(0) saturate(100%)'
               }}
@@ -49,22 +98,55 @@ const Application = () => {
 
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-lg">1</span>
+                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                  <span 
+                    className={`text-white font-bold text-lg transition-opacity duration-500 ${
+                      stepAnimations.step1.fadeText ? 'opacity-0' : 'opacity-100'
+                    }`}
+                  >
+                    1
+                  </span>
+                  <Check 
+                    className={`h-6 w-6 text-white absolute transition-opacity duration-500 ${
+                      stepAnimations.step1.showTick ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Property Details</h3>
                 <p className="text-sm text-gray-600">Enter your preferred property information</p>
               </div>
               <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-lg">2</span>
+                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                  <span 
+                    className={`text-white font-bold text-lg transition-opacity duration-500 ${
+                      stepAnimations.step2.fadeText ? 'opacity-0' : 'opacity-100'
+                    }`}
+                  >
+                    2
+                  </span>
+                  <Check 
+                    className={`h-6 w-6 text-white absolute transition-opacity duration-500 ${
+                      stepAnimations.step2.showTick ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Personal Information</h3>
                 <p className="text-sm text-gray-600">Provide your personal and employment details</p>
               </div>
               <div className="text-center p-6 bg-orange-50 rounded-lg">
-                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-lg">3</span>
+                <div className="bg-orange-500 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 relative">
+                  <span 
+                    className={`text-white font-bold text-lg transition-opacity duration-500 ${
+                      stepAnimations.step3.fadeText ? 'opacity-0' : 'opacity-100'
+                    }`}
+                  >
+                    3
+                  </span>
+                  <Check 
+                    className={`h-6 w-6 text-white absolute transition-opacity duration-500 ${
+                      stepAnimations.step3.showTick ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
                 </div>
                 <h3 className="font-semibold text-gray-900 mb-2">Submit</h3>
                 <p className="text-sm text-gray-600">Review and submit your application</p>
