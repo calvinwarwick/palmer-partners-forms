@@ -333,12 +333,12 @@ const TenancyApplicationForm = () => {
   };
 
   const allSteps = [
-    { step: 1, icon: Home, label: "Property", description: "Property details and preferences" },
-    { step: 2, icon: User, label: "Personal", description: "Personal information" },
-    { step: 3, icon: Briefcase, label: "Employment", description: "Employment details" },
-    { step: 4, icon: MapPin, label: "Address", description: "Current address" },
-    { step: 5, icon: Info, label: "Additional", description: "Additional details" },
-    { step: 6, icon: CheckCircle, label: "Complete", description: "Terms and signature" }
+    { step: 1, icon: Home, label: "Rental property details" },
+    { step: 2, icon: User, label: "Personal Information" },
+    { step: 3, icon: Briefcase, label: "Employment Details" },
+    { step: 4, icon: MapPin, label: "Current Address Details" },
+    { step: 5, icon: Info, label: "Additional Details" },
+    { step: 6, icon: CheckCircle, label: "Terms & Signature" }
   ];
 
   if (isSubmitted) {
@@ -444,7 +444,7 @@ const TenancyApplicationForm = () => {
 
               {/* Modern step indicators with new color scheme */}
               <div className="grid grid-cols-6 gap-2">
-                {allSteps.map(({ step, icon: Icon, label, description }) => (
+                {allSteps.map(({ step, icon: Icon, label }) => (
                   <div key={step} className="text-center">
                     <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
                       currentStep === step 
@@ -463,9 +463,6 @@ const TenancyApplicationForm = () => {
                       currentStep >= step ? "text-orange-600" : "text-light-grey"
                     }`}>
                       {label}
-                    </div>
-                    <div className="text-xs text-light-grey hidden sm:block font-lexend">
-                      {description}
                     </div>
                   </div>
                 ))}
@@ -488,7 +485,7 @@ const TenancyApplicationForm = () => {
                   variant="outline"
                   onClick={goToPrevious}
                   disabled={isSubmitting}
-                  className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-gray-800 px-8 py-3 font-medium shadow-sm font-lexend"
+                  className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-black px-8 py-3 font-medium shadow-sm font-lexend"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
