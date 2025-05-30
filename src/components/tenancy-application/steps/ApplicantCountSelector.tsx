@@ -16,14 +16,14 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
       
       <div>
         <Label htmlFor="applicantCount" className="form-label">
-          How many adults will be living in the property? Please ensure you provide details for each applicant below. *
+          How many adults will be living in the property? Please ensure you provide details for each applicant below. <span className="text-red-500">*</span>
         </Label>
         <Select
           value={applicantCount.toString()}
           onValueChange={(value) => onApplicantCountChange(parseInt(value))}
         >
           <SelectTrigger className="focus:ring-orange-500 focus:border-orange-500">
-            <SelectValue placeholder="Select number of applicants" />
+            <SelectValue placeholder="Please select an option" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="1">1 Applicant</SelectItem>

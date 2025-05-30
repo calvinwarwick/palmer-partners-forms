@@ -23,7 +23,7 @@ const PropertyDetailsStep = ({
   return (
     <div className="space-y-8 font-lexend">
       <div>
-        <h3 className="text-2xl font-bold text-dark-grey mb-2">Proposed Rental Property Details</h3>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Rental Property Details</h3>
         <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
@@ -32,7 +32,7 @@ const PropertyDetailsStep = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <Label htmlFor="streetAddress" className="form-label text-dark-grey font-medium">
-              Address <span className="text-orange-500">*</span>
+              Address <span className="text-red-500">*</span>
             </Label>
             <Input
               id="streetAddress"
@@ -46,7 +46,7 @@ const PropertyDetailsStep = ({
 
           <div className="space-y-2">
             <Label htmlFor="postcode" className="form-label text-dark-grey font-medium">
-              Postcode <span className="text-orange-500">*</span>
+              Postcode <span className="text-red-500">*</span>
             </Label>
             <Input
               id="postcode"
@@ -60,17 +60,17 @@ const PropertyDetailsStep = ({
 
           <div className="space-y-2">
             <Label htmlFor="maxRent" className="form-label text-dark-grey font-medium">
-              Rental amount <span className="text-orange-500">*</span>
+              Rental amount <span className="text-red-500">*</span>
             </Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-grey z-10">£</span>
+            <div className="currency-input-container">
+              <span className="currency-input-icon text-orange-500">£</span>
               <Input
                 id="maxRent"
                 type="number"
                 value={propertyPreferences.maxRent}
                 onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
                 placeholder=""
-                className="form-control pl-8 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                className="currency-input border-gray-300 focus:border-orange-500 focus:ring-orange-500"
                 required
               />
             </div>
@@ -80,7 +80,7 @@ const PropertyDetailsStep = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <Label htmlFor="moveInDate" className="form-label text-dark-grey font-medium">
-              Preferred move-in date <span className="text-orange-500">*</span>
+              Preferred move-in date <span className="text-red-500">*</span>
             </Label>
             <div className="date-input-container">
               <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
@@ -98,7 +98,7 @@ const PropertyDetailsStep = ({
 
           <div className="space-y-2">
             <Label htmlFor="latestMoveInDate" className="form-label text-dark-grey font-medium">
-              Latest move-in date <span className="text-orange-500">*</span>
+              Latest move-in date <span className="text-red-500">*</span>
             </Label>
             <div className="date-input-container">
               <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
@@ -115,14 +115,14 @@ const PropertyDetailsStep = ({
 
           <div className="space-y-2">
             <Label htmlFor="initialTenancyTerm" className="form-label text-dark-grey font-medium">
-              Preferred initial tenancy term <span className="text-orange-500">*</span>
+              Preferred initial tenancy term <span className="text-red-500">*</span>
             </Label>
             <Select 
               value={propertyPreferences.initialTenancyTerm} 
               onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
             >
               <SelectTrigger id="initialTenancyTerm" className="form-select border-gray-300 focus:border-orange-500 focus:ring-orange-500">
-                <SelectValue placeholder="Select an option" />
+                <SelectValue placeholder="Please select an option" />
               </SelectTrigger>
               <SelectContent className="bg-white border-gray-300">
                 <SelectItem value="6 months">6 months</SelectItem>

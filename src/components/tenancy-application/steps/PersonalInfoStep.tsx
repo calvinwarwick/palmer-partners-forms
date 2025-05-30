@@ -59,7 +59,7 @@ const PersonalInfoStep = ({
           <CardContent className="space-y-6 p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor={`firstName-${applicant.id}`} className="form-label text-gray-700 font-medium">First Name *</Label>
+                <Label htmlFor={`firstName-${applicant.id}`} className="form-label text-gray-700 font-medium">First Name <span className="text-red-500">*</span></Label>
                 <Input
                   id={`firstName-${applicant.id}`}
                   value={applicant.firstName}
@@ -70,7 +70,7 @@ const PersonalInfoStep = ({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`lastName-${applicant.id}`} className="form-label text-gray-700 font-medium">Last Name *</Label>
+                <Label htmlFor={`lastName-${applicant.id}`} className="form-label text-gray-700 font-medium">Last Name <span className="text-red-500">*</span></Label>
                 <Input
                   id={`lastName-${applicant.id}`}
                   value={applicant.lastName}
@@ -83,7 +83,7 @@ const PersonalInfoStep = ({
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <Label htmlFor={`email-${applicant.id}`} className="form-label text-gray-700 font-medium">Email Address *</Label>
+                <Label htmlFor={`email-${applicant.id}`} className="form-label text-gray-700 font-medium">Email Address <span className="text-red-500">*</span></Label>
                 <Input
                   id={`email-${applicant.id}`}
                   type="email"
@@ -95,7 +95,7 @@ const PersonalInfoStep = ({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`phone-${applicant.id}`} className="form-label text-gray-700 font-medium">Phone Number *</Label>
+                <Label htmlFor={`phone-${applicant.id}`} className="form-label text-gray-700 font-medium">Phone Number <span className="text-red-500">*</span></Label>
                 <Input
                   id={`phone-${applicant.id}`}
                   type="tel"
@@ -128,7 +128,7 @@ const PersonalInfoStep = ({
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <Label className="form-label text-gray-700 font-medium">
-                      Do you hold a UK or Republic of Ireland passport? *
+                      Do you hold a UK or Republic of Ireland passport? <span className="text-red-500">*</span>
                     </Label>
                   </div>
                   <Switch
@@ -140,7 +140,7 @@ const PersonalInfoStep = ({
                 <div className="flex items-start justify-between">
                   <div className="flex-1 pr-4">
                     <Label className="form-label text-gray-700 font-medium">
-                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? *
+                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
@@ -148,20 +148,13 @@ const PersonalInfoStep = ({
                       checked={applicant.adverseCredit === "yes"}
                       onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
                     />
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="text-orange-600 border-orange-300 hover:bg-orange-50"
-                    >
-                      <Info className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
 
                 <div className="flex items-start justify-between">
                   <div className="flex-1 pr-4">
                     <Label className="form-label text-gray-700 font-medium">
-                      If required, can you supply a guarantor for this proposed tenancy? *
+                      If required, can you supply a guarantor for this proposed tenancy? <span className="text-red-500">*</span>
                     </Label>
                   </div>
                   <div className="flex items-center gap-2">
