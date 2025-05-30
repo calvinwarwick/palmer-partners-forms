@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check } from "lucide-react";
 import TenancyApplicationForm from "@/components/TenancyApplicationForm";
+import ApplicationHeader from "@/components/shared/ApplicationHeader";
 
 const Application = () => {
   const [showForm, setShowForm] = useState(false);
@@ -62,38 +63,16 @@ const Application = () => {
 
   return (
     <div className="min-h-screen bg-gray-200">
-      {/* Palmer & Partners style header - full width, far left corner */}
-      <div className="bg-dark-grey w-full overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
-        <div className="w-full px-6 py-4 relative">
-          <div className="flex items-center space-x-6">
-            <div className="transform rotate-12 -my-2">
-              <img 
-                src="/lovable-uploads/fb64eebc-b467-4dd1-b635-6d1817b04c67.png" 
-                alt="Palmer & Partners P Logo" 
-                className="h-24 w-24"
-              />
-            </div>
-            <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/8958574e-86f0-4482-9a99-322142a0f734.png" 
-                alt="Palmer & Partners Text Logo" 
-                className="h-12"
-              />
-            </div>
-          </div>
-        </div>
-        <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
-      </div>
+      <ApplicationHeader />
 
       <div className="container mx-auto px-4 py-16 max-w-4xl">
         {/* Main content section */}
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Tenancy Application
+            Welcome to Your Application
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Start your tenancy application journey with our streamlined process.
+            Complete your tenancy application in just a few simple steps with our streamlined process.
           </p>
         </div>
 

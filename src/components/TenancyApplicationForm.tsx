@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check, TestTube, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ApplicationHeader from "@/components/shared/ApplicationHeader";
 
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
@@ -442,148 +443,155 @@ const TenancyApplicationForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 py-8 font-lexend">
-      <div className="container mx-auto px-4 max-w-5xl">
-        {/* Redesigned header with house icon, title, and progress */}
-        <div className="mb-8">
-          <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
-            <CardContent className="p-8">
-              {/* Main header row with icon and title */}
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-lg">
-                  <Home className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
-                </div>
-              </div>
-
-              {/* Progress section */}
-              <div className="mb-6">
-                <div className="flex justify-between text-sm mb-3">
-                  <span className="font-medium text-dark-grey">{Math.round(progress)}% Complete</span>
-                  <span className="text-light-grey">{totalSteps - currentStep + 1} steps remaining</span>
-                </div>
-                <Progress 
-                  value={progress} 
-                  className="h-3 bg-gray-200"
-                />
-              </div>
-
-              {/* Modern step indicators with mobile responsiveness and arrows aligned with icons */}
-              <div className={`flex items-center justify-center gap-2 ${isMobile ? 'flex-wrap' : ''}`}>
-                {getVisibleSteps().map(({ step, icon: Icon, label }, index) => (
-                  <div key={step} className="flex items-center">
-                    <div className="text-center">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
-                        currentStep === step 
-                          ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-110" 
-                          : currentStep > step
-                            ? "bg-orange-500 text-white shadow-md"
-                            : "bg-gray-100 text-light-grey"
-                      }`}>
-                        {currentStep > step ? (
-                          <Check className="h-5 w-5" />
-                        ) : (
-                          <Icon className="h-5 w-5" />
-                        )}
-                      </div>
-                      <div className={`text-xs font-medium font-lexend ${
-                        currentStep >= step ? "text-orange-600" : "text-light-grey"
-                      }`}>
-                        {label}
-                      </div>
-                    </div>
-                    
-                    {/* Add arrow aligned with icon center, after each step except the last visible step */}
-                    {index < getVisibleSteps().length - 1 && (
-                      <div className="flex items-center" style={{ marginBottom: '24px' }}>
-                        <ChevronRight className="h-5 w-5 text-gray-400 mx-2" />
-                      </div>
-                    )}
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 font-lexend">
+      <ApplicationHeader 
+        title="Application Form"
+        description="Complete your application step by step"
+      />
+      
+      <div className="py-8">
+        <div className="container mx-auto px-4 max-w-5xl">
+          {/* Redesigned header with house icon, title, and progress */}
+          <div className="mb-8">
+            <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
+              <CardContent className="p-8">
+                {/* Main header row with icon and title */}
+                <div className="flex items-center space-x-4 mb-4">
+                  <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-3 rounded-xl shadow-lg">
+                    <Home className="h-6 w-6 text-white" />
                   </div>
-                ))}
+                  <div>
+                    <h1 className="text-2xl font-bold text-dark-grey">Application Progress</h1>
+                  </div>
+                </div>
+
+                {/* Progress section */}
+                <div className="mb-6">
+                  <div className="flex justify-between text-sm mb-3">
+                    <span className="font-medium text-dark-grey">{Math.round(progress)}% Complete</span>
+                    <span className="text-light-grey">{totalSteps - currentStep + 1} steps remaining</span>
+                  </div>
+                  <Progress 
+                    value={progress} 
+                    className="h-3 bg-gray-200"
+                  />
+                </div>
+
+                {/* Modern step indicators with mobile responsiveness and arrows aligned with icons */}
+                <div className={`flex items-center justify-center gap-2 ${isMobile ? 'flex-wrap' : ''}`}>
+                  {getVisibleSteps().map(({ step, icon: Icon, label }, index) => (
+                    <div key={step} className="flex items-center">
+                      <div className="text-center">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
+                          currentStep === step 
+                            ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-110" 
+                            : currentStep > step
+                              ? "bg-orange-500 text-white shadow-md"
+                              : "bg-gray-100 text-light-grey"
+                        }`}>
+                          {currentStep > step ? (
+                            <Check className="h-5 w-5" />
+                          ) : (
+                            <Icon className="h-5 w-5" />
+                          )}
+                        </div>
+                        <div className={`text-xs font-medium font-lexend ${
+                          currentStep >= step ? "text-orange-600" : "text-light-grey"
+                        }`}>
+                          {label}
+                        </div>
+                      </div>
+                      
+                      {/* Add arrow aligned with icon center, after each step except the last visible step */}
+                      {index < getVisibleSteps().length - 1 && (
+                        <div className="flex items-center" style={{ marginBottom: '24px' }}>
+                          <ChevronRight className="h-5 w-5 text-gray-400 mx-2" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main form content with enhanced styling */}
+          <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
+            <CardContent className="p-8 md:p-12">
+              <div className="min-h-[500px]">
+                {renderStepContent()}
+              </div>
+              
+              {/* Enhanced navigation buttons */}
+              <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
+                {!isFirstStep ? (
+                  <Button
+                    variant="outline"
+                    onClick={goToPrevious}
+                    disabled={isSubmitting}
+                    className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-black px-8 py-3 font-medium shadow-sm font-lexend"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Back
+                  </Button>
+                ) : (
+                  <div></div>
+                )}
+                
+                <div className="flex gap-3">
+                  <Button
+                    variant="outline"
+                    onClick={fillAllTestData}
+                    className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 px-6 py-3 font-medium shadow-sm font-lexend"
+                  >
+                    <TestTube className="h-4 w-4 mr-2" />
+                    Fill All Data
+                  </Button>
+                  
+                  {!isLastStep ? (
+                    <Button
+                      onClick={handleNext}
+                      disabled={isSubmitting}
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
+                    >
+                      Next
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={handleSubmit}
+                      disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
+                      className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Submitting...
+                        </>
+                      ) : (
+                        <>
+                          Submit Application
+                          <CheckCircle className="h-4 w-4 ml-2" />
+                        </>
+                      )}
+                    </Button>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
+
+          {/* Guarantor Form Modal */}
+          {guarantorFormOpen && selectedApplicantForGuarantor && (
+            <GuarantorForm
+              applicant={selectedApplicantForGuarantor}
+              applicationId="current-application"
+              isOpen={guarantorFormOpen}
+              onClose={() => setGuarantorFormOpen(false)}
+              onSave={handleGuarantorSave}
+            />
+          )}
         </div>
-
-        {/* Main form content with enhanced styling */}
-        <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-2xl">
-          <CardContent className="p-8 md:p-12">
-            <div className="min-h-[500px]">
-              {renderStepContent()}
-            </div>
-            
-            {/* Enhanced navigation buttons */}
-            <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
-              {!isFirstStep ? (
-                <Button
-                  variant="outline"
-                  onClick={goToPrevious}
-                  disabled={isSubmitting}
-                  className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-black px-8 py-3 font-medium shadow-sm font-lexend"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              ) : (
-                <div></div>
-              )}
-              
-              <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  onClick={fillAllTestData}
-                  className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 px-6 py-3 font-medium shadow-sm font-lexend"
-                >
-                  <TestTube className="h-4 w-4 mr-2" />
-                  Fill All Data
-                </Button>
-                
-                {!isLastStep ? (
-                  <Button
-                    onClick={handleNext}
-                    disabled={isSubmitting}
-                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
-                  >
-                    Next
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={!canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted) || isSubmitting}
-                    className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 font-lexend"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Submitting...
-                      </>
-                    ) : (
-                      <>
-                        Submit Application
-                        <CheckCircle className="h-4 w-4 ml-2" />
-                      </>
-                    )}
-                  </Button>
-                )}
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Guarantor Form Modal */}
-        {guarantorFormOpen && selectedApplicantForGuarantor && (
-          <GuarantorForm
-            applicant={selectedApplicantForGuarantor}
-            applicationId="current-application"
-            isOpen={guarantorFormOpen}
-            onClose={() => setGuarantorFormOpen(false)}
-            onSave={handleGuarantorSave}
-          />
-        )}
       </div>
     </div>
   );
