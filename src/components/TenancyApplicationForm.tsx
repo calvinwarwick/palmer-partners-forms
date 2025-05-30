@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check, TestTube } from "lucide-react";
+import { ArrowLeft, ArrowRight, User, Home, FileText, CheckCircle, MapPin, Building, Info, Briefcase, Check, TestTube, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -466,7 +466,7 @@ const TenancyApplicationForm = () => {
               <div className="mb-6">
                 <div className="flex justify-between text-sm text-light-grey mb-3">
                   <span className="font-medium text-dark-grey">{Math.round(progress)}% Complete</span>
-                  <span className="text-light-grey">{6 - currentStep} steps remaining</span>
+                  <span className="text-light-grey">{totalSteps - currentStep + 1} steps remaining</span>
                 </div>
                 <Progress 
                   value={progress} 
@@ -474,28 +474,35 @@ const TenancyApplicationForm = () => {
                 />
               </div>
 
-              {/* Modern step indicators with mobile responsiveness */}
-              <div className={`grid gap-2 ${isMobile ? 'grid-cols-2' : 'grid-cols-6'}`}>
-                {getVisibleSteps().map(({ step, icon: Icon, label }) => (
-                  <div key={step} className="text-center">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
-                      currentStep === step 
-                        ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-110" 
-                        : currentStep > step
-                          ? "bg-orange-500 text-white shadow-md"
-                          : "bg-gray-100 text-light-grey"
-                    }`}>
-                      {currentStep > step ? (
-                        <Check className="h-5 w-5" />
-                      ) : (
-                        <Icon className="h-5 w-5" />
-                      )}
+              {/* Modern step indicators with mobile responsiveness and arrows */}
+              <div className={`flex items-center justify-center gap-2 ${isMobile ? 'flex-wrap' : ''}`}>
+                {getVisibleSteps().map(({ step, icon: Icon, label }, index) => (
+                  <div key={step} className="flex items-center">
+                    <div className="text-center">
+                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-2 mx-auto transition-all duration-300 ${
+                        currentStep === step 
+                          ? "bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg scale-110" 
+                          : currentStep > step
+                            ? "bg-orange-500 text-white shadow-md"
+                            : "bg-gray-100 text-light-grey"
+                      }`}>
+                        {currentStep > step ? (
+                          <Check className="h-5 w-5" />
+                        ) : (
+                          <Icon className="h-5 w-5" />
+                        )}
+                      </div>
+                      <div className={`text-xs font-medium font-lexend ${
+                        currentStep >= step ? "text-orange-600" : "text-light-grey"
+                      }`}>
+                        {label}
+                      </div>
                     </div>
-                    <div className={`text-xs font-medium font-lexend ${
-                      currentStep >= step ? "text-orange-600" : "text-light-grey"
-                    }`}>
-                      {label}
-                    </div>
+                    
+                    {/* Add arrow after each step except the last visible step */}
+                    {index < getVisibleSteps().length - 1 && (
+                      <ChevronRight className="h-5 w-5 text-gray-400 mx-2" />
+                    )}
                   </div>
                 ))}
               </div>
