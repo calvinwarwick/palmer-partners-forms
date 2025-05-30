@@ -1,265 +1,78 @@
 
-/* Component-specific styles */
+/* Custom Scrollbar Styles */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6b35 #f1f5f9;
+}
 
-/* Focus states with orange theme */
-input:focus,
-select:focus,
-textarea:focus {
-  @apply ring-2 ring-orange-500 ring-offset-2 border-orange-500;
-  outline: none !important;
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ff6b35;
+  border-radius: 4px;
+  border: 1px solid #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #e55a2b;
+}
+
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+/* Apply custom scrollbar to body */
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #ff6b35 #f1f5f9;
+}
+
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #ff6b35;
+  border-radius: 4px;
+}
+
+body::-webkit-scrollbar-thumb:hover {
+  background: #e55a2b;
+}
+
+/* Signature canvas styling */
+.signature-canvas {
+  border: 1px solid rgb(228, 228, 231) !important;
+  border-radius: 0.375rem;
   box-shadow: none !important;
 }
 
-/* Orange theme overrides */
-.focus\:ring-blue-500:focus,
-.ring-blue-500 {
-  @apply ring-orange-500;
-}
-
-.focus\:border-blue-500:focus,
-.border-blue-500 {
-  @apply border-orange-500;
-}
-
-.bg-blue-500,
-.bg-blue-600 {
-  @apply bg-orange-500;
-}
-
-.hover\:bg-blue-600:hover {
-  @apply hover:bg-orange-600;
-}
-
-.text-blue-500,
-.text-blue-600 {
-  @apply text-orange-500;
-}
-
-.bg-blue-100 {
-  @apply bg-orange-100;
-}
-
-.text-blue-800 {
-  @apply text-orange-800;
-}
-
-/* Links and navigation colors */
-a {
-  @apply text-orange-500;
-}
-
-a:hover {
-  @apply text-orange-600;
-}
-
-/* Button variants */
-.btn-primary,
-button[class*="bg-blue"] {
-  @apply bg-orange-500 hover:bg-orange-600;
-}
-
-.btn-outline-orange {
-  @apply border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white;
-}
-
-.btn-orange {
-  @apply bg-orange-500 text-white hover:bg-orange-600;
-}
-
-/* Enhanced applicant cards styling */
-.applicant-details-section {
-  @apply p-4 bg-gradient-to-br from-orange-50 to-white rounded-lg;
-  border: 2px solid rgb(228, 228, 231) !important;
+/* Card styling overrides */
+.card-override {
+  border: 1px solid rgb(228, 228, 231) !important;
   box-shadow: none !important;
 }
 
-.applicant-details-section h3 {
-  @apply text-base font-semibold text-orange-800 mb-2;
-}
-
-.applicant-details-section p {
-  @apply text-sm text-gray-600 mb-3;
-}
-
-/* Progress bar effects */
-.fill {
-  position: relative;
-  overflow: hidden;
-  transition: color 0.09s ease-in;
-}
-
-.fill:hover {
-  color: whitesmoke;
-}
-
-.fill:before {
-  content: "";
-  position: absolute;
-  background: #383736;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 100%;
-  z-index: -1;
-  transition: top 0.09s ease-in;
-}
-
-.fill:hover:before {
-  top: 0;
-}
-
-.progress-fill {
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-fill:before {
-  content: "";
-  position: absolute;
-  background: linear-gradient(90deg, #f97316, #ea580c);
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 100%;
-  z-index: -1;
-  transition: top linear;
-}
-
-.progress-fill.animate-progress:before {
-  top: 0;
-  transition-duration: 15s;
-}
-
-/* Enhanced step badges with improved animation */
-.step-indicator {
-  position: relative;
-  overflow: visible;
-}
-
-.step-badge {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  z-index: 20;
-  transform: scale(0);
-  opacity: 0;
-  transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.5s ease-out;
-  pointer-events: none;
+/* Button styling overrides */
+.button-override {
+  border: 1px solid rgb(228, 228, 231) !important;
   box-shadow: none !important;
 }
 
-.step-badge.animate-in {
-  transform: scale(1);
-  opacity: 1;
-  animation: bounce-in 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0) rotate(-180deg);
-    opacity: 0;
-  }
-  50% {
-    transform: scale(1.2) rotate(-90deg);
-    opacity: 0.8;
-  }
-  100% {
-    transform: scale(1) rotate(0deg);
-    opacity: 1;
-  }
-}
-
-/* Enhanced form styling with better borders */
-.form-section-border {
-  @apply rounded-xl bg-gradient-to-br from-white to-orange-50/50;
-  border: 2px solid rgb(228, 228, 231) !important;
+/* Additional form styling */
+.form-container {
+  border: 1px solid rgb(228, 228, 231) !important;
   box-shadow: none !important;
-}
-
-.form-section-header {
-  @apply bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl p-4;
-}
-
-/* Terms and conditions styling */
-.terms-content {
-  max-height: 400px;
-  overflow-y: auto;
-  @apply rounded-lg p-6 bg-gradient-to-br from-orange-50 to-white;
-  border: 2px solid rgb(228, 228, 231) !important;
-  box-shadow: none !important;
-}
-
-.terms-content h3 {
-  @apply font-semibold text-orange-800 mb-3;
-}
-
-.terms-content p {
-  @apply mb-4 text-sm text-gray-700 leading-relaxed;
-}
-
-.terms-content p:last-child {
-  @apply mb-0;
-}
-
-/* Enhanced alert and message styling with better visual hierarchy */
-.alert,
-[role="alert"],
-.error-message,
-.info-message,
-.warning-message,
-.success-message,
-.message-banner,
-.alert-banner {
-  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 rounded-lg p-4 mb-4;
-  border: 2px solid rgb(228, 228, 231) !important;
-  box-shadow: none !important;
-}
-
-/* Override any existing alert color variants */
-.alert-destructive,
-.alert-warning,
-.alert-info,
-.alert-success {
-  @apply bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800;
-  border-color: rgb(228, 228, 231) !important;
-}
-
-/* Ensure all text in alerts is properly colored */
-.alert *,
-[role="alert"] *,
-.error-message *,
-.info-message *,
-.warning-message *,
-.success-message *,
-.message-banner *,
-.alert-banner * {
-  @apply text-orange-800;
-}
-
-/* Specific shadcn alert overrides */
-.alert .alert-title,
-.alert .alert-description,
-[data-sonner-toast] {
-  @apply text-orange-800;
-}
-
-/* Enhanced card hover effects */
-.hover-lift {
-  transition: transform 0.2s ease-in-out;
-}
-
-.hover-lift:hover {
-  transform: translateY(-2px);
-}
-
-/* Step connection lines enhancement */
-.step-connection-line {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent 0%, #f97316 10%, #f97316 90%, transparent 100%);
-  z-index: 1;
-  transform: translateY(-50%);
 }

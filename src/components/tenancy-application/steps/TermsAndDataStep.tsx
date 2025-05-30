@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -85,7 +86,7 @@ const TermsAndDataStep = ({
           <CardTitle className="text-base">Terms & Conditions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="max-h-64 overflow-y-auto p-4 border border-gray-200 rounded-lg bg-gray-50 text-sm">
+          <div className="max-h-64 overflow-y-auto p-4 border rounded-lg bg-gray-50 text-sm custom-scrollbar" style={{ borderColor: 'rgb(228, 228, 231)' }}>
             <div className="space-y-4">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">Terms & Conditions</h4>
@@ -109,14 +110,14 @@ const TermsAndDataStep = ({
                 <p className="text-gray-700 mb-2">
                   Before being able to advise our landlord to grant a tenancy by signing a tenancy agreement, Palmer & Partners will need to complete a full reference check on any proposed tenant named overleaf. We use an independent reference provider to carry out this service. A successful reference check is dependent on, but not limited to, the following criteria:
                 </p>
-                <ul className="list-disc pl-5 text-gray-700 space-y-1">
+                <ul className="list-disc pl-5 text-gray-700 space-y-1 mb-2">
                   <li>Named tenants must a combined minimum UK based annual salary greater than 30 x monthly rent (excluding bonus/commission). Alternatively, if a tenant has UK based savings in excess of this sum and they have been in place for over 3 months, there are circumstances where this can be considered in lieu of income.</li>
                   <li>If you are self-employed, you must have at least 2 completed tax years of accounts confirming average annual income greater than 30 x monthly rent.</li>
                   <li>Any guarantor must earn in excess of 36 x monthly rent per year or have UK based savings in excess of this sum (these savings must have been in place for over 3 months).</li>
                   <li>Named tenants must have no County Court Judgements (CCJ) or Bankruptcy and not be in an Individual Voluntary Arrangement (IVA) or similar agreement.</li>
                   <li>A successful "previous landlord reference" where your previous landlord/agent must confirm that you have always paid your rent on time, kept the property in good order and that you are free to leave the tenancy.</li>
                 </ul>
-                <p className="text-gray-700 mt-2">
+                <p className="text-gray-700">
                   Should a tenant or guarantor fail a credit check due to inaccurate or misleading information, fail to fill in the referencing forms within the stipulated time frame or withdraw from the application process for any reason, the above "Holding Deposit" is non-refundable. Should the landlord withdraw from the application process prior to the start date of the tenancy, any deposit or rent paid will be refunded to the tenant in full.
                 </p>
               </div>
@@ -203,7 +204,7 @@ const TermsAndDataStep = ({
               onCheckedChange={onTermsChange}
             />
             <Label htmlFor="terms" className="text-sm">
-              I have read and agree to the terms and conditions *
+              I confirm that I have read and understood the terms and conditions and I am bound by their contents
             </Label>
           </div>
         </CardContent>
