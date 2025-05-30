@@ -38,8 +38,8 @@ const PropertyDetailsStep = ({
     <div className="space-y-8 font-lexend">
       <div>
         <h3 className="text-xl font-semibold text-dark-grey mb-2">Proposed Rental Property Details</h3>
+        <p className="text-light-grey mb-6">Please provide the details of the property you are applying for.</p>
         <div className="border-b border-gray-200 mb-6"></div>
-        <p className="text-light-grey">Please provide the details of the property you are applying for.</p>
       </div>
 
       <div className="space-y-6">
