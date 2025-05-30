@@ -377,7 +377,7 @@ const TenancyApplicationForm = () => {
 
   if (isSubmitted) {
     return <ApplicationSuccess applicants={applicants} />;
-  }
+  };
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -444,21 +444,14 @@ const TenancyApplicationForm = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 font-lexend">
-      <ApplicationHeader />
+      <ApplicationHeader title="Tenancy Application" />
       
       <div className="py-8">
         <div className="container mx-auto px-4 max-w-5xl">
-          {/* Redesigned header with title and progress */}
+          {/* Redesigned header with progress */}
           <div className="mb-8">
             <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
               <CardContent className="p-8">
-                {/* Main header row with title */}
-                <div className="flex items-center space-x-4 mb-4">
-                  <div>
-                    <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
-                  </div>
-                </div>
-
                 {/* Progress section */}
                 <div className="mb-6">
                   <div className="flex justify-between text-sm mb-3">
