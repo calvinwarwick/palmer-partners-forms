@@ -444,7 +444,7 @@ const TenancyApplicationForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 py-8 font-lexend">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Redesigned header with house icon, title, step counter, and progress */}
+        {/* Redesigned header with house icon, title, and progress */}
         <div className="mb-8">
           <Card className="bg-white/90 backdrop-blur-sm border-0 shadow-2xl">
             <CardContent className="p-8">
@@ -455,9 +455,6 @@ const TenancyApplicationForm = () => {
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-dark-grey">Tenancy Application</h1>
-                  <Badge variant="outline" className="text-orange-600 border-orange-300 bg-orange-50 font-lexend text-sm">
-                    Step {currentStep} of {totalSteps}
-                  </Badge>
                 </div>
               </div>
 
