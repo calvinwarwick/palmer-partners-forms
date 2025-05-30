@@ -64,9 +64,19 @@ const Application = () => {
 
   return (
     <div className="min-h-screen bg-gray-200">
-      <ApplicationHeader title="Tenancy Application" />
+      <ApplicationHeader />
 
       <div className="container mx-auto px-4 py-16 max-w-4xl">
+        {/* Main content section */}
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Welcome to Your Application
+          </h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Complete your tenancy application in just a few simple steps with our streamlined process.
+          </p>
+        </div>
+
         {/* Application Card */}
         <Card className="border-0 bg-white/80 backdrop-blur-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
           <CardContent className="p-12">
