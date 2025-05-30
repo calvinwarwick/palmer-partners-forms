@@ -63,10 +63,10 @@ const Application = () => {
 
   return (
     <div className="min-h-screen bg-gray-200">
-      {/* Palmer & Partners style header */}
-      <div className="bg-dark-grey">
-        <div className="h-2 bg-gradient-to-r from-orange-500 to-orange-600"></div>
-        <div className="container mx-auto px-4 py-6">
+      {/* Palmer & Partners style header - full width, far left corner */}
+      <div className="bg-dark-grey w-full">
+        <div className="h-2 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
+        <div className="w-full px-4 py-6">
           <div className="flex items-center space-x-4">
             <div className="bg-orange-500 p-3 rounded-lg transform rotate-12">
               <img 
