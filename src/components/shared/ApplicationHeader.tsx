@@ -10,8 +10,7 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
 }) => {
   return (
     <div className="bg-dark-grey w-full overflow-hidden">
-      <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
-      <div className="w-full px-6 py-3 relative h-14 flex items-center">
+      <div className="w-full px-6 py-6 relative h-20 flex items-center">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center space-x-4">
             <div className="transform rotate-12 -my-2">
