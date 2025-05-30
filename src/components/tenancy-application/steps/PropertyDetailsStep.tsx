@@ -36,26 +36,13 @@ const PropertyDetailsStep = ({
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2">Proposed Rental Property Details</h3>
-          <p className="text-gray-600">Please provide the details of the property you are applying for.</p>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
-            <TestTube className="h-4 w-4" />
-            Fill Step Data
-          </Button>
-          {onFillAllTestData && (
-            <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
-              <TestTube className="h-4 w-4" />
-              Fill All Form Data
-            </Button>
-          )}
-        </div>
+      <div>
+        <h3 className="text-xl font-semibold text-gray-900 mb-2">Proposed Rental Property Details</h3>
+        <div className="border-b border-gray-200 mb-6"></div>
+        <p className="text-gray-600">Please provide the details of the property you are applying for.</p>
       </div>
 
-      <div className="form-section">
+      <div className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <Label htmlFor="streetAddress" className="form-label">
@@ -104,7 +91,7 @@ const PropertyDetailsStep = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="space-y-2">
             <Label htmlFor="moveInDate" className="form-label">
               Preferred move-in date <span className="text-red-500">*</span>
@@ -155,6 +142,19 @@ const PropertyDetailsStep = ({
             </Select>
           </div>
         </div>
+      </div>
+
+      <div className="flex gap-2 pt-4 border-t border-gray-200">
+        <Button variant="outline" size="sm" onClick={fillTestData} className="flex items-center gap-2">
+          <TestTube className="h-4 w-4" />
+          Fill Step Data
+        </Button>
+        {onFillAllTestData && (
+          <Button variant="default" size="sm" onClick={onFillAllTestData} className="flex items-center gap-2">
+            <TestTube className="h-4 w-4" />
+            Fill All Form Data
+          </Button>
+        )}
       </div>
     </div>
   );
