@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle, Briefcase } from "lucide-react";
+import { AlertTriangle, User } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface EmploymentStepProps {
@@ -26,7 +26,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
             <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
               <div className="p-2 bg-white/20 rounded-lg">
-                <Briefcase className="h-5 w-5" />
+                <User className="h-5 w-5" />
               </div>
               Applicant {index + 1}
               {applicant.firstName && applicant.lastName && (

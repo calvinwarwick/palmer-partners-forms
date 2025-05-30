@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { TestTube, Calendar, MapPin, Home } from "lucide-react";
+import { TestTube, Calendar, MapPin, User } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface CurrentAddressStepProps {
@@ -26,7 +26,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant, onFillAllTestData }
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
             <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
               <div className="p-2 bg-white/20 rounded-lg">
-                <Home className="h-5 w-5" />
+                <User className="h-5 w-5" />
               </div>
               Applicant {index + 1}
               {applicant.firstName && applicant.lastName && (
