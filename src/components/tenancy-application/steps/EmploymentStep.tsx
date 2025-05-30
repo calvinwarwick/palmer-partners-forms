@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,16 +25,16 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
       </div>
 
       {hasSelfEmployed && (
-        <Card className="border-l-4 border-l-orange-500 border-gray-200 bg-orange-50/30">
+        <Card className="border-l-4 border-l-gray-400 border-gray-200 bg-gray-50/30">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <AlertCircle className="h-4 w-4 text-orange-600 mt-1 flex-shrink-0" />
+              <AlertCircle className="h-4 w-4 text-gray-400 mt-1 flex-shrink-0" />
               <div>
-                <h4 className="text-sm font-medium text-orange-900 mb-2">Self-Employment Information</h4>
-                <p className="text-xs text-orange-800 mb-3 leading-relaxed">
+                <h4 className="text-sm font-medium text-gray-900 mb-2">Self-Employment Information</h4>
+                <p className="text-xs text-gray-600 mb-3 leading-relaxed">
                   We note you have stated that you are self-employed. To ensure you have the best chance of successfully completing the referencing procedure, please note the following:
                 </p>
-                <ul className="list-disc list-inside space-y-1 text-xs text-orange-800 leading-relaxed ml-2">
+                <ul className="list-disc list-inside space-y-1 text-xs text-gray-600 leading-relaxed ml-2">
                   <li>You must have been self-employed for at least 2 years and be able to supply at least one completed HMRC Tax Return or SA302. Alternatively, proof of earnings via a Chartered Accountant may be sufficient.</li>
                   <li>Any salary figures you provide must be your salary and not figures based on the turnover of a business.</li>
                   <li>Any salary figures that you supply must be what you take as "salary" and must not include any dividends that you receive.</li>
@@ -47,11 +48,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
       {applicants.map((applicant, index) => (
         <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-            <CardTitle className="text-lg font-semibold flex items-center gap-3">
+            <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
               <div className="p-2 bg-white/20 rounded-lg">
-                <Briefcase className="h-5 w-5" />
+                <Briefcase className="h-5 w-5 text-white" />
               </div>
-              {applicant.firstName} {applicant.lastName} - Employment Information
+              <span className="text-white">{applicant.firstName} {applicant.lastName} - Employment Information</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
@@ -104,18 +105,20 @@ const EmploymentStep = ({ applicants, onUpdateApplicant, onFillAllTestData }: Em
               
               <div className="space-y-2">
                 <Label htmlFor={`income-${applicant.id}`} className="form-label text-gray-700 font-medium flex items-center gap-2">
-                  <PoundSterling className="h-4 w-4 text-orange-500" />
-                  Annual salary (£) *
+                  Annual salary *
                 </Label>
-                <Input
-                  id={`income-${applicant.id}`}
-                  type="number"
-                  value={applicant.annualIncome}
-                  onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
-                  placeholder="e.g., 35000"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  required
-                />
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500 z-10 font-medium">£</span>
+                  <Input
+                    id={`income-${applicant.id}`}
+                    type="number"
+                    value={applicant.annualIncome}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
+                    placeholder="e.g., 35000"
+                    className="form-control pl-8 border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    required
+                  />
+                </div>
               </div>
             </div>
             

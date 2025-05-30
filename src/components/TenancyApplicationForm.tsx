@@ -488,7 +488,7 @@ const TenancyApplicationForm = () => {
                   variant="outline"
                   onClick={goToPrevious}
                   disabled={isSubmitting}
-                  className="bg-white border-light-grey text-black hover:bg-white hover:border-orange-500 hover:text-black px-8 py-3 font-medium shadow-sm font-lexend"
+                  className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-gray-800 px-8 py-3 font-medium shadow-sm font-lexend"
                 >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back
@@ -501,7 +501,7 @@ const TenancyApplicationForm = () => {
                 <Button
                   variant="outline"
                   onClick={fillAllTestData}
-                  className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-black px-6 py-3 font-medium shadow-sm font-lexend"
+                  className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 px-6 py-3 font-medium shadow-sm font-lexend"
                 >
                   <TestTube className="h-4 w-4 mr-2" />
                   Fill All Data
