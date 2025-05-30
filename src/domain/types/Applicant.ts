@@ -23,6 +23,7 @@ export interface Applicant {
   petDetails: string;
   ukPassport?: string;
   adverseCredit?: string;
+  adverseCreditDetails?: string;
   guarantorRequired?: string;
 }
 
@@ -49,6 +50,7 @@ export interface AdditionalDetails {
   childrenAges: string;
   conditionsOfOffer: string;
   depositType: string;
+  guarantorDetails?: string;
 }
 
 export interface Application {
