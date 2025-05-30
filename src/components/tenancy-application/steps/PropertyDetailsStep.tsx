@@ -36,6 +36,7 @@ const PropertyDetailsStep = ({
             </Label>
             <Input
               id="streetAddress"
+              name="streetAddress"
               value={propertyPreferences.streetAddress}
               onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
               placeholder="Rental property address"
@@ -50,6 +51,7 @@ const PropertyDetailsStep = ({
             </Label>
             <Input
               id="postcode"
+              name="postcode"
               value={propertyPreferences.postcode}
               onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
               placeholder="Rental property postcode"
@@ -66,6 +68,7 @@ const PropertyDetailsStep = ({
               <span className="currency-input-icon text-orange-500">£</span>
               <Input
                 id="maxRent"
+                name="maxRent"
                 type="number"
                 value={propertyPreferences.maxRent}
                 onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
@@ -86,6 +89,7 @@ const PropertyDetailsStep = ({
               <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
               <Input
                 id="moveInDate"
+                name="moveInDate"
                 type="date"
                 value={propertyPreferences.moveInDate}
                 onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
@@ -104,6 +108,7 @@ const PropertyDetailsStep = ({
               <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
               <Input
                 id="latestMoveInDate"
+                name="latestMoveInDate"
                 type="date"
                 value={propertyPreferences.latestMoveInDate}
                 onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
@@ -121,10 +126,10 @@ const PropertyDetailsStep = ({
               value={propertyPreferences.initialTenancyTerm} 
               onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
             >
-              <SelectTrigger id="initialTenancyTerm" className="form-select border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+              <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-select border-gray-300 focus:border-orange-500 focus:ring-orange-500">
                 <SelectValue placeholder="Please select an option" />
               </SelectTrigger>
-              <SelectContent className="bg-white border-gray-300">
+              <SelectContent className="bg-white border-gray-300 z-50">
                 <SelectItem value="6 months">6 months</SelectItem>
                 <SelectItem value="1 year">1 year</SelectItem>
                 <SelectItem value="18 months">18 months</SelectItem>

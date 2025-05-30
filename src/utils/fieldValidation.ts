@@ -1,9 +1,23 @@
-export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
-  const element = document.getElementById(elementId) || document.querySelector(`[name="${elementId}"]`);
-  if (!element) return;
 
-  // Add red border classes with transition
-  element.classList.add('border-red-500', 'border-2', 'transition-all', 'duration-500');
+export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
+  // Try multiple selectors to find the element
+  let element = document.getElementById(elementId) || 
+                document.querySelector(`[name="${elementId}"]`) ||
+                document.querySelector(`input[id="${elementId}"]`) ||
+                document.querySelector(`select[id="${elementId}"]`) ||
+                document.querySelector(`textarea[id="${elementId}"]`);
+  
+  if (!element) {
+    console.log(`Element not found for ID: ${elementId}`);
+    return;
+  }
+
+  console.log(`Highlighting field: ${elementId}`);
+  
+  // Add red border classes with transition - using !important to override existing styles
+  element.style.border = '2px solid #ef4444 !important';
+  element.style.transition = 'all 0.3s ease';
+  element.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.1)';
   
   // Only scroll to the first element
   if (shouldScroll) {
@@ -12,11 +26,12 @@ export const highlightInvalidField = (elementId: string, shouldScroll: boolean =
   
   // Remove the red border after 2 seconds with fade effect
   setTimeout(() => {
-    element.classList.remove('border-red-500', 'border-2');
-    // Remove transition class after animation completes
+    element.style.border = '';
+    element.style.boxShadow = '';
+    // Remove transition after animation completes
     setTimeout(() => {
-      element.classList.remove('transition-all', 'duration-500');
-    }, 500);
+      element.style.transition = '';
+    }, 300);
   }, 2000);
 };
 
@@ -86,15 +101,17 @@ export const validateAndHighlightFields = (
 export const handleValidationErrors = (invalidFields: string[]) => {
   if (invalidFields.length === 0) return;
 
+  console.log('Invalid fields:', invalidFields);
+
   // Immediately scroll to and highlight the first invalid field
   highlightInvalidField(invalidFields[0], true);
 
-  // After 1 second, highlight all other invalid fields (without scrolling)
+  // After 0.5 seconds, highlight all other invalid fields (without scrolling)
   if (invalidFields.length > 1) {
     setTimeout(() => {
       invalidFields.slice(1).forEach(fieldId => {
         highlightInvalidField(fieldId, false);
       });
-    }, 1000);
+    }, 500);
   }
 };
