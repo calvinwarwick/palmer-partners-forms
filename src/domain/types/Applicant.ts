@@ -1,4 +1,5 @@
 
+
 export interface Applicant {
   id: string;
   firstName: string;
@@ -25,6 +26,26 @@ export interface Applicant {
   adverseCredit?: string;
   adverseCreditDetails?: string;
   guarantorRequired?: string;
+  // Employment fields
+  employmentStatus?: string;
+  employer?: string;
+  employmentStartDate?: string;
+  contractType?: string;
+  probationPeriod?: string;
+  probationEndDate?: string;
+  // Current address fields
+  currentAddress?: string;
+  currentPostcode?: string;
+  residencyStatus?: string;
+  timeAtAddress?: string;
+  landlordName?: string;
+  landlordPhone?: string;
+  rentUpToDate?: string;
+  rentArrearsDetails?: string;
+  noticePeriod?: string;
+  noticePeriodLength?: string;
+  previousLandlordName?: string;
+  previousLandlordPhone?: string;
 }
 
 export interface PropertyPreferences {
@@ -40,16 +61,24 @@ export interface PropertyPreferences {
 }
 
 export interface AdditionalDetails {
-  ukPassport: string;
-  adverseCredit: string;
-  adverseCreditDetails: string;
-  guarantorRequired: string;
-  pets: string;
+  moveInDate: string;
+  tenancyLength: string;
+  pets: boolean;
   petDetails: string;
-  under18Count: string;
-  childrenAges: string;
-  conditionsOfOffer: string;
-  depositType: string;
+  smoking: boolean;
+  parking: boolean;
+  children: boolean;
+  childrenDetails: string;
+  additionalRequests: string;
+  householdIncome: string;
+  ukPassport?: string;
+  adverseCredit?: string;
+  adverseCreditDetails?: string;
+  guarantorRequired?: string;
+  under18Count?: string;
+  childrenAges?: string;
+  conditionsOfOffer?: string;
+  depositType?: string;
   guarantorDetails?: string;
 }
 
@@ -63,3 +92,4 @@ export interface Application {
   };
   signature: string;
 }
+
