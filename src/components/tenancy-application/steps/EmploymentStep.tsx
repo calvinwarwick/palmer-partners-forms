@@ -1,10 +1,12 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle, User } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { User, Briefcase, Building, Calendar, PoundSterling } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface EmploymentStepProps {
@@ -17,12 +19,12 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
     <div className="space-y-8">
       <div>
         <h3 className="text-2xl font-bold text-dark-grey mb-2">Employment Information</h3>
-        <p className="text-light-grey mb-4">Please provide employment details for all applicants</p>
+        <p className="text-light-grey mb-4">Tell us about your employment situation</p>
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
-
+      
       {applicants.map((applicant, index) => (
-        <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
+        <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
           <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
             <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
               <div className="p-2 bg-white/20 rounded-lg">
@@ -37,107 +39,161 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Employment Status */}
-              <div className="md:col-span-2">
-                <Label className="text-sm font-medium text-gray-700 mb-2 block flex items-center">
-                  Employment Status <span className="text-red-500 ml-1">*</span>
+            {/* Employment Status */}
+            <div className="space-y-2">
+              <Label htmlFor={`employmentStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                Employment Status <span className="text-red-500">*</span>
+              </Label>
+              <Select value={applicant.employmentStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "employmentStatus", value)}>
+                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                  <SelectValue placeholder="Select employment status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="employed">Employed</SelectItem>
+                  <SelectItem value="self-employed">Self-Employed</SelectItem>
+                  <SelectItem value="unemployed">Unemployed</SelectItem>
+                  <SelectItem value="student">Student</SelectItem>
+                  <SelectItem value="retired">Retired</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Employment Details for Employed/Self-employed */}
+            {(applicant.employmentStatus === "employed" || applicant.employmentStatus === "self-employed") && (
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Job Title <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="job-title-container">
+                      <Briefcase className="job-title-icon h-4 w-4 text-orange-500" />
+                      <Input
+                        id={`jobTitle-${applicant.id}`}
+                        value={applicant.jobTitle || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
+                        placeholder="Enter job title"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`employer-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Employer/Company <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="employer-container">
+                      <Building className="employer-icon h-4 w-4 text-orange-500" />
+                      <Input
+                        id={`employer-${applicant.id}`}
+                        value={applicant.employer || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "employer", e.target.value)}
+                        placeholder="Enter employer/company name"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor={`annualIncome-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Annual Income (£) <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="income-container">
+                      <PoundSterling className="income-icon h-4 w-4 text-orange-500" />
+                      <Input
+                        id={`annualIncome-${applicant.id}`}
+                        type="number"
+                        value={applicant.annualIncome || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
+                        placeholder="Enter annual income"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`employmentStartDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Employment Start Date <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="date-input-container">
+                      <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+                      <Input
+                        id={`employmentStartDate-${applicant.id}`}
+                        type="date"
+                        value={applicant.employmentStartDate || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "employmentStartDate", e.target.value)}
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Contract Type for Employed */}
+            {applicant.employmentStatus === "employed" && (
+              <div className="space-y-2">
+                <Label htmlFor={`contractType-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                  Contract Type <span className="text-red-500">*</span>
                 </Label>
-                <Select value={applicant.employment} onValueChange={(value) => onUpdateApplicant(applicant.id, "employment", value)}>
-                  <SelectTrigger id={`employment-${applicant.id}`} className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500">
-                    <SelectValue placeholder="Select employment status" />
+                <Select value={applicant.contractType} onValueChange={(value) => onUpdateApplicant(applicant.id, "contractType", value)}>
+                  <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                    <SelectValue placeholder="Select contract type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Full Time">Full Time Employment</SelectItem>
-                    <SelectItem value="Part Time">Part Time Employment</SelectItem>
-                    <SelectItem value="Self Employed">Self Employed</SelectItem>
-                    <SelectItem value="Contract">Contract Work</SelectItem>
-                    <SelectItem value="Retired">Retired</SelectItem>
-                    <SelectItem value="Student">Student</SelectItem>
-                    <SelectItem value="Unemployed">Unemployed</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    <SelectItem value="permanent">Permanent</SelectItem>
+                    <SelectItem value="fixed-term">Fixed Term</SelectItem>
+                    <SelectItem value="contract">Contract</SelectItem>
+                    <SelectItem value="zero-hours">Zero Hours</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
+            )}
 
-              {/* Self Employment Alert */}
-              {applicant.employment === "Self Employed" && (
-                <div className="md:col-span-2">
-                  <Alert className="bg-light-grey/10 border-light-grey/20">
-                    <AlertTriangle className="h-4 w-4 text-light-grey" />
-                    <AlertDescription className="text-black">
-                      <span className="font-medium text-black">Self-employed applicants:</span>
-                      <span className="text-light-grey"> You may be required to provide additional documentation such as SA302 forms, accountant references, or bank statements.</span>
-                    </AlertDescription>
-                  </Alert>
+            {/* Additional Employment Questions */}
+            <div className="border-t border-gray-200 pt-6">
+              <h4 className="text-lg font-semibold text-dark-grey mb-4">Additional Employment Details</h4>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Switch
+                      checked={applicant.probationPeriod === "yes"}
+                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "probationPeriod", checked ? "yes" : "no")}
+                    />
+                    <Label 
+                      className="form-label text-gray-700 font-medium cursor-pointer"
+                      onClick={() => onUpdateApplicant(applicant.id, "probationPeriod", applicant.probationPeriod === "yes" ? "no" : "yes")}
+                    >
+                      Are you currently in a probation period? <span className="text-red-500">*</span>
+                    </Label>
+                  </div>
                 </div>
-              )}
 
-              {/* Company Name */}
-              {applicant.employment !== "Unemployed" && applicant.employment !== "Retired" && applicant.employment !== "Student" && (
-                <div>
-                  <Label htmlFor={`companyName-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">
-                    Company/Organisation Name
-                  </Label>
-                  <Input
-                    id={`companyName-${applicant.id}`}
-                    value={applicant.companyName}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
-                    placeholder="Enter company name"
-                    className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
-              )}
-
-              {/* Job Title */}
-              {applicant.employment !== "Unemployed" && applicant.employment !== "Retired" && applicant.employment !== "Student" && (
-                <div>
-                  <Label htmlFor={`jobTitle-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">
-                    Job Title/Position
-                  </Label>
-                  <Input
-                    id={`jobTitle-${applicant.id}`}
-                    value={applicant.jobTitle}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
-                    placeholder="Enter job title"
-                    className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
-              )}
-
-              {/* Annual Income */}
-              <div>
-                <Label htmlFor={`annualIncome-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block flex items-center">
-                  Annual Income <span className="text-red-500 ml-1">*</span>
-                </Label>
-                <div className="currency-input-container">
-                  <span className="currency-input-icon text-orange-500">£</span>
-                  <Input
-                    id={`annualIncome-${applicant.id}`}
-                    type="number"
-                    value={applicant.annualIncome}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
-                    placeholder="e.g., 35000"
-                    className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
+                {applicant.probationPeriod === "yes" && (
+                  <div className="space-y-2">
+                    <Label htmlFor={`probationEndDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Probation End Date:
+                    </Label>
+                    <Input
+                      id={`probationEndDate-${applicant.id}`}
+                      type="date"
+                      value={applicant.probationEndDate || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "probationEndDate", e.target.value)}
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    />
+                  </div>
+                )}
               </div>
-
-              {/* Length of Service */}
-              {applicant.employment !== "Unemployed" && applicant.employment !== "Retired" && applicant.employment !== "Student" && (
-                <div>
-                  <Label htmlFor={`lengthOfService-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-2 block">
-                    Length of Service
-                  </Label>
-                  <Input
-                    id={`lengthOfService-${applicant.id}`}
-                    value={applicant.lengthOfService}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
-                    placeholder="e.g., 2 years 6 months"
-                    className="bg-white border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  />
-                </div>
-              )}
             </div>
           </CardContent>
         </Card>
