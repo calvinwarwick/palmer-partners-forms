@@ -54,8 +54,12 @@ const TermsAndDataStep = ({
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="utilities" className="font-medium">
+            <div className="flex-1 mr-4">
+              <Label 
+                htmlFor="utilities" 
+                className="font-medium cursor-pointer"
+                onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
+              >
                 I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
               </Label>
             </div>
@@ -67,8 +71,12 @@ const TermsAndDataStep = ({
           </div>
           
           <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="insurance" className="font-medium">
+            <div className="flex-1 mr-4">
+              <Label 
+                htmlFor="insurance" 
+                className="font-medium cursor-pointer"
+                onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
+              >
                 I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
               </Label>
             </div>
@@ -203,7 +211,7 @@ const TermsAndDataStep = ({
               checked={termsAccepted}
               onCheckedChange={onTermsChange}
             />
-            <Label htmlFor="terms" className="text-sm">
+            <Label htmlFor="terms" className="text-sm cursor-pointer">
               I confirm that I have read and understood the terms and conditions and I am bound by their contents
             </Label>
           </div>
