@@ -139,7 +139,10 @@ const PersonalInfoStep = ({
                       checked={applicant.ukPassport === "yes"}
                       onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "ukPassport", checked ? "yes" : "no")}
                     />
-                    <Label className="form-label text-gray-700 font-medium">
+                    <Label 
+                      className="form-label text-gray-700 font-medium cursor-pointer"
+                      onClick={() => onUpdateApplicant(applicant.id, "ukPassport", applicant.ukPassport === "yes" ? "no" : "yes")}
+                    >
                       Do you hold a UK or Republic of Ireland passport? <span className="text-red-500">*</span>
                     </Label>
                   </div>
@@ -153,7 +156,10 @@ const PersonalInfoStep = ({
                         onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "adverseCredit", checked ? "yes" : "no")}
                       />
                       <div className="flex-1">
-                        <Label className="form-label text-gray-700 font-medium">
+                        <Label 
+                          className="form-label text-gray-700 font-medium cursor-pointer"
+                          onClick={() => onUpdateApplicant(applicant.id, "adverseCredit", applicant.adverseCredit === "yes" ? "no" : "yes")}
+                        >
                           Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
                         </Label>
                       </div>
@@ -184,7 +190,10 @@ const PersonalInfoStep = ({
                       onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
                     />
                     <div className="flex-1 pr-4">
-                      <Label className="form-label text-gray-700 font-medium">
+                      <Label 
+                        className="form-label text-gray-700 font-medium cursor-pointer"
+                        onClick={() => onUpdateApplicant(applicant.id, "guarantorRequired", applicant.guarantorRequired === "yes" ? "no" : "yes")}
+                      >
                         If required, can you supply a guarantor for this proposed tenancy? <span className="text-red-500">*</span>
                       </Label>
                     </div>

@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -211,7 +210,11 @@ const TermsAndDataStep = ({
               checked={termsAccepted}
               onCheckedChange={onTermsChange}
             />
-            <Label htmlFor="terms" className="text-sm cursor-pointer">
+            <Label 
+              htmlFor="terms" 
+              className="text-sm cursor-pointer"
+              onClick={() => onTermsChange(!termsAccepted)}
+            >
               I confirm that I have read and understood the terms and conditions and I am bound by their contents
             </Label>
           </div>
