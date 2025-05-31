@@ -25,7 +25,7 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
               <p className="text-sm text-gray-600 mt-1">Please ensure you provide details for each applicant below.</p>
             </div>
             <Select
-              value={applicantCount > 0 ? applicantCount.toString() : ""}
+              value={applicantCount === 0 ? "" : applicantCount.toString()}
               onValueChange={(value) => onApplicantCountChange(parseInt(value))}
             >
               <SelectTrigger 
