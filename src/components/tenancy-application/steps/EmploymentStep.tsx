@@ -64,6 +64,23 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
+                    <Label htmlFor={`companyName-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Company Name <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="employer-container">
+                      <Building className="employer-icon h-4 w-4 text-orange-500" />
+                      <Input
+                        id={`companyName-${applicant.id}`}
+                        value={applicant.companyName || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
+                        placeholder="Enter company name"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
                     <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Job Title <span className="text-red-500">*</span>
                     </Label>
@@ -80,17 +97,39 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                       />
                     </div>
                   </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor={`employer-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                      Employer/Company <span className="text-red-500">*</span>
+                    <Label htmlFor={`annualIncome-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Annual Salary (£) <span className="text-red-500">*</span>
                     </Label>
-                    <div className="employer-container">
-                      <Building className="employer-icon h-4 w-4 text-orange-500" />
+                    <p className="text-sm text-gray-500 mb-2">This should be your basic salary excluding bonuses, commission, overtime etc.</p>
+                    <div className="income-container">
+                      <PoundSterling className="income-icon h-4 w-4 text-orange-500" />
                       <Input
-                        id={`employer-${applicant.id}`}
-                        value={applicant.employer || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "employer", e.target.value)}
-                        placeholder="Enter employer/company name"
+                        id={`annualIncome-${applicant.id}`}
+                        type="number"
+                        value={applicant.annualIncome || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
+                        placeholder="Enter annual salary"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Length of Service <span className="text-red-500">*</span>
+                    </Label>
+                    <div className="service-length-container">
+                      <Calendar className="service-length-icon h-4 w-4 text-orange-500" />
+                      <Input
+                        id={`lengthOfService-${applicant.id}`}
+                        value={applicant.lengthOfService || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
+                        placeholder="e.g. 2 years 3 months"
                         className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                         required
@@ -99,41 +138,21 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor={`annualIncome-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                      Annual Income (£) <span className="text-red-500">*</span>
-                    </Label>
-                    <div className="income-container">
-                      <PoundSterling className="income-icon h-4 w-4 text-orange-500" />
-                      <Input
-                        id={`annualIncome-${applicant.id}`}
-                        type="number"
-                        value={applicant.annualIncome || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
-                        placeholder="Enter annual income"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor={`employmentStartDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                      Employment Start Date <span className="text-red-500">*</span>
-                    </Label>
-                    <div className="date-input-container">
-                      <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                      <Input
-                        id={`employmentStartDate-${applicant.id}`}
-                        type="date"
-                        value={applicant.employmentStartDate || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "employmentStartDate", e.target.value)}
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                        required
-                      />
-                    </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`employmentStartDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                    Employment Start Date <span className="text-red-500">*</span>
+                  </Label>
+                  <div className="date-input-container">
+                    <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+                    <Input
+                      id={`employmentStartDate-${applicant.id}`}
+                      type="date"
+                      value={applicant.employmentStartDate || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "employmentStartDate", e.target.value)}
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                      required
+                    />
                   </div>
                 </div>
               </>
