@@ -110,7 +110,27 @@ const FormProvider = ({ children }: FormProviderProps) => {
       reference1Contact: "",
       pets: "",
       petDetails: "",
-      adverseCreditDetails: ""
+      adverseCreditDetails: "",
+      // Employment fields
+      employmentStatus: "",
+      employer: "",
+      employmentStartDate: "",
+      contractType: "",
+      probationPeriod: "",
+      probationEndDate: "",
+      // Current address fields
+      currentAddress: "",
+      currentPostcode: "",
+      residencyStatus: "",
+      timeAtAddress: "",
+      landlordName: "",
+      landlordPhone: "",
+      rentUpToDate: "",
+      rentArrearsDetails: "",
+      noticePeriod: "",
+      noticePeriodLength: "",
+      previousLandlordName: "",
+      previousLandlordPhone: ""
     }
   ]);
 
@@ -162,7 +182,27 @@ const FormProvider = ({ children }: FormProviderProps) => {
         reference1Contact: "",
         pets: "",
         petDetails: "",
-        adverseCreditDetails: ""
+        adverseCreditDetails: "",
+        // Employment fields
+        employmentStatus: "",
+        employer: "",
+        employmentStartDate: "",
+        contractType: "",
+        probationPeriod: "",
+        probationEndDate: "",
+        // Current address fields
+        currentAddress: "",
+        currentPostcode: "",
+        residencyStatus: "",
+        timeAtAddress: "",
+        landlordName: "",
+        landlordPhone: "",
+        rentUpToDate: "",
+        rentArrearsDetails: "",
+        noticePeriod: "",
+        noticePeriodLength: "",
+        previousLandlordName: "",
+        previousLandlordPhone: ""
       };
       setApplicants([...applicants, newApplicant]);
     }
@@ -202,7 +242,27 @@ const FormProvider = ({ children }: FormProviderProps) => {
           reference1Contact: "",
           pets: "",
           petDetails: "",
-          adverseCreditDetails: ""
+          adverseCreditDetails: "",
+          // Employment fields
+          employmentStatus: "",
+          employer: "",
+          employmentStartDate: "",
+          contractType: "",
+          probationPeriod: "",
+          probationEndDate: "",
+          // Current address fields
+          currentAddress: "",
+          currentPostcode: "",
+          residencyStatus: "",
+          timeAtAddress: "",
+          landlordName: "",
+          landlordPhone: "",
+          rentUpToDate: "",
+          rentArrearsDetails: "",
+          noticePeriod: "",
+          noticePeriodLength: "",
+          previousLandlordName: "",
+          previousLandlordPhone: ""
         });
       }
       setApplicants(newApplicants);
