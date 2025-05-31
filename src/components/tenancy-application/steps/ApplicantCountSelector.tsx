@@ -25,21 +25,21 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
               <p className="text-sm text-gray-600 mt-1">Please ensure you provide details for each applicant below.</p>
             </div>
             <Select
-              value={applicantCount.toString()}
+              value={applicantCount > 0 ? applicantCount.toString() : ""}
               onValueChange={(value) => onApplicantCountChange(parseInt(value))}
             >
               <SelectTrigger 
                 id="applicantCount" 
                 className="focus:ring-orange-500 focus:border-orange-500 bg-white"
               >
-                <SelectValue placeholder="Please select an option" />
+                <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1" className="pl-4">1 Applicant</SelectItem>
-                <SelectItem value="2" className="pl-4">2 Applicants</SelectItem>
-                <SelectItem value="3" className="pl-4">3 Applicants</SelectItem>
-                <SelectItem value="4" className="pl-4">4 Applicants</SelectItem>
-                <SelectItem value="5" className="pl-4">5 Applicants</SelectItem>
+                <SelectItem value="1" className="pl-4 [&>span:first-child]:hidden">1 Applicant</SelectItem>
+                <SelectItem value="2" className="pl-4 [&>span:first-child]:hidden">2 Applicants</SelectItem>
+                <SelectItem value="3" className="pl-4 [&>span:first-child]:hidden">3 Applicants</SelectItem>
+                <SelectItem value="4" className="pl-4 [&>span:first-child]:hidden">4 Applicants</SelectItem>
+                <SelectItem value="5" className="pl-4 [&>span:first-child]:hidden">5 Applicants</SelectItem>
               </SelectContent>
             </Select>
           </div>
