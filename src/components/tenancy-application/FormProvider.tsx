@@ -17,12 +17,23 @@ export interface FormContextType {
   isLastStep: boolean;
   goToNext: () => void;
   goToPrevious: () => void;
-  canProceed: (step: number, applicants: Applicant[], propertyPreferences: PropertyPreferences, additionalDetails: AdditionalDetails, signature: string, termsAccepted: boolean) => boolean;
+  canProceed: (step: number, applicants: Applicant[], propertyPreferences: PropertyPreferences, additionalDetails: any, signature: string, termsAccepted: boolean) => boolean;
   
   // Form state
   propertyPreferences: PropertyPreferences;
   applicants: Applicant[];
-  additionalDetails: AdditionalDetails;
+  additionalDetails: {
+    moveInDate: string;
+    tenancyLength: string;
+    pets: boolean;
+    petDetails: string;
+    smoking: boolean;
+    parking: boolean;
+    children: boolean;
+    childrenDetails: string;
+    additionalRequests: string;
+    householdIncome: string;
+  };
   dataSharing: { utilities: boolean; insurance: boolean };
   signature: string;
   fullName: string;
@@ -33,7 +44,7 @@ export interface FormContextType {
   // Form actions
   updatePropertyPreferences: (field: keyof PropertyPreferences, value: string) => void;
   updateApplicant: (id: string, field: keyof Applicant, value: string) => void;
-  updateAdditionalDetails: (field: keyof AdditionalDetails, value: string) => void;
+  updateAdditionalDetails: (field: string, value: string | boolean) => void;
   updateDataSharing: (field: 'utilities' | 'insurance', value: boolean) => void;
   setSignature: (signature: string) => void;
   setFullName: (name: string) => void;
@@ -103,18 +114,17 @@ const FormProvider = ({ children }: FormProviderProps) => {
     }
   ]);
 
-  const [additionalDetails, setAdditionalDetails] = useState<AdditionalDetails>({
-    ukPassport: "",
-    adverseCredit: "",
-    adverseCreditDetails: "",
-    guarantorRequired: "",
-    pets: "",
+  const [additionalDetails, setAdditionalDetails] = useState({
+    moveInDate: "",
+    tenancyLength: "",
+    pets: false,
     petDetails: "",
-    under18Count: "",
-    childrenAges: "",
-    conditionsOfOffer: "",
-    depositType: "",
-    guarantorDetails: ""
+    smoking: false,
+    parking: false,
+    children: false,
+    childrenDetails: "",
+    additionalRequests: "",
+    householdIncome: ""
   });
 
   const [dataSharing, setDataSharing] = useState({
@@ -211,7 +221,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
     setPropertyPreferences(prev => ({ ...prev, [field]: value }));
   };
 
-  const updateAdditionalDetails = (field: keyof AdditionalDetails, value: string) => {
+  const updateAdditionalDetails = (field: string, value: string | boolean) => {
     setAdditionalDetails(prev => ({ ...prev, [field]: value }));
   };
 
@@ -266,9 +276,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
         reference1Contact: "mike.johnson@techsolutions.com",
         pets: "yes",
         petDetails: "1 cat",
-        ukPassport: "yes",
-        adverseCredit: "no",
-        guarantorRequired: "no"
+        adverseCreditDetails: ""
       },
       {
         firstName: "Sarah",
@@ -291,9 +299,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
         reference1Contact: "lisa.brown@designstudio.com",
         pets: "no",
         petDetails: "",
-        ukPassport: "yes",
-        adverseCredit: "no",
-        guarantorRequired: "no"
+        adverseCreditDetails: ""
       }
     ];
 
@@ -305,17 +311,16 @@ const FormProvider = ({ children }: FormProviderProps) => {
     }));
 
     setAdditionalDetails({
-      ukPassport: "yes",
-      adverseCredit: "no",
-      adverseCreditDetails: "",
-      guarantorRequired: "no",
-      pets: "yes",
+      moveInDate: "2024-06-01",
+      tenancyLength: "12-months",
+      pets: true,
       petDetails: "1 cat",
-      under18Count: "0",
-      childrenAges: "",
-      conditionsOfOffer: "Standard conditions accepted",
-      depositType: "traditional",
-      guarantorDetails: ""
+      smoking: false,
+      parking: true,
+      children: false,
+      childrenDetails: "",
+      additionalRequests: "Pet-friendly property preferred",
+      householdIncome: "85000"
     });
 
     setSignature("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==");

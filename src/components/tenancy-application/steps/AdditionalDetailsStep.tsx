@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Heart, Car, Baby, PawPrint, Calendar, Building, DollarSign } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
-import PetDetails from "./PetDetails";
+import { PetDetails } from "./PetDetails";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: {
@@ -201,8 +201,10 @@ const AdditionalDetailsStep = ({
 
           {additionalDetails.pets && (
             <PetDetails
+              pets={additionalDetails.pets ? "yes" : "no"}
               petDetails={additionalDetails.petDetails}
-              onUpdatePetDetails={(details) => onUpdateDetails("petDetails", details)}
+              onPetsChange={(value) => onUpdateDetails("pets", value === "yes")}
+              onPetDetailsChange={(details) => onUpdateDetails("petDetails", details)}
             />
           )}
         </CardContent>
