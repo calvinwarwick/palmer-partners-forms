@@ -35,11 +35,11 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
                 <SelectValue placeholder="Please select an option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="1">1 Applicant</SelectItem>
-                <SelectItem value="2">2 Applicants</SelectItem>
-                <SelectItem value="3">3 Applicants</SelectItem>
-                <SelectItem value="4">4 Applicants</SelectItem>
-                <SelectItem value="5">5 Applicants</SelectItem>
+                <SelectItem value="1" className="pl-4">1 Applicant</SelectItem>
+                <SelectItem value="2" className="pl-4">2 Applicants</SelectItem>
+                <SelectItem value="3" className="pl-4">3 Applicants</SelectItem>
+                <SelectItem value="4" className="pl-4">4 Applicants</SelectItem>
+                <SelectItem value="5" className="pl-4">5 Applicants</SelectItem>
               </SelectContent>
             </Select>
           </div>
