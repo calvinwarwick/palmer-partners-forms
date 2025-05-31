@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, CheckCircle, TestTube } from "lucide-react";
+import { ChevronLeft, ChevronRight, Send, TestTube, Trash2 } from "lucide-react";
 
 interface NavigationButtonsProps {
   isFirstStep: boolean;
@@ -10,7 +10,8 @@ interface NavigationButtonsProps {
   onPrevious: () => void;
   onNext: () => void;
   onSubmit: () => void;
-  onFillTestData: () => void;
+  onFillTestData?: () => void;
+  onClearData?: () => void;
 }
 
 const NavigationButtons = ({
@@ -21,60 +22,81 @@ const NavigationButtons = ({
   onPrevious,
   onNext,
   onSubmit,
-  onFillTestData
+  onFillTestData,
+  onClearData
 }: NavigationButtonsProps) => {
   return (
-    <div className="flex justify-between items-center mt-12 pt-8 border-t border-gray-100">
-      {!isFirstStep ? (
-        <Button
-          variant="outline"
-          onClick={onPrevious}
-          disabled={isSubmitting}
-          className="bg-white border-gray-300 text-gray-800 hover:bg-gray-50 hover:border-orange-500 hover:text-black px-8 py-3 font-medium font-lexend"
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Back
-        </Button>
-      ) : (
-        <div></div>
-      )}
-      
-      <div className="flex gap-3">
-        <Button
-          variant="outline"
-          onClick={onFillTestData}
-          className="bg-white border-orange-200 text-orange-600 hover:bg-orange-50 hover:border-orange-500 hover:text-orange-600 px-6 py-3 font-medium font-lexend"
-        >
-          <TestTube className="h-4 w-4 mr-2" />
-          Fill All Data
-        </Button>
-        
-        {!isLastStep ? (
+    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-200">
+      {/* Left side - Previous button */}
+      <div className="flex-1 flex justify-start">
+        {!isFirstStep && (
           <Button
-            onClick={onNext}
-            disabled={isSubmitting}
-            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold transition-all duration-200 font-lexend"
+            variant="outline"
+            onClick={onPrevious}
+            className="flex items-center gap-2 text-gray-600 border-gray-300 hover:bg-gray-50"
+            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
           >
-            Next
-            <ArrowRight className="h-4 w-4 ml-2" />
+            <ChevronLeft className="h-4 w-4" />
+            Previous
           </Button>
-        ) : (
+        )}
+      </div>
+
+      {/* Center - Test Data and Clear buttons */}
+      <div className="flex gap-2">
+        {onFillTestData && (
+          <Button 
+            variant="outline" 
+            onClick={onFillTestData}
+            className="text-orange-600 border-orange-300 hover:bg-orange-50 flex items-center gap-2"
+            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+          >
+            <TestTube className="h-4 w-4" />
+            Fill Test Data
+          </Button>
+        )}
+        {onClearData && (
+          <Button 
+            variant="outline" 
+            onClick={onClearData}
+            className="text-red-600 border-red-300 hover:bg-red-50 flex items-center gap-2"
+            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+          >
+            <Trash2 className="h-4 w-4" />
+            Clear Data
+          </Button>
+        )}
+      </div>
+
+      {/* Right side - Next/Submit button */}
+      <div className="flex-1 flex justify-end">
+        {isLastStep ? (
           <Button
             onClick={onSubmit}
             disabled={!canSubmit || isSubmitting}
-            className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-10 py-3 font-semibold transition-all duration-200 font-lexend"
+            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
           >
             {isSubmitting ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                 Submitting...
               </>
             ) : (
               <>
+                <Send className="h-4 w-4" />
                 Submit Application
-                <CheckCircle className="h-4 w-4 ml-2" />
               </>
             )}
+          </Button>
+        ) : (
+          <Button
+            onClick={onNext}
+            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
+            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+          >
+            Next
+            <ChevronRight className="h-4 w-4" />
           </Button>
         )}
       </div>

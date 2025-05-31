@@ -143,7 +143,7 @@ const PersonalInfoStep = ({
                       className="form-label text-gray-700 font-medium cursor-pointer"
                       onClick={() => onUpdateApplicant(applicant.id, "ukPassport", applicant.ukPassport === "yes" ? "no" : "yes")}
                     >
-                      Do you hold a UK or Republic of Ireland passport? <span className="text-red-500">*</span>
+                      Do you hold a UK or Republic of Ireland passport?
                     </Label>
                   </div>
                 </div>
@@ -160,7 +160,7 @@ const PersonalInfoStep = ({
                           className="form-label text-gray-700 font-medium cursor-pointer"
                           onClick={() => onUpdateApplicant(applicant.id, "adverseCredit", applicant.adverseCredit === "yes" ? "no" : "yes")}
                         >
-                          Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy? <span className="text-red-500">*</span>
+                          Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
                         </Label>
                       </div>
                     </div>
@@ -175,29 +175,32 @@ const PersonalInfoStep = ({
                         id={`adverseCreditDetails-${applicant.id}`}
                         value={applicant.adverseCreditDetails || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
-                        placeholder="Please provide details about your adverse credit history..."
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[140px]"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       />
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={applicant.guarantorRequired === "yes"}
-                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
-                    />
-                    <div className="flex-1 pr-4">
-                      <Label 
-                        className="form-label text-gray-700 font-medium cursor-pointer"
-                        onClick={() => onUpdateApplicant(applicant.id, "guarantorRequired", applicant.guarantorRequired === "yes" ? "no" : "yes")}
-                      >
-                        If required, can you supply a guarantor for this proposed tenancy? <span className="text-red-500">*</span>
-                      </Label>
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={applicant.guarantorRequired === "yes"}
+                        onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "guarantorRequired", checked ? "yes" : "no")}
+                      />
+                      <div className="flex-1">
+                        <Label 
+                          className="form-label text-gray-700 font-medium cursor-pointer"
+                          onClick={() => onUpdateApplicant(applicant.id, "guarantorRequired", applicant.guarantorRequired === "yes" ? "no" : "yes")}
+                        >
+                          If required, can you supply a guarantor for this proposed tenancy?
+                        </Label>
+                      </div>
                     </div>
-                    {applicant.guarantorRequired === "yes" && (
+                  </div>
+                  {applicant.guarantorRequired === "yes" && (
+                    <div className="mt-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -208,8 +211,8 @@ const PersonalInfoStep = ({
                         <Shield className="h-4 w-4 mr-1" />
                         Add Guarantor
                       </Button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

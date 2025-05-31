@@ -67,14 +67,14 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     <Label htmlFor={`companyName-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Company Name <span className="text-red-500">*</span>
                     </Label>
-                    <div className="employer-container">
-                      <Building className="employer-icon h-4 w-4 text-orange-500" />
+                    <div className="relative">
+                      <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500" />
                       <Input
                         id={`companyName-${applicant.id}`}
                         value={applicant.companyName || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
                         placeholder="Enter company name"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                         required
                       />
@@ -84,14 +84,14 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Job Title <span className="text-red-500">*</span>
                     </Label>
-                    <div className="job-title-container">
-                      <Briefcase className="job-title-icon h-4 w-4 text-orange-500" />
+                    <div className="relative">
+                      <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500" />
                       <Input
                         id={`jobTitle-${applicant.id}`}
                         value={applicant.jobTitle || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
                         placeholder="Enter job title"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                         required
                       />
@@ -105,15 +105,15 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                       Annual Salary (£) <span className="text-red-500">*</span>
                     </Label>
                     <p className="text-sm text-gray-500 mb-2">This should be your basic salary excluding bonuses, commission, overtime etc.</p>
-                    <div className="income-container">
-                      <PoundSterling className="income-icon h-4 w-4 text-orange-500" />
+                    <div className="relative">
+                      <PoundSterling className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500" />
                       <Input
                         id={`annualIncome-${applicant.id}`}
                         type="number"
                         value={applicant.annualIncome || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                         placeholder="Enter annual salary"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                         required
                       />
@@ -123,14 +123,14 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Length of Service <span className="text-red-500">*</span>
                     </Label>
-                    <div className="service-length-container">
-                      <Calendar className="service-length-icon h-4 w-4 text-orange-500" />
+                    <div className="relative">
+                      <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500" />
                       <Input
                         id={`lengthOfService-${applicant.id}`}
                         value={applicant.lengthOfService || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
                         placeholder="e.g. 2 years 3 months"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                         required
                       />

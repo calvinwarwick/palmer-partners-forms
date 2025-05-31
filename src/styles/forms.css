@@ -41,6 +41,11 @@
   padding: 0.75rem;
 }
 
+/* Remove left padding from select dropdown items */
+[data-radix-select-content] [data-radix-select-item] {
+  padding-left: 0.5rem !important;
+}
+
 /* Improved label styling */
 .form-label {
   @apply block text-sm font-medium text-gray-700 mb-2;
