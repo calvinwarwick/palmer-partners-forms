@@ -69,18 +69,18 @@ export const generateApplicationPDF = async (data: {
   doc.setFillColor(255, 111, 0);
   doc.rect(0, 50, 210, 3, 'F');
 
-  yPosition = 65; // Reduced from 70 to remove spacing
+  yPosition = 65;
 
   // Main title
   doc.setTextColor(33, 33, 33); // Dark grey text
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
-  yPosition += 15; // Reduced from 20 to remove spacing
+  yPosition += 15;
 
   // Helper function to add section header exactly like demo
   const addSectionHeader = (title: string, currentY: number) => {
-    const y = checkPageBreak(currentY + 10); // Reduced from 15
+    const y = checkPageBreak(currentY + 10);
     
     // Dark grey background exactly like demo
     doc.setFillColor(33, 33, 33); // #212121
@@ -92,7 +92,7 @@ export const generateApplicationPDF = async (data: {
     doc.setFont('helvetica', 'bold');
     doc.text(title, 105, y + 4, { align: 'center' });
     
-    return y + 10; // Reduced from 15 to remove spacing under titles
+    return y + 10;
   };
 
   // Helper function for data rows with exact 35% width like demo
@@ -202,6 +202,15 @@ export const generateApplicationPDF = async (data: {
     }
   };
 
+  // Helper function to determine if has pets - handle both boolean and string types
+  const hasPets = () => {
+    const pets = data.additionalDetails?.pets;
+    if (typeof pets === 'boolean') {
+      return pets;
+    }
+    return pets === 'yes';
+  };
+
   // Property Details Section
   yPosition = addSectionHeader('Property Details', yPosition);
   yPosition = addDataRow('Street Address', data.propertyPreferences?.streetAddress || '', yPosition);
@@ -210,7 +219,7 @@ export const generateApplicationPDF = async (data: {
   yPosition = addDataRow('Preferred Move-in Date', formatDate(data.propertyPreferences?.moveInDate || ''), yPosition);
   yPosition = addDataRow('Latest Move-in Date', formatDate(data.propertyPreferences?.latestMoveInDate || ''), yPosition);
   yPosition = addDataRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm || '', yPosition);
-  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets === 'yes' ? 'Yes' : 'No', yPosition);
+  yPosition = addDataRow('Has Pets', hasPets() ? 'Yes' : 'No', yPosition);
   yPosition = addDataRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
   if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
     yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
@@ -253,7 +262,7 @@ export const generateApplicationPDF = async (data: {
       yPosition = addDataRow('Adverse Credit Details', applicant.adverseCreditDetails, yPosition);
     }
     yPosition = addDataRow('Requires Guarantor', applicant.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
-    if (data.additionalDetails?.pets === 'yes' && data.additionalDetails?.petDetails) {
+    if (hasPets() && data.additionalDetails?.petDetails) {
       yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
     }
   });
