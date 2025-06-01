@@ -20,6 +20,23 @@ export interface Applicant {
   lengthOfService?: string;
   employmentStartDate?: string;
   contractType?: string;
+  
+  // Current Address Information
+  currentAddress?: string;
+  currentPostcode?: string;
+  residencyStatus?: string;
+  timeAtAddress?: string;
+  landlordName?: string;
+  landlordPhone?: string;
+  rentUpToDate?: string;
+  rentArrearsDetails?: string;
+  noticePeriod?: string;
+  noticePeriodLength?: string;
+  
+  // Previous Address Information
+  previousAddress?: string;
+  previousLandlordName?: string;
+  previousLandlordPhone?: string;
 }
 
 export interface PropertyPreferences {

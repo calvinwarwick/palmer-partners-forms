@@ -160,9 +160,6 @@ const PersonalInfoStep = ({
 
                 {/* Passport Photo Upload */}
                 <div className="space-y-2">
-                  <Label className="form-label text-gray-700 font-medium">
-                    Passport Photo Upload
-                  </Label>
                   <div className="flex items-center gap-4">
                     <input
                       type="file"
