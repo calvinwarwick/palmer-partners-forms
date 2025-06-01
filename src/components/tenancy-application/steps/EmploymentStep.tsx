@@ -74,8 +74,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.companyName || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
                         placeholder="Enter company name"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', paddingLeft: '2.5rem' }}
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
+                          paddingLeft: '2.75rem' 
+                        }}
                         required
                       />
                     </div>
@@ -91,8 +94,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.jobTitle || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
                         placeholder="Enter job title"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', paddingLeft: '2.5rem' }}
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
+                          paddingLeft: '2.75rem' 
+                        }}
                         required
                       />
                     </div>
@@ -113,8 +119,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.annualIncome || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                         placeholder="Enter annual salary"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', paddingLeft: '2.5rem' }}
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
+                          paddingLeft: '2.75rem' 
+                        }}
                         required
                       />
                     </div>
@@ -130,8 +139,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.lengthOfService || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
                         placeholder="e.g. 2 years 3 months"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', paddingLeft: '2.5rem' }}
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
+                          paddingLeft: '2.75rem' 
+                        }}
                         required
                       />
                     </div>
@@ -177,43 +189,6 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 </Select>
               </div>
             )}
-
-            {/* Additional Employment Questions */}
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-lg font-semibold text-dark-grey mb-4">Additional Employment Details</h4>
-              <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={applicant.probationPeriod === "yes"}
-                      onCheckedChange={(checked) => onUpdateApplicant(applicant.id, "probationPeriod", checked ? "yes" : "no")}
-                    />
-                    <Label 
-                      className="form-label text-gray-700 font-medium cursor-pointer"
-                      onClick={() => onUpdateApplicant(applicant.id, "probationPeriod", applicant.probationPeriod === "yes" ? "no" : "yes")}
-                    >
-                      Are you currently in a probation period? <span className="text-red-500">*</span>
-                    </Label>
-                  </div>
-                </div>
-
-                {applicant.probationPeriod === "yes" && (
-                  <div className="space-y-2">
-                    <Label htmlFor={`probationEndDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                      Probation End Date:
-                    </Label>
-                    <Input
-                      id={`probationEndDate-${applicant.id}`}
-                      type="date"
-                      value={applicant.probationEndDate || ""}
-                      onChange={(e) => onUpdateApplicant(applicant.id, "probationEndDate", e.target.value)}
-                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
           </CardContent>
         </Card>
       ))}
