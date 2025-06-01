@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -152,18 +151,17 @@ const PropertyDetailsStep = ({
 
           <div className="space-y-2">
             <Label htmlFor="initialTenancyTerm" className="form-label text-gray-700 font-medium">
-              Initial Tenancy Term <span className="text-red-500">*</span>
+              Preferred Initial Tenancy Term <span className="text-red-500">*</span>
             </Label>
             <Select value={propertyPreferences.initialTenancyTerm} onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}>
               <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                <SelectValue placeholder="Select tenancy term" />
+                <SelectValue placeholder="Select an option" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="6-months">6 Months</SelectItem>
-                <SelectItem value="12-months">12 Months</SelectItem>
-                <SelectItem value="18-months">18 Months</SelectItem>
-                <SelectItem value="24-months">24 Months</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="1">1 Year</SelectItem>
+                <SelectItem value="2">2 Years</SelectItem>
+                <SelectItem value="3">3 Years</SelectItem>
+                <SelectItem value="4+">4+ Years</SelectItem>
               </SelectContent>
             </Select>
           </div>
