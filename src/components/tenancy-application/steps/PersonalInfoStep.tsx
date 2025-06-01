@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { User, Calendar, Shield } from "lucide-react";
+import { User, Calendar, Shield, Upload } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Switch } from "@/components/ui/switch";
@@ -26,6 +26,16 @@ const PersonalInfoStep = ({
   onApplicantCountChange,
   onGuarantorOpen,
 }: PersonalInfoStepProps) => {
+
+  const handlePassportUpload = (applicantId: string, event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Here you would typically upload the file to your storage service
+      console.log('Uploading passport photo for applicant:', applicantId, file);
+      // For now, we'll just store the filename
+      onUpdateApplicant(applicantId, "passportPhoto", file.name);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -148,6 +158,37 @@ const PersonalInfoStep = ({
                   </div>
                 </div>
 
+                {/* Passport Photo Upload */}
+                <div className="space-y-2">
+                  <Label className="form-label text-gray-700 font-medium">
+                    Passport Photo Upload
+                  </Label>
+                  <div className="flex items-center gap-4">
+                    <input
+                      type="file"
+                      accept=".png,.jpg,.jpeg"
+                      onChange={(e) => handlePassportUpload(applicant.id, e)}
+                      className="hidden"
+                      id={`passport-upload-${applicant.id}`}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => document.getElementById(`passport-upload-${applicant.id}`)?.click()}
+                      className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    >
+                      <Upload className="h-4 w-4 mr-1" />
+                      Upload Passport Photo (Optional)
+                    </Button>
+                    {applicant.passportPhoto && (
+                      <span className="text-sm text-gray-600">
+                        File: {applicant.passportPhoto}
+                      </span>
+                    )}
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-2">
@@ -175,7 +216,7 @@ const PersonalInfoStep = ({
                         id={`adverseCreditDetails-${applicant.id}`}
                         value={applicant.adverseCreditDetails || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "adverseCreditDetails", e.target.value)}
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[140px]"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[160px]"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       />
                     </div>
@@ -209,7 +250,7 @@ const PersonalInfoStep = ({
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       >
                         <Shield className="h-4 w-4 mr-1" />
-                        Add Guarantor
+                        Add Guarantor (Optional)
                       </Button>
                     </div>
                   )}
