@@ -4,9 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { Heart, Car, Baby, PawPrint, Calendar, Building, DollarSign } from "lucide-react";
+import { Heart, PawPrint } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import { PetDetails } from "./PetDetails";
 
@@ -38,15 +37,6 @@ const AdditionalDetailsStep = ({
   applicants,
   onUpdateApplicant
 }: AdditionalDetailsStepProps) => {
-  const calculateRecommendedIncome = () => {
-    if (!maxRent) return null;
-    const rent = parseFloat(maxRent);
-    if (isNaN(rent)) return null;
-    return (rent * 30).toLocaleString();
-  };
-
-  const recommendedIncome = calculateRecommendedIncome();
-
   return (
     <div className="space-y-8">
       <div>
@@ -55,98 +45,14 @@ const AdditionalDetailsStep = ({
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
-      {/* Tenancy Details */}
+      {/* Further Information */}
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Building className="h-5 w-5" />
-            </div>
-            Tenancy Requirements
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label htmlFor="moveInDate" className="form-label text-gray-700 font-medium">
-                Preferred Move-in Date <span className="text-red-500">*</span>
-              </Label>
-              <div className="date-input-container">
-                <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                <Input
-                  id="moveInDate"
-                  type="date"
-                  value={additionalDetails.moveInDate}
-                  onChange={(e) => onUpdateDetails("moveInDate", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="tenancyLength" className="form-label text-gray-700 font-medium">
-                Preferred Tenancy Length <span className="text-red-500">*</span>
-              </Label>
-              <Select value={additionalDetails.tenancyLength} onValueChange={(value) => onUpdateDetails("tenancyLength", value)}>
-                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                  <SelectValue placeholder="Select tenancy length" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="6-months">6 months</SelectItem>
-                  <SelectItem value="12-months">12 months</SelectItem>
-                  <SelectItem value="18-months">18 months</SelectItem>
-                  <SelectItem value="24-months">24 months</SelectItem>
-                  <SelectItem value="flexible">Flexible</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Financial Information */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <DollarSign className="h-5 w-5" />
-            </div>
-            Financial Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          <div className="space-y-2">
-            <Label htmlFor="householdIncome" className="form-label text-gray-700 font-medium">
-              Total Annual Household Income (£) <span className="text-red-500">*</span>
-            </Label>
-            {recommendedIncome && (
-              <p className="text-sm text-orange-600 mb-2">
-                Recommended minimum income: £{recommendedIncome} per year (based on max rent of £{maxRent}/month)
-              </p>
-            )}
-            <Input
-              id="householdIncome"
-              type="number"
-              value={additionalDetails.householdIncome}
-              onChange={(e) => onUpdateDetails("householdIncome", e.target.value)}
-              placeholder="Enter total household income"
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-              required
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Household Composition */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-lg">
               <Heart className="h-5 w-5" />
             </div>
-            Household Composition
+            Further Information
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
@@ -160,7 +66,7 @@ const AdditionalDetailsStep = ({
                 className="form-label text-gray-700 font-medium cursor-pointer"
                 onClick={() => onUpdateDetails("children", !additionalDetails.children)}
               >
-                Will there be children living in the property? <span className="text-red-500">*</span>
+                How many people under the age of 18 will be living in the property? <span className="text-red-500">*</span>
               </Label>
             </div>
           </div>
@@ -168,19 +74,16 @@ const AdditionalDetailsStep = ({
           {additionalDetails.children && (
             <div className="space-y-2">
               <Label htmlFor="childrenDetails" className="form-label text-gray-700 font-medium">
-                Please provide details about children (ages, special requirements):
+                Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15) <span className="text-red-500">*</span>
               </Label>
-              <div className="children-details-container">
-                <Baby className="children-details-icon h-4 w-4 text-orange-500" />
-                <Textarea
-                  id="childrenDetails"
-                  value={additionalDetails.childrenDetails}
-                  onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
-                  placeholder="Please provide details about the children..."
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                />
-              </div>
+              <Textarea
+                id="childrenDetails"
+                value={additionalDetails.childrenDetails}
+                onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
+                placeholder="Please provide ages of children..."
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+              />
             </div>
           )}
 
@@ -200,70 +103,23 @@ const AdditionalDetailsStep = ({
           </div>
 
           {additionalDetails.pets && (
-            <PetDetails
-              pets={additionalDetails.pets ? "yes" : "no"}
-              petDetails={additionalDetails.petDetails}
-              onPetsChange={(value) => onUpdateDetails("pets", value === "yes")}
-              onPetDetailsChange={(details) => onUpdateDetails("petDetails", details)}
-            />
+            <div className="space-y-2">
+              <Label htmlFor="petDetails" className="form-label text-gray-700 font-medium">
+                Please provide details about your pets:
+              </Label>
+              <div className="pet-details-container">
+                <PawPrint className="pet-details-icon h-4 w-4 text-orange-500" />
+                <Textarea
+                  id="petDetails"
+                  value={additionalDetails.petDetails}
+                  onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
+                  placeholder="Please provide details about the pets..."
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                />
+              </div>
+            </div>
           )}
-        </CardContent>
-      </Card>
-
-      {/* Lifestyle & Preferences */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Car className="h-5 w-5" />
-            </div>
-            Lifestyle & Preferences
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={additionalDetails.smoking}
-                onCheckedChange={(checked) => onUpdateDetails("smoking", checked)}
-              />
-              <Label 
-                className="form-label text-gray-700 font-medium cursor-pointer"
-                onClick={() => onUpdateDetails("smoking", !additionalDetails.smoking)}
-              >
-                Do you smoke? <span className="text-red-500">*</span>
-              </Label>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={additionalDetails.parking}
-                onCheckedChange={(checked) => onUpdateDetails("parking", checked)}
-              />
-              <Label 
-                className="form-label text-gray-700 font-medium cursor-pointer"
-                onClick={() => onUpdateDetails("parking", !additionalDetails.parking)}
-              >
-                Do you require parking? <span className="text-red-500">*</span>
-              </Label>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="additionalRequests" className="form-label text-gray-700 font-medium">
-              Additional Requests or Requirements:
-            </Label>
-            <Textarea
-              id="additionalRequests"
-              value={additionalDetails.additionalRequests}
-              onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
-              placeholder="Any additional requests or special requirements..."
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-            />
-          </div>
         </CardContent>
       </Card>
 
