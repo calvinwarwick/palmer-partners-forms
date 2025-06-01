@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface ApplicationHeaderProps {
@@ -23,11 +24,8 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
               <img 
                 src="/lovable-uploads/8958574e-86f0-4482-9a99-322142a0f734.png" 
                 alt="Palmer & Partners Text Logo" 
-                className="h-10"
+                className="h-12"
               />
-              <p className="text-xs text-gray-300 font-lexend mt-1">
-                The leading estate agents in Essex & Suffolk.
-              </p>
             </div>
           </div>
           {title && (
