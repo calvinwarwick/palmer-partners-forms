@@ -84,14 +84,14 @@ export const generateApplicationPDF = async (data: {
   doc.setFillColor(255, 111, 0); // #FF6F00 orange
   doc.rect(0, headerHeight, 210, 2, 'F');
 
-  yPosition = headerHeight + 10; // Reduced spacing from 15 to 10
+  yPosition = headerHeight + 15; // Increased top padding from 10 to 15
 
-  // Main title - moved closer to form
+  // Main title - moved closer to form with reduced bottom spacing
   doc.setTextColor(33, 33, 33); // Dark grey text
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
-  yPosition += 10; // Reduced spacing from 15 to 10
+  yPosition += 5; // Much reduced spacing from 10 to 5
 
   // Helper function to add section header exactly like demo
   const addSectionHeader = (title: string, currentY: number) => {

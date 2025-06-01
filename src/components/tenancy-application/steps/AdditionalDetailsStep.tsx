@@ -46,6 +46,16 @@ const AdditionalDetailsStep = ({
     }
   };
 
+  // Get current children count value for select
+  const getCurrentChildrenCount = () => {
+    if (!additionalDetails.children) return "None";
+    // If we have children but no details yet, default to "1"
+    if (additionalDetails.children && !additionalDetails.childrenDetails) return "1";
+    // Try to parse the first number from childrenDetails to determine count
+    const match = additionalDetails.childrenDetails?.match(/\d+/);
+    return match ? (parseInt(match[0]) > 5 ? "5+" : match[0]) : "1";
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -70,7 +80,7 @@ const AdditionalDetailsStep = ({
               How many people under the age of 18 will be living in the property? <span className="text-red-500">*</span>
             </Label>
             <Select
-              value={additionalDetails.children ? (additionalDetails.childrenDetails ? "1" : "1") : "None"}
+              value={getCurrentChildrenCount()}
               onValueChange={handleChildrenCountChange}
             >
               <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
@@ -119,7 +129,7 @@ const AdditionalDetailsStep = ({
           {additionalDetails.pets && (
             <div className="space-y-2">
               <Label htmlFor="petDetails" className="form-label text-gray-700 font-medium">
-                Please provide details about your pets:
+                Please provide details about your pets: <span className="text-red-500">*</span>
               </Label>
               <Textarea
                 id="petDetails"
@@ -131,6 +141,20 @@ const AdditionalDetailsStep = ({
               />
             </div>
           )}
+
+          <div className="space-y-2">
+            <Label htmlFor="additionalRequests" className="form-label text-gray-700 font-medium">
+              Additional Requests or Requirements (Optional)
+            </Label>
+            <Textarea
+              id="additionalRequests"
+              value={additionalDetails.additionalRequests}
+              onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
+              placeholder="Any additional requests or requirements..."
+              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+            />
+          </div>
         </CardContent>
       </Card>
 
