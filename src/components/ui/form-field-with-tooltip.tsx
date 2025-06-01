@@ -1,7 +1,6 @@
 
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { HelpCircle } from "lucide-react";
 
 interface FormFieldWithTooltipProps {
   label: string;
@@ -29,7 +28,7 @@ const FormFieldWithTooltip = ({
             <Tooltip>
               <TooltipTrigger asChild>
                 <div className="flex items-center justify-center w-5 h-5 bg-orange-500 rounded-full cursor-help">
-                  <HelpCircle className="h-3 w-3 text-white" />
+                  <span className="text-white text-xs font-bold">?</span>
                 </div>
               </TooltipTrigger>
               <TooltipContent className="max-w-xs bg-white border border-gray-200 shadow-lg">
