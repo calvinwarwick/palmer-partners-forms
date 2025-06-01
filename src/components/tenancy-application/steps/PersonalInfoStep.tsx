@@ -160,7 +160,7 @@ const PersonalInfoStep = ({
 
                 {/* Passport Photo Upload - Only show if UK passport is yes */}
                 {applicant.ukPassport === "yes" && (
-                  <div className="space-y-2 mb-4">
+                  <div className="space-y-2">
                     <div className="flex items-center gap-4">
                       <input
                         type="file"
@@ -173,7 +173,7 @@ const PersonalInfoStep = ({
                         variant="outline"
                         size="sm"
                         onClick={() => document.getElementById(`passport-upload-${applicant.id}`)?.click()}
-                        className="text-orange-600 border-orange-300 hover:bg-orange-50 hover:text-orange-700"
+                        className="text-orange-600 border-orange-300 hover:bg-orange-50"
                         style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       >
                         <Upload className="h-4 w-4 mr-1" />

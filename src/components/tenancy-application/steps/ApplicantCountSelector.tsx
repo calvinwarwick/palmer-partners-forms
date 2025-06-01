@@ -22,7 +22,7 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
               <Label htmlFor="applicantCount" className="text-lg font-semibold text-dark-grey mb-2">
                 How many adults will be living in the property? <span className="text-red-500">*</span>
               </Label>
-              <p className="text-sm text-gray-600 mt-1">Please select the number of adults who will be staying at the property and provide details for each applicant.</p>
+              <p className="text-sm text-gray-600 mt-1">Please ensure you provide details for each applicant below.</p>
             </div>
             <Select
               value={applicantCount <= 0 ? "" : applicantCount.toString()}
