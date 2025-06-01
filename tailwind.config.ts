@@ -74,7 +74,7 @@ export default {
 					100: '#FFE0B2',
 					200: '#FFCC80',
 					300: '#FFB74D',
-					400: '#FFA726',
+					400: '#FFA726', // Lighter shade for gradient
 					500: '#e35c00', // Updated Primary Orange
 					600: '#cc5200',
 					700: '#b84700',

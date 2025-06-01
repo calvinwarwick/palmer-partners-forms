@@ -127,9 +127,9 @@
   @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2;
 }
 
-/* Enhanced button styles with new color scheme */
+/* Enhanced button styles with lighter orange gradient */
 .btn-primary {
-  @apply bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200;
+  @apply bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-500 text-white font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200;
   font-family: 'Lexend', sans-serif;
 }
 

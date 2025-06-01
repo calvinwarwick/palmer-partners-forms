@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
 import ApplicationSuccess from "@/components/tenancy-application/ApplicationSuccess";
@@ -44,7 +43,7 @@ const TenancyApplicationForm = () => {
         const canSubmit = canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
 
         return (
-          <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-gray-50 font-lexend">
+          <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
             <ApplicationHeader title="Tenancy Application" />
             
             <div className="py-8">

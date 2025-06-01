@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 interface ApplicationHeaderProps {
@@ -38,7 +37,7 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
           )}
         </div>
       </div>
-      <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-600 w-full"></div>
+      <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400 w-full"></div>
     </div>
   );
 };
