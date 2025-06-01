@@ -40,7 +40,9 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
       return (
         <PropertyDetailsStep
           propertyPreferences={propertyPreferences}
+          additionalDetails={additionalDetails}
           onUpdatePreferences={updatePropertyPreferences}
+          onUpdateDetails={updateAdditionalDetails}
         />
       );
     case 2:
