@@ -1,3 +1,4 @@
+
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validatePropertyDetails = (preferences: PropertyPreferences): boolean => {
@@ -15,27 +16,29 @@ export const validatePersonalInfo = (applicants: Applicant[]): boolean => {
 
 export const validateEmploymentInfo = (applicants: Applicant[]): boolean => {
   return applicants.every(applicant => 
-    applicant.employment && 
+    applicant.employmentStatus && 
     applicant.annualIncome
   );
 };
 
 export const validateCurrentAddress = (applicants: Applicant[]): boolean => {
   return applicants.every(applicant => 
-    applicant.previousAddress && 
-    applicant.previousPostcode && 
-    applicant.currentPropertyStatus
+    applicant.currentAddress && 
+    applicant.currentPostcode && 
+    applicant.residencyStatus
   );
 };
 
 export const validateAdditionalDetails = (additionalDetails: AdditionalDetails): boolean => {
+  // Check the actual fields that exist in the AdditionalDetails interface
   return !!(
-    additionalDetails.ukPassport && 
-    additionalDetails.adverseCredit && 
-    additionalDetails.guarantorRequired && 
-    additionalDetails.pets && 
-    additionalDetails.under18Count !== "" &&
-    additionalDetails.depositType
+    additionalDetails.moveInDate && 
+    additionalDetails.tenancyLength && 
+    additionalDetails.householdIncome &&
+    (additionalDetails.pets !== undefined) &&
+    (additionalDetails.smoking !== undefined) &&
+    (additionalDetails.parking !== undefined) &&
+    (additionalDetails.children !== undefined)
   );
 };
 

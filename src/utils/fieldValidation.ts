@@ -1,3 +1,4 @@
+
 export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
   // Try multiple selectors to find the element
   let element = document.getElementById(elementId) || 
@@ -29,7 +30,7 @@ export const highlightInvalidField = (elementId: string, shouldScroll: boolean =
     setTimeout(() => {
       element.style.transition = '';
     }, 300);
-  }, 2000);
+  }, 300);
 };
 
 export const validateAndHighlightFields = (
@@ -63,26 +64,27 @@ export const validateAndHighlightFields = (
     
     case 3:
       applicants.forEach((applicant, index) => {
-        if (!applicant.employment) invalidFields.push(`employment-${applicant.id}`);
+        if (!applicant.employmentStatus) invalidFields.push(`employmentStatus-${applicant.id}`);
         if (!applicant.annualIncome) invalidFields.push(`annualIncome-${applicant.id}`);
       });
       break;
     
     case 4:
       applicants.forEach((applicant, index) => {
-        if (!applicant.previousAddress) invalidFields.push(`previousAddress-${applicant.id}`);
-        if (!applicant.previousPostcode) invalidFields.push(`previousPostcode-${applicant.id}`);
-        if (!applicant.currentPropertyStatus) invalidFields.push(`currentPropertyStatus-${applicant.id}`);
+        if (!applicant.currentAddress) invalidFields.push(`currentAddress-${applicant.id}`);
+        if (!applicant.currentPostcode) invalidFields.push(`currentPostcode-${applicant.id}`);
+        if (!applicant.residencyStatus) invalidFields.push(`residencyStatus-${applicant.id}`);
       });
       break;
     
     case 5:
-      if (!additionalDetails.ukPassport) invalidFields.push('ukPassport');
-      if (!additionalDetails.adverseCredit) invalidFields.push('adverseCredit');
-      if (!additionalDetails.guarantorRequired) invalidFields.push('guarantorRequired');
-      if (!additionalDetails.pets) invalidFields.push('pets');
-      if (additionalDetails.under18Count === "") invalidFields.push('under18Count');
-      if (!additionalDetails.depositType) invalidFields.push('depositType');
+      if (!additionalDetails.moveInDate) invalidFields.push('moveInDate');
+      if (!additionalDetails.tenancyLength) invalidFields.push('tenancyLength');
+      if (!additionalDetails.householdIncome) invalidFields.push('householdIncome');
+      if (additionalDetails.pets === undefined) invalidFields.push('pets');
+      if (additionalDetails.smoking === undefined) invalidFields.push('smoking');
+      if (additionalDetails.parking === undefined) invalidFields.push('parking');
+      if (additionalDetails.children === undefined) invalidFields.push('children');
       break;
     
     case 6:
