@@ -44,7 +44,7 @@ const ApplicationPreviewContent = ({ application }: ApplicationPreviewContentPro
   );
 
   return (
-    <div className="bg-white font-lexend max-h-[80vh] overflow-y-auto">
+    <div className="bg-white font-lexend h-full overflow-y-auto">
       {/* Main Title */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-dark-grey">Tenancy Application</h1>

@@ -42,9 +42,28 @@ export const generateApplicationPDF = async (data: {
     // Try to load and add the actual logo
     const logoImg = await loadImage('/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png');
     
-    // Calculate logo dimensions to fit in the orange box (40x20)
-    const logoWidth = 30;
-    const logoHeight = 15;
+    // Calculate logo dimensions maintaining aspect ratio
+    const imgWidth = logoImg.naturalWidth;
+    const imgHeight = logoImg.naturalHeight;
+    const aspectRatio = imgWidth / imgHeight;
+    
+    // Set maximum dimensions for the logo area
+    const maxLogoWidth = 30;
+    const maxLogoHeight = 15;
+    
+    let logoWidth, logoHeight;
+    
+    // Calculate actual dimensions maintaining aspect ratio
+    if (aspectRatio > maxLogoWidth / maxLogoHeight) {
+      // Image is wider - constrain by width
+      logoWidth = maxLogoWidth;
+      logoHeight = maxLogoWidth / aspectRatio;
+    } else {
+      // Image is taller - constrain by height
+      logoHeight = maxLogoHeight;
+      logoWidth = maxLogoHeight * aspectRatio;
+    }
+    
     const logoX = 105 - logoWidth / 2; // Center horizontally
     const logoY = 25 - logoHeight / 2; // Center vertically in the header
     
@@ -52,7 +71,7 @@ export const generateApplicationPDF = async (data: {
     doc.setFillColor(255, 111, 0); // #FF6F00 orange
     doc.rect(logoX - 5, logoY - 2.5, logoWidth + 10, logoHeight + 5, 'F');
     
-    // Add the actual logo image
+    // Add the actual logo image with correct aspect ratio
     doc.addImage(logoImg, 'PNG', logoX, logoY, logoWidth, logoHeight);
   } catch (error) {
     // Fallback to text logo if image loading fails
@@ -100,7 +119,7 @@ export const generateApplicationPDF = async (data: {
     const y = checkPageBreak(currentY);
     
     if (isSubsection) {
-      // Light grey subsection header
+      // Light grey subsection header with no extra spacing
       doc.setFillColor(200, 200, 200);
       doc.rect(20, y, 170, 12, 'F');
       doc.setDrawColor(150, 150, 150);
@@ -109,7 +128,7 @@ export const generateApplicationPDF = async (data: {
       doc.setFontSize(10);
       doc.setTextColor(0, 0, 0);
       doc.text(label, 105, y + 7, { align: 'center' });
-      return y + 15;
+      return y + 12; // Return immediately after subsection header, no extra spacing
     }
     
     // Calculate exact 35% width for labels

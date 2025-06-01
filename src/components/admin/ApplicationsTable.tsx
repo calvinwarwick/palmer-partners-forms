@@ -449,10 +449,17 @@ const ApplicationsTable = ({
 
       {/* Preview Sheet */}
       <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
-        <SheetContent className="w-full sm:max-w-4xl">
-          {selectedApplicationForPreview && (
-            <ApplicationPreviewContent application={selectedApplicationForPreview} />
-          )}
+        <SheetContent className="w-full sm:max-w-4xl h-full p-0">
+          <div className="h-full flex flex-col">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-semibold">Application Preview</h2>
+            </div>
+            <div className="flex-1 p-6 overflow-hidden">
+              {selectedApplicationForPreview && (
+                <ApplicationPreviewContent application={selectedApplicationForPreview} />
+              )}
+            </div>
+          </div>
         </SheetContent>
       </Sheet>
 
