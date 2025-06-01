@@ -48,56 +48,6 @@ const TermsAndDataStep = ({
         <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
-      {/* Data Sharing Section */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Shield className="h-5 w-5" />
-            </div>
-            Data Sharing Preferences
-          </CardTitle>
-          <CardDescription className="text-orange-50">
-            We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="utilities"
-                checked={dataSharing.utilities}
-                onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
-              />
-              <Label 
-                htmlFor="utilities" 
-                className="form-label text-gray-700 font-medium cursor-pointer"
-                onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
-              >
-                I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
-              </Label>
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="insurance"
-                checked={dataSharing.insurance}
-                onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
-              />
-              <Label 
-                htmlFor="insurance" 
-                className="form-label text-gray-700 font-medium cursor-pointer"
-                onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
-              >
-                I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
-              </Label>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Terms & Conditions Section */}
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
         <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
@@ -233,6 +183,56 @@ const TermsAndDataStep = ({
                 onClick={() => onTermsChange(!termsAccepted)}
               >
                 I confirm that I have read and understood the terms and conditions and I am bound by their contents <span className="text-red-500">*</span>
+              </Label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Data Sharing Section - moved after Terms & Conditions */}
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Shield className="h-5 w-5" />
+            </div>
+            Data Sharing Preferences
+          </CardTitle>
+          <CardDescription className="text-orange-50">
+            We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="utilities"
+                checked={dataSharing.utilities}
+                onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
+              />
+              <Label 
+                htmlFor="utilities" 
+                className="form-label text-gray-700 font-medium cursor-pointer"
+                onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
+              >
+                I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
+              </Label>
+            </div>
+          </div>
+          
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="insurance"
+                checked={dataSharing.insurance}
+                onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
+              />
+              <Label 
+                htmlFor="insurance" 
+                className="form-label text-gray-700 font-medium cursor-pointer"
+                onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
+              >
+                I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
               </Label>
             </div>
           </div>
