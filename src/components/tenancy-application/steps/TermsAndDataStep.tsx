@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Shield, FileText } from "lucide-react";
 import SignaturePad from "@/components/ui/signature-pad";
 
 interface TermsAndDataStepProps {
@@ -40,54 +41,74 @@ const TermsAndDataStep = ({
   };
 
   return (
-    <div className="space-y-6 font-lexend">
-      <h3 className="text-lg font-semibold">Data Sharing & Terms</h3>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Data Sharing</CardTitle>
-          <CardDescription>
+    <div className="space-y-8">
+      <div>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Terms & Conditions</h3>
+        <p className="text-light-grey mb-4">Review and accept our terms, data sharing preferences, and provide your signature</p>
+        <div className="border-b border-gray-200 mb-6"></div>
+      </div>
+
+      {/* Data Sharing Section */}
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <Shield className="h-5 w-5" />
+            </div>
+            Data Sharing Preferences
+          </CardTitle>
+          <CardDescription className="text-orange-50">
             We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center gap-3">
-            <Switch
-              id="utilities"
-              checked={dataSharing.utilities}
-              onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
-            />
-            <Label 
-              htmlFor="utilities" 
-              className="font-medium cursor-pointer flex-1 leading-6"
-              onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
-            >
-              I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
-            </Label>
+        <CardContent className="space-y-6 p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="utilities"
+                checked={dataSharing.utilities}
+                onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
+              />
+              <Label 
+                htmlFor="utilities" 
+                className="form-label text-gray-700 font-medium cursor-pointer"
+                onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
+              >
+                I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
+              </Label>
+            </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Switch
-              id="insurance"
-              checked={dataSharing.insurance}
-              onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
-            />
-            <Label 
-              htmlFor="insurance" 
-              className="font-medium cursor-pointer flex-1 leading-6"
-              onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
-            >
-              I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
-            </Label>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="insurance"
+                checked={dataSharing.insurance}
+                onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
+              />
+              <Label 
+                htmlFor="insurance" 
+                className="form-label text-gray-700 font-medium cursor-pointer"
+                onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
+              >
+                I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
+              </Label>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Terms & Conditions</CardTitle>
+      {/* Terms & Conditions Section */}
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <FileText className="h-5 w-5" />
+            </div>
+            Terms & Conditions
+          </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6 p-6">
           <div className="max-h-64 overflow-y-auto p-4 border rounded-lg bg-gray-50 text-sm custom-scrollbar" style={{ borderColor: 'rgb(228, 228, 231)' }}>
             <div className="space-y-4">
               <div>
@@ -199,19 +220,21 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <div className="flex items-center gap-3">
-            <Switch
-              id="terms"
-              checked={termsAccepted}
-              onCheckedChange={onTermsChange}
-            />
-            <Label 
-              htmlFor="terms" 
-              className="text-sm cursor-pointer flex-1 leading-6"
-              onClick={() => onTermsChange(!termsAccepted)}
-            >
-              I confirm that I have read and understood the terms and conditions and I am bound by their contents
-            </Label>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="terms"
+                checked={termsAccepted}
+                onCheckedChange={onTermsChange}
+              />
+              <Label 
+                htmlFor="terms" 
+                className="form-label text-gray-700 font-medium cursor-pointer"
+                onClick={() => onTermsChange(!termsAccepted)}
+              >
+                I confirm that I have read and understood the terms and conditions and I am bound by their contents <span className="text-red-500">*</span>
+              </Label>
+            </div>
           </div>
         </CardContent>
       </Card>
