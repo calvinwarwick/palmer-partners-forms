@@ -103,19 +103,17 @@ const AdditionalDetailsStep = ({
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={additionalDetails.pets}
-                onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-              />
-              <Label 
-                className="form-label text-gray-700 font-medium cursor-pointer"
-                onClick={() => onUpdateDetails("pets", !additionalDetails.pets)}
-              >
-                Do you intend to have any pets at the property? <span className="text-red-500">*</span>
-              </Label>
-            </div>
+          <div className="flex items-center gap-3">
+            <Switch
+              checked={additionalDetails.pets}
+              onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
+            />
+            <Label 
+              className="text-gray-700 font-medium cursor-pointer mb-0"
+              onClick={() => onUpdateDetails("pets", !additionalDetails.pets)}
+            >
+              Do you intend to have any pets at the property? <span className="text-red-500">*</span>
+            </Label>
           </div>
 
           {additionalDetails.pets && (
