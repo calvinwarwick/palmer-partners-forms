@@ -450,9 +450,6 @@ const ApplicationsTable = ({
       {/* Preview Sheet */}
       <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
         <SheetContent className="w-full sm:max-w-4xl">
-          <SheetHeader>
-            <SheetTitle>Application Preview</SheetTitle>
-          </SheetHeader>
           {selectedApplicationForPreview && (
             <ApplicationPreviewContent application={selectedApplicationForPreview} />
           )}
