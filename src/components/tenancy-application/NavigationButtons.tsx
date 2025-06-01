@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Send, TestTube, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Send } from "lucide-react";
 
 interface NavigationButtonsProps {
   isFirstStep: boolean;
@@ -21,9 +21,7 @@ const NavigationButtons = ({
   canSubmit,
   onPrevious,
   onNext,
-  onSubmit,
-  onFillTestData,
-  onClearData
+  onSubmit
 }: NavigationButtonsProps) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-200">
@@ -42,30 +40,9 @@ const NavigationButtons = ({
         )}
       </div>
 
-      {/* Center - Test Data and Clear buttons */}
+      {/* Center - Empty space where test data buttons were */}
       <div className="flex gap-2">
-        {onFillTestData && (
-          <Button 
-            variant="outline" 
-            onClick={onFillTestData}
-            className="text-orange-600 border-orange-300 hover:bg-orange-50 flex items-center gap-2"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-          >
-            <TestTube className="h-4 w-4" />
-            Fill Test Data
-          </Button>
-        )}
-        {onClearData && (
-          <Button 
-            variant="outline" 
-            onClick={onClearData}
-            className="text-red-600 border-red-300 hover:bg-red-50 flex items-center gap-2"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-          >
-            <Trash2 className="h-4 w-4" />
-            Clear Data
-          </Button>
-        )}
+        {/* Removed Fill Test Data and Clear Data buttons */}
       </div>
 
       {/* Right side - Next/Submit button */}

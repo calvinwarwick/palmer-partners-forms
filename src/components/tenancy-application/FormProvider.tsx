@@ -55,7 +55,6 @@ export interface FormContextType {
   handleApplicantCountChange: (count: number) => void;
   handleGuarantorOpen: (applicant: Applicant) => void;
   handleGuarantorSave: () => void;
-  fillAllTestData: () => void;
   handleNext: () => void;
   handleSubmit: () => void;
   
@@ -299,101 +298,6 @@ const FormProvider = ({ children }: FormProviderProps) => {
     setSelectedApplicantForGuarantor(null);
   };
 
-  const fillAllTestData = () => {
-    console.log('Fill All Test Data clicked - populating entire form');
-    
-    setPropertyPreferences({
-      propertyType: "apartment",
-      streetAddress: "123 Orchard House, New Cut",
-      postcode: "IP7 5DA",
-      maxRent: "2500",
-      preferredLocation: "Central London",
-      moveInDate: "2024-06-01",
-      latestMoveInDate: "2024-06-15",
-      initialTenancyTerm: "1 year",
-      additionalRequests: "Pet-friendly property preferred"
-    });
-
-    const testData = [
-      {
-        firstName: "John",
-        lastName: "Smith",
-        email: "john.smith@example.com",
-        phone: "07700 900123",
-        dateOfBirth: "1990-05-15",
-        employment: "Full Time",
-        companyName: "Tech Solutions Ltd",
-        jobTitle: "Software Engineer",
-        annualIncome: "45000",
-        lengthOfService: "3 years",
-        previousAddress: "45 Elm Street, Colchester",
-        previousPostcode: "CO1 2AB",
-        currentPropertyStatus: "Rented Privately",
-        moveInDate: "2022-01-15",
-        vacateDate: "2024-05-30",
-        currentRentalAmount: "1800",
-        reference1Name: "Mike Johnson",
-        reference1Contact: "mike.johnson@techsolutions.com",
-        pets: "yes",
-        petDetails: "1 cat",
-        adverseCreditDetails: ""
-      },
-      {
-        firstName: "Sarah",
-        lastName: "Johnson",
-        email: "sarah.johnson@example.com",
-        phone: "07700 900456",
-        dateOfBirth: "1988-11-22",
-        employment: "Full Time",
-        companyName: "Design Studio",
-        jobTitle: "Graphic Designer",
-        annualIncome: "38000",
-        lengthOfService: "2 years",
-        previousAddress: "22 Oak Avenue, Ipswich",
-        previousPostcode: "IP2 3CD",
-        currentPropertyStatus: "Rented Privately",
-        moveInDate: "2021-03-01",
-        vacateDate: "2024-05-30",
-        currentRentalAmount: "1600",
-        reference1Name: "Lisa Brown",
-        reference1Contact: "lisa.brown@designstudio.com",
-        pets: "no",
-        petDetails: "",
-        adverseCreditDetails: ""
-      }
-    ];
-
-    setApplicants(applicants.map((applicant, index) => {
-      if (testData[index]) {
-        return { ...applicant, ...testData[index] };
-      }
-      return applicant;
-    }));
-
-    setAdditionalDetails({
-      moveInDate: "2024-06-01",
-      tenancyLength: "12-months",
-      pets: true,
-      petDetails: "1 cat",
-      smoking: false,
-      parking: true,
-      children: false,
-      childrenDetails: "",
-      additionalRequests: "Pet-friendly property preferred",
-      householdIncome: "85000"
-    });
-
-    setSignature("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==");
-    setFullName("John Smith");
-    setTermsAccepted(true);
-    setDataSharing({
-      utilities: true,
-      insurance: true
-    });
-
-    console.log('All test data filled successfully');
-  };
-
   const handleNext = () => {
     const canProceedToNext = canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
     
@@ -458,7 +362,6 @@ const FormProvider = ({ children }: FormProviderProps) => {
     handleApplicantCountChange,
     handleGuarantorOpen,
     handleGuarantorSave,
-    fillAllTestData,
     handleNext,
     handleSubmit,
     isSubmitting,

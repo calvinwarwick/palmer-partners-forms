@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
 import ApplicationSuccess from "@/components/tenancy-application/ApplicationSuccess";
@@ -31,7 +32,6 @@ const TenancyApplicationForm = () => {
           goToPrevious,
           handleNext,
           handleSubmit,
-          fillAllTestData,
           handleGuarantorSave,
           setGuarantorFormOpen
         } = formContext;
@@ -77,7 +77,6 @@ const TenancyApplicationForm = () => {
                       onPrevious={goToPrevious}
                       onNext={handleNext}
                       onSubmit={handleSubmit}
-                      onFillTestData={fillAllTestData}
                     />
                   </CardContent>
                 </Card>

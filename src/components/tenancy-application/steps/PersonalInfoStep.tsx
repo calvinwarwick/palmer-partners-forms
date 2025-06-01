@@ -95,7 +95,7 @@ const PersonalInfoStep = ({
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor={`dob-${applicant.id}`} className="form-label text-gray-700 font-medium">Date of Birth</Label>
+                <Label htmlFor={`dob-${applicant.id}`} className="form-label text-gray-700 font-medium">Date of Birth <span className="text-red-500">*</span></Label>
                 <div className="date-input-container">
                   <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
                   <Input
@@ -105,6 +105,7 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, "dateOfBirth", e.target.value)}
                     className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                     style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    required
                   />
                 </div>
               </div>

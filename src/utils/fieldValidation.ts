@@ -1,5 +1,4 @@
 
-
 export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
   // Try multiple selectors to find the element
   let element = document.getElementById(elementId) || 
@@ -62,6 +61,7 @@ export const validateAndHighlightFields = (
         if (!applicant.lastName) invalidFields.push(`lastName-${applicant.id}`);
         if (!applicant.email) invalidFields.push(`email-${applicant.id}`);
         if (!applicant.phone) invalidFields.push(`phone-${applicant.id}`);
+        if (!applicant.dateOfBirth) invalidFields.push(`dob-${applicant.id}`);
       });
       break;
     
@@ -118,4 +118,3 @@ export const handleValidationErrors = (invalidFields: string[]) => {
     }, 500);
   }
 };
-
