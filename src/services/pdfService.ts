@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 
@@ -34,9 +33,10 @@ export const generateApplicationPDF = async (data: {
     });
   };
 
-  // Header exactly like demo page - Dark grey background with centered logo
+  // Header - Dark grey background with centered logo (half height)
+  const headerHeight = 25; // Reduced from 50
   doc.setFillColor(33, 33, 33); // #212121 dark grey
-  doc.rect(0, 0, 210, 50, 'F'); // Full width dark header
+  doc.rect(0, 0, 210, headerHeight, 'F'); // Full width dark header
 
   try {
     // Try to load and add the actual logo
@@ -47,9 +47,9 @@ export const generateApplicationPDF = async (data: {
     const imgHeight = logoImg.naturalHeight;
     const aspectRatio = imgWidth / imgHeight;
     
-    // Set maximum dimensions for the logo area - larger to match demo
-    const maxLogoWidth = 60;
-    const maxLogoHeight = 30;
+    // Set maximum dimensions for the logo area - adjusted for smaller header
+    const maxLogoWidth = 30;
+    const maxLogoHeight = 15;
     
     let logoWidth, logoHeight;
     
@@ -65,27 +65,26 @@ export const generateApplicationPDF = async (data: {
     }
     
     const logoX = 105 - logoWidth / 2; // Center horizontally
-    const logoY = 25 - logoHeight / 2; // Center vertically in the header
+    const logoY = headerHeight / 2 - logoHeight / 2; // Center vertically in the smaller header
     
-    // Add the actual logo image with white background for contrast
-    doc.setFillColor(255, 255, 255); // White background
-    doc.rect(logoX - 5, logoY - 2.5, logoWidth + 10, logoHeight + 5, 'F');
-    
-    // Add the actual logo image with correct aspect ratio
+    // Add the actual logo image without background (PNG has transparency)
     doc.addImage(logoImg, 'PNG', logoX, logoY, logoWidth, logoHeight);
   } catch (error) {
-    // Fallback to text logo if image loading fails - match demo styling
-    doc.setFillColor(255, 255, 255); // White background
-    doc.rect(85, 15, 40, 20, 'F');
+    // Fallback to text logo if image loading fails
+    doc.setFillColor(255, 255, 255); // White background for text
+    doc.rect(85, 8, 40, 9, 'F');
     
     doc.setTextColor(33, 33, 33); // Dark grey text
-    doc.setFontSize(18);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text('P&P', 105, 27, { align: 'center' });
+    doc.text('P&P', 105, 14, { align: 'center' });
   }
 
-  // No orange line at bottom - remove to match demo
-  yPosition = 65;
+  // Orange bottom border
+  doc.setFillColor(255, 111, 0); // #FF6F00 orange
+  doc.rect(0, headerHeight, 210, 2, 'F');
+
+  yPosition = headerHeight + 15; // Start content below the smaller header
 
   // Main title
   doc.setTextColor(33, 33, 33); // Dark grey text
