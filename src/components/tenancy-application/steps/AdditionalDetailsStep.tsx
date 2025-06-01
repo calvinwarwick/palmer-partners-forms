@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import { PetDetails } from "./PetDetails";
@@ -37,6 +38,14 @@ const AdditionalDetailsStep = ({
   applicants,
   onUpdateApplicant
 }: AdditionalDetailsStepProps) => {
+  const handleChildrenCountChange = (value: string) => {
+    const hasChildren = value !== "None";
+    onUpdateDetails("children", hasChildren);
+    if (!hasChildren) {
+      onUpdateDetails("childrenDetails", "");
+    }
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -56,19 +65,26 @@ const AdditionalDetailsStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Switch
-                checked={additionalDetails.children}
-                onCheckedChange={(checked) => onUpdateDetails("children", checked)}
-              />
-              <Label 
-                className="form-label text-gray-700 font-medium cursor-pointer"
-                onClick={() => onUpdateDetails("children", !additionalDetails.children)}
-              >
-                How many people under the age of 18 will be living in the property? <span className="text-red-500">*</span>
-              </Label>
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="childrenCount" className="form-label text-gray-700 font-medium">
+              How many people under the age of 18 will be living in the property? <span className="text-red-500">*</span>
+            </Label>
+            <Select
+              value={additionalDetails.children ? (additionalDetails.childrenDetails ? "1" : "1") : "None"}
+              onValueChange={handleChildrenCountChange}
+            >
+              <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
+                <SelectValue placeholder="Select number of children" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="None">None</SelectItem>
+                <SelectItem value="1">1</SelectItem>
+                <SelectItem value="2">2</SelectItem>
+                <SelectItem value="3">3</SelectItem>
+                <SelectItem value="4">4</SelectItem>
+                <SelectItem value="5+">5+</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {additionalDetails.children && (
@@ -97,7 +113,7 @@ const AdditionalDetailsStep = ({
                 className="form-label text-gray-700 font-medium cursor-pointer"
                 onClick={() => onUpdateDetails("pets", !additionalDetails.pets)}
               >
-                Do you have pets? <span className="text-red-500">*</span>
+                Do you intend to have any pets at the property? <span className="text-red-500">*</span>
               </Label>
             </div>
           </div>
