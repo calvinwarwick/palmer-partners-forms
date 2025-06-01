@@ -31,8 +31,7 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
     addApplicant,
     removeApplicant,
     handleApplicantCountChange,
-    handleGuarantorOpen,
-    fillAllTestData
+    handleGuarantorOpen
   } = formContext;
 
   switch (currentStep) {
@@ -73,7 +72,6 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
         <AdditionalDetailsStep
           additionalDetails={additionalDetails}
           onUpdateDetails={updateAdditionalDetails}
-          onFillAllTestData={fillAllTestData}
           maxRent={propertyPreferences.maxRent}
           applicants={applicants}
           onUpdateApplicant={updateApplicant}
