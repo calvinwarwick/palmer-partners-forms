@@ -23,36 +23,64 @@ export const generateApplicationPDF = async (data: {
     return currentY;
   };
 
+  // Load the actual logo image
+  const loadImage = (src: string): Promise<HTMLImageElement> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = src;
+    });
+  };
+
   // Header exactly like demo page - Dark grey background with logo
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, 50, 'F'); // Full width dark header
 
-  // Orange P&P logo box
-  doc.setFillColor(255, 111, 0); // #FF6F00 orange
-  doc.rect(85, 15, 40, 20, 'F');
-
-  // White P&P text
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(14);
-  doc.setFont('helvetica', 'bold');
-  doc.text('P&P', 105, 27, { align: 'center' });
+  try {
+    // Try to load and add the actual logo
+    const logoImg = await loadImage('/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png');
+    
+    // Calculate logo dimensions to fit in the orange box (40x20)
+    const logoWidth = 30;
+    const logoHeight = 15;
+    const logoX = 105 - logoWidth / 2; // Center horizontally
+    const logoY = 25 - logoHeight / 2; // Center vertically in the header
+    
+    // Orange background for logo
+    doc.setFillColor(255, 111, 0); // #FF6F00 orange
+    doc.rect(logoX - 5, logoY - 2.5, logoWidth + 10, logoHeight + 5, 'F');
+    
+    // Add the actual logo image
+    doc.addImage(logoImg, 'PNG', logoX, logoY, logoWidth, logoHeight);
+  } catch (error) {
+    // Fallback to text logo if image loading fails
+    doc.setFillColor(255, 111, 0); // #FF6F00 orange
+    doc.rect(85, 15, 40, 20, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('P&P', 105, 27, { align: 'center' });
+  }
 
   // Orange bottom line
   doc.setFillColor(255, 111, 0);
   doc.rect(0, 50, 210, 3, 'F');
 
-  yPosition = 70;
+  yPosition = 65; // Reduced from 70 to remove spacing
 
   // Main title
   doc.setTextColor(33, 33, 33); // Dark grey text
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
-  yPosition += 20;
+  yPosition += 15; // Reduced from 20 to remove spacing
 
   // Helper function to add section header exactly like demo
   const addSectionHeader = (title: string, currentY: number) => {
-    const y = checkPageBreak(currentY + 15);
+    const y = checkPageBreak(currentY + 10); // Reduced from 15
     
     // Dark grey background exactly like demo
     doc.setFillColor(33, 33, 33); // #212121
@@ -64,7 +92,7 @@ export const generateApplicationPDF = async (data: {
     doc.setFont('helvetica', 'bold');
     doc.text(title, 105, y + 4, { align: 'center' });
     
-    return y + 15;
+    return y + 10; // Reduced from 15 to remove spacing under titles
   };
 
   // Helper function for data rows with exact 35% width like demo
@@ -117,15 +145,72 @@ export const generateApplicationPDF = async (data: {
     return y + rowHeight;
   };
 
+  // Helper function to format dates like the demo
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.toLocaleDateString('en-GB', { month: 'long' });
+      const year = date.getFullYear();
+      
+      // Add ordinal suffix
+      const getOrdinalSuffix = (day: number) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      };
+      
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Helper function to format submitted date like the demo
+  const formatSubmittedDate = (dateString: string) => {
+    if (!dateString) return new Date().toLocaleString();
+    try {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.toLocaleDateString('en-GB', { month: 'long' });
+      const year = date.getFullYear();
+      const time = date.toLocaleTimeString('en-GB', { 
+        hour: 'numeric', 
+        minute: '2-digit',
+        hour12: true 
+      });
+      
+      // Add ordinal suffix
+      const getOrdinalSuffix = (day: number) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      };
+      
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year} - ${time}`;
+    } catch {
+      return new Date().toLocaleString();
+    }
+  };
+
   // Property Details Section
   yPosition = addSectionHeader('Property Details', yPosition);
   yPosition = addDataRow('Street Address', data.propertyPreferences?.streetAddress || '', yPosition);
   yPosition = addDataRow('Postcode', data.propertyPreferences?.postcode || '', yPosition);
   yPosition = addDataRow('Rental Amount', data.propertyPreferences?.maxRent ? `£${data.propertyPreferences.maxRent}` : '', yPosition);
-  yPosition = addDataRow('Preferred Move-in Date', data.propertyPreferences?.moveInDate || '', yPosition);
-  yPosition = addDataRow('Latest Move-in Date', data.propertyPreferences?.latestMoveInDate || '', yPosition);
+  yPosition = addDataRow('Preferred Move-in Date', formatDate(data.propertyPreferences?.moveInDate || ''), yPosition);
+  yPosition = addDataRow('Latest Move-in Date', formatDate(data.propertyPreferences?.latestMoveInDate || ''), yPosition);
   yPosition = addDataRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm || '', yPosition);
-  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets ? 'Yes' : 'No', yPosition);
+  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets === 'yes' ? 'Yes' : 'No', yPosition);
   yPosition = addDataRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
   if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
     yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
@@ -139,7 +224,7 @@ export const generateApplicationPDF = async (data: {
     // Personal Details
     yPosition = addDataRow('First Name', applicant.firstName || '', yPosition);
     yPosition = addDataRow('Last Name', applicant.lastName || '', yPosition);
-    yPosition = addDataRow('Date of Birth', applicant.dateOfBirth || '', yPosition);
+    yPosition = addDataRow('Date of Birth', formatDate(applicant.dateOfBirth || ''), yPosition);
     yPosition = addDataRow('Email Address', applicant.email || '', yPosition);
     yPosition = addDataRow('Mobile Number', applicant.phone || '', yPosition);
 
@@ -155,8 +240,8 @@ export const generateApplicationPDF = async (data: {
     yPosition = addDataRow('Current Property Details', '', yPosition, true);
     yPosition = addDataRow('Postcode', applicant.previousPostcode || applicant.currentPostcode || '', yPosition);
     yPosition = addDataRow('Street Address', applicant.previousAddress || applicant.currentAddress || '', yPosition);
-    yPosition = addDataRow('Move In Date', applicant.moveInDate || '', yPosition);
-    yPosition = addDataRow('Vacate Date', applicant.vacateDate || '', yPosition);
+    yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
+    yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
     yPosition = addDataRow('Current Property Status', applicant.currentPropertyStatus || '', yPosition);
     yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', yPosition);
 
@@ -168,7 +253,7 @@ export const generateApplicationPDF = async (data: {
       yPosition = addDataRow('Adverse Credit Details', applicant.adverseCreditDetails, yPosition);
     }
     yPosition = addDataRow('Requires Guarantor', applicant.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
-    if (data.additionalDetails?.pets && data.additionalDetails?.petDetails) {
+    if (data.additionalDetails?.pets === 'yes' && data.additionalDetails?.petDetails) {
       yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
     }
   });
@@ -215,7 +300,7 @@ export const generateApplicationPDF = async (data: {
   doc.text('Digital Signature Applied', 25 + labelWidth + (valueWidth - 10) / 2, yPosition + 14, { align: 'center' });
   
   yPosition += signatureRowHeight;
-  yPosition = addDataRow('Submitted At', data.submittedAt ? new Date(data.submittedAt).toLocaleString() : new Date().toLocaleString(), yPosition);
+  yPosition = addDataRow('Submitted At', formatSubmittedDate(data.submittedAt || ''), yPosition);
 
   return new Uint8Array(doc.output('arraybuffer'));
 };
