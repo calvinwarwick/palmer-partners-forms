@@ -50,6 +50,7 @@ export const validateStep = (
     
     case 5: // Additional Details
       // Check if pets is defined (boolean or string)
+      const hasPets = additionalDetails.pets === true || additionalDetails.pets === 'true' || additionalDetails.pets === 'yes';
       const petsValid = additionalDetails.pets !== undefined;
       
       // Check if children details are valid
@@ -57,8 +58,8 @@ export const validateStep = (
         (additionalDetails.children && additionalDetails.childrenDetails);
       
       // Check if pet details are provided when pets are selected
-      const petDetailsValid = !additionalDetails.pets || 
-        (additionalDetails.pets && additionalDetails.petDetails);
+      const petDetailsValid = !hasPets || 
+        (hasPets && additionalDetails.petDetails);
       
       return petsValid && childrenValid && petDetailsValid;
     
@@ -130,7 +131,8 @@ export const getStepErrors = (
       if (additionalDetails.children && !additionalDetails.childrenDetails) {
         errors.push('Please provide details about children');
       }
-      if (additionalDetails.pets && !additionalDetails.petDetails) {
+      const hasPets = additionalDetails.pets === true || additionalDetails.pets === 'true' || additionalDetails.pets === 'yes';
+      if (hasPets && !additionalDetails.petDetails) {
         errors.push('Please provide pet details');
       }
       break;
