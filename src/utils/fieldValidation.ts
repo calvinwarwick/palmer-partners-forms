@@ -1,4 +1,5 @@
 
+
 export const highlightInvalidField = (elementId: string, shouldScroll: boolean = true) => {
   // Try multiple selectors to find the element
   let element = document.getElementById(elementId) || 
@@ -44,6 +45,8 @@ export const validateAndHighlightFields = (
 ): string[] => {
   const invalidFields: string[] = [];
 
+  console.log(`Validating step ${step}`, { applicants, propertyPreferences, additionalDetails });
+
   switch (step) {
     case 1:
       if (!propertyPreferences.streetAddress) invalidFields.push('streetAddress');
@@ -81,10 +84,10 @@ export const validateAndHighlightFields = (
       if (!additionalDetails.moveInDate) invalidFields.push('moveInDate');
       if (!additionalDetails.tenancyLength) invalidFields.push('tenancyLength');
       if (!additionalDetails.householdIncome) invalidFields.push('householdIncome');
-      if (additionalDetails.pets === undefined) invalidFields.push('pets');
-      if (additionalDetails.smoking === undefined) invalidFields.push('smoking');
-      if (additionalDetails.parking === undefined) invalidFields.push('parking');
-      if (additionalDetails.children === undefined) invalidFields.push('children');
+      if (additionalDetails.pets === undefined || additionalDetails.pets === null) invalidFields.push('pets');
+      if (additionalDetails.smoking === undefined || additionalDetails.smoking === null) invalidFields.push('smoking');
+      if (additionalDetails.parking === undefined || additionalDetails.parking === null) invalidFields.push('parking');
+      if (additionalDetails.children === undefined || additionalDetails.children === null) invalidFields.push('children');
       break;
     
     case 6:
@@ -94,6 +97,7 @@ export const validateAndHighlightFields = (
       break;
   }
 
+  console.log(`Step ${step} validation result:`, invalidFields);
   return invalidFields;
 };
 
@@ -114,3 +118,4 @@ export const handleValidationErrors = (invalidFields: string[]) => {
     }, 500);
   }
 };
+
