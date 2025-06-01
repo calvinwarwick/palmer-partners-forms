@@ -322,7 +322,7 @@ const ApplicationsTable = ({
                           </DropdownMenuItem>
                           <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
                             <Download className="h-4 w-4 mr-2" />
-                            Generate PDF
+                            Download PDF
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -406,7 +406,7 @@ const ApplicationsTable = ({
                           className="h-8"
                         >
                           <Eye className="h-4 w-4 mr-1" />
-                          Preview
+                          View
                         </Button>
                         
                         <DropdownMenu>
@@ -422,7 +422,7 @@ const ApplicationsTable = ({
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => handleGeneratePdf(application)}>
                               <Download className="h-4 w-4 mr-2" />
-                              Generate PDF
+                              Download PDF
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
