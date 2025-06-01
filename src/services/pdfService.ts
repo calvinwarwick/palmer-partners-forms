@@ -34,7 +34,7 @@ export const generateApplicationPDF = async (data: {
     });
   };
 
-  // Header exactly like demo page - Dark grey background with logo
+  // Header exactly like demo page - Dark grey background with centered logo
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, 50, 'F'); // Full width dark header
 
@@ -47,9 +47,9 @@ export const generateApplicationPDF = async (data: {
     const imgHeight = logoImg.naturalHeight;
     const aspectRatio = imgWidth / imgHeight;
     
-    // Set maximum dimensions for the logo area
-    const maxLogoWidth = 30;
-    const maxLogoHeight = 15;
+    // Set maximum dimensions for the logo area - larger to match demo
+    const maxLogoWidth = 60;
+    const maxLogoHeight = 30;
     
     let logoWidth, logoHeight;
     
@@ -67,27 +67,24 @@ export const generateApplicationPDF = async (data: {
     const logoX = 105 - logoWidth / 2; // Center horizontally
     const logoY = 25 - logoHeight / 2; // Center vertically in the header
     
-    // Orange background for logo
-    doc.setFillColor(255, 111, 0); // #FF6F00 orange
+    // Add the actual logo image with white background for contrast
+    doc.setFillColor(255, 255, 255); // White background
     doc.rect(logoX - 5, logoY - 2.5, logoWidth + 10, logoHeight + 5, 'F');
     
     // Add the actual logo image with correct aspect ratio
     doc.addImage(logoImg, 'PNG', logoX, logoY, logoWidth, logoHeight);
   } catch (error) {
-    // Fallback to text logo if image loading fails
-    doc.setFillColor(255, 111, 0); // #FF6F00 orange
+    // Fallback to text logo if image loading fails - match demo styling
+    doc.setFillColor(255, 255, 255); // White background
     doc.rect(85, 15, 40, 20, 'F');
     
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(14);
+    doc.setTextColor(33, 33, 33); // Dark grey text
+    doc.setFontSize(18);
     doc.setFont('helvetica', 'bold');
     doc.text('P&P', 105, 27, { align: 'center' });
   }
 
-  // Orange bottom line
-  doc.setFillColor(255, 111, 0);
-  doc.rect(0, 50, 210, 3, 'F');
-
+  // No orange line at bottom - remove to match demo
   yPosition = 65;
 
   // Main title
@@ -295,7 +292,7 @@ export const generateApplicationPDF = async (data: {
   yPosition = addSectionHeader('Signature', yPosition);
   yPosition = addDataRow('Full Name', `${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}`, yPosition);
   
-  // Special signature row with exact styling
+  // Special signature row with actual signature image
   yPosition = checkPageBreak(yPosition);
   
   const labelWidth = 170 * 0.35;
@@ -317,15 +314,35 @@ export const generateApplicationPDF = async (data: {
   doc.rect(20 + labelWidth, yPosition, valueWidth, signatureRowHeight, 'F');
   doc.rect(20 + labelWidth, yPosition, valueWidth, signatureRowHeight);
   
-  // Digital signature placeholder exactly like demo
-  doc.setFillColor(243, 244, 246);
-  doc.rect(25 + labelWidth, yPosition + 5, valueWidth - 10, 15, 'F');
-  doc.setDrawColor(209, 213, 219);
-  doc.rect(25 + labelWidth, yPosition + 5, valueWidth - 10, 15);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.setTextColor(107, 114, 128);
-  doc.text('Digital Signature Applied', 25 + labelWidth + (valueWidth - 10) / 2, yPosition + 14, { align: 'center' });
+  // Try to add actual signature image if it exists and is a data URL
+  if (data.signature && data.signature.startsWith('data:image/')) {
+    try {
+      // Add the signature image
+      const maxSignatureWidth = valueWidth - 10;
+      const maxSignatureHeight = 15;
+      doc.addImage(data.signature, 'PNG', 25 + labelWidth, yPosition + 5, maxSignatureWidth, maxSignatureHeight);
+    } catch (error) {
+      // Fallback to placeholder if image fails to load
+      doc.setFillColor(243, 244, 246);
+      doc.rect(25 + labelWidth, yPosition + 5, valueWidth - 10, 15, 'F');
+      doc.setDrawColor(209, 213, 219);
+      doc.rect(25 + labelWidth, yPosition + 5, valueWidth - 10, 15);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(107, 114, 128);
+      doc.text('Digital Signature Applied', 25 + labelWidth + (valueWidth - 10) / 2, yPosition + 14, { align: 'center' });
+    }
+  } else {
+    // Fallback placeholder
+    doc.setFillColor(243, 244, 246);
+    doc.rect(25 + labelWidth, yPosition + 5, valueWidth - 10, 15, 'F');
+    doc.setDrawColor(209, 213, 219);
+    doc.rect(25 + labelWidth, yPosition + 5, valueWidth - 10, 15);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(107, 114, 128);
+    doc.text('Digital Signature Applied', 25 + labelWidth + (valueWidth - 10) / 2, yPosition + 14, { align: 'center' });
+  }
   
   yPosition += signatureRowHeight;
   yPosition = addDataRow('Submitted At', formatSubmittedDate(data.submittedAt || ''), yPosition);
