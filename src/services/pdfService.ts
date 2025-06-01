@@ -115,12 +115,12 @@ export const generateApplicationPDF = async (data: {
   yPosition = addTableRow('Preferred Move-in Date', data.propertyPreferences?.moveInDate, yPosition);
   yPosition = addTableRow('Latest Move-in Date', data.propertyPreferences?.latestMoveInDate, yPosition);
   yPosition = addTableRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm, yPosition);
-  yPosition = addTableRow('Has Pets', data.additionalDetails?.pets === 'yes' ? 'Yes' : 'No', yPosition);
+  yPosition = addTableRow('Has Pets', data.additionalDetails?.pets ? 'Yes' : 'No', yPosition);
   yPosition = addTableRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
   if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
     yPosition = addTableRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
   }
-  yPosition = addTableRow('Conditions of Offer', data.additionalDetails?.conditionsOfOffer, yPosition);
+  yPosition = addTableRow('Conditions of Offer', data.additionalDetails?.additionalRequests, yPosition);
   yPosition = addTableRow('Deposit Type', data.additionalDetails?.depositType, yPosition);
 
   // Applicants Section
@@ -153,13 +153,13 @@ export const generateApplicationPDF = async (data: {
 
     // Additional Information
     yPosition = addTableRow('Additional Information', '', yPosition, true);
-    yPosition = addTableRow('UK/ROI Passport', data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No', yPosition);
-    yPosition = addTableRow('Adverse Credit', data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No', yPosition);
-    if (data.additionalDetails?.adverseCredit === 'yes' && data.additionalDetails?.adverseCreditDetails) {
-      yPosition = addTableRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails, yPosition);
+    yPosition = addTableRow('UK/ROI Passport', applicant.ukPassport === 'yes' ? 'Yes' : 'No', yPosition);
+    yPosition = addTableRow('Adverse Credit', applicant.adverseCredit === 'yes' ? 'Yes' : 'No', yPosition);
+    if (applicant.adverseCredit === 'yes' && applicant.adverseCreditDetails) {
+      yPosition = addTableRow('Adverse Credit Details', applicant.adverseCreditDetails, yPosition);
     }
-    yPosition = addTableRow('Requires Guarantor', data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
-    if (data.additionalDetails?.pets === 'yes' && data.additionalDetails?.petDetails) {
+    yPosition = addTableRow('Requires Guarantor', applicant.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
+    if (data.additionalDetails?.pets && data.additionalDetails?.petDetails) {
       yPosition = addTableRow('Pet Details', data.additionalDetails.petDetails, yPosition);
     }
   });
