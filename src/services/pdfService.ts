@@ -47,9 +47,9 @@ export const generateApplicationPDF = async (data: {
     const imgHeight = logoImg.naturalHeight;
     const aspectRatio = imgWidth / imgHeight;
     
-    // Set maximum dimensions for the logo area - adjusted for smaller header
-    const maxLogoWidth = 30;
-    const maxLogoHeight = 15;
+    // Set maximum dimensions for the logo area - made larger
+    const maxLogoWidth = 40; // Increased from 30
+    const maxLogoHeight = 20; // Increased from 15
     
     let logoWidth, logoHeight;
     
@@ -84,14 +84,14 @@ export const generateApplicationPDF = async (data: {
   doc.setFillColor(255, 111, 0); // #FF6F00 orange
   doc.rect(0, headerHeight, 210, 2, 'F');
 
-  yPosition = headerHeight + 15; // Start content below the smaller header
+  yPosition = headerHeight + 10; // Reduced spacing from 15 to 10
 
-  // Main title
+  // Main title - moved closer to form
   doc.setTextColor(33, 33, 33); // Dark grey text
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
-  yPosition += 15;
+  yPosition += 10; // Reduced spacing from 15 to 10
 
   // Helper function to add section header exactly like demo
   const addSectionHeader = (title: string, currentY: number) => {

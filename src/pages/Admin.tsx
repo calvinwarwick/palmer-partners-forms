@@ -9,6 +9,7 @@ import AdminStats from "@/components/admin/AdminStats";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
+import ApplicationHeader from "@/components/shared/ApplicationHeader";
 import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
 
 interface TenancyApplication {
@@ -192,17 +193,12 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Add the header */}
+      <ApplicationHeader title="Admin Dashboard" />
+      
       <div className="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8 max-w-7xl">
-        {/* Header - Mobile optimized */}
-        <div className="mb-6 sm:mb-8">
-          <div className="flex flex-col gap-2 sm:gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-1 sm:mb-2">Admin Dashboard</h1>
-              <p className="text-gray-600 text-sm sm:text-base lg:text-lg">Manage tenancy applications and track performance</p>
-            </div>
-          </div>
-        </div>
-
+        {/* Header content - removed since it's now in ApplicationHeader */}
+        
         {/* Statistics - Mobile responsive */}
         <div className="mb-4 sm:mb-6">
           <AdminStats applications={applications} />
