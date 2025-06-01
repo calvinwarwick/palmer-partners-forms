@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2, Clock, Filter } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ import { useState, useRef, useEffect } from "react";
 import { format, formatDistanceToNow } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import ApplicationActivityModal from "./ApplicationActivityModal";
+import ApplicationPreviewContent from "./ApplicationPreviewContent";
 
 interface TenancyApplication {
   id: string;
@@ -60,6 +62,8 @@ const ApplicationsTable = ({
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [selectedApplicationForActivity, setSelectedApplicationForActivity] = useState<TenancyApplication | null>(null);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [selectedApplicationForPreview, setSelectedApplicationForPreview] = useState<TenancyApplication | null>(null);
+  const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
   const checkboxRef = useRef<HTMLButtonElement>(null);
   
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
@@ -87,8 +91,9 @@ const ApplicationsTable = ({
     }
   };
 
-  const handlePreviewApplication = (applicationId: string) => {
-    navigate(`/application-preview/${applicationId}`);
+  const handlePreviewApplication = (application: TenancyApplication) => {
+    setSelectedApplicationForPreview(application);
+    setIsPreviewSheetOpen(true);
   };
 
   const handleGeneratePdf = async (application: TenancyApplication) => {
@@ -297,7 +302,7 @@ const ApplicationsTable = ({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handlePreviewApplication(application.id)}
+                        onClick={() => handlePreviewApplication(application)}
                         className="h-7 text-xs"
                       >
                         <Eye className="h-3 w-3 mr-1" />
@@ -397,7 +402,7 @@ const ApplicationsTable = ({
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handlePreviewApplication(application.id)}
+                          onClick={() => handlePreviewApplication(application)}
                           className="h-8"
                         >
                           <Eye className="h-4 w-4 mr-1" />
@@ -441,6 +446,18 @@ const ApplicationsTable = ({
           </p>
         </div>
       )}
+
+      {/* Preview Sheet */}
+      <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
+        <SheetContent className="w-full sm:max-w-4xl">
+          <SheetHeader>
+            <SheetTitle>Application Preview</SheetTitle>
+          </SheetHeader>
+          {selectedApplicationForPreview && (
+            <ApplicationPreviewContent application={selectedApplicationForPreview} />
+          )}
+        </SheetContent>
+      </Sheet>
 
       {/* Activity Modal */}
       <ApplicationActivityModal
