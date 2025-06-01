@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { User, Briefcase, Building, Calendar, PoundSterling } from "lucide-react";
+import { User, Briefcase, Building, Calendar, PoundSterling, HelpCircle } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
+import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 
 interface EmploymentStepProps {
   applicants: Applicant[];
@@ -74,10 +75,9 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.companyName || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
                         placeholder="Enter company name"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
-                          paddingLeft: '2.75rem' 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
                         required
                       />
@@ -94,10 +94,9 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.jobTitle || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
                         placeholder="Enter job title"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
-                          paddingLeft: '2.75rem' 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
                         required
                       />
@@ -106,11 +105,12 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor={`annualIncome-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                      Annual Salary (£) <span className="text-red-500">*</span>
-                    </Label>
-                    <p className="text-sm text-gray-500 mb-2">This should be your basic salary excluding bonuses, commission, overtime etc.</p>
+                  <FormFieldWithTooltip
+                    label="Annual Salary (£)"
+                    tooltip="This should be your basic salary excluding bonuses, commission, overtime etc."
+                    required
+                    htmlFor={`annualIncome-${applicant.id}`}
+                  >
                     <div className="relative">
                       <PoundSterling className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 z-10" />
                       <Input
@@ -119,15 +119,15 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.annualIncome || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                         placeholder="Enter annual salary"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
-                          paddingLeft: '2.75rem' 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
                         required
                       />
                     </div>
-                  </div>
+                  </FormFieldWithTooltip>
+                  
                   <div className="space-y-2">
                     <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Length of Service <span className="text-red-500">*</span>
@@ -139,10 +139,9 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.lengthOfService || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
                         placeholder="e.g. 2 years 3 months"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', 
-                          paddingLeft: '2.75rem' 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
                         required
                       />

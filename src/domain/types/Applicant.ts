@@ -103,7 +103,7 @@ export interface AdditionalDetails {
   
   // Additional fields used in validation and forms
   hasPets?: boolean;
-  petDetails?: {
+  petDetailsArray?: {
     petType: string;
     petBreed: string;
     petAge: string;
