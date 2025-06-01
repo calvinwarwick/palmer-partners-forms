@@ -92,22 +92,7 @@ export const generateApplicationPDF = async (data: {
 
   doc.setFontSize(12);
   const details = data.additionalDetails;
-  doc.text(`Move In Date: ${details.moveInDate}`, 20, yPosition);
-  yPosition += 7;
-  doc.text(`Tenancy Length: ${details.tenancyLength}`, 20, yPosition);
-  yPosition += 7;
-  doc.text(`Pets: ${details.pets ? 'Yes' : 'No'}`, 20, yPosition);
-  yPosition += 7;
   
-  if (details.pets === true) {
-    doc.text(`Pet Details: ${details.petDetails || 'Not specified'}`, 20, yPosition);
-    yPosition += 7;
-  }
-  
-  doc.text(`Smoking: ${details.smoking ? 'Yes' : 'No'}`, 20, yPosition);
-  yPosition += 7;
-  doc.text(`Parking: ${details.parking ? 'Yes' : 'No'}`, 20, yPosition);
-  yPosition += 7;
   doc.text(`Children: ${details.children ? 'Yes' : 'No'}`, 20, yPosition);
   yPosition += 7;
   
@@ -116,8 +101,13 @@ export const generateApplicationPDF = async (data: {
     yPosition += 7;
   }
   
-  doc.text(`Household Income: £${details.householdIncome}`, 20, yPosition);
+  doc.text(`Pets: ${details.pets ? 'Yes' : 'No'}`, 20, yPosition);
   yPosition += 7;
+  
+  if (details.pets && details.petDetails) {
+    doc.text(`Pet Details: ${details.petDetails}`, 20, yPosition);
+    yPosition += 7;
+  }
   
   if (details.additionalRequests) {
     doc.text(`Additional Requests: ${details.additionalRequests}`, 20, yPosition);

@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { Heart, PawPrint } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import { PetDetails } from "./PetDetails";
 
@@ -107,17 +107,14 @@ const AdditionalDetailsStep = ({
               <Label htmlFor="petDetails" className="form-label text-gray-700 font-medium">
                 Please provide details about your pets:
               </Label>
-              <div className="pet-details-container">
-                <PawPrint className="pet-details-icon h-4 w-4 text-orange-500" />
-                <Textarea
-                  id="petDetails"
-                  value={additionalDetails.petDetails}
-                  onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
-                  placeholder="Please provide details about the pets..."
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                />
-              </div>
+              <Textarea
+                id="petDetails"
+                value={additionalDetails.petDetails}
+                onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
+                placeholder="Please provide details about the pets..."
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+              />
             </div>
           )}
         </CardContent>
