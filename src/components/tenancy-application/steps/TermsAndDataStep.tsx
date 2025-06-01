@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -196,9 +197,6 @@ const TermsAndDataStep = ({
             </div>
             Data Sharing Preferences
           </CardTitle>
-          <CardDescription className="text-orange-50">
-            We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div className="flex items-center gap-3">
@@ -209,7 +207,7 @@ const TermsAndDataStep = ({
             />
             <Label 
               htmlFor="utilities" 
-              className="text-gray-700 font-medium cursor-pointer mb-0"
+              className="text-gray-700 font-medium cursor-pointer"
               onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
             >
               I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
@@ -224,12 +222,16 @@ const TermsAndDataStep = ({
             />
             <Label 
               htmlFor="insurance" 
-              className="text-gray-700 font-medium cursor-pointer mb-0"
+              className="text-gray-700 font-medium cursor-pointer"
               onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
             >
               I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
             </Label>
           </div>
+
+          <p className="text-sm text-gray-500 mt-4">
+            We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.
+          </p>
         </CardContent>
       </Card>
 
