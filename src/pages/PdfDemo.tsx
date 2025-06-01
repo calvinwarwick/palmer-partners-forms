@@ -47,7 +47,7 @@ const PdfDemo = () => {
       utilities: false,
       insurance: true
     },
-    signature: "Calvin Warwick",
+    signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", // Demo signature
     submittedAt: "2025-02-10T12:38:00.000Z"
   };
 
@@ -59,10 +59,10 @@ const PdfDemo = () => {
 
   const DataRow = ({ label, value }: { label: string; value: string }) => (
     <TableRow>
-      <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3">
+      <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3 w-[35%]">
         {label}
       </TableCell>
-      <TableCell className="bg-white border border-gray-300 p-3">
+      <TableCell className="bg-white border border-gray-300 p-3 w-[65%]">
         {value || '-'}
       </TableCell>
     </TableRow>
@@ -169,13 +169,22 @@ const PdfDemo = () => {
               <TableBody>
                 <DataRow label="Full Name" value={`${demoData.applicants[0]?.firstName || ''} ${demoData.applicants[0]?.lastName || ''}`} />
                 <TableRow>
-                  <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3">
+                  <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3 w-[35%]">
                     Signature
                   </TableCell>
-                  <TableCell className="bg-white border border-gray-300 p-3">
-                    <div className="bg-gray-100 border border-gray-200 p-4 text-center text-gray-600">
-                      Digital Signature Applied
-                    </div>
+                  <TableCell className="bg-white border border-gray-300 p-3 w-[65%]">
+                    {demoData.signature && demoData.signature.startsWith('data:image/') ? (
+                      <img 
+                        src={demoData.signature} 
+                        alt="Digital Signature" 
+                        className="max-w-xs"
+                        style={{ maxWidth: '100%', maxHeight: '40px' }}
+                      />
+                    ) : (
+                      <div className="bg-gray-100 border border-gray-200 p-4 text-center text-gray-600">
+                        Digital Signature Applied
+                      </div>
+                    )}
                   </TableCell>
                 </TableRow>
                 <DataRow label="Submitted At" value={new Date(demoData.submittedAt).toLocaleString()} />

@@ -26,10 +26,10 @@ const ApplicationPreviewContent = ({ application }: ApplicationPreviewContentPro
 
   const DataRow = ({ label, value }: { label: string; value: string }) => (
     <TableRow>
-      <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3">
+      <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3 w-[35%]">
         {label}
       </TableCell>
-      <TableCell className="bg-white border border-gray-300 p-3">
+      <TableCell className="bg-white border border-gray-300 p-3 w-[65%]">
         {value || '-'}
       </TableCell>
     </TableRow>
@@ -143,10 +143,10 @@ const ApplicationPreviewContent = ({ application }: ApplicationPreviewContentPro
             <TableBody>
               <DataRow label="Full Name" value={`${application.applicants[0]?.firstName || ''} ${application.applicants[0]?.lastName || ''}`} />
               <TableRow>
-                <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3">
+                <TableCell className="bg-gray-100 font-medium border border-gray-300 p-3 w-[35%]">
                   Signature
                 </TableCell>
-                <TableCell className="bg-white border border-gray-300 p-3">
+                <TableCell className="bg-white border border-gray-300 p-3 w-[65%]">
                   {application.signature && application.signature.startsWith('data:image/') ? (
                     <img 
                       src={application.signature} 
