@@ -5,9 +5,9 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
 
 interface PetDetailsProps {
-  pets: boolean;
+  pets: string;
   petDetails?: string;
-  onPetsChange: (value: boolean) => void;
+  onPetsChange: (value: string) => void;
   onPetDetailsChange: (value: string) => void;
 }
 
@@ -21,8 +21,8 @@ export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange 
         <div>
           <Label>Do you have any pets?</Label>
           <RadioGroup
-            value={pets ? "yes" : "no"}
-            onValueChange={(value) => onPetsChange(value === "yes")}
+            value={pets}
+            onValueChange={onPetsChange}
             className="flex flex-row space-x-4 mt-2"
           >
             <div className="flex items-center space-x-2">
@@ -36,7 +36,7 @@ export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange 
           </RadioGroup>
         </div>
 
-        {pets && (
+        {pets === 'yes' && (
           <div>
             <Label htmlFor="petDetails">Please provide details about your pets</Label>
             <Textarea

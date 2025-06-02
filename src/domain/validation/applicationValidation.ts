@@ -1,5 +1,4 @@
 
-
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validateStep = (
@@ -50,15 +49,18 @@ export const validateStep = (
       );
     
     case 5: // Additional Details
+      // Check if pets is defined (boolean or string)
+      const petsValid = additionalDetails.pets !== undefined;
+      
       // Check if children details are valid
       const childrenValid = !additionalDetails.children || 
         (additionalDetails.children && additionalDetails.childrenDetails);
       
-      // Check if pet details are provided when pets are selected - pets is now boolean
+      // Check if pet details are provided when pets are selected
       const petDetailsValid = !additionalDetails.pets || 
         (additionalDetails.pets && additionalDetails.petDetails);
       
-      return childrenValid && petDetailsValid;
+      return petsValid && childrenValid && petDetailsValid;
     
     case 6: // Terms and Data
       return !!(termsAccepted && signature);
@@ -124,10 +126,11 @@ export const getStepErrors = (
       break;
       
     case 5:
+      if (additionalDetails.pets === undefined) errors.push('Please specify if you have pets');
       if (additionalDetails.children && !additionalDetails.childrenDetails) {
         errors.push('Please provide details about children');
       }
-      if (additionalDetails.pets === true && !additionalDetails.petDetails) {
+      if (additionalDetails.pets && !additionalDetails.petDetails) {
         errors.push('Please provide pet details');
       }
       break;
@@ -140,4 +143,3 @@ export const getStepErrors = (
   
   return errors;
 };
-
