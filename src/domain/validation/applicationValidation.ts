@@ -49,7 +49,7 @@ export const validateStep = (
       );
     
     case 5: // Additional Details
-      // Check if pets field is properly defined
+      // Check if pets field is properly defined - handle both string and boolean types
       const petsValid = typeof additionalDetails.pets === 'boolean';
       
       // Check if children details are valid
