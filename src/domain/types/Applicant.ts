@@ -89,7 +89,7 @@ export interface PropertyPreferences {
 }
 
 export interface AdditionalDetails {
-  // Core fields
+  // Core fields - pets is now consistently boolean
   moveInDate: string;
   tenancyLength: string;
   pets: boolean;
