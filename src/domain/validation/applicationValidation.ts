@@ -49,20 +49,15 @@ export const validateStep = (
       );
     
     case 5: // Additional Details
-      // Check if pets field is properly defined - handle both string and boolean types
-      const petsValid = typeof additionalDetails.pets === 'boolean';
-      
       // Check if children details are valid
       const childrenValid = !additionalDetails.children || 
         (additionalDetails.children && additionalDetails.childrenDetails);
       
       // Check if pet details are provided when pets are selected
-      // Convert pets to boolean to handle potential type issues
-      const hasPets = Boolean(additionalDetails.pets);
-      const petDetailsValid = !hasPets || 
-        (hasPets && additionalDetails.petDetails);
+      const petDetailsValid = !additionalDetails.pets || 
+        (additionalDetails.pets && additionalDetails.petDetails);
       
-      return petsValid && childrenValid && petDetailsValid;
+      return childrenValid && petDetailsValid;
     
     case 6: // Terms and Data
       return !!(termsAccepted && signature);
@@ -128,13 +123,10 @@ export const getStepErrors = (
       break;
       
     case 5:
-      if (typeof additionalDetails.pets !== 'boolean') errors.push('Please specify if you have pets');
       if (additionalDetails.children && !additionalDetails.childrenDetails) {
         errors.push('Please provide details about children');
       }
-      // Convert pets to boolean to handle potential type issues
-      const hasPets = Boolean(additionalDetails.pets);
-      if (hasPets && !additionalDetails.petDetails) {
+      if (additionalDetails.pets && !additionalDetails.petDetails) {
         errors.push('Please provide pet details');
       }
       break;
