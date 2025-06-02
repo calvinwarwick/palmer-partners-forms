@@ -1,4 +1,5 @@
 
+
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validateStep = (
@@ -126,7 +127,7 @@ export const getStepErrors = (
       if (additionalDetails.children && !additionalDetails.childrenDetails) {
         errors.push('Please provide details about children');
       }
-      if (additionalDetails.pets && !additionalDetails.petDetails) {
+      if (additionalDetails.pets === true && !additionalDetails.petDetails) {
         errors.push('Please provide pet details');
       }
       break;
@@ -139,3 +140,4 @@ export const getStepErrors = (
   
   return errors;
 };
+
