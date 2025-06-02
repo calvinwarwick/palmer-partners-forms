@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Applicant, PropertyPreferences, AdditionalDetails, Application } from "@/domain/types/Applicant";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
@@ -57,6 +58,7 @@ export interface FormContextType {
   handleGuarantorSave: () => void;
   handleNext: () => void;
   handleSubmit: () => void;
+  fillAllTestData: () => void;
   
   // Submission state
   isSubmitting: boolean;
@@ -298,6 +300,71 @@ const FormProvider = ({ children }: FormProviderProps) => {
     setSelectedApplicantForGuarantor(null);
   };
 
+  const fillAllTestData = () => {
+    // Fill property preferences
+    setPropertyPreferences({
+      propertyType: "House",
+      streetAddress: "123 Test Street",
+      postcode: "AB12 3CD",
+      maxRent: "1500",
+      preferredLocation: "City Center",
+      moveInDate: "2024-07-01",
+      latestMoveInDate: "2024-07-15",
+      initialTenancyTerm: "1 year",
+      additionalRequests: "No smoking policy preferred"
+    });
+
+    // Fill first applicant data
+    setApplicants(prev => prev.map((applicant, index) => {
+      if (index === 0) {
+        return {
+          ...applicant,
+          firstName: "John",
+          lastName: "Doe",
+          email: "john.doe@example.com",
+          phone: "07123456789",
+          dateOfBirth: "1990-01-01",
+          employment: "Full-time",
+          employmentStatus: "Employed",
+          companyName: "Tech Corp Ltd",
+          jobTitle: "Software Developer",
+          annualIncome: "45000",
+          lengthOfService: "2 years",
+          currentAddress: "456 Current Road",
+          currentPostcode: "EF34 5GH",
+          residencyStatus: "Tenant",
+          timeAtAddress: "2 years",
+          landlordName: "Current Landlord",
+          landlordPhone: "07987654321",
+          moveInDate: "2024-07-01",
+          vacateDate: "2024-06-30",
+          currentPropertyStatus: "Renting",
+          currentRentalAmount: "1200"
+        };
+      }
+      return applicant;
+    }));
+
+    // Fill additional details
+    setAdditionalDetails({
+      moveInDate: "2024-07-01",
+      tenancyLength: "1 year",
+      pets: false,
+      petDetails: "",
+      smoking: false,
+      parking: true,
+      children: false,
+      childrenDetails: "",
+      additionalRequests: "Prefer quiet neighbors",
+      householdIncome: "45000"
+    });
+
+    // Fill signature and terms
+    setSignature("John Doe");
+    setFullName("John Doe");
+    setTermsAccepted(true);
+  };
+
   const handleNext = () => {
     const canProceedToNext = canProceed(currentStep, applicants, propertyPreferences, additionalDetails, signature, termsAccepted);
     
@@ -364,6 +431,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
     handleGuarantorSave,
     handleNext,
     handleSubmit,
+    fillAllTestData,
     isSubmitting,
     isSubmitted
   });

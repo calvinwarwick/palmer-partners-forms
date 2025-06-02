@@ -139,11 +139,10 @@ const PropertyDetailsStep = ({
                   <SelectValue placeholder="Please select an option" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-gray-300 z-50">
-                  <SelectItem value="6 months">6 months</SelectItem>
                   <SelectItem value="1 year">1 year</SelectItem>
-                  <SelectItem value="18 months">18 months</SelectItem>
                   <SelectItem value="2 years">2 years</SelectItem>
-                  <SelectItem value="flexible">Flexible</SelectItem>
+                  <SelectItem value="3 years">3 years</SelectItem>
+                  <SelectItem value="4+ years">4+ years</SelectItem>
                 </SelectContent>
               </Select>
             </div>
