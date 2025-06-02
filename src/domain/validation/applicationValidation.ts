@@ -53,7 +53,7 @@ export const validateStep = (
       const childrenValid = !additionalDetails.children || 
         (additionalDetails.children && additionalDetails.childrenDetails);
       
-      // Check if pet details are provided when pets are selected
+      // Check if pet details are provided when pets are selected - pets is now boolean
       const petDetailsValid = !additionalDetails.pets || 
         (additionalDetails.pets && additionalDetails.petDetails);
       
