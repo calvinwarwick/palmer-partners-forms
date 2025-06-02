@@ -1,4 +1,5 @@
 
+
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validateStep = (
@@ -56,12 +57,9 @@ export const validateStep = (
       const childrenValid = !additionalDetails.children || 
         (additionalDetails.children && additionalDetails.childrenDetails);
       
-      // Convert pets to boolean properly handling string/boolean types
-      const hasPets: boolean = additionalDetails.pets === true || additionalDetails.pets === 'true';
-      
       // Check if pet details are provided when pets are selected
-      const petDetailsValid = !hasPets || 
-        (hasPets && additionalDetails.petDetails);
+      const petDetailsValid = !additionalDetails.pets || 
+        (additionalDetails.pets && additionalDetails.petDetails);
       
       return petsValid && childrenValid && petDetailsValid;
     
@@ -133,9 +131,7 @@ export const getStepErrors = (
       if (additionalDetails.children && !additionalDetails.childrenDetails) {
         errors.push('Please provide details about children');
       }
-      // Convert pets to boolean properly handling string/boolean types
-      const hasPets: boolean = additionalDetails.pets === true || additionalDetails.pets === 'true';
-      if (hasPets && !additionalDetails.petDetails) {
+      if (additionalDetails.pets && !additionalDetails.petDetails) {
         errors.push('Please provide pet details');
       }
       break;
@@ -148,3 +144,4 @@ export const getStepErrors = (
   
   return errors;
 };
+
