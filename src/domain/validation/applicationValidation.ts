@@ -57,8 +57,10 @@ export const validateStep = (
         (additionalDetails.children && additionalDetails.childrenDetails);
       
       // Check if pet details are provided when pets are selected
-      const petDetailsValid = !additionalDetails.pets || 
-        (additionalDetails.pets && additionalDetails.petDetails);
+      // Convert pets to boolean to handle potential type issues
+      const hasPets = Boolean(additionalDetails.pets);
+      const petDetailsValid = !hasPets || 
+        (hasPets && additionalDetails.petDetails);
       
       return petsValid && childrenValid && petDetailsValid;
     
@@ -130,7 +132,9 @@ export const getStepErrors = (
       if (additionalDetails.children && !additionalDetails.childrenDetails) {
         errors.push('Please provide details about children');
       }
-      if (additionalDetails.pets && !additionalDetails.petDetails) {
+      // Convert pets to boolean to handle potential type issues
+      const hasPets = Boolean(additionalDetails.pets);
+      if (hasPets && !additionalDetails.petDetails) {
         errors.push('Please provide pet details');
       }
       break;
