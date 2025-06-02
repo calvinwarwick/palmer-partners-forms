@@ -157,19 +157,6 @@ const AdditionalDetailsStep = ({
           </div>
         </CardContent>
       </Card>
-
-      {/* Test Data Button */}
-      {onFillAllTestData && (
-        <div className="flex justify-center">
-          <Button 
-            variant="outline" 
-            onClick={onFillAllTestData}
-            className="text-orange-600 border-orange-300 hover:bg-orange-50"
-          >
-            Fill All Test Data
-          </Button>
-        </div>
-      )}
     </div>
   );
 };

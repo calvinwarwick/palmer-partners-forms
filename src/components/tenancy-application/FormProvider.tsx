@@ -57,6 +57,7 @@ export interface FormContextType {
   handleGuarantorSave: () => void;
   handleNext: () => void;
   handleSubmit: () => void;
+  fillTestData: () => void;
   
   // Submission state
   isSubmitting: boolean;
@@ -331,6 +332,72 @@ const FormProvider = ({ children }: FormProviderProps) => {
     await submitApplication(application);
   };
 
+  const fillTestData = () => {
+    // Fill property preferences
+    setPropertyPreferences({
+      propertyType: "apartment",
+      streetAddress: "123 Test Street",
+      postcode: "SW1A 1AA",
+      maxRent: "2500",
+      preferredLocation: "Central London",
+      moveInDate: "2024-07-01",
+      latestMoveInDate: "2024-08-01",
+      initialTenancyTerm: "2",
+      additionalRequests: "Pet-friendly property preferred"
+    });
+
+    // Fill first applicant
+    setApplicants(prev => prev.map((applicant, index) => {
+      if (index === 0) {
+        return {
+          ...applicant,
+          firstName: "John",
+          lastName: "Doe",
+          email: "john.doe@example.com",
+          phone: "07123456789",
+          dateOfBirth: "1990-01-01",
+          employment: "Full-time",
+          employmentStatus: "Permanent",
+          companyName: "Tech Solutions Ltd",
+          jobTitle: "Software Developer",
+          annualIncome: "50000",
+          lengthOfService: "2 years",
+          currentAddress: "456 Current Street",
+          currentPostcode: "E1 6AN",
+          residencyStatus: "Tenant",
+          timeAtAddress: "2 years",
+          landlordName: "Current Landlord",
+          landlordPhone: "07987654321",
+          rentUpToDate: "Yes",
+          currentPropertyStatus: "Renting",
+          moveInDate: "2022-06-01",
+          vacateDate: "2024-07-01",
+          currentRentalAmount: "1800"
+        };
+      }
+      return applicant;
+    }));
+
+    // Fill additional details
+    setAdditionalDetails({
+      moveInDate: "2024-07-01",
+      tenancyLength: "2 years",
+      pets: true,
+      petDetails: "1 small dog, house trained, vaccinated",
+      smoking: false,
+      parking: true,
+      children: false,
+      childrenDetails: "",
+      additionalRequests: "Would prefer ground floor apartment",
+      householdIncome: "50000"
+    });
+
+    // Fill signature and terms
+    setSignature("John Doe");
+    setFullName("John Doe");
+    setTermsAccepted(true);
+  };
+
   return children({
     totalSteps,
     currentStep,
@@ -364,6 +431,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
     handleGuarantorSave,
     handleNext,
     handleSubmit,
+    fillTestData,
     isSubmitting,
     isSubmitted
   });

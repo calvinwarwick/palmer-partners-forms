@@ -33,7 +33,8 @@ const TenancyApplicationForm = () => {
           handleNext,
           handleSubmit,
           handleGuarantorSave,
-          setGuarantorFormOpen
+          setGuarantorFormOpen,
+          fillTestData
         } = formContext;
 
         if (isSubmitted) {
@@ -77,6 +78,7 @@ const TenancyApplicationForm = () => {
                       onPrevious={goToPrevious}
                       onNext={handleNext}
                       onSubmit={handleSubmit}
+                      onFillTestData={fillTestData}
                     />
                   </CardContent>
                 </Card>
