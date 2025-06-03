@@ -50,8 +50,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                   <SelectValue placeholder="Select employment status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="employed">Employed</SelectItem>
-                  <SelectItem value="self-employed">Self-Employed</SelectItem>
+                  <SelectItem value="full-time">Full Time</SelectItem>
+                  <SelectItem value="part-time">Part Time</SelectItem>
+                  <SelectItem value="zero-hours">Zero Hours</SelectItem>
+                  <SelectItem value="self-employed">Self Employed</SelectItem>
                   <SelectItem value="unemployed">Unemployed</SelectItem>
                   <SelectItem value="student">Student</SelectItem>
                   <SelectItem value="retired">Retired</SelectItem>
@@ -60,8 +62,11 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
               </Select>
             </div>
 
-            {/* Employment Details for Employed/Self-employed */}
-            {(applicant.employmentStatus === "employed" || applicant.employmentStatus === "self-employed") && (
+            {/* Employment Details for Full Time, Part Time, Zero Hours, and Self Employed */}
+            {(applicant.employmentStatus === "full-time" || 
+              applicant.employmentStatus === "part-time" || 
+              applicant.employmentStatus === "zero-hours" || 
+              applicant.employmentStatus === "self-employed") && (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
@@ -160,8 +165,10 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
               </>
             )}
 
-            {/* Contract Type for Employed */}
-            {applicant.employmentStatus === "employed" && (
+            {/* Contract Type for Full Time, Part Time, and Zero Hours (not Self Employed) */}
+            {(applicant.employmentStatus === "full-time" || 
+              applicant.employmentStatus === "part-time" || 
+              applicant.employmentStatus === "zero-hours") && (
               <div className="space-y-2">
                 <Label htmlFor={`contractType-${applicant.id}`} className="form-label text-gray-700 font-medium">
                   Contract Type <span className="text-red-500">*</span>
