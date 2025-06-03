@@ -44,7 +44,7 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor={`companyName-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                Company Name <span className="text-red-500">*</span>
+                Company Name
               </Label>
               <Input
                 id={`companyName-${applicant.id}`}
@@ -55,12 +55,11 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                 style={{ 
                   boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                 }}
-                required
               />
             </div>
             <div className="space-y-2">
               <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                Job Title <span className="text-red-500">*</span>
+                Job Title
               </Label>
               <Input
                 id={`jobTitle-${applicant.id}`}
@@ -71,7 +70,6 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                 style={{ 
                   boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                 }}
-                required
               />
             </div>
           </div>
@@ -80,7 +78,6 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
             <FormFieldWithTooltip
               label="Annual Salary (£)"
               tooltip="This should be your basic salary excluding bonuses, commission, overtime etc."
-              required
               htmlFor={`annualIncome-${applicant.id}`}
             >
               <div className="currency-input-container">
@@ -95,14 +92,13 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                   style={{ 
                     boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                   }}
-                  required
                 />
               </div>
             </FormFieldWithTooltip>
             
             <div className="space-y-2">
               <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                Length of Service <span className="text-red-500">*</span>
+                Length of Service
               </Label>
               <Select value={applicant.lengthOfService} onValueChange={(value) => onUpdateApplicant(applicant.id, "lengthOfService", value)}>
                 <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
