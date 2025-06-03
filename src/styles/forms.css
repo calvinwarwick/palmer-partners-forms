@@ -41,9 +41,20 @@
   padding: 0.75rem;
 }
 
-/* Remove left padding from select dropdown items */
+/* Remove left padding from all select dropdown items and ensure no tickmarks */
 [data-radix-select-content] [data-radix-select-item] {
   padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+}
+
+/* Hide all select item indicators (tickmarks) */
+[data-radix-select-item] span:first-child {
+  display: none !important;
+}
+
+/* Ensure select items have no left margin for indicators */
+[data-radix-select-item] [data-radix-select-item-text] {
+  margin-left: 0 !important;
 }
 
 /* Improved label styling */
