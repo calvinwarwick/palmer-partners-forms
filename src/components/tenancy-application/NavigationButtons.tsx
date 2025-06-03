@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Send, TestTube } from "lucide-react";
+import { ChevronLeft, ChevronRight, Send, TestTube, Zap } from "lucide-react";
 
 interface NavigationButtonsProps {
   isFirstStep: boolean;
@@ -11,6 +11,7 @@ interface NavigationButtonsProps {
   onNext: () => void;
   onSubmit: () => void;
   onFillTestData?: () => void;
+  onFillStepData?: () => void;
   onClearData?: () => void;
 }
 
@@ -22,7 +23,8 @@ const NavigationButtons = ({
   onPrevious,
   onNext,
   onSubmit,
-  onFillTestData
+  onFillTestData,
+  onFillStepData
 }: NavigationButtonsProps) => {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-200">
@@ -41,8 +43,20 @@ const NavigationButtons = ({
         )}
       </div>
 
-      {/* Center - Test data button */}
+      {/* Center - Test data buttons */}
       <div className="flex gap-2">
+        {onFillStepData && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onFillStepData}
+            className="flex items-center gap-2 text-orange-600 border-orange-300 hover:bg-orange-50"
+            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+          >
+            <Zap className="h-4 w-4" />
+            Fill Step
+          </Button>
+        )}
         {onFillTestData && (
           <Button
             type="button"
@@ -52,7 +66,7 @@ const NavigationButtons = ({
             style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
           >
             <TestTube className="h-4 w-4" />
-            Fill Test Data
+            Fill Data
           </Button>
         )}
       </div>

@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
 import ApplicationSuccess from "@/components/tenancy-application/ApplicationSuccess";
@@ -79,6 +78,10 @@ const TenancyApplicationForm = () => {
                       onNext={handleNext}
                       onSubmit={handleSubmit}
                       onFillTestData={fillAllTestData}
+                      onFillStepData={() => {
+                        // Placeholder function for now - will need to be implemented in FormProvider
+                        console.log('Fill Step button clicked');
+                      }}
                     />
                   </CardContent>
                 </Card>
