@@ -67,24 +67,8 @@ export const validateAndHighlightFields = (
     
     case 3:
       applicants.forEach((applicant, index) => {
+        // Only employment status is required
         if (!applicant.employmentStatus) invalidFields.push(`employmentStatus-${applicant.id}`);
-        
-        // Only require employment details for employed statuses that need them
-        const requiresEmploymentDetails = applicant.employmentStatus && 
-            applicant.employmentStatus !== "unemployed" && 
-            applicant.employmentStatus !== "student" && 
-            applicant.employmentStatus !== "retired" && 
-            applicant.employmentStatus !== "other";
-            
-        if (requiresEmploymentDetails) {
-          if (!applicant.annualIncome) invalidFields.push(`annualIncome-${applicant.id}`);
-          if (!applicant.companyName) invalidFields.push(`companyName-${applicant.id}`);
-          if (!applicant.jobTitle) invalidFields.push(`jobTitle-${applicant.id}`);
-          if (!applicant.lengthOfService) invalidFields.push(`lengthOfService-${applicant.id}`);
-        } else {
-          // For non-employment statuses, still require annual income (could be pension, benefits, etc.)
-          if (!applicant.annualIncome) invalidFields.push(`annualIncome-${applicant.id}`);
-        }
       });
       break;
     

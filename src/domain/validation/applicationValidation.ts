@@ -31,24 +31,8 @@ export const validateStep = (
     
     case 3: // Employment
       return applicants.every(applicant => {
-        // Employment status is always required
-        if (!applicant.employmentStatus) return false;
-        
-        // Annual income is always required (pension, benefits, salary, etc.)
-        if (!applicant.annualIncome) return false;
-        
-        // Only require employment details for employed statuses
-        const requiresEmploymentDetails = applicant.employmentStatus && 
-            applicant.employmentStatus !== "unemployed" && 
-            applicant.employmentStatus !== "student" && 
-            applicant.employmentStatus !== "retired" && 
-            applicant.employmentStatus !== "other";
-            
-        if (requiresEmploymentDetails) {
-          return !!(applicant.companyName && applicant.jobTitle && applicant.lengthOfService);
-        }
-        
-        return true;
+        // Only employment status is required
+        return !!applicant.employmentStatus;
       });
     
     case 4: // Current Address
@@ -119,18 +103,6 @@ export const getStepErrors = (
     case 3:
       applicants.forEach((applicant, index) => {
         if (!applicant.employmentStatus) errors.push(`Applicant ${index + 1}: Employment status is required`);
-        if (!applicant.annualIncome) errors.push(`Applicant ${index + 1}: Annual income is required`);
-        
-        // Only require employment details for employed statuses
-        if (applicant.employmentStatus && 
-            applicant.employmentStatus !== "unemployed" && 
-            applicant.employmentStatus !== "student" && 
-            applicant.employmentStatus !== "retired" && 
-            applicant.employmentStatus !== "other") {
-          if (!applicant.companyName) errors.push(`Applicant ${index + 1}: Company name is required`);
-          if (!applicant.jobTitle) errors.push(`Applicant ${index + 1}: Job title is required`);
-          if (!applicant.lengthOfService) errors.push(`Applicant ${index + 1}: Length of service is required`);
-        }
       });
       break;
       
