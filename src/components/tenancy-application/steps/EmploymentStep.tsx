@@ -131,17 +131,25 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Length of Service <span className="text-red-500">*</span>
                     </Label>
-                    <Input
-                      id={`lengthOfService-${applicant.id}`}
-                      value={applicant.lengthOfService || ""}
-                      onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
-                      placeholder="e.g. 2 years 3 months"
-                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                      style={{ 
-                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                      }}
-                      required
-                    />
+                    <Select value={applicant.lengthOfService} onValueChange={(value) => onUpdateApplicant(applicant.id, "lengthOfService", value)}>
+                      <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                        <SelectValue placeholder="Select an option" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="not-started">Not started yet</SelectItem>
+                        <SelectItem value="less-than-1-year">Less than 1 year</SelectItem>
+                        <SelectItem value="1-year">1 year</SelectItem>
+                        <SelectItem value="2-years">2 years</SelectItem>
+                        <SelectItem value="3-years">3 years</SelectItem>
+                        <SelectItem value="4-years">4 years</SelectItem>
+                        <SelectItem value="5-years">5 years</SelectItem>
+                        <SelectItem value="6-years">6 years</SelectItem>
+                        <SelectItem value="7-years">7 years</SelectItem>
+                        <SelectItem value="8-years">8 years</SelectItem>
+                        <SelectItem value="9-years">9 years</SelectItem>
+                        <SelectItem value="10-plus-years">10+ years</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
 
