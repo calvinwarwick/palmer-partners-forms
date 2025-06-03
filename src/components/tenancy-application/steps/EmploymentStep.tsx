@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
-import { User, Briefcase, Building, Calendar, PoundSterling, HelpCircle } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 
@@ -67,39 +68,33 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     <Label htmlFor={`companyName-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Company Name <span className="text-red-500">*</span>
                     </Label>
-                    <div className="relative">
-                      <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 z-10" />
-                      <Input
-                        id={`companyName-${applicant.id}`}
-                        value={applicant.companyName || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
-                        placeholder="Enter company name"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
-                        style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                        }}
-                        required
-                      />
-                    </div>
+                    <Input
+                      id={`companyName-${applicant.id}`}
+                      value={applicant.companyName || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
+                      placeholder="Enter company name"
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ 
+                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
+                      }}
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor={`jobTitle-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Job Title <span className="text-red-500">*</span>
                     </Label>
-                    <div className="relative">
-                      <Briefcase className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 z-10" />
-                      <Input
-                        id={`jobTitle-${applicant.id}`}
-                        value={applicant.jobTitle || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
-                        placeholder="Enter job title"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
-                        style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                        }}
-                        required
-                      />
-                    </div>
+                    <Input
+                      id={`jobTitle-${applicant.id}`}
+                      value={applicant.jobTitle || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
+                      placeholder="Enter job title"
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ 
+                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
+                      }}
+                      required
+                    />
                   </div>
                 </div>
 
@@ -110,41 +105,35 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     required
                     htmlFor={`annualIncome-${applicant.id}`}
                   >
-                    <div className="relative">
-                      <PoundSterling className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 z-10" />
-                      <Input
-                        id={`annualIncome-${applicant.id}`}
-                        type="number"
-                        value={applicant.annualIncome || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
-                        placeholder="Enter annual salary"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
-                        style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                        }}
-                        required
-                      />
-                    </div>
+                    <Input
+                      id={`annualIncome-${applicant.id}`}
+                      type="number"
+                      value={applicant.annualIncome || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
+                      placeholder="Enter annual salary"
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ 
+                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
+                      }}
+                      required
+                    />
                   </FormFieldWithTooltip>
                   
                   <div className="space-y-2">
                     <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Length of Service <span className="text-red-500">*</span>
                     </Label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-orange-500 z-10" />
-                      <Input
-                        id={`lengthOfService-${applicant.id}`}
-                        value={applicant.lengthOfService || ""}
-                        onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
-                        placeholder="e.g. 2 years 3 months"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
-                        style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                        }}
-                        required
-                      />
-                    </div>
+                    <Input
+                      id={`lengthOfService-${applicant.id}`}
+                      value={applicant.lengthOfService || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
+                      placeholder="e.g. 2 years 3 months"
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ 
+                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
+                      }}
+                      required
+                    />
                   </div>
                 </div>
 
