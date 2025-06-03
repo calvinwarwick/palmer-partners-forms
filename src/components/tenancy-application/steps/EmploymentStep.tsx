@@ -105,18 +105,21 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     required
                     htmlFor={`annualIncome-${applicant.id}`}
                   >
-                    <Input
-                      id={`annualIncome-${applicant.id}`}
-                      type="number"
-                      value={applicant.annualIncome || ""}
-                      onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
-                      placeholder="Enter annual salary"
-                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                      style={{ 
-                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                      }}
-                      required
-                    />
+                    <div className="currency-input-container">
+                      <span className="currency-input-icon">£</span>
+                      <Input
+                        id={`annualIncome-${applicant.id}`}
+                        type="number"
+                        value={applicant.annualIncome || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
+                        placeholder="Enter annual salary"
+                        className="currency-input form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
+                        }}
+                        required
+                      />
+                    </div>
                   </FormFieldWithTooltip>
                   
                   <div className="space-y-2">
