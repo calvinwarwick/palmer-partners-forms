@@ -1,13 +1,19 @@
 
 import { sendEmail } from '../api/emailApi';
-import { generateApplicationPdf } from '../pdfService';
+import { generateApplicationPDF } from '../pdfService';
 import { Application } from '@/domain/types/Applicant';
 
 export const sendApplicationConfirmation = async (application: Application): Promise<boolean> => {
   console.log('Generating PDF for confirmation email...');
   
   try {
-    const pdfBuffer = await generateApplicationPdf(application);
+    const pdfBuffer = await generateApplicationPDF({
+      applicants: application.applicants,
+      propertyPreferences: application.propertyPreferences,
+      additionalDetails: application.additionalDetails,
+      dataSharing: application.dataSharing,
+      signature: application.signature
+    });
     console.log('PDF generated, size:', pdfBuffer.byteLength, 'bytes');
     
     const pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));
@@ -81,7 +87,13 @@ export const sendAdminNotification = async (application: Application): Promise<b
   console.log('Generating PDF for admin notification...');
   
   try {
-    const pdfBuffer = await generateApplicationPdf(application);
+    const pdfBuffer = await generateApplicationPDF({
+      applicants: application.applicants,
+      propertyPreferences: application.propertyPreferences,
+      additionalDetails: application.additionalDetails,
+      dataSharing: application.dataSharing,
+      signature: application.signature
+    });
     console.log('PDF generated for admin, size:', pdfBuffer.byteLength, 'bytes');
     
     const pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));

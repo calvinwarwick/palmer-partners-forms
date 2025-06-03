@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { sendApplicationConfirmation, sendAdminNotification } from '@/services/emailService';
+import { sendApplicationConfirmation, sendAdminNotification } from '@/services/domain/ApplicationService';
 import { Application } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -52,13 +52,7 @@ export const useApplicationSubmission = () => {
       });
       
       // Send confirmation email to applicant
-      const confirmationSent = await sendApplicationConfirmation(
-        application.applicants,
-        application.propertyPreferences,
-        application.additionalDetails,
-        application.dataSharing,
-        application.signature
-      );
+      const confirmationSent = await sendApplicationConfirmation(application);
       
       if (confirmationSent) {
         // Log email sent
@@ -74,13 +68,7 @@ export const useApplicationSubmission = () => {
       }
       
       // Send notification to admin
-      const adminNotificationSent = await sendAdminNotification(
-        application.applicants,
-        application.propertyPreferences,
-        application.additionalDetails,
-        application.dataSharing,
-        application.signature
-      );
+      const adminNotificationSent = await sendAdminNotification(application);
       
       if (adminNotificationSent) {
         // Log admin notification sent
