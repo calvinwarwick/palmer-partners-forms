@@ -308,7 +308,7 @@ const SignaturePad = ({
           <div className="space-y-4">
             <div>
               <Label htmlFor="fullName" className="text-sm font-medium text-gray-700">
-                Type full name *
+                Type full name
               </Label>
               <Input
                 id="fullName"
