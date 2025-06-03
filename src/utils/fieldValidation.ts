@@ -69,6 +69,17 @@ export const validateAndHighlightFields = (
       applicants.forEach((applicant, index) => {
         if (!applicant.employmentStatus) invalidFields.push(`employmentStatus-${applicant.id}`);
         if (!applicant.annualIncome) invalidFields.push(`annualIncome-${applicant.id}`);
+        
+        // Only require employment details for employed statuses
+        if (applicant.employmentStatus && 
+            applicant.employmentStatus !== "unemployed" && 
+            applicant.employmentStatus !== "student" && 
+            applicant.employmentStatus !== "retired" && 
+            applicant.employmentStatus !== "other") {
+          if (!applicant.companyName) invalidFields.push(`companyName-${applicant.id}`);
+          if (!applicant.jobTitle) invalidFields.push(`jobTitle-${applicant.id}`);
+          if (!applicant.lengthOfService) invalidFields.push(`lengthOfService-${applicant.id}`);
+        }
       });
       break;
     
@@ -81,13 +92,10 @@ export const validateAndHighlightFields = (
       break;
     
     case 5:
-      if (!additionalDetails.moveInDate) invalidFields.push('moveInDate');
-      if (!additionalDetails.tenancyLength) invalidFields.push('tenancyLength');
-      if (!additionalDetails.householdIncome) invalidFields.push('householdIncome');
       if (additionalDetails.pets === undefined || additionalDetails.pets === null) invalidFields.push('pets');
-      if (additionalDetails.smoking === undefined || additionalDetails.smoking === null) invalidFields.push('smoking');
-      if (additionalDetails.parking === undefined || additionalDetails.parking === null) invalidFields.push('parking');
       if (additionalDetails.children === undefined || additionalDetails.children === null) invalidFields.push('children');
+      if (additionalDetails.children && !additionalDetails.childrenDetails) invalidFields.push('childrenDetails');
+      if (additionalDetails.pets && !additionalDetails.petDetails) invalidFields.push('petDetails');
       break;
     
     case 6:

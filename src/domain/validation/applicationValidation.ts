@@ -1,3 +1,4 @@
+
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validateStep = (
@@ -30,21 +31,21 @@ export const validateStep = (
     
     case 3: // Employment
       return applicants.every(applicant => 
-        applicant.employment &&
-        applicant.companyName &&
-        applicant.jobTitle &&
+        applicant.employmentStatus &&
         applicant.annualIncome &&
-        applicant.lengthOfService
+        // Only require employment details for employed statuses
+        (applicant.employmentStatus === "unemployed" || 
+         applicant.employmentStatus === "student" || 
+         applicant.employmentStatus === "retired" || 
+         applicant.employmentStatus === "other" ||
+         (applicant.companyName && applicant.jobTitle && applicant.lengthOfService))
       );
     
     case 4: // Current Address
       return applicants.every(applicant => 
         applicant.currentAddress &&
         applicant.currentPostcode &&
-        applicant.moveInDate &&
-        applicant.vacateDate &&
-        applicant.currentPropertyStatus &&
-        applicant.currentRentalAmount
+        applicant.residencyStatus
       );
     
     case 5: // Additional Details
@@ -105,11 +106,19 @@ export const getStepErrors = (
       
     case 3:
       applicants.forEach((applicant, index) => {
-        if (!applicant.employment) errors.push(`Applicant ${index + 1}: Employment status is required`);
-        if (!applicant.companyName) errors.push(`Applicant ${index + 1}: Company name is required`);
-        if (!applicant.jobTitle) errors.push(`Applicant ${index + 1}: Job title is required`);
+        if (!applicant.employmentStatus) errors.push(`Applicant ${index + 1}: Employment status is required`);
         if (!applicant.annualIncome) errors.push(`Applicant ${index + 1}: Annual income is required`);
-        if (!applicant.lengthOfService) errors.push(`Applicant ${index + 1}: Length of service is required`);
+        
+        // Only require employment details for employed statuses
+        if (applicant.employmentStatus && 
+            applicant.employmentStatus !== "unemployed" && 
+            applicant.employmentStatus !== "student" && 
+            applicant.employmentStatus !== "retired" && 
+            applicant.employmentStatus !== "other") {
+          if (!applicant.companyName) errors.push(`Applicant ${index + 1}: Company name is required`);
+          if (!applicant.jobTitle) errors.push(`Applicant ${index + 1}: Job title is required`);
+          if (!applicant.lengthOfService) errors.push(`Applicant ${index + 1}: Length of service is required`);
+        }
       });
       break;
       
@@ -117,10 +126,7 @@ export const getStepErrors = (
       applicants.forEach((applicant, index) => {
         if (!applicant.currentAddress) errors.push(`Applicant ${index + 1}: Current address is required`);
         if (!applicant.currentPostcode) errors.push(`Applicant ${index + 1}: Current postcode is required`);
-        if (!applicant.moveInDate) errors.push(`Applicant ${index + 1}: Move-in date is required`);
-        if (!applicant.vacateDate) errors.push(`Applicant ${index + 1}: Vacate date is required`);
-        if (!applicant.currentPropertyStatus) errors.push(`Applicant ${index + 1}: Property status is required`);
-        if (!applicant.currentRentalAmount) errors.push(`Applicant ${index + 1}: Current rental amount is required`);
+        if (!applicant.residencyStatus) errors.push(`Applicant ${index + 1}: Residency status is required`);
       });
       break;
       
