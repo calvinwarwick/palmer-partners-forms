@@ -326,15 +326,15 @@ const FormProvider = ({ children }: FormProviderProps) => {
           phone: "07123456789",
           dateOfBirth: "1990-01-01",
           employment: "Full-time",
-          employmentStatus: "employed",
+          employmentStatus: "full-time",
           companyName: "Tech Corp Ltd",
           jobTitle: "Software Developer",
           annualIncome: "45000",
-          lengthOfService: "2 years",
+          lengthOfService: "2-years",
           currentAddress: "456 Current Road",
           currentPostcode: "EF34 5GH",
           residencyStatus: "tenant",
-          timeAtAddress: "2 years",
+          timeAtAddress: "2-years",
           landlordName: "Current Landlord",
           landlordPhone: "07987654321",
           moveInDate: "2024-07-01",
@@ -343,7 +343,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
           currentRentalAmount: "1200",
           rentUpToDate: "yes",
           noticePeriod: "yes",
-          noticePeriodLength: "1 month"
+          noticePeriodLength: "1-month"
         };
       }
       return applicant;
