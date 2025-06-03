@@ -153,7 +153,7 @@ const AdditionalDetailsStep = ({
             onClick={onFillAllTestData}
             className="text-orange-600 border-orange-300 hover:bg-orange-50"
           >
-            Fill Data
+            Fill Form
           </Button>
         </div>
       )}

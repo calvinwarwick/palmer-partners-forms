@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
 import ApplicationSuccess from "@/components/tenancy-application/ApplicationSuccess";
@@ -33,7 +34,8 @@ const TenancyApplicationForm = () => {
           handleSubmit,
           handleGuarantorSave,
           setGuarantorFormOpen,
-          fillAllTestData
+          fillAllTestData,
+          fillStepData
         } = formContext;
 
         if (isSubmitted) {
@@ -78,10 +80,7 @@ const TenancyApplicationForm = () => {
                       onNext={handleNext}
                       onSubmit={handleSubmit}
                       onFillTestData={fillAllTestData}
-                      onFillStepData={() => {
-                        // Placeholder function for now - will need to be implemented in FormProvider
-                        console.log('Fill Step button clicked');
-                      }}
+                      onFillStepData={fillStepData}
                     />
                   </CardContent>
                 </Card>

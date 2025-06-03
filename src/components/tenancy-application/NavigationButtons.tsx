@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Send, TestTube, Zap } from "lucide-react";
+import { ChevronLeft, ChevronRight, Send, FileText, Zap } from "lucide-react";
 
 interface NavigationButtonsProps {
   isFirstStep: boolean;
@@ -65,8 +65,8 @@ const NavigationButtons = ({
             className="flex items-center gap-2 text-orange-600 border-orange-300 hover:bg-orange-50"
             style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
           >
-            <TestTube className="h-4 w-4" />
-            Fill Data
+            <FileText className="h-4 w-4" />
+            Fill Form
           </Button>
         )}
       </div>
