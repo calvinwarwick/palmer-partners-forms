@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -75,7 +74,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.companyName || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
                         placeholder="Enter company name"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
                           boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
@@ -94,7 +93,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.jobTitle || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
                         placeholder="Enter job title"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
                           boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
@@ -119,7 +118,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.annualIncome || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                         placeholder="Enter annual salary"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
                           boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
@@ -139,7 +138,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                         value={applicant.lengthOfService || ""}
                         onChange={(e) => onUpdateApplicant(applicant.id, "lengthOfService", e.target.value)}
                         placeholder="e.g. 2 years 3 months"
-                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-10"
+                        className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
                         style={{ 
                           boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
