@@ -152,47 +152,7 @@ const EmploymentStep = ({ applicants, onUpdateApplicant }: EmploymentStepProps) 
                     </Select>
                   </div>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor={`employmentStartDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Employment Start Date <span className="text-red-500">*</span>
-                  </Label>
-                  <div className="date-input-container">
-                    <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                    <Input
-                      id={`employmentStartDate-${applicant.id}`}
-                      type="date"
-                      value={applicant.employmentStartDate || ""}
-                      onChange={(e) => onUpdateApplicant(applicant.id, "employmentStartDate", e.target.value)}
-                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 pl-12"
-                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                      required
-                    />
-                  </div>
-                </div>
               </>
-            )}
-
-            {/* Contract Type for Full Time, Part Time, and Zero Hours (not Self Employed) */}
-            {(applicant.employmentStatus === "full-time" || 
-              applicant.employmentStatus === "part-time" || 
-              applicant.employmentStatus === "zero-hours") && (
-              <div className="space-y-2">
-                <Label htmlFor={`contractType-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                  Contract Type <span className="text-red-500">*</span>
-                </Label>
-                <Select value={applicant.contractType} onValueChange={(value) => onUpdateApplicant(applicant.id, "contractType", value)}>
-                  <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                    <SelectValue placeholder="Select contract type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="permanent">Permanent</SelectItem>
-                    <SelectItem value="fixed-term">Fixed Term</SelectItem>
-                    <SelectItem value="contract">Contract</SelectItem>
-                    <SelectItem value="zero-hours">Zero Hours</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
             )}
           </CardContent>
         </Card>
