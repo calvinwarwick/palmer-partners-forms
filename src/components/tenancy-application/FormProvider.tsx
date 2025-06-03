@@ -302,9 +302,9 @@ const FormProvider = ({ children }: FormProviderProps) => {
   };
 
   const fillAllTestData = () => {
-    // Fill property preferences
+    // Fill property preferences with proper select values
     setPropertyPreferences({
-      propertyType: "House",
+      propertyType: "house",
       streetAddress: "123 Test Street",
       postcode: "AB12 3CD",
       maxRent: "1500",
@@ -315,7 +315,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
       additionalRequests: "No smoking policy preferred"
     });
 
-    // Fill first applicant data
+    // Fill first applicant data with proper select values
     setApplicants(prev => prev.map((applicant, index) => {
       if (index === 0) {
         return {
@@ -326,21 +326,24 @@ const FormProvider = ({ children }: FormProviderProps) => {
           phone: "07123456789",
           dateOfBirth: "1990-01-01",
           employment: "Full-time",
-          employmentStatus: "Employed",
+          employmentStatus: "employed",
           companyName: "Tech Corp Ltd",
           jobTitle: "Software Developer",
           annualIncome: "45000",
           lengthOfService: "2 years",
           currentAddress: "456 Current Road",
           currentPostcode: "EF34 5GH",
-          residencyStatus: "Tenant",
+          residencyStatus: "tenant",
           timeAtAddress: "2 years",
           landlordName: "Current Landlord",
           landlordPhone: "07987654321",
           moveInDate: "2024-07-01",
           vacateDate: "2024-06-30",
-          currentPropertyStatus: "Renting",
-          currentRentalAmount: "1200"
+          currentPropertyStatus: "renting",
+          currentRentalAmount: "1200",
+          rentUpToDate: "yes",
+          noticePeriod: "yes",
+          noticePeriodLength: "1 month"
         };
       }
       return applicant;
@@ -356,7 +359,7 @@ const FormProvider = ({ children }: FormProviderProps) => {
       parking: true,
       children: false,
       childrenDetails: "",
-      additionalRequests: "Prefer quiet neighbors",
+      additionalRequests: "",
       householdIncome: "45000",
       childrenCount: "None"
     });

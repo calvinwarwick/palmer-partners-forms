@@ -142,20 +142,6 @@ const AdditionalDetailsStep = ({
               />
             </div>
           )}
-
-          <div className="space-y-2">
-            <Label htmlFor="additionalRequests" className="form-label text-gray-700 font-medium">
-              Additional Requests or Requirements (Optional)
-            </Label>
-            <Textarea
-              id="additionalRequests"
-              value={additionalDetails.additionalRequests}
-              onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
-              placeholder="Any additional requests or requirements..."
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-            />
-          </div>
         </CardContent>
       </Card>
 

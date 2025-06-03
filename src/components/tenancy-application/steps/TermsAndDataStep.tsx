@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -60,7 +59,7 @@ const TermsAndDataStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div className="max-h-64 overflow-y-auto p-4 border rounded-lg bg-gray-50 text-sm custom-scrollbar" style={{ borderColor: 'rgb(228, 228, 231)' }}>
+          <div className="max-h-96 overflow-y-auto p-4 border rounded-lg bg-gray-50 text-sm custom-scrollbar" style={{ borderColor: 'rgb(228, 228, 231)' }}>
             <div className="space-y-4">
               <div>
                 <h4 className="font-semibold text-gray-900 mb-2">Terms & Conditions</h4>
