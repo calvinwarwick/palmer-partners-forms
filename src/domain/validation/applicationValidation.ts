@@ -1,4 +1,3 @@
-
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validateStep = (
@@ -52,13 +51,13 @@ export const validateStep = (
       // Check if pets is defined (boolean)
       const petsValid = typeof additionalDetails.pets === 'boolean';
       
-      // Check if children details are valid
+      // Check if children details are valid - ensure boolean result
       const childrenValid = !additionalDetails.children || 
-        (additionalDetails.children && additionalDetails.childrenDetails);
+        (additionalDetails.children && !!additionalDetails.childrenDetails);
       
-      // Check if pet details are provided when pets are selected
+      // Check if pet details are provided when pets are selected - ensure boolean result
       const petDetailsValid = !additionalDetails.pets || 
-        (additionalDetails.pets && additionalDetails.petDetails);
+        (additionalDetails.pets && !!additionalDetails.petDetails);
       
       return petsValid && childrenValid && petDetailsValid;
     
