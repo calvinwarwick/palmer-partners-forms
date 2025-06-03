@@ -30,16 +30,26 @@ export const validateStep = (
       );
     
     case 3: // Employment
-      return applicants.every(applicant => 
-        applicant.employmentStatus &&
-        applicant.annualIncome &&
+      return applicants.every(applicant => {
+        // Employment status is always required
+        if (!applicant.employmentStatus) return false;
+        
+        // Annual income is always required (pension, benefits, salary, etc.)
+        if (!applicant.annualIncome) return false;
+        
         // Only require employment details for employed statuses
-        (applicant.employmentStatus === "unemployed" || 
-         applicant.employmentStatus === "student" || 
-         applicant.employmentStatus === "retired" || 
-         applicant.employmentStatus === "other" ||
-         (applicant.companyName && applicant.jobTitle && applicant.lengthOfService))
-      );
+        const requiresEmploymentDetails = applicant.employmentStatus && 
+            applicant.employmentStatus !== "unemployed" && 
+            applicant.employmentStatus !== "student" && 
+            applicant.employmentStatus !== "retired" && 
+            applicant.employmentStatus !== "other";
+            
+        if (requiresEmploymentDetails) {
+          return !!(applicant.companyName && applicant.jobTitle && applicant.lengthOfService);
+        }
+        
+        return true;
+      });
     
     case 4: // Current Address
       return applicants.every(applicant => 
