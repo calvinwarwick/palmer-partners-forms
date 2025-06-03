@@ -88,6 +88,8 @@ export const validateAndHighlightFields = (
         if (!applicant.currentAddress) invalidFields.push(`currentAddress-${applicant.id}`);
         if (!applicant.currentPostcode) invalidFields.push(`currentPostcode-${applicant.id}`);
         if (!applicant.residencyStatus) invalidFields.push(`residencyStatus-${applicant.id}`);
+        if (!applicant.moveInDate) invalidFields.push(`moveInDate-${applicant.id}`);
+        if (!applicant.vacateDate) invalidFields.push(`vacateDate-${applicant.id}`);
       });
       break;
     

@@ -45,7 +45,9 @@ export const validateStep = (
       return applicants.every(applicant => 
         applicant.currentAddress &&
         applicant.currentPostcode &&
-        applicant.residencyStatus
+        applicant.residencyStatus &&
+        applicant.moveInDate &&
+        applicant.vacateDate
       );
     
     case 5: // Additional Details
@@ -127,6 +129,8 @@ export const getStepErrors = (
         if (!applicant.currentAddress) errors.push(`Applicant ${index + 1}: Current address is required`);
         if (!applicant.currentPostcode) errors.push(`Applicant ${index + 1}: Current postcode is required`);
         if (!applicant.residencyStatus) errors.push(`Applicant ${index + 1}: Residency status is required`);
+        if (!applicant.moveInDate) errors.push(`Applicant ${index + 1}: Move in date is required`);
+        if (!applicant.vacateDate) errors.push(`Applicant ${index + 1}: Vacate date is required`);
       });
       break;
       
