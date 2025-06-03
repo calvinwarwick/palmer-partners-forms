@@ -22,6 +22,7 @@ interface AdditionalDetailsStepProps {
     childrenDetails: string;
     additionalRequests: string;
     householdIncome: string;
+    childrenCount?: string;
   };
   onUpdateDetails: (field: string, value: string | boolean) => void;
   onFillAllTestData?: () => void;
@@ -41,6 +42,7 @@ const AdditionalDetailsStep = ({
   const handleChildrenCountChange = (value: string) => {
     const hasChildren = value !== "None";
     onUpdateDetails("children", hasChildren);
+    onUpdateDetails("childrenCount", value);
     if (!hasChildren) {
       onUpdateDetails("childrenDetails", "");
     }
@@ -48,12 +50,11 @@ const AdditionalDetailsStep = ({
 
   // Get current children count value for select
   const getCurrentChildrenCount = () => {
+    if (additionalDetails.childrenCount) {
+      return additionalDetails.childrenCount;
+    }
     if (!additionalDetails.children) return "None";
-    // If we have children but no details yet, default to "1"
-    if (additionalDetails.children && !additionalDetails.childrenDetails) return "1";
-    // Try to parse the first number from childrenDetails to determine count
-    const match = additionalDetails.childrenDetails?.match(/\d+/);
-    return match ? (parseInt(match[0]) > 5 ? "5+" : match[0]) : "1";
+    return "1"; // Default fallback
   };
 
   return (

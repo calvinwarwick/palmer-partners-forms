@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Applicant, PropertyPreferences, AdditionalDetails, Application } from "@/domain/types/Applicant";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
@@ -34,6 +33,7 @@ export interface FormContextType {
     childrenDetails: string;
     additionalRequests: string;
     householdIncome: string;
+    childrenCount: string;
   };
   dataSharing: { utilities: boolean; insurance: boolean };
   signature: string;
@@ -145,7 +145,8 @@ const FormProvider = ({ children }: FormProviderProps) => {
     children: false,
     childrenDetails: "",
     additionalRequests: "",
-    householdIncome: ""
+    householdIncome: "",
+    childrenCount: "None"
   });
 
   const [dataSharing, setDataSharing] = useState({
@@ -356,7 +357,8 @@ const FormProvider = ({ children }: FormProviderProps) => {
       children: false,
       childrenDetails: "",
       additionalRequests: "Prefer quiet neighbors",
-      householdIncome: "45000"
+      householdIncome: "45000",
+      childrenCount: "None"
     });
 
     // Fill signature and terms
