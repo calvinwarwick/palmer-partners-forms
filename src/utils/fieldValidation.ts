@@ -70,12 +70,14 @@ export const validateAndHighlightFields = (
         if (!applicant.employmentStatus) invalidFields.push(`employmentStatus-${applicant.id}`);
         if (!applicant.annualIncome) invalidFields.push(`annualIncome-${applicant.id}`);
         
-        // Only require employment details for employed statuses
-        if (applicant.employmentStatus && 
+        // Only require employment details for employed statuses that need them
+        const requiresEmploymentDetails = applicant.employmentStatus && 
             applicant.employmentStatus !== "unemployed" && 
             applicant.employmentStatus !== "student" && 
             applicant.employmentStatus !== "retired" && 
-            applicant.employmentStatus !== "other") {
+            applicant.employmentStatus !== "other";
+            
+        if (requiresEmploymentDetails) {
           if (!applicant.companyName) invalidFields.push(`companyName-${applicant.id}`);
           if (!applicant.jobTitle) invalidFields.push(`jobTitle-${applicant.id}`);
           if (!applicant.lengthOfService) invalidFields.push(`lengthOfService-${applicant.id}`);
