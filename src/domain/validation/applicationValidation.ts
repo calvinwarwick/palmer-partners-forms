@@ -43,21 +43,19 @@ export const validateStep = (
       );
     
     case 5:
-      // Handle both string ("yes"/"no") and boolean values for pets and children
-      const petsValue = additionalDetails.pets;
-      const childrenValue = additionalDetails.children;
-      
-      // Check if pets and children fields have been set (not undefined/null)
-      const petsValid = petsValue !== undefined && petsValue !== null;
-      const childrenValid = childrenValue !== undefined && childrenValue !== null;
-      
-      // Convert to boolean for validation checks - handle both string and boolean types
-      const hasPets = petsValue === true || petsValue === "yes";
-      const hasChildren = childrenValue === true || childrenValue === "yes";
-      
-      const petDetailsValid = !hasPets || additionalDetails.petDetails;
-      const childrenDetailsValid = !hasChildren || additionalDetails.childrenDetails;
-      
+      // Helper function to normalize "yes"/"no" string and boolean values
+      const isYes = (value: unknown): boolean =>
+        value === true || value === "yes";
+
+      const hasPets = isYes(additionalDetails.pets);
+      const hasChildren = isYes(additionalDetails.children);
+
+      const petsValid = additionalDetails.pets !== undefined && additionalDetails.pets !== null;
+      const childrenValid = additionalDetails.children !== undefined && additionalDetails.children !== null;
+
+      const petDetailsValid = !hasPets || Boolean(additionalDetails.petDetails?.trim());
+      const childrenDetailsValid = !hasChildren || Boolean(additionalDetails.childrenDetails?.trim());
+
       return petsValid && childrenValid && petDetailsValid && childrenDetailsValid;
     
     case 6:
