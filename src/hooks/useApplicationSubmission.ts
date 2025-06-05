@@ -15,7 +15,7 @@ export const useApplicationSubmission = () => {
     setIsSubmitting(true);
     
     try {
-      console.log('Submitting application:', application);
+      console.log('Starting application submission:', application);
       
       // Save to database first - using the correct column names
       const { data: insertedData, error: dbError } = await supabase
@@ -36,6 +36,8 @@ export const useApplicationSubmission = () => {
         throw new Error('Failed to save application');
       }
 
+      console.log('Application saved to database successfully:', insertedData.id);
+
       const applicationId = insertedData.id;
       const primaryApplicant = application.applicants[0];
       
@@ -51,8 +53,18 @@ export const useApplicationSubmission = () => {
         }
       });
       
-      // Send confirmation email to applicant
-      const confirmationSent = await sendApplicationConfirmation(application);
+      console.log('About to send confirmation email...');
+      
+      // Send confirmation email to applicant with error handling
+      let confirmationSent = false;
+      try {
+        confirmationSent = await sendApplicationConfirmation(application);
+        console.log('Confirmation email result:', confirmationSent);
+      } catch (emailError) {
+        console.error('Error sending confirmation email:', emailError);
+        // Don't fail the entire submission for email errors
+        confirmationSent = false;
+      }
       
       if (confirmationSent) {
         // Log email sent
@@ -67,8 +79,18 @@ export const useApplicationSubmission = () => {
         });
       }
       
-      // Send notification to admin
-      const adminNotificationSent = await sendAdminNotification(application);
+      console.log('About to send admin notification...');
+      
+      // Send notification to admin with error handling
+      let adminNotificationSent = false;
+      try {
+        adminNotificationSent = await sendAdminNotification(application);
+        console.log('Admin notification result:', adminNotificationSent);
+      } catch (emailError) {
+        console.error('Error sending admin notification:', emailError);
+        // Don't fail the entire submission for email errors
+        adminNotificationSent = false;
+      }
       
       if (adminNotificationSent) {
         // Log admin notification sent
@@ -83,12 +105,17 @@ export const useApplicationSubmission = () => {
         });
       }
       
+      // Mark as submitted even if emails fail
+      setIsSubmitted(true);
+      
       if (confirmationSent && adminNotificationSent) {
-        setIsSubmitted(true);
-        toast.success('Application submitted successfully!');
+        toast.success('Application submitted successfully with email notifications!');
+      } else if (!confirmationSent && !adminNotificationSent) {
+        toast.success('Application submitted successfully (email notifications failed - will be sent manually)');
       } else {
-        throw new Error('Failed to send emails');
+        toast.success('Application submitted successfully (some email notifications failed)');
       }
+      
     } catch (error) {
       console.error('Error submitting application:', error);
       toast.error('Failed to submit application. Please try again.');
