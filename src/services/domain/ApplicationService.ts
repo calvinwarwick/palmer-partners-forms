@@ -16,7 +16,13 @@ export const sendApplicationConfirmation = async (application: Application): Pro
     });
     console.log('PDF generated, size:', pdfBuffer.byteLength, 'bytes');
     
-    const pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));
+    // Convert ArrayBuffer to base64 safely
+    const uint8Array = new Uint8Array(pdfBuffer);
+    let binaryString = '';
+    for (let i = 0; i < uint8Array.byteLength; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    const pdfBase64 = btoa(binaryString);
     console.log('PDF converted to base64, length:', pdfBase64.length);
     
     const applicantEmail = application.applicants[0]?.email;
@@ -96,7 +102,13 @@ export const sendAdminNotification = async (application: Application): Promise<b
     });
     console.log('PDF generated for admin, size:', pdfBuffer.byteLength, 'bytes');
     
-    const pdfBase64 = btoa(String.fromCharCode(...new Uint8Array(pdfBuffer)));
+    // Convert ArrayBuffer to base64 safely
+    const uint8Array = new Uint8Array(pdfBuffer);
+    let binaryString = '';
+    for (let i = 0; i < uint8Array.byteLength; i++) {
+      binaryString += String.fromCharCode(uint8Array[i]);
+    }
+    const pdfBase64 = btoa(binaryString);
     console.log('Admin PDF converted to base64, length:', pdfBase64.length);
     
     const applicantName = `${application.applicants[0]?.firstName} ${application.applicants[0]?.lastName}`;
