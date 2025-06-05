@@ -43,8 +43,9 @@ export const validateStep = (
       );
     
     case 5:
-      const petsValid = additionalDetails.pets !== undefined && additionalDetails.pets !== null;
-      const childrenValid = additionalDetails.children !== undefined && additionalDetails.children !== null;
+      // Check if pets and children fields have been set (not undefined)
+      const petsValid = typeof additionalDetails.pets === 'boolean';
+      const childrenValid = typeof additionalDetails.children === 'boolean';
       const petDetailsValid = !additionalDetails.pets || additionalDetails.petDetails;
       const childrenDetailsValid = !additionalDetails.children || additionalDetails.childrenDetails;
       
