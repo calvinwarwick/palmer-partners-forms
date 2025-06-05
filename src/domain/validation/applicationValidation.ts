@@ -2,7 +2,7 @@
 import { Applicant, PropertyPreferences, AdditionalDetails } from '../types/Applicant';
 
 export const validateStep = (
-  step: number, 
+  step: number,
   applicants: Applicant[], 
   preferences: PropertyPreferences, 
   additionalDetails: AdditionalDetails,
@@ -10,32 +10,30 @@ export const validateStep = (
   termsAccepted: boolean
 ): boolean => {
   switch (step) {
-    case 1: // Property Details
-      return !!(
+    case 1:
+      return Boolean(
         preferences.streetAddress &&
         preferences.postcode &&
         preferences.maxRent &&
         preferences.moveInDate &&
-        preferences.latestMoveInDate &&
         preferences.initialTenancyTerm
       );
     
-    case 2: // Personal Info
-      return applicants.length > 0 && applicants.every(applicant => 
+    case 2:
+      return applicants.every(applicant => 
         applicant.firstName &&
         applicant.lastName &&
-        applicant.dateOfBirth &&
         applicant.email &&
-        applicant.phone
+        applicant.phone &&
+        applicant.dateOfBirth
       );
     
-    case 3: // Employment
-      return applicants.every(applicant => {
-        // Only employment status is required
-        return !!applicant.employmentStatus;
-      });
+    case 3:
+      return applicants.every(applicant => 
+        applicant.employmentStatus
+      );
     
-    case 4: // Current Address
+    case 4:
       return applicants.every(applicant => 
         applicant.currentAddress &&
         applicant.currentPostcode &&
@@ -44,93 +42,18 @@ export const validateStep = (
         applicant.vacateDate
       );
     
-    case 5: // Additional Details
-      // Check if pets is defined (boolean)
-      const petsValid = typeof additionalDetails.pets === 'boolean';
+    case 5:
+      const petsValid = additionalDetails.pets !== undefined && additionalDetails.pets !== null;
+      const childrenValid = additionalDetails.children !== undefined && additionalDetails.children !== null;
+      const petDetailsValid = !additionalDetails.pets || additionalDetails.petDetails;
+      const childrenDetailsValid = !additionalDetails.children || additionalDetails.childrenDetails;
       
-      // Check if children details are valid - ensure boolean result
-      const childrenValid = !additionalDetails.children || 
-        (additionalDetails.children && !!additionalDetails.childrenDetails);
-      
-      // Check if pet details are provided when pets are selected - ensure boolean result
-      const petDetailsValid = !additionalDetails.pets || 
-        (additionalDetails.pets && !!additionalDetails.petDetails);
-      
-      return petsValid && childrenValid && petDetailsValid;
+      return petsValid && childrenValid && petDetailsValid && childrenDetailsValid;
     
-    case 6: // Terms and Data
-      return !!(termsAccepted && signature);
+    case 6:
+      return termsAccepted && signature.trim() !== '';
     
     default:
       return false;
   }
-};
-
-export const getStepErrors = (
-  step: number,
-  applicants: Applicant[],
-  preferences: PropertyPreferences,
-  additionalDetails: AdditionalDetails,
-  signature: string,
-  termsAccepted: boolean
-): string[] => {
-  const errors: string[] = [];
-  
-  switch (step) {
-    case 1:
-      if (!preferences.streetAddress) errors.push('Street address is required');
-      if (!preferences.postcode) errors.push('Postcode is required');
-      if (!preferences.maxRent) errors.push('Maximum rent is required');
-      if (!preferences.moveInDate) errors.push('Move-in date is required');
-      if (!preferences.latestMoveInDate) errors.push('Latest move-in date is required');
-      if (!preferences.initialTenancyTerm) errors.push('Initial tenancy term is required');
-      break;
-      
-    case 2:
-      if (applicants.length === 0) {
-        errors.push('At least one applicant is required');
-      } else {
-        applicants.forEach((applicant, index) => {
-          if (!applicant.firstName) errors.push(`Applicant ${index + 1}: First name is required`);
-          if (!applicant.lastName) errors.push(`Applicant ${index + 1}: Last name is required`);
-          if (!applicant.dateOfBirth) errors.push(`Applicant ${index + 1}: Date of birth is required`);
-          if (!applicant.email) errors.push(`Applicant ${index + 1}: Email is required`);
-          if (!applicant.phone) errors.push(`Applicant ${index + 1}: Phone is required`);
-        });
-      }
-      break;
-      
-    case 3:
-      applicants.forEach((applicant, index) => {
-        if (!applicant.employmentStatus) errors.push(`Applicant ${index + 1}: Employment status is required`);
-      });
-      break;
-      
-    case 4:
-      applicants.forEach((applicant, index) => {
-        if (!applicant.currentAddress) errors.push(`Applicant ${index + 1}: Current address is required`);
-        if (!applicant.currentPostcode) errors.push(`Applicant ${index + 1}: Current postcode is required`);
-        if (!applicant.residencyStatus) errors.push(`Applicant ${index + 1}: Residency status is required`);
-        if (!applicant.moveInDate) errors.push(`Applicant ${index + 1}: Move in date is required`);
-        if (!applicant.vacateDate) errors.push(`Applicant ${index + 1}: Vacate date is required`);
-      });
-      break;
-      
-    case 5:
-      if (typeof additionalDetails.pets !== 'boolean') errors.push('Please specify if you have pets');
-      if (additionalDetails.children && !additionalDetails.childrenDetails) {
-        errors.push('Please provide details about children');
-      }
-      if (additionalDetails.pets && !additionalDetails.petDetails) {
-        errors.push('Please provide pet details');
-      }
-      break;
-      
-    case 6:
-      if (!termsAccepted) errors.push('You must accept the terms and conditions');
-      if (!signature) errors.push('Signature is required');
-      break;
-  }
-  
-  return errors;
 };

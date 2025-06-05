@@ -92,7 +92,7 @@ export const validateAndHighlightFields = (
     case 6:
       if (!termsAccepted) invalidFields.push('terms');
       if (!signature.trim()) invalidFields.push('signature');
-      if (!fullName?.trim()) invalidFields.push('fullName');
+      // Removed fullName validation since it's not being used in the current form
       break;
   }
 
