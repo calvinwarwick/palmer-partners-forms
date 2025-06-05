@@ -43,13 +43,17 @@ export const validateStep = (
       );
     
     case 5:
-      // Check if pets and children fields have been set (not undefined)
-      const petsValid = typeof additionalDetails.pets === 'boolean';
-      const childrenValid = typeof additionalDetails.children === 'boolean';
+      // Handle both string ("yes"/"no") and boolean values for pets and children
+      const petsValue = additionalDetails.pets;
+      const childrenValue = additionalDetails.children;
       
-      // Convert to boolean for validation checks
-      const hasPets = Boolean(additionalDetails.pets);
-      const hasChildren = Boolean(additionalDetails.children);
+      // Check if pets and children fields have been set (not undefined/null)
+      const petsValid = petsValue !== undefined && petsValue !== null;
+      const childrenValid = childrenValue !== undefined && childrenValue !== null;
+      
+      // Convert to boolean for validation checks - handle both string and boolean types
+      const hasPets = petsValue === true || petsValue === "yes";
+      const hasChildren = childrenValue === true || childrenValue === "yes";
       
       const petDetailsValid = !hasPets || additionalDetails.petDetails;
       const childrenDetailsValid = !hasChildren || additionalDetails.childrenDetails;
