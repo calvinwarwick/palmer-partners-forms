@@ -72,7 +72,7 @@
   @apply text-orange-500 hover:text-orange-600 cursor-help;
 }
 
-/* Date input specific styling with icon inside - FIXED */
+/* Date input specific styling with icon inside - CALENDAR VISIBLE */
 .date-input-container {
   @apply relative;
   margin-bottom: 8px !important; /* Base spacing for mobile */
@@ -101,25 +101,27 @@ input[type="date"] {
   z-index: 1;
 }
 
-/* Fix date picker indicator to prevent unwanted focus */
+/* Keep calendar picker visible and functional */
 input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 0;
-  width: 20px !important; /* Restrict to a smaller area */
+  opacity: 1 !important; /* Make calendar icon visible */
+  width: 20px !important;
   height: 20px !important;
   position: absolute;
-  right: 8px !important; /* Position it properly */
+  right: 8px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   cursor: pointer;
   z-index: 2;
+  background: none !important;
+  color: #FF6F00 !important; /* Orange color to match theme */
 }
 
 input[type="date"]::-webkit-inner-spin-button {
   display: none;
 }
 
-/* Prevent date input from being focused by outside clicks */
-input[type="date"]:not(:focus):not(:hover) {
+/* Prevent accidental focus but allow intentional clicks */
+input[type="date"] {
   pointer-events: auto;
 }
 
