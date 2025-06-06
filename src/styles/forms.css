@@ -72,7 +72,7 @@
   @apply text-orange-500 hover:text-orange-600 cursor-help;
 }
 
-/* Date input specific styling with icon inside */
+/* Date input specific styling with icon inside - FIXED */
 .date-input-container {
   @apply relative;
   margin-bottom: 8px !important; /* Base spacing for mobile */
@@ -85,7 +85,8 @@
 }
 
 .date-input-icon {
-  @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-primary pointer-events-none z-10;
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-primary z-10;
+  pointer-events: none !important; /* Prevent icon from capturing clicks */
 }
 
 input[type="date"] {
@@ -96,20 +97,30 @@ input[type="date"] {
   border: 1px solid rgb(228, 228, 231) !important;
   background-color: white !important;
   box-shadow: none !important;
+  position: relative;
+  z-index: 1;
 }
 
+/* Fix date picker indicator to prevent unwanted focus */
 input[type="date"]::-webkit-calendar-picker-indicator {
   opacity: 0;
-  width: 100%;
-  height: 100%;
+  width: 20px !important; /* Restrict to a smaller area */
+  height: 20px !important;
   position: absolute;
-  left: 0;
-  top: 0;
+  right: 8px !important; /* Position it properly */
+  top: 50% !important;
+  transform: translateY(-50%) !important;
   cursor: pointer;
+  z-index: 2;
 }
 
 input[type="date"]::-webkit-inner-spin-button {
   display: none;
+}
+
+/* Prevent date input from being focused by outside clicks */
+input[type="date"]:not(:focus):not(:hover) {
+  pointer-events: auto;
 }
 
 /* Fix search input padding to prevent icon overlap */
