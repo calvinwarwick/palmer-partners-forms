@@ -5,7 +5,7 @@ import EmploymentStep from "@/components/tenancy-application/steps/EmploymentSte
 import CurrentAddressStep from "@/components/tenancy-application/steps/CurrentAddressStep";
 import AdditionalDetailsStep from "@/components/tenancy-application/steps/AdditionalDetailsStep";
 import TermsAndDataStep from "@/components/tenancy-application/steps/TermsAndDataStep";
-import { FormContextType } from "./FormProvider";
+import { FormContextType } from "@/types/FormContext";
 
 interface FormStepsProps {
   formContext: FormContextType;
