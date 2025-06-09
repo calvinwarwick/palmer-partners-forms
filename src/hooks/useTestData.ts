@@ -5,7 +5,7 @@ import { Applicant, PropertyPreferences } from "@/domain/types/Applicant";
 interface UseTestDataProps {
   currentStep: number;
   setPropertyPreferences: (preferences: PropertyPreferences) => void;
-  setApplicants: (applicants: Applicant[]) => void;
+  setApplicants: (applicants: Applicant[] | ((prev: Applicant[]) => Applicant[])) => void;
   setAdditionalDetails: (details: any) => void;
   setSignature: (signature: string) => void;
   setFullName: (name: string) => void;
