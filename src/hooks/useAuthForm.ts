@@ -23,6 +23,14 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
     return email === "demo.user@test.com" && password === "demo123456";
   };
 
+  const createDemoAccount = async () => {
+    const { error } = await signUp("demo.user@test.com", "demo123456", {
+      first_name: "Demo",
+      last_name: "User",
+    });
+    return error;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -30,14 +38,32 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
     try {
       if (isLogin) {
         const { error } = await signIn(email, password);
+        
         if (error) {
-          if (error.message.includes('Invalid login credentials')) {
+          // If it's demo credentials and login fails, try to create the demo account
+          if (isDemoCredentials(email, password) && error.message.includes('Invalid login credentials')) {
+            toast.info("Creating demo account...");
+            const createError = await createDemoAccount();
+            
+            if (createError) {
+              if (createError.message.includes('User already registered')) {
+                toast.error("Demo account exists but password is incorrect. Please try again.");
+              } else {
+                toast.error(`Failed to create demo account: ${createError.message}`);
+              }
+            } else {
+              toast.success("Demo account created! Please check your email to confirm, or try signing in again.");
+            }
+          } else if (error.message.includes('Invalid login credentials')) {
             toast.error("Invalid email or password. Please check your credentials.");
           } else {
             toast.error(error.message);
           }
         } else {
           toast.success("Signed in successfully!");
+          if (onLogin) {
+            onLogin(email, "User");
+          }
           navigate("/admin");
         }
       } else {
@@ -67,6 +93,7 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
   const fillDemoCredentials = () => {
     setEmail("demo.user@test.com");
     setPassword("demo123456");
+    setIsLogin(true);
     toast.info("Demo credentials filled. Click 'Sign In' to login.");
   };
 
