@@ -28,13 +28,33 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
     setIsLoading(true);
 
     try {
-      // For now, just redirect any credentials to admin page
       if (isLogin) {
-        toast.success("Signed in successfully!");
-        navigate("/admin");
+        const { error } = await signIn(email, password);
+        if (error) {
+          if (error.message.includes('Invalid login credentials')) {
+            toast.error("Invalid email or password. Please check your credentials.");
+          } else {
+            toast.error(error.message);
+          }
+        } else {
+          toast.success("Signed in successfully!");
+          navigate("/admin");
+        }
       } else {
-        toast.success("Account created successfully!");
-        setIsLogin(true);
+        const { error } = await signUp(email, password, {
+          first_name: firstName,
+          last_name: lastName,
+        });
+        if (error) {
+          if (error.message.includes('User already registered')) {
+            toast.error("This email is already registered. Please try signing in instead.");
+          } else {
+            toast.error(error.message);
+          }
+        } else {
+          toast.success("Account created successfully! Please check your email to confirm your account.");
+          setIsLogin(true);
+        }
       }
     } catch (error: any) {
       console.error("Auth error:", error);

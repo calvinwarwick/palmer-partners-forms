@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,8 +17,10 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
-import { Loader2, RefreshCw } from "lucide-react";
+import { Loader2, RefreshCw, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface TenancyApplication {
   id: string;
@@ -32,6 +33,9 @@ interface TenancyApplication {
 }
 
 const Admin = () => {
+  const { signOut, user } = useAuth();
+  const navigate = useNavigate();
+  
   const [applications, setApplications] = useState<TenancyApplication[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<TenancyApplication[]>([]);
   const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
@@ -92,6 +96,17 @@ const Admin = () => {
 
   const handleRefresh = () => {
     fetchApplications(true);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast.success("Signed out successfully");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to sign out");
+    }
   };
 
   const filterApplications = () => {
@@ -250,22 +265,35 @@ const Admin = () => {
       <ApplicationHeader title="Admin Dashboard" />
       
       <div className="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8 max-w-7xl">
-        {/* Header with Refresh */}
+        {/* Header with User Info and Actions */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Applications Dashboard</h1>
-            <p className="text-gray-600">Manage and review tenancy applications</p>
+            <p className="text-gray-600">
+              Welcome back, {user?.email} • Manage and review tenancy applications
+            </p>
           </div>
           
-          <Button
-            variant="outline"
-            onClick={handleRefresh}
-            disabled={refreshing}
-            className="bg-white shadow-sm hover:shadow-md transition-all"
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Refreshing...' : 'Refresh'}
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="outline"
+              onClick={handleRefresh}
+              disabled={refreshing}
+              className="bg-white shadow-sm hover:shadow-md transition-all"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              {refreshing ? 'Refreshing...' : 'Refresh'}
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={handleLogout}
+              className="bg-white shadow-sm hover:shadow-md transition-all text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Sign Out
+            </Button>
+          </div>
         </div>
 
         {/* Statistics */}
