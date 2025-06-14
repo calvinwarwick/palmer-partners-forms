@@ -18,6 +18,8 @@ import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
+import { Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface TenancyApplication {
   id: string;
@@ -36,6 +38,7 @@ const Admin = () => {
   const [selectedApplication, setSelectedApplication] = useState<TenancyApplication | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const { generatePdf } = usePdfGeneration();
 
   // Filter states
@@ -57,8 +60,10 @@ const Admin = () => {
     filterApplications();
   }, [applications, searchTerm, dateFilter, customDateRange]);
 
-  const fetchApplications = async () => {
+  const fetchApplications = async (showRefreshing = false) => {
     try {
+      if (showRefreshing) setRefreshing(true);
+      
       const { data, error } = await supabase
         .from('tenancy_applications')
         .select('*')
@@ -75,12 +80,18 @@ const Admin = () => {
       }));
 
       setApplications(typedData);
+      toast.success(`${typedData.length} applications loaded`);
     } catch (error) {
       console.error('Error fetching applications:', error);
       toast.error('Failed to fetch applications');
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  };
+
+  const handleRefresh = () => {
+    fetchApplications(true);
   };
 
   const filterApplications = () => {
@@ -153,7 +164,7 @@ const Admin = () => {
     const selectedData = applications.filter(app => selectedApplications.includes(app.id));
     const csvContent = generateCSV(selectedData);
     downloadCSV(csvContent, 'selected-applications.csv');
-    toast.success('Applications exported successfully');
+    toast.success(`${selectedData.length} applications exported successfully`);
   };
 
   const generateCSV = (data: TenancyApplication[]) => {
@@ -226,7 +237,10 @@ const Admin = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
+        <div className="text-center space-y-4">
+          <Loader2 className="h-12 w-12 animate-spin text-orange-500 mx-auto" />
+          <p className="text-gray-600 font-medium">Loading admin dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -236,6 +250,24 @@ const Admin = () => {
       <ApplicationHeader title="Admin Dashboard" />
       
       <div className="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8 max-w-7xl">
+        {/* Header with Refresh */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Applications Dashboard</h1>
+            <p className="text-gray-600">Manage and review tenancy applications</p>
+          </div>
+          
+          <Button
+            variant="outline"
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="bg-white shadow-sm hover:shadow-md transition-all"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            {refreshing ? 'Refreshing...' : 'Refresh'}
+          </Button>
+        </div>
+
         {/* Statistics */}
         <div className="mb-6">
           <AdminStats applications={applications} />
@@ -257,17 +289,17 @@ const Admin = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="applications" className="w-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
-            <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-50 rounded-lg p-1">
+          <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
+            <TabsList className="grid w-full grid-cols-2 h-14 bg-gray-50 rounded-xl p-1">
               <TabsTrigger 
                 value="applications" 
-                className="text-base font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+                className="text-base font-medium h-12 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
-                Applications
+                Applications ({filteredApplications.length})
               </TabsTrigger>
               <TabsTrigger 
                 value="applicants" 
-                className="text-base font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+                className="text-base font-medium h-12 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applicants
               </TabsTrigger>
@@ -284,18 +316,18 @@ const Admin = () => {
             />
 
             {/* Applications Table */}
-            <Card className="shadow-sm border border-gray-200 overflow-hidden">
+            <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-xl">
               <CardContent className="p-0">
                 {filteredApplications.length > 0 ? (
                   <div className="overflow-x-auto">
                     <Table>
                       <TableHeader>
-                        <TableRow className="bg-gray-50 border-b">
+                        <TableRow className="bg-gray-50 border-b hover:bg-gray-50">
                           <TableHead className="w-12"></TableHead>
-                          <TableHead className="font-semibold text-gray-900">Applicant</TableHead>
-                          <TableHead className="font-semibold text-gray-900">Property</TableHead>
-                          <TableHead className="font-semibold text-gray-900 text-center">Submitted</TableHead>
-                          <TableHead className="font-semibold text-gray-900 text-center">Site</TableHead>
+                          <TableHead className="font-semibold text-gray-900">Primary Applicant</TableHead>
+                          <TableHead className="font-semibold text-gray-900">Property Details</TableHead>
+                          <TableHead className="font-semibold text-gray-900 text-center">Submission Date</TableHead>
+                          <TableHead className="font-semibold text-gray-900 text-center">Location</TableHead>
                           <TableHead className="font-semibold text-gray-900 text-right">Actions</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -315,14 +347,20 @@ const Admin = () => {
                     </Table>
                   </div>
                 ) : (
-                  <div className="text-center py-16">
-                    <div className="text-gray-400 mb-4">
-                      <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="text-center py-20">
+                    <div className="text-gray-400 mb-6">
+                      <svg className="mx-auto h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                     </div>
-                    <p className="text-gray-500 mb-4 text-lg">
-                      {searchTerm || dateFilter !== "all" ? "No applications found matching your search." : "No applications found."}
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      {searchTerm || dateFilter !== "all" ? "No matching applications found" : "No applications submitted yet"}
+                    </h3>
+                    <p className="text-gray-500 max-w-md mx-auto">
+                      {searchTerm || dateFilter !== "all" 
+                        ? "Try adjusting your search criteria or date range to find more applications."
+                        : "When tenancy applications are submitted, they will appear here for review and management."
+                      }
                     </p>
                   </div>
                 )}
@@ -331,7 +369,7 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="applicants">
-            <Card className="shadow-sm border border-gray-200 overflow-hidden">
+            <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-xl">
               <CardContent className="p-0">
                 <ApplicantsTab />
               </CardContent>
@@ -351,6 +389,7 @@ const Admin = () => {
             <div className="h-full flex flex-col">
               <div className="p-6 border-b bg-white">
                 <h2 className="text-xl font-semibold text-gray-900">Application Preview</h2>
+                <p className="text-sm text-gray-600 mt-1">Detailed view of the tenancy application</p>
               </div>
               <div className="flex-1 p-6 overflow-auto bg-gray-50">
                 {selectedApplicationForPreview && (

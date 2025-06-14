@@ -5,7 +5,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Calendar as CalendarIcon, Filter, X } from "lucide-react";
+import { Search, Calendar as CalendarIcon, Filter, X, TrendingUp } from "lucide-react";
 import { format } from "date-fns";
 import type { DateRange } from "react-day-picker";
 
@@ -57,16 +57,34 @@ const AdminSearchFilters = ({
   };
 
   const hasActiveFilters = searchTerm || dateFilter !== "all";
+  const filterPercentage = totalApplications > 0 ? Math.round((filteredCount / totalApplications) * 100) : 0;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+    <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+      {/* Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-        <div className="flex items-center gap-3">
-          <Filter className="h-5 w-5 text-orange-500" />
-          <h3 className="text-lg font-semibold text-gray-900">Filter Applications</h3>
-          <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300">
-            {filteredCount} of {totalApplications}
-          </Badge>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-orange-50 rounded-lg border border-orange-200">
+              <Filter className="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-900">Filter Applications</h3>
+              <p className="text-sm text-gray-500">Search and filter through all applications</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-300 px-3 py-1">
+              <TrendingUp className="h-3 w-3 mr-1" />
+              {filteredCount} of {totalApplications}
+            </Badge>
+            {hasActiveFilters && (
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-300">
+                {filterPercentage}% shown
+              </Badge>
+            )}
+          </div>
         </div>
         
         {hasActiveFilters && (
@@ -74,26 +92,37 @@ const AdminSearchFilters = ({
             variant="outline"
             size="sm"
             onClick={clearFilters}
-            className="text-gray-600 hover:text-gray-700 border-gray-300 hover:bg-gray-50"
+            className="text-gray-600 hover:text-gray-700 border-gray-300 hover:bg-gray-50 transition-colors"
           >
             <X className="h-4 w-4 mr-2" />
-            Clear Filters
+            Clear All Filters
           </Button>
         )}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      {/* Filter Controls */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
         {/* Search Input */}
-        <div className="space-y-2">
+        <div className="lg:col-span-2 xl:col-span-2 space-y-2">
           <label className="text-sm font-medium text-gray-700">Search Applications</label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
-              placeholder="Search by name, email, or address..."
+              placeholder="Search by name, email, address, or postcode..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-10 border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              className="pl-10 border-gray-300 focus:border-orange-500 focus:ring-orange-500 h-11"
             />
+            {searchTerm && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onSearchChange("")}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 h-7 w-7 p-0 hover:bg-gray-100"
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            )}
           </div>
         </div>
 
@@ -102,7 +131,7 @@ const AdminSearchFilters = ({
           <label className="text-sm font-medium text-gray-700">Date Range</label>
           <div className="flex gap-2">
             <Select value={dateFilter} onValueChange={onDateFilterChange}>
-              <SelectTrigger className="flex-1 border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+              <SelectTrigger className="flex-1 border-gray-300 focus:border-orange-500 focus:ring-orange-500 h-11">
                 <CalendarIcon className="h-4 w-4 mr-2 text-gray-400" />
                 <SelectValue />
               </SelectTrigger>
@@ -121,7 +150,8 @@ const AdminSearchFilters = ({
               <PopoverTrigger asChild>
                 <Button 
                   variant="outline" 
-                  className="border-gray-300 hover:bg-gray-50"
+                  className="border-gray-300 hover:bg-gray-50 h-11 px-3"
+                  title="Select custom date range"
                 >
                   <CalendarIcon className="h-4 w-4" />
                 </Button>
@@ -137,7 +167,7 @@ const AdminSearchFilters = ({
                 />
                 {dateRange?.from && dateRange?.to && (
                   <div className="p-3 border-t bg-gray-50">
-                    <div className="text-sm text-gray-700 text-center">
+                    <div className="text-sm text-gray-700 text-center font-medium">
                       {format(dateRange.from, "MMM dd, yyyy")} - {format(dateRange.to, "MMM dd, yyyy")}
                     </div>
                   </div>
@@ -147,6 +177,25 @@ const AdminSearchFilters = ({
           </div>
         </div>
       </div>
+
+      {/* Quick Stats */}
+      {hasActiveFilters && (
+        <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="flex items-center gap-4 text-sm text-gray-600">
+            <span>Showing {filteredCount} results</span>
+            {searchTerm && (
+              <span className="bg-blue-50 text-blue-700 px-2 py-1 rounded">
+                Search: "{searchTerm}"
+              </span>
+            )}
+            {dateFilter !== "all" && (
+              <span className="bg-purple-50 text-purple-700 px-2 py-1 rounded">
+                Date: {dateFilter.replace('_', ' ')}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
