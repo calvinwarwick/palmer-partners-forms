@@ -1,6 +1,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Eye, EyeOff, Lock, User } from "lucide-react";
 
 interface AuthFormFieldsProps {
@@ -15,6 +16,8 @@ interface AuthFormFieldsProps {
   setFirstName: (name: string) => void;
   lastName: string;
   setLastName: (name: string) => void;
+  isLoading?: boolean;
+  onSubmit: (e: React.FormEvent) => void;
 }
 
 const AuthFormFields = ({
@@ -29,9 +32,11 @@ const AuthFormFields = ({
   setFirstName,
   lastName,
   setLastName,
+  isLoading = false,
+  onSubmit,
 }: AuthFormFieldsProps) => {
   return (
-    <>
+    <form onSubmit={onSubmit} className="space-y-4">
       {!isLogin && (
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -97,7 +102,25 @@ const AuthFormFields = ({
           </button>
         </div>
       </div>
-    </>
+
+      <Button 
+        type="submit" 
+        className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold" 
+        disabled={isLoading}
+      >
+        {isLoading ? (isLogin ? "Signing in..." : "Creating account...") : (isLogin ? "Sign In" : "Sign Up")}
+      </Button>
+
+      <div className="mt-4 text-center">
+        <button
+          type="button"
+          onClick={() => window.location.reload()} // This will be handled by the parent component
+          className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+        >
+          {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+        </button>
+      </div>
+    </form>
   );
 };
 

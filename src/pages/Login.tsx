@@ -8,6 +8,10 @@ import ApplicationHeader from "@/components/shared/ApplicationHeader";
 const Login = () => {
   const authForm = useAuthForm({});
 
+  const handleToggleMode = () => {
+    authForm.setIsLogin(!authForm.isLogin);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
       <ApplicationHeader title="Login" />
@@ -26,8 +30,22 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <AuthFormFields {...authForm} />
-            <DemoCredentials onFillCredentials={authForm.fillDemoCredentials} />
+            <AuthFormFields 
+              {...authForm} 
+              onSubmit={authForm.handleSubmit}
+            />
+            <div className="mt-4 text-center">
+              <button
+                type="button"
+                onClick={handleToggleMode}
+                className="text-sm text-orange-600 hover:text-orange-700 font-medium"
+              >
+                {authForm.isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+              </button>
+            </div>
+            {authForm.isLogin && (
+              <DemoCredentials onFillCredentials={authForm.fillDemoCredentials} />
+            )}
           </CardContent>
         </Card>
       </div>
