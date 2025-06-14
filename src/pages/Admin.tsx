@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -46,7 +45,16 @@ const Admin = () => {
         console.error('Error fetching applications:', error);
         toast.error('Failed to fetch applications');
       } else {
-        setApplications(data || []);
+        // Cast the Supabase data to match our TenancyApplication interface
+        const typedApplications = (data || []).map(app => ({
+          ...app,
+          applicants: app.applicants as any[],
+          property_preferences: app.property_preferences as any,
+          additional_details: app.additional_details as any,
+          data_sharing: app.data_sharing as any,
+        })) as TenancyApplication[];
+        
+        setApplications(typedApplications);
       }
     } catch (error) {
       console.error('Error fetching applications:', error);
