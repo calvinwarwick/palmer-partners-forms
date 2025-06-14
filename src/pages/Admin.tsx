@@ -1,438 +1,80 @@
+
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
+import { LogOut, Users, FileText, BarChart3 } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { supabase } from "@/integrations/supabase/client";
-import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
+import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import AdminStats from "@/components/admin/AdminStats";
-import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
-import AdminSearchFilters from "@/components/admin/AdminSearchFilters";
-import BulkActions from "@/components/admin/BulkActions";
-import AdminTableRow from "@/components/admin/AdminTableRow";
-import ApplicationActivityModal from "@/components/admin/ApplicationActivityModal";
-import ApplicationPreviewContent from "@/components/admin/ApplicationPreviewContent";
-import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { usePdfGeneration } from "@/hooks/usePdfGeneration";
-import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
-import { Loader2, RefreshCw, LogOut } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-
-interface TenancyApplication {
-  id: string;
-  applicants: Applicant[];
-  property_preferences: PropertyPreferences;
-  additional_details: AdditionalDetails;
-  data_sharing: { utilities: boolean; insurance: boolean };
-  signature: string;
-  submitted_at: string;
-}
 
 const Admin = () => {
-  const { signOut, user } = useAuth();
-  const navigate = useNavigate();
-  
-  const [applications, setApplications] = useState<TenancyApplication[]>([]);
-  const [filteredApplications, setFilteredApplications] = useState<TenancyApplication[]>([]);
-  const [selectedApplications, setSelectedApplications] = useState<string[]>([]);
-  const [selectedApplication, setSelectedApplication] = useState<TenancyApplication | null>(null);
-  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const { generatePdf } = usePdfGeneration();
+  const { user, signOut } = useAuth();
 
-  // Filter states
-  const [searchTerm, setSearchTerm] = useState("");
-  const [dateFilter, setDateFilter] = useState("all");
-  const [customDateRange, setCustomDateRange] = useState<{ from: Date; to: Date } | null>(null);
-
-  // Activity and preview modals
-  const [selectedApplicationForActivity, setSelectedApplicationForActivity] = useState<TenancyApplication | null>(null);
-  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
-  const [selectedApplicationForPreview, setSelectedApplicationForPreview] = useState<TenancyApplication | null>(null);
-  const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
-
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
-  useEffect(() => {
-    filterApplications();
-  }, [applications, searchTerm, dateFilter, customDateRange]);
-
-  const fetchApplications = async (showRefreshing = false) => {
-    try {
-      if (showRefreshing) setRefreshing(true);
-      
-      const { data, error } = await supabase
-        .from('tenancy_applications')
-        .select('*')
-        .order('submitted_at', { ascending: false });
-
-      if (error) throw error;
-
-      const typedData = data.map(app => ({
-        ...app,
-        applicants: app.applicants as unknown as Applicant[],
-        property_preferences: app.property_preferences as unknown as PropertyPreferences,
-        additional_details: app.additional_details as unknown as AdditionalDetails,
-        data_sharing: app.data_sharing as unknown as { utilities: boolean; insurance: boolean }
-      }));
-
-      setApplications(typedData);
-      toast.success(`${typedData.length} applications loaded`);
-    } catch (error) {
-      console.error('Error fetching applications:', error);
-      toast.error('Failed to fetch applications');
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
+  const handleSignOut = async () => {
+    await signOut();
+    toast.success("Signed out successfully");
   };
-
-  const handleRefresh = () => {
-    fetchApplications(true);
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      toast.success("Signed out successfully");
-      navigate("/");
-    } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("Failed to sign out");
-    }
-  };
-
-  const filterApplications = () => {
-    let filtered = applications;
-
-    // Search filter
-    if (searchTerm) {
-      filtered = filtered.filter(app => 
-        app.applicants.some(applicant => 
-          applicant.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          applicant.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          applicant.email?.toLowerCase().includes(searchTerm.toLowerCase())
-        ) ||
-        app.property_preferences.streetAddress?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        app.property_preferences.postcode?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    // Date filter
-    if (dateFilter !== "all") {
-      const now = new Date();
-      filtered = filtered.filter(app => {
-        const submitDate = new Date(app.submitted_at);
-        switch (dateFilter) {
-          case "today":
-            return submitDate.toDateString() === now.toDateString();
-          case "this_week":
-            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-            return submitDate >= weekAgo;
-          case "this_month":
-            return submitDate.getMonth() === now.getMonth() && submitDate.getFullYear() === now.getFullYear();
-          case "last_month":
-            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-            return submitDate >= lastMonth && submitDate < thisMonth;
-          case "custom":
-            if (customDateRange?.from && customDateRange?.to) {
-              return isWithinInterval(submitDate, {
-                start: startOfDay(customDateRange.from),
-                end: endOfDay(customDateRange.to)
-              });
-            }
-            return true;
-          default:
-            return true;
-        }
-      });
-    }
-
-    setFilteredApplications(filtered);
-  };
-
-  const handleSelectApplication = (id: string, checked: boolean) => {
-    if (checked) {
-      setSelectedApplications(prev => [...prev, id]);
-    } else {
-      setSelectedApplications(prev => prev.filter(appId => appId !== id));
-    }
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedApplications(filteredApplications.map(app => app.id));
-    } else {
-      setSelectedApplications([]);
-    }
-  };
-
-  const handleBulkExport = () => {
-    const selectedData = applications.filter(app => selectedApplications.includes(app.id));
-    const csvContent = generateCSV(selectedData);
-    downloadCSV(csvContent, 'selected-applications.csv');
-    toast.success(`${selectedData.length} applications exported successfully`);
-  };
-
-  const generateCSV = (data: TenancyApplication[]) => {
-    const headers = [
-      'First name',
-      'Last name', 
-      'Date of birth',
-      'Mobile number',
-      'Email address',
-      'Postcode',
-      'Street address',
-      'Is rented?',
-      'Vacate date'
-    ];
-    
-    const rows = data.map(app => {
-      const primaryApplicant = app.applicants[0];
-      return [
-        primaryApplicant?.firstName || '',
-        primaryApplicant?.lastName || '',
-        primaryApplicant?.dateOfBirth || '',
-        primaryApplicant?.phone || '',
-        primaryApplicant?.email || '',
-        primaryApplicant?.previousPostcode || app.property_preferences?.postcode || '',
-        primaryApplicant?.previousAddress || app.property_preferences?.streetAddress || '',
-        primaryApplicant?.currentPropertyStatus === 'renting' ? 'Yes' : 'No',
-        primaryApplicant?.vacateDate || ''
-      ];
-    });
-    
-    return [headers, ...rows].map(row => row.join(',')).join('\n');
-  };
-
-  const downloadCSV = (content: string, filename: string) => {
-    const blob = new Blob([content], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
-  };
-
-  const handleViewApplication = (application: TenancyApplication) => {
-    setSelectedApplicationForPreview(application);
-    setIsPreviewSheetOpen(true);
-  };
-
-  const handleDownloadPdf = async (application: TenancyApplication) => {
-    const pdfData = {
-      applicants: application.applicants,
-      propertyPreferences: application.property_preferences,
-      additionalDetails: application.additional_details,
-      dataSharing: application.data_sharing,
-      signature: application.signature,
-      submittedAt: application.submitted_at
-    };
-
-    const primaryApplicant = application.applicants[0];
-    const filename = `${primaryApplicant?.firstName || 'Unknown'}_${primaryApplicant?.lastName || 'Applicant'}_Application.pdf`;
-    
-    await generatePdf(pdfData, filename);
-  };
-
-  const handleViewActivity = (application: TenancyApplication) => {
-    setSelectedApplicationForActivity(application);
-    setIsActivityModalOpen(true);
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-center space-y-4">
-          <Loader2 className="h-12 w-12 animate-spin text-orange-500 mx-auto" />
-          <p className="text-gray-600 font-medium">Loading admin dashboard...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
       <ApplicationHeader title="Admin Dashboard" />
       
-      <div className="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8 max-w-7xl">
-        {/* Header with User Info and Actions */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Applications Dashboard</h1>
-            <p className="text-gray-600">
-              Welcome back, {user?.email} • Manage and review tenancy applications
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <Button
-              variant="outline"
-              onClick={handleRefresh}
-              disabled={refreshing}
-              className="bg-white shadow-sm hover:shadow-md transition-all"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-              {refreshing ? 'Refreshing...' : 'Refresh'}
-            </Button>
-            
-            <Button
-              variant="outline"
-              onClick={handleLogout}
-              className="bg-white shadow-sm hover:shadow-md transition-all text-red-600 hover:text-red-700 border-red-200 hover:border-red-300"
-            >
-              <LogOut className="h-4 w-4 mr-2" />
-              Sign Out
-            </Button>
-          </div>
-        </div>
-
-        {/* Statistics */}
-        <div className="mb-6">
-          <AdminStats applications={applications} />
-        </div>
-
-        {/* Search and Filters */}
-        <div className="mb-6">
-          <AdminSearchFilters
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-            dateFilter={dateFilter}
-            onDateFilterChange={setDateFilter}
-            customDateRange={customDateRange}
-            onCustomDateRangeChange={setCustomDateRange}
-            totalApplications={applications.length}
-            filteredCount={filteredApplications.length}
-          />
-        </div>
-
-        {/* Tabs */}
-        <Tabs defaultValue="applications" className="w-full">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 mb-6">
-            <TabsList className="grid w-full grid-cols-2 h-14 bg-gray-50 rounded-xl p-1">
-              <TabsTrigger 
-                value="applications" 
-                className="text-base font-medium h-12 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Welcome Card */}
+        <Card className="mb-8 border-0 bg-white/90 backdrop-blur-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+          <CardContent className="p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-dark-grey mb-2">Welcome back!</h1>
+                <p className="text-light-grey">
+                  Logged in as: <span className="font-medium text-dark-grey">{user?.email}</span>
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                onClick={handleSignOut}
+                className="border-orange-300 text-orange-600 hover:bg-orange-50"
               >
-                Applications ({filteredApplications.length})
-              </TabsTrigger>
-              <TabsTrigger 
-                value="applicants" 
-                className="text-base font-medium h-12 rounded-lg data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
-              >
-                Applicants
-              </TabsTrigger>
-            </TabsList>
-          </div>
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          <TabsContent value="applications" className="space-y-6">
-            {/* Bulk Actions */}
-            <BulkActions
-              selectedApplications={selectedApplications}
-              onSelectAll={handleSelectAll}
-              onBulkExport={handleBulkExport}
-              totalApplications={filteredApplications.length}
-            />
+        {/* Admin Tabs */}
+        <Tabs defaultValue="stats" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-white/90 backdrop-blur-sm">
+            <TabsTrigger value="stats" className="flex items-center gap-2">
+              <BarChart3 className="h-4 w-4" />
+              Statistics
+            </TabsTrigger>
+            <TabsTrigger value="applications" className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              Applications
+            </TabsTrigger>
+            <TabsTrigger value="applicants" className="flex items-center gap-2">
+              <Users className="h-4 w-4" />
+              Applicants
+            </TabsTrigger>
+          </TabsList>
 
-            {/* Applications Table */}
-            <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-xl">
-              <CardContent className="p-0">
-                {filteredApplications.length > 0 ? (
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="bg-gray-50 border-b hover:bg-gray-50">
-                          <TableHead className="w-12"></TableHead>
-                          <TableHead className="font-semibold text-gray-900">Primary Applicant</TableHead>
-                          <TableHead className="font-semibold text-gray-900">Property Details</TableHead>
-                          <TableHead className="font-semibold text-gray-900 text-center">Submission Date</TableHead>
-                          <TableHead className="font-semibold text-gray-900 text-center">Location</TableHead>
-                          <TableHead className="font-semibold text-gray-900 text-right">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {filteredApplications.map((application) => (
-                          <AdminTableRow
-                            key={application.id}
-                            application={application}
-                            isSelected={selectedApplications.includes(application.id)}
-                            onSelect={handleSelectApplication}
-                            onView={handleViewApplication}
-                            onDownload={handleDownloadPdf}
-                            onViewActivity={handleViewActivity}
-                          />
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                ) : (
-                  <div className="text-center py-20">
-                    <div className="text-gray-400 mb-6">
-                      <svg className="mx-auto h-20 w-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      {searchTerm || dateFilter !== "all" ? "No matching applications found" : "No applications submitted yet"}
-                    </h3>
-                    <p className="text-gray-500 max-w-md mx-auto">
-                      {searchTerm || dateFilter !== "all" 
-                        ? "Try adjusting your search criteria or date range to find more applications."
-                        : "When tenancy applications are submitted, they will appear here for review and management."
-                      }
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+          <TabsContent value="stats">
+            <AdminStats />
+          </TabsContent>
+
+          <TabsContent value="applications">
+            <ApplicationsTable />
           </TabsContent>
 
           <TabsContent value="applicants">
-            <Card className="shadow-sm border border-gray-200 overflow-hidden rounded-xl">
-              <CardContent className="p-0">
-                <ApplicantsTab />
-              </CardContent>
-            </Card>
+            <ApplicantsTab />
           </TabsContent>
         </Tabs>
-
-        {/* Modals and Sheets */}
-        <ApplicationDetailsModal
-          application={selectedApplication}
-          isOpen={isDetailsModalOpen}
-          onClose={() => setIsDetailsModalOpen(false)}
-        />
-
-        <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
-          <SheetContent className="w-full sm:max-w-4xl h-full p-0">
-            <div className="h-full flex flex-col">
-              <div className="p-6 border-b bg-white">
-                <h2 className="text-xl font-semibold text-gray-900">Application Preview</h2>
-                <p className="text-sm text-gray-600 mt-1">Detailed view of the tenancy application</p>
-              </div>
-              <div className="flex-1 p-6 overflow-auto bg-gray-50">
-                {selectedApplicationForPreview && (
-                  <ApplicationPreviewContent application={selectedApplicationForPreview} />
-                )}
-              </div>
-            </div>
-          </SheetContent>
-        </Sheet>
-
-        <ApplicationActivityModal
-          application={selectedApplicationForActivity}
-          isOpen={isActivityModalOpen}
-          onClose={() => setIsActivityModalOpen(false)}
-        />
       </div>
     </div>
   );

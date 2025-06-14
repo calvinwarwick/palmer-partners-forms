@@ -1,37 +1,38 @@
 
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import LoginForm from "@/components/LoginForm";
-import Dashboard from "@/components/Dashboard";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useAuthForm } from "@/hooks/useAuthForm";
+import AuthFormFields from "@/components/auth/AuthFormFields";
+import DemoCredentials from "@/components/auth/DemoCredentials";
+import ApplicationHeader from "@/components/shared/ApplicationHeader";
 
 const Login = () => {
-  const { user, loading, signOut } = useAuth();
-  const navigate = useNavigate();
+  const authForm = useAuthForm({});
 
-  const handleLogin = () => {
-    // User is automatically set by the auth context
-    navigate("/");
-  };
-
-  const handleLogout = async () => {
-    await signOut();
-    navigate("/");
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500"></div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
+      <ApplicationHeader title="Login" />
+      
+      <div className="flex items-center justify-center py-16 px-4">
+        <Card className="w-full max-w-md border-0 bg-white/90 backdrop-blur-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center text-dark-grey">
+              {authForm.isLogin ? "Sign In" : "Create Account"}
+            </CardTitle>
+            <CardDescription className="text-center text-light-grey">
+              {authForm.isLogin 
+                ? "Enter your credentials to access your account" 
+                : "Create a new account to get started"
+              }
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <AuthFormFields {...authForm} />
+            <DemoCredentials onFillCredentials={authForm.fillDemoCredentials} />
+          </CardContent>
+        </Card>
       </div>
-    );
-  }
-
-  if (user) {
-    return <Dashboard user={{ username: user.email || "", role: "User" }} onLogout={handleLogout} />;
-  }
-
-  return <LoginForm onLogin={handleLogin} />;
+    </div>
+  );
 };
 
 export default Login;
