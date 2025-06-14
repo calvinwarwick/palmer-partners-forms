@@ -1,15 +1,22 @@
+
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { toast } from "sonner";
 import AdminStats from "@/components/admin/AdminStats";
-import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import ApplicationDetailsModal from "@/components/admin/ApplicationDetailsModal";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
+import AdminSearchFilters from "@/components/admin/AdminSearchFilters";
+import BulkActions from "@/components/admin/BulkActions";
+import AdminTableRow from "@/components/admin/AdminTableRow";
+import ApplicationActivityModal from "@/components/admin/ApplicationActivityModal";
+import ApplicationPreviewContent from "@/components/admin/ApplicationPreviewContent";
+import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { isWithinInterval, startOfDay, endOfDay } from "date-fns";
 
 interface TenancyApplication {
@@ -29,11 +36,18 @@ const Admin = () => {
   const [selectedApplication, setSelectedApplication] = useState<TenancyApplication | null>(null);
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { generatePdf } = usePdfGeneration();
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
   const [customDateRange, setCustomDateRange] = useState<{ from: Date; to: Date } | null>(null);
+
+  // Activity and preview modals
+  const [selectedApplicationForActivity, setSelectedApplicationForActivity] = useState<TenancyApplication | null>(null);
+  const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
+  const [selectedApplicationForPreview, setSelectedApplicationForPreview] = useState<TenancyApplication | null>(null);
+  const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
 
   useEffect(() => {
     fetchApplications();
@@ -183,6 +197,32 @@ const Admin = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const handleViewApplication = (application: TenancyApplication) => {
+    setSelectedApplicationForPreview(application);
+    setIsPreviewSheetOpen(true);
+  };
+
+  const handleDownloadPdf = async (application: TenancyApplication) => {
+    const pdfData = {
+      applicants: application.applicants,
+      propertyPreferences: application.property_preferences,
+      additionalDetails: application.additional_details,
+      dataSharing: application.data_sharing,
+      signature: application.signature,
+      submittedAt: application.submitted_at
+    };
+
+    const primaryApplicant = application.applicants[0];
+    const filename = `${primaryApplicant?.firstName || 'Unknown'}_${primaryApplicant?.lastName || 'Applicant'}_Application.pdf`;
+    
+    await generatePdf(pdfData, filename);
+  };
+
+  const handleViewActivity = (application: TenancyApplication) => {
+    setSelectedApplicationForActivity(application);
+    setIsActivityModalOpen(true);
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -193,51 +233,101 @@ const Admin = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Add the header */}
       <ApplicationHeader title="Admin Dashboard" />
       
       <div className="container mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-8 max-w-7xl">
-        {/* Header content - removed since it's now in ApplicationHeader */}
-        
-        {/* Statistics - Mobile responsive */}
-        <div className="mb-4 sm:mb-6">
+        {/* Statistics */}
+        <div className="mb-6">
           <AdminStats applications={applications} />
         </div>
 
-        {/* Tabs - Mobile optimized */}
+        {/* Search and Filters */}
+        <div className="mb-6">
+          <AdminSearchFilters
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            dateFilter={dateFilter}
+            onDateFilterChange={setDateFilter}
+            customDateRange={customDateRange}
+            onCustomDateRangeChange={setCustomDateRange}
+            totalApplications={applications.length}
+            filteredCount={filteredApplications.length}
+          />
+        </div>
+
+        {/* Tabs */}
         <Tabs defaultValue="applications" className="w-full">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 sm:mb-6">
-            <TabsList className="grid w-full grid-cols-2 h-10 sm:h-12 bg-gray-50 rounded-lg p-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <TabsList className="grid w-full grid-cols-2 h-12 bg-gray-50 rounded-lg p-1">
               <TabsTrigger 
                 value="applications" 
-                className="text-sm sm:text-base lg:text-lg font-medium h-8 sm:h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+                className="text-base font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applications
               </TabsTrigger>
               <TabsTrigger 
                 value="applicants" 
-                className="text-sm sm:text-base lg:text-lg font-medium h-8 sm:h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
+                className="text-base font-medium h-10 rounded-md data-[state=active]:bg-orange-500 data-[state=active]:text-white data-[state=active]:shadow-sm transition-all"
               >
                 Applicants
               </TabsTrigger>
             </TabsList>
           </div>
 
-          <TabsContent value="applications" className="space-y-4 sm:space-y-6">
-            {/* Applications Table */}
-            <ApplicationsTable
-              applications={filteredApplications}
+          <TabsContent value="applications" className="space-y-6">
+            {/* Bulk Actions */}
+            <BulkActions
               selectedApplications={selectedApplications}
-              onSelectApplication={handleSelectApplication}
               onSelectAll={handleSelectAll}
               onBulkExport={handleBulkExport}
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              dateFilter={dateFilter}
-              onDateFilterChange={setDateFilter}
-              customDateRange={customDateRange}
-              onCustomDateRangeChange={setCustomDateRange}
+              totalApplications={filteredApplications.length}
             />
+
+            {/* Applications Table */}
+            <Card className="shadow-sm border border-gray-200 overflow-hidden">
+              <CardContent className="p-0">
+                {filteredApplications.length > 0 ? (
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-gray-50 border-b">
+                          <TableHead className="w-12"></TableHead>
+                          <TableHead className="font-semibold text-gray-900">Applicant</TableHead>
+                          <TableHead className="font-semibold text-gray-900">Property</TableHead>
+                          <TableHead className="font-semibold text-gray-900 text-center">Submitted</TableHead>
+                          <TableHead className="font-semibold text-gray-900 text-center">Site</TableHead>
+                          <TableHead className="font-semibold text-gray-900 text-right">Actions</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredApplications.map((application) => (
+                          <AdminTableRow
+                            key={application.id}
+                            application={application}
+                            isSelected={selectedApplications.includes(application.id)}
+                            onSelect={handleSelectApplication}
+                            onView={handleViewApplication}
+                            onDownload={handleDownloadPdf}
+                            onViewActivity={handleViewActivity}
+                          />
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                ) : (
+                  <div className="text-center py-16">
+                    <div className="text-gray-400 mb-4">
+                      <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 mb-4 text-lg">
+                      {searchTerm || dateFilter !== "all" ? "No applications found matching your search." : "No applications found."}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="applicants">
@@ -249,11 +339,32 @@ const Admin = () => {
           </TabsContent>
         </Tabs>
 
-        {/* Application Details Modal */}
+        {/* Modals and Sheets */}
         <ApplicationDetailsModal
           application={selectedApplication}
           isOpen={isDetailsModalOpen}
           onClose={() => setIsDetailsModalOpen(false)}
+        />
+
+        <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
+          <SheetContent className="w-full sm:max-w-4xl h-full p-0">
+            <div className="h-full flex flex-col">
+              <div className="p-6 border-b bg-white">
+                <h2 className="text-xl font-semibold text-gray-900">Application Preview</h2>
+              </div>
+              <div className="flex-1 p-6 overflow-auto bg-gray-50">
+                {selectedApplicationForPreview && (
+                  <ApplicationPreviewContent application={selectedApplicationForPreview} />
+                )}
+              </div>
+            </div>
+          </SheetContent>
+        </Sheet>
+
+        <ApplicationActivityModal
+          application={selectedApplicationForActivity}
+          isOpen={isActivityModalOpen}
+          onClose={() => setIsActivityModalOpen(false)}
         />
       </div>
     </div>
