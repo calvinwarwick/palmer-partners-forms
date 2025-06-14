@@ -20,11 +20,11 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
   const navigate = useNavigate();
 
   const isDemoCredentials = (email: string, password: string) => {
-    return email === "demo.user@test.com" && password === "demo123456";
+    return email === "demo.user@example.com" && password === "demo123456";
   };
 
   const createDemoAccount = async () => {
-    const { error } = await signUp("demo.user@test.com", "demo123456", {
+    const { error } = await signUp("demo.user@example.com", "demo123456", {
       first_name: "Demo",
       last_name: "User",
     });
@@ -91,7 +91,7 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
   };
 
   const fillDemoCredentials = () => {
-    setEmail("demo.user@test.com");
+    setEmail("demo.user@example.com");
     setPassword("demo123456");
     setIsLogin(true);
     toast.info("Demo credentials filled. Click 'Sign In' to login.");

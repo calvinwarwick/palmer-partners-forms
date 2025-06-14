@@ -15,7 +15,7 @@ const DemoCredentials = ({ onFillCredentials }: DemoCredentialsProps) => {
         <div className="flex items-center justify-between">
           <div>
             <div className="font-semibold text-gray-900">Demo User</div>
-            <div className="text-gray-600">demo.user@test.com</div>
+            <div className="text-gray-600">demo.user@example.com</div>
             <div className="text-gray-500 text-xs mt-1">Password: demo123456</div>
           </div>
           <div className="text-orange-600 text-xs font-medium">
