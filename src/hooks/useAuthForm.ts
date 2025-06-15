@@ -20,12 +20,12 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
   const navigate = useNavigate();
 
   const isDemoCredentials = (email: string, password: string) => {
-    return email === "demo.user@example.com" && password === "demo123456";
+    return email === "admin@palmerandpartners.com" && password === "admin123456";
   };
 
   const createDemoAccount = async () => {
-    const { error } = await signUp("demo.user@example.com", "demo123456", {
-      first_name: "Demo",
+    const { error } = await signUp("admin@palmerandpartners.com", "admin123456", {
+      first_name: "Admin",
       last_name: "User",
     });
     return error;
@@ -55,17 +55,17 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
           console.error("Sign in error:", error);
           // If it's demo credentials and login fails, try to create the demo account
           if (isDemoCredentials(email, password) && error.message.includes('Invalid login credentials')) {
-            toast.info("Creating demo account...");
+            toast.info("Creating admin account...");
             const createError = await createDemoAccount();
             
             if (createError) {
               if (createError.message.includes('User already registered')) {
-                toast.error("Demo account exists but password is incorrect. Please try again.");
+                toast.error("Admin account exists but password is incorrect. Please try again.");
               } else {
-                toast.error(`Failed to create demo account: ${createError.message}`);
+                toast.error(`Failed to create admin account: ${createError.message}`);
               }
             } else {
-              toast.success("Demo account created! Please check your email to confirm, or try signing in again.");
+              toast.success("Admin account created! Please check your email to confirm, or try signing in again.");
             }
           } else if (error.message.includes('Invalid login credentials')) {
             toast.error("Invalid email or password. Please check your credentials.");
@@ -76,7 +76,7 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
           console.log("Sign in successful, navigating to admin");
           toast.success("Signed in successfully!");
           if (onLogin) {
-            onLogin(email, "User");
+            onLogin(email, "Admin");
           }
           navigate("/admin");
         }
@@ -109,10 +109,10 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
 
   const fillDemoCredentials = () => {
     console.log("Filling demo credentials");
-    setEmail("demo.user@example.com");
-    setPassword("demo123456");
+    setEmail("admin@palmerandpartners.com");
+    setPassword("admin123456");
     setIsLogin(true);
-    toast.info("Demo credentials filled. Click 'Sign In' to login.");
+    toast.info("Admin credentials filled. Click 'Sign In' to login.");
   };
 
   return {
