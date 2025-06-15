@@ -1,8 +1,7 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { FormSwitch } from "@/components/ui/form-switch";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
@@ -157,32 +156,22 @@ const PersonalInfoStep = ({
                 </div>
               </div>
 
-              {/* Toggle Questions */}
+              {/* Switch Questions */}
               <div className="space-y-4 md:space-y-6 border-t border-gray-200 pt-4 md:pt-6">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                  <Label htmlFor={`ukPassport-${applicant.id}`} className="text-sm md:text-base font-medium text-gray-700 leading-relaxed">
-                    Do you hold a UK or Republic of Ireland passport?
-                  </Label>
-                  <Switch
-                    id={`ukPassport-${applicant.id}`}
-                    checked={toggles.ukPassport}
-                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'ukPassport', checked)}
-                    className="shrink-0"
-                  />
-                </div>
+                <FormSwitch
+                  id={`ukPassport-${applicant.id}`}
+                  label="Do you hold a UK or Republic of Ireland passport?"
+                  checked={toggles.ukPassport}
+                  onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'ukPassport', checked)}
+                />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                    <Label htmlFor={`adverseCredit-${applicant.id}`} className="text-sm md:text-base font-medium text-gray-700 leading-relaxed">
-                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
-                    </Label>
-                    <Switch
-                      id={`adverseCredit-${applicant.id}`}
-                      checked={toggles.adverseCredit}
-                      onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
-                      className="shrink-0"
-                    />
-                  </div>
+                  <FormSwitch
+                    id={`adverseCredit-${applicant.id}`}
+                    label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
+                    checked={toggles.adverseCredit}
+                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
+                  />
                   
                   {toggles.adverseCredit && (
                     <div className="ml-0 md:ml-4 space-y-2">
@@ -200,17 +189,12 @@ const PersonalInfoStep = ({
                   )}
                 </div>
                 
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 md:gap-4">
-                  <Label htmlFor={`guarantorRequired-${applicant.id}`} className="text-sm md:text-base font-medium text-gray-700 leading-relaxed">
-                    If required, can you supply a guarantor for this proposed tenancy?
-                  </Label>
-                  <Switch
-                    id={`guarantorRequired-${applicant.id}`}
-                    checked={toggles.guarantorRequired}
-                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)}
-                    className="shrink-0"
-                  />
-                </div>
+                <FormSwitch
+                  id={`guarantorRequired-${applicant.id}`}
+                  label="If required, can you supply a guarantor for this proposed tenancy?"
+                  checked={toggles.guarantorRequired}
+                  onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)}
+                />
               </div>
               
               {toggles.guarantorRequired && (

@@ -63,23 +63,26 @@
     flex-shrink: 0 !important;
   }
 
-  /* Mobile toggle containers - improved layout */
-  .flex.items-center.justify-between,
-  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between {
+  /* Improved switch containers for mobile */
+  .flex.items-center.justify-between.gap-4 {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 12px !important;
-    padding: 16px 0 !important;
+    gap: 8px !important;
+    padding: 12px 0 !important;
   }
 
-  .flex.items-center.justify-between label,
-  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between label {
+  .flex.items-center.justify-between.gap-4 label {
     width: 100% !important;
-    margin-bottom: 8px !important;
-    margin-right: 0 !important;
+    margin-bottom: 0 !important;
     font-size: 0.9rem !important;
     font-weight: 500 !important;
     line-height: 1.4 !important;
+    order: 1;
+  }
+
+  .flex.items-center.justify-between.gap-4 [data-radix-switch-root] {
+    order: 2;
+    align-self: flex-end;
   }
 
   .btn,
