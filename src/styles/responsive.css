@@ -65,16 +65,16 @@
 
   /* Switch component mobile improvements with better touch targets */
   [role="switch"] {
-    @apply w-14 h-8 !important;
-    min-width: 56px !important;
-    min-height: 32px !important;
+    @apply w-16 h-9 !important;
+    min-width: 64px !important;
+    min-height: 36px !important;
     flex-shrink: 0 !important;
-    margin: 6px !important;
+    margin: 8px 0 !important;
   }
 
   /* Better switch thumb sizing on mobile */
   [role="switch"] [data-state] {
-    @apply w-6 h-6 !important;
+    @apply w-7 h-7 !important;
   }
 
   /* Checkbox component mobile improvements */
@@ -122,16 +122,38 @@
 
   /* Improved toggle container spacing on mobile */
   .flex.items-center.justify-between {
-    min-height: 56px;
-    padding: 10px 0;
-    align-items: flex-start;
+    min-height: 64px !important;
+    padding: 12px 0 !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
   }
 
   /* Better label spacing for toggles on mobile */
   .flex.items-center.justify-between label {
-    margin-right: 16px;
-    flex: 1;
-    line-height: 1.4;
+    margin-right: 16px !important;
+    flex: 1 !important;
+    line-height: 1.4 !important;
+    font-size: 0.875rem !important;
+  }
+
+  /* Mobile-specific toggle layout improvements */
+  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    padding: 16px 0 !important;
+    min-height: auto !important;
+  }
+
+  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between label {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+    margin-right: 0 !important;
+  }
+
+  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between [role="switch"] {
+    align-self: flex-end !important;
+    margin: 0 !important;
   }
 
   /* Improved grid layouts on mobile */
