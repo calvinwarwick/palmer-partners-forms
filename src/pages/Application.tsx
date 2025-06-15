@@ -1,8 +1,8 @@
 
-import TenancyApplicationForm from "@/components/TenancyApplicationForm";
+import TenancyApplicationFormRHF from "@/components/TenancyApplicationFormRHF";
 
 const Application = () => {
-  return <TenancyApplicationForm />;
+  return <TenancyApplicationFormRHF />;
 };
 
 export default Application;
