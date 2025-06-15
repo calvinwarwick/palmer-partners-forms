@@ -14,8 +14,8 @@ interface PetDetailsProps {
 export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange }: PetDetailsProps) => {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Pets</CardTitle>
+      <CardHeader variant="gradient">
+        <CardTitle className="text-orange-700">Pets</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
