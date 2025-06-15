@@ -1,0 +1,72 @@
+
+/* Mobile layout and spacing */
+@media (max-width: 640px) {
+  .container {
+    @apply px-3;
+  }
+  
+  .card {
+    @apply mx-2;
+    border-radius: 12px;
+  }
+  
+  .card-content {
+    @apply p-5;
+  }
+  
+  .step-indicator {
+    min-width: 60px;
+    display: none;
+  }
+  
+  .step-indicator.mobile-visible {
+    display: flex;
+  }
+  
+  .step-indicator span {
+    font-size: 0.75rem;
+    line-height: 1.2;
+  }
+
+  .space-y-6 > * + * {
+    margin-top: 1.25rem !important;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  .max-w-4xl {
+    @apply max-w-full mx-3;
+  }
+
+  .border-t {
+    margin-top: 1.25rem !important;
+    padding-top: 1.25rem !important;
+  }
+
+  .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .grid.grid-cols-1.md\\:grid-cols-3 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .card-header {
+    padding: 1rem 1.25rem !important;
+  }
+
+  .card-header .text-lg {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
+  }
+}
+
+@media (max-width: 950px) {
+  .hidden-below-950\\:hidden {
+    display: none !important;
+  }
+}

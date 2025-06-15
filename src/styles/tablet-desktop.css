@@ -1,0 +1,47 @@
+
+/* Tablet and desktop styles */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .form-control,
+  .form-select {
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+  }
+  
+  .container {
+    @apply px-6;
+  }
+
+  .card {
+    border-radius: 12px;
+  }
+
+  .btn,
+  button {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .form-control,
+  .form-select {
+    min-height: 44px;
+    transition: all 0.2s ease;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(227, 92, 0, 0.15);
+  }
+
+  .card {
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+}
