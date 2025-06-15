@@ -50,9 +50,11 @@ const DemoDataForm = ({ data, onUpdate }: DemoDataFormProps) => {
         postcode: 'SW1A 1AA',
         propertyType: data.propertyType,
         maxRent: data.rentAmount,
+        preferredLocation: 'Central London',
         moveInDate: '2024-07-01',
         latestMoveInDate: '2024-08-01',
-        initialTenancyTerm: '12 months'
+        initialTenancyTerm: '12 months',
+        additionalRequests: 'None'
       },
       additionalDetails: {
         pets: 'no',
@@ -85,7 +87,7 @@ const DemoDataForm = ({ data, onUpdate }: DemoDataFormProps) => {
 
     const demoApplication = {
       applicants: [{
-        id: '1', // Added missing id property
+        id: '1',
         firstName: data.name.split(' ')[0] || 'John',
         lastName: data.name.split(' ')[1] || 'Doe',
         email: data.email,
@@ -108,9 +110,11 @@ const DemoDataForm = ({ data, onUpdate }: DemoDataFormProps) => {
         postcode: 'SW1A 1AA',
         propertyType: data.propertyType,
         maxRent: data.rentAmount,
+        preferredLocation: 'Central London',
         moveInDate: '2024-07-01',
         latestMoveInDate: '2024-08-01',
-        initialTenancyTerm: '12 months'
+        initialTenancyTerm: '12 months',
+        additionalRequests: 'None'
       },
       additionalDetails: {
         pets: 'no',
