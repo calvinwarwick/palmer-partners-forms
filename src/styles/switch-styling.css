@@ -1,10 +1,16 @@
 
-/* Global switch styling - ensures consistency across all screen sizes */
-[data-radix-switch-root] {
+/* Comprehensive switch styling - ensures consistency across all screen sizes */
+
+/* Base switch container styling with maximum specificity */
+[data-radix-switch-root],
+.switch-root,
+*[role="switch"] {
   width: 44px !important;
   height: 24px !important;
   min-width: 44px !important;
   min-height: 24px !important;
+  max-width: 44px !important;
+  max-height: 24px !important;
   flex-shrink: 0 !important;
   border: 2px solid transparent !important;
   border-radius: 12px !important;
@@ -14,28 +20,61 @@
   transition: all 0.2s ease !important;
   display: inline-flex !important;
   align-items: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  background-clip: padding-box !important;
 }
 
-[data-radix-switch-root][data-state="checked"] {
+/* Checked state styling */
+[data-radix-switch-root][data-state="checked"],
+.switch-root[data-state="checked"],
+*[role="switch"][data-state="checked"] {
   background-color: #FF6F00 !important;
+  border-color: #FF6F00 !important;
 }
 
-[data-radix-switch-root][data-state="unchecked"] {
+/* Unchecked state styling */
+[data-radix-switch-root][data-state="unchecked"],
+.switch-root[data-state="unchecked"],
+*[role="switch"][data-state="unchecked"] {
   background-color: #9E9E9E !important;
+  border-color: #9E9E9E !important;
 }
 
-[data-radix-switch-root]:focus-visible {
+/* Focus styling */
+[data-radix-switch-root]:focus-visible,
+.switch-root:focus-visible,
+*[role="switch"]:focus-visible {
   box-shadow: 0 0 0 2px #FF6F00 !important;
+  outline: none !important;
 }
 
-[data-radix-switch-root]:disabled {
+/* Disabled styling */
+[data-radix-switch-root]:disabled,
+.switch-root:disabled,
+*[role="switch"]:disabled {
   opacity: 0.5 !important;
   cursor: not-allowed !important;
 }
 
-[data-radix-switch-thumb] {
+/* Hover effects */
+[data-radix-switch-root]:hover:not(:disabled),
+.switch-root:hover:not(:disabled),
+*[role="switch"]:hover:not(:disabled) {
+  transform: scale(1.02) !important;
+}
+
+/* Thumb (slider) styling */
+[data-radix-switch-thumb],
+.switch-thumb,
+*[data-radix-switch-thumb] {
   width: 20px !important;
   height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
   border-radius: 10px !important;
   background-color: white !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
@@ -43,13 +82,101 @@
   display: block !important;
   pointer-events: none !important;
   position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  border: none !important;
+}
+
+/* Thumb position - unchecked */
+[data-radix-switch-root][data-state="unchecked"] [data-radix-switch-thumb],
+.switch-root[data-state="unchecked"] .switch-thumb,
+*[role="switch"][data-state="unchecked"] *[data-radix-switch-thumb] {
   transform: translateX(2px) !important;
 }
 
-[data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+/* Thumb position - checked */
+[data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb],
+.switch-root[data-state="checked"] .switch-thumb,
+*[role="switch"][data-state="checked"] *[data-radix-switch-thumb] {
   transform: translateX(22px) !important;
 }
 
-[data-radix-switch-root][data-state="unchecked"] [data-radix-switch-thumb] {
-  transform: translateX(2px) !important;
+/* Override any conflicting Tailwind classes */
+.peer,
+.inline-flex,
+.h-6,
+.w-11,
+.shrink-0,
+.cursor-pointer,
+.items-center,
+.rounded-full,
+.border-2,
+.border-transparent,
+.transition-colors,
+.focus-visible\:outline-none,
+.focus-visible\:ring-2,
+.focus-visible\:ring-orange-500,
+.focus-visible\:ring-offset-2,
+.focus-visible\:ring-offset-white,
+.disabled\:cursor-not-allowed,
+.disabled\:opacity-50,
+.data-\[state\=checked\]\:bg-orange-500,
+.data-\[state\=unchecked\]\:bg-gray-300 {
+  /* Reset any conflicting styles when applied to switch elements */
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+  [data-radix-switch-root],
+  .switch-root,
+  *[role="switch"] {
+    width: 44px !important;
+    height: 24px !important;
+    min-width: 44px !important;
+    min-height: 24px !important;
+  }
+  
+  [data-radix-switch-thumb],
+  .switch-thumb,
+  *[data-radix-switch-thumb] {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  [data-radix-switch-root],
+  .switch-root,
+  *[role="switch"] {
+    width: 44px !important;
+    height: 24px !important;
+  }
+}
+
+/* Desktop adjustments */
+@media (min-width: 1025px) {
+  [data-radix-switch-root],
+  .switch-root,
+  *[role="switch"] {
+    width: 44px !important;
+    height: 24px !important;
+  }
+}
+
+/* Force override any competing styles */
+.form-switch-container [data-radix-switch-root],
+.form-switch-container .switch-root,
+.form-switch-container *[role="switch"] {
+  width: 44px !important;
+  height: 24px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure the switch works in flex containers */
+.flex [data-radix-switch-root],
+.flex .switch-root,
+.flex *[role="switch"] {
+  flex-shrink: 0 !important;
 }

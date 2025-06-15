@@ -29,30 +29,33 @@ const FormSwitch = ({
         justifyContent: 'space-between',
         gap: '12px',
         padding: '12px 0',
-        width: '100%'
+        width: '100%',
+        minHeight: '48px'
       }}
     >
       <Label 
         htmlFor={id} 
-        className="text-sm md:text-base font-medium text-gray-700 leading-relaxed flex-1 cursor-pointer"
+        className="text-sm md:text-base font-medium text-gray-700 leading-relaxed cursor-pointer"
         style={{
           flex: 1,
           margin: 0,
-          cursor: 'pointer'
+          cursor: 'pointer',
+          lineHeight: '1.4'
         }}
       >
         {label}
       </Label>
-      <Switch
-        id={id}
-        checked={checked}
-        onCheckedChange={onCheckedChange}
-        disabled={disabled}
-        className="shrink-0"
-        style={{
-          flexShrink: 0
-        }}
-      />
+      <div style={{ flexShrink: 0 }}>
+        <Switch
+          id={id}
+          checked={checked}
+          onCheckedChange={onCheckedChange}
+          disabled={disabled}
+          style={{
+            flexShrink: 0
+          }}
+        />
+      </div>
     </div>
   );
 };
