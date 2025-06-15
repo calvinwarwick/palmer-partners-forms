@@ -40,6 +40,9 @@ const CustomSwitch = React.forwardRef<HTMLButtonElement, CustomSwitchProps>(
           checked ? "bg-orange-500" : "bg-gray-300",
           className
         )}
+        style={{
+          boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+        }}
         {...props}
       >
         <span
