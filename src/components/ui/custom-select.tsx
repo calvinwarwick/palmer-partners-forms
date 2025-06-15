@@ -30,22 +30,33 @@ const CustomSelect = React.forwardRef<HTMLSelectElement, CustomSelectProps>(
           disabled={disabled}
           className={cn(
             "flex h-11 md:h-12 w-full items-center justify-between rounded-lg border-[1.5px] border-gray-300 bg-white px-4 py-3 text-gray-900 ring-offset-background placeholder:text-gray-500 focus:outline-none focus:border-orange-500 disabled:cursor-not-allowed disabled:opacity-50 appearance-none cursor-pointer font-lexend transition-none",
+            "text-sm md:text-base",
             className
           )}
           style={{
             borderColor: '#e4e4e7',
             boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-            fontFamily: 'Lexend, sans-serif'
+            fontFamily: 'Lexend, sans-serif',
+            backgroundColor: 'white',
+            color: '#111827'
           }}
           {...props}
         >
           {placeholder && (
-            <option value="" disabled>
+            <option value="" disabled style={{ color: '#9ca3af' }}>
               {placeholder}
             </option>
           )}
           {options.map((option) => (
-            <option key={option.value} value={option.value}>
+            <option 
+              key={option.value} 
+              value={option.value}
+              style={{ 
+                color: '#111827',
+                backgroundColor: 'white',
+                fontFamily: 'Lexend, sans-serif'
+              }}
+            >
               {option.label}
             </option>
           ))}
