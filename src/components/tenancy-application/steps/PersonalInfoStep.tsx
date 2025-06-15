@@ -1,10 +1,13 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useState } from "react";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -23,6 +26,30 @@ const PersonalInfoStep = ({
   onApplicantCountChange,
   onGuarantorOpen
 }: PersonalInfoStepProps) => {
+  const [applicantToggles, setApplicantToggles] = useState<{[key: string]: {
+    ukPassport: boolean;
+    adverseCredit: boolean;
+    guarantorRequired: boolean;
+  }}>({});
+
+  const updateApplicantToggle = (applicantId: string, field: string, value: boolean) => {
+    setApplicantToggles(prev => ({
+      ...prev,
+      [applicantId]: {
+        ...prev[applicantId],
+        [field]: value
+      }
+    }));
+  };
+
+  const getApplicantToggles = (applicantId: string) => {
+    return applicantToggles[applicantId] || {
+      ukPassport: false,
+      adverseCredit: false,
+      guarantorRequired: false
+    };
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -39,97 +66,142 @@ const PersonalInfoStep = ({
         onApplicantCountChange={onApplicantCountChange}
       />
 
-      {applicants.map((applicant, index) => (
-        <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-          <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-            <CardTitle className="text-lg font-semibold flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-lg">
-                  <User className="h-5 w-5" />
+      {applicants.map((applicant, index) => {
+        const toggles = getApplicantToggles(applicant.id);
+        
+        return (
+          <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+            <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+              <CardTitle className="text-lg font-semibold flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-lg">
+                    <User className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-white">
+                    Applicant {index + 1}
+                    {applicant.firstName && applicant.lastName && (
+                      <span className="font-normal ml-2">
+                        - {applicant.firstName} {applicant.lastName}
+                      </span>
+                    )}
+                  </span>
                 </div>
-                <span className="text-white">
-                  Applicant {index + 1}
-                  {applicant.firstName && applicant.lastName && (
-                    <span className="font-normal ml-2">
-                      - {applicant.firstName} {applicant.lastName}
-                    </span>
-                  )}
-                </span>
+                {applicants.length > 1 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onRemoveApplicant(applicant.id)}
+                    className="text-white hover:bg-white/20 h-8 w-8 p-0"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6 p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor={`firstName-${applicant.id}`}>First Name *</Label>
+                  <Input
+                    id={`firstName-${applicant.id}`}
+                    value={applicant.firstName}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'firstName', e.target.value)}
+                    placeholder="Enter first name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor={`lastName-${applicant.id}`}>Last Name *</Label>
+                  <Input
+                    id={`lastName-${applicant.id}`}
+                    value={applicant.lastName}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'lastName', e.target.value)}
+                    placeholder="Enter last name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor={`email-${applicant.id}`}>Email *</Label>
+                  <Input
+                    id={`email-${applicant.id}`}
+                    type="email"
+                    value={applicant.email}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
+                    placeholder="Enter email address"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor={`phone-${applicant.id}`}>Phone Number *</Label>
+                  <Input
+                    id={`phone-${applicant.id}`}
+                    value={applicant.phone}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
+                    placeholder="Enter phone number"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor={`dateOfBirth-${applicant.id}`}>Date of Birth *</Label>
+                  <div className="date-input-container">
+                    <Input
+                      id={`dateOfBirth-${applicant.id}`}
+                      type="date"
+                      value={applicant.dateOfBirth}
+                      onChange={(e) => onUpdateApplicant(applicant.id, 'dateOfBirth', e.target.value)}
+                      className="form-control"
+                    />
+                  </div>
+                </div>
               </div>
-              {applicants.length > 1 && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => onRemoveApplicant(applicant.id)}
-                  className="text-white hover:bg-white/20 h-8 w-8 p-0"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+
+              {/* Toggle Questions */}
+              <div className="space-y-4 border-t pt-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor={`ukPassport-${applicant.id}`} className="text-sm">
+                    Do you hold a UK or Republic of Ireland passport?
+                  </Label>
+                  <Switch
+                    id={`ukPassport-${applicant.id}`}
+                    checked={toggles.ukPassport}
+                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'ukPassport', checked)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor={`adverseCredit-${applicant.id}`} className="text-sm">
+                    Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
+                  </Label>
+                  <Switch
+                    id={`adverseCredit-${applicant.id}`}
+                    checked={toggles.adverseCredit}
+                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Label htmlFor={`guarantorRequired-${applicant.id}`} className="text-sm">
+                    If required, can you supply a guarantor for this proposed tenancy?
+                  </Label>
+                  <Switch
+                    id={`guarantorRequired-${applicant.id}`}
+                    checked={toggles.guarantorRequired}
+                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)}
+                  />
+                </div>
+              </div>
+              
+              {toggles.guarantorRequired && (
+                <div className="flex justify-end pt-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => onGuarantorOpen(applicant)}
+                    className="border-orange-300 text-orange-600 hover:bg-orange-50"
+                  >
+                    Add Guarantor
+                  </Button>
+                </div>
               )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6 p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor={`firstName-${applicant.id}`}>First Name *</Label>
-                <Input
-                  id={`firstName-${applicant.id}`}
-                  value={applicant.firstName}
-                  onChange={(e) => onUpdateApplicant(applicant.id, 'firstName', e.target.value)}
-                  placeholder="Enter first name"
-                />
-              </div>
-              <div>
-                <Label htmlFor={`lastName-${applicant.id}`}>Last Name *</Label>
-                <Input
-                  id={`lastName-${applicant.id}`}
-                  value={applicant.lastName}
-                  onChange={(e) => onUpdateApplicant(applicant.id, 'lastName', e.target.value)}
-                  placeholder="Enter last name"
-                />
-              </div>
-              <div>
-                <Label htmlFor={`email-${applicant.id}`}>Email *</Label>
-                <Input
-                  id={`email-${applicant.id}`}
-                  type="email"
-                  value={applicant.email}
-                  onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
-                  placeholder="Enter email address"
-                />
-              </div>
-              <div>
-                <Label htmlFor={`phone-${applicant.id}`}>Phone Number *</Label>
-                <Input
-                  id={`phone-${applicant.id}`}
-                  value={applicant.phone}
-                  onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
-                  placeholder="Enter phone number"
-                />
-              </div>
-              <div>
-                <Label htmlFor={`dateOfBirth-${applicant.id}`}>Date of Birth *</Label>
-                <Input
-                  id={`dateOfBirth-${applicant.id}`}
-                  type="date"
-                  value={applicant.dateOfBirth}
-                  onChange={(e) => onUpdateApplicant(applicant.id, 'dateOfBirth', e.target.value)}
-                />
-              </div>
-            </div>
-            
-            <div className="flex justify-end pt-4">
-              <Button
-                variant="outline"
-                onClick={() => onGuarantorOpen(applicant)}
-                className="border-orange-300 text-orange-600 hover:bg-orange-50"
-              >
-                Add Guarantor
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 };
