@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2 } from "lucide-react";
+import { Eye, Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2, Filter } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
@@ -126,24 +126,38 @@ const ApplicantsTab = () => {
     // Date filter
     if (dateFilter !== "all") {
       const now = new Date();
-      filtered = filtered.filter(applicant => {
-        const submitDate = new Date(applicant.createdAt);
-        switch (dateFilter) {
-          case "today":
-            return submitDate.toDateString() === now.toDateString();
-          case "this_week":
-            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-            return submitDate >= weekAgo;
-          case "this_month":
-            return submitDate.getMonth() === now.getMonth() && submitDate.getFullYear() === now.getFullYear();
-          case "last_month":
-            const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-            const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-            return submitDate >= lastMonth && submitDate < thisMonth;
-          default:
-            return true;
-        }
-      });
+      let filterDate: Date;
+
+      switch (dateFilter) {
+        case "today":
+          filterDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          filtered = filtered.filter(applicant => new Date(applicant.createdAt) >= filterDate);
+          break;
+        case "this_week":
+          filterDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          filtered = filtered.filter(applicant => new Date(applicant.createdAt) >= filterDate);
+          break;
+        case "this_month":
+          filterDate = new Date(now.getFullYear(), now.getMonth(), 1);
+          filtered = filtered.filter(applicant => new Date(applicant.createdAt) >= filterDate);
+          break;
+        case "last_month":
+          const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+          const thisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+          filtered = filtered.filter(applicant => {
+            const appDate = new Date(applicant.createdAt);
+            return appDate >= lastMonth && appDate < thisMonth;
+          });
+          break;
+        case "custom":
+          if (dateRange?.from && dateRange?.to) {
+            filtered = filtered.filter(applicant => {
+              const appDate = new Date(applicant.createdAt);
+              return appDate >= dateRange.from && appDate <= dateRange.to;
+            });
+          }
+          break;
+      }
     }
 
     setFilteredApplicants(filtered);
@@ -244,6 +258,13 @@ const ApplicantsTab = () => {
     }
   };
 
+  const getDateRangeDisplay = () => {
+    if (dateRange?.from && dateRange?.to) {
+      return `${format(dateRange.from, "MMM dd")} - ${format(dateRange.to, "MMM dd")}`;
+    }
+    return "Custom range";
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -253,34 +274,25 @@ const ApplicantsTab = () => {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Search and Filter Controls - Mobile-friendly */}
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+      {/* Always Visible Table Header with Filters */}
+      <div className="bg-gray-50 border-b px-4 py-4">
         <div className="space-y-4">
-          {/* Title and Selection Row */}
+          {/* Title and Actions Row */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              {filteredApplicants.length > 0 && (
-                <Checkbox
-                  ref={checkboxRef}
-                  checked={isAllSelected}
-                  onCheckedChange={handleSelectAll}
-                  className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                />
-              )}
-              <span className="text-sm font-semibold text-gray-900">
+              <Filter className="h-5 w-5 text-orange-500" />
+              <span className="text-lg font-semibold text-gray-900">
                 Applicants ({filteredApplicants.length})
               </span>
-              {selectedApplicants.length > 0 && (
-                <span className="text-xs text-gray-600 bg-orange-50 px-2 py-1 rounded-full border border-orange-200">
-                  {selectedApplicants.length} selected
-                </span>
-              )}
             </div>
 
-            {/* Bulk Actions - Mobile friendly */}
+            {/* Bulk Actions */}
             {selectedApplicants.length > 0 && (
               <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                  {selectedApplicants.length} selected
+                </span>
                 <Button
                   variant="outline"
                   size="sm"
@@ -303,72 +315,100 @@ const ApplicantsTab = () => {
             )}
           </div>
 
-          {/* Search and Filter Row */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search applicants..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input h-9 text-sm pl-10"
-              />
+          {/* Search and Filter Controls */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Search Input */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Search</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Search by name or email..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                />
+              </div>
             </div>
-            
-            <Select value={dateFilter} onValueChange={setDateFilter}>
-              <SelectTrigger className="w-full sm:w-36 h-9 text-sm">
-                <CalendarIcon className="h-3 w-3 mr-1" />
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All time</SelectItem>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="this_week">This week</SelectItem>
-                <SelectItem value="this_month">This month</SelectItem>
-                <SelectItem value="last_month">Last month</SelectItem>
-                <SelectItem value="custom">
-                  <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
-                    <PopoverTrigger asChild>
-                      <Button variant="ghost" className="w-full justify-start text-sm font-normal p-0 h-auto">
-                        Custom range
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        initialFocus
-                        mode="range"
-                        defaultMonth={dateRange?.from}
-                        selected={dateRange}
-                        onSelect={handleDateRangeSelect}
-                        numberOfMonths={2}
-                        className="pointer-events-auto"
-                      />
-                      <div className="p-3 border-t">
-                        <div className="text-sm text-gray-600">
-                          {dateRange?.from && dateRange?.to ? (
-                            `${format(dateRange.from, "MMM dd, yyyy")} - ${format(dateRange.to, "MMM dd, yyyy")}`
-                          ) : (
-                            "Select date range"
-                          )}
+
+            {/* Date Filter */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Date Range</label>
+              <div className="flex gap-2">
+                <Select value={dateFilter} onValueChange={setDateFilter}>
+                  <SelectTrigger className="flex-1 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500">
+                    <CalendarIcon className="h-4 w-4 mr-2 text-gray-400" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All time</SelectItem>
+                    <SelectItem value="today">Today</SelectItem>
+                    <SelectItem value="this_week">This week</SelectItem>
+                    <SelectItem value="this_month">This month</SelectItem>
+                    <SelectItem value="last_month">Last month</SelectItem>
+                    <SelectItem value="custom">{getDateRangeDisplay()}</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Custom Date Range Picker */}
+                <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
+                  <PopoverTrigger asChild>
+                    <Button 
+                      variant="outline" 
+                      className="shadow-sm border-gray-300 hover:bg-gray-50"
+                      onClick={() => setIsDatePickerOpen(true)}
+                    >
+                      <CalendarIcon className="h-4 w-4" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="end">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={dateRange?.from}
+                      selected={dateRange}
+                      onSelect={handleDateRangeSelect}
+                      numberOfMonths={2}
+                      className="pointer-events-auto"
+                    />
+                    {dateRange?.from && dateRange?.to && (
+                      <div className="p-3 border-t bg-gray-50">
+                        <div className="text-sm text-gray-700 text-center">
+                          {format(dateRange.from, "MMM dd, yyyy")} - {format(dateRange.to, "MMM dd, yyyy")}
                         </div>
                       </div>
-                    </PopoverContent>
-                  </Popover>
-                </SelectItem>
-              </SelectContent>
-            </Select>
+                    )}
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
           </div>
+
+          {/* Select All Checkbox */}
+          {filteredApplicants.length > 0 && (
+            <div className="flex items-center gap-3 pt-2 border-t border-gray-200">
+              <Checkbox
+                ref={checkboxRef}
+                checked={isAllSelected}
+                onCheckedChange={handleSelectAll}
+                className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+              />
+              <span className="text-sm font-medium text-gray-900">
+                Select all applicants
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Table - Mobile responsive */}
+      {/* Applicants Content */}
       {filteredApplicants.length > 0 ? (
-        <div className="border rounded-lg overflow-hidden">
+        <>
           {/* Mobile Card View */}
           <div className="block sm:hidden">
             <div className="space-y-3 p-4">
               {filteredApplicants.map((applicant) => (
-                <div key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="bg-white border rounded-lg p-4 space-y-3">
+                <div key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="bg-gray-50 border rounded-lg p-4 space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
                       <Checkbox
@@ -438,7 +478,7 @@ const ApplicantsTab = () => {
           <div className="hidden sm:block">
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50">
+                <TableRow className="bg-gray-100 border-b-0">
                   <TableHead className="w-12">
                     <span className="sr-only">Select</span>
                   </TableHead>
@@ -452,7 +492,7 @@ const ApplicantsTab = () => {
               </TableHeader>
               <TableBody>
                 {filteredApplicants.map((applicant) => (
-                  <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50">
+                  <TableRow key={`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`} className="hover:bg-gray-50 border-b">
                     <TableCell>
                       <Checkbox
                         checked={selectedApplicants.includes(`${applicant.applicationId}-${applicant.firstName}-${applicant.lastName}`)}
@@ -532,9 +572,9 @@ const ApplicantsTab = () => {
               </TableBody>
             </Table>
           </div>
-        </div>
+        </>
       ) : (
-        <div className="text-center py-16 bg-white border rounded-lg">
+        <div className="text-center py-16">
           <div className="text-gray-400 mb-4">
             <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />

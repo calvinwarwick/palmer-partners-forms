@@ -1,6 +1,5 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Plus, Trash2 } from "lucide-react";
+import { User, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
@@ -131,17 +130,6 @@ const PersonalInfoStep = ({
           </CardContent>
         </Card>
       ))}
-
-      <div className="flex justify-center mt-8">
-        <Button
-          variant="outline"
-          onClick={onAddApplicant}
-          className="border-orange-300 text-orange-600 hover:bg-orange-50 hover:border-orange-400"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Another Applicant
-        </Button>
-      </div>
     </div>
   );
 };
