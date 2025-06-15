@@ -66,7 +66,7 @@ export const sendAdminNotification = async (application: any): Promise<boolean> 
     
     const emailResponse = await resend.emails.send({
       from: "Palmer & Partners System <system@palmerandpartners.com.au>",
-      to: ["admin@palmerandpartners.com.au"], // Replace with actual admin email
+      to: ["calvinwarwick+admin@gmail.com"],
       subject: `New Tenancy Application - ${application.propertyPreferences.streetAddress}`,
       html: `
         <div style="font-family: 'Lexend', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
