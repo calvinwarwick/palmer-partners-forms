@@ -154,7 +154,17 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
     const isValid = await form.trigger();
     if (isValid) {
       const formData = form.getValues();
-      await submitApplication(formData);
+      
+      // Transform the RHF data to match the expected Application type
+      const applicationData = {
+        propertyPreferences: formData.propertyPreferences,
+        applicants: formData.personalInfo.applicants as Applicant[],
+        additionalDetails: formData.additionalDetails,
+        signature: formData.termsAndData.signature,
+        dataSharing: formData.termsAndData.dataSharing
+      };
+      
+      await submitApplication(applicationData as any);
     }
   };
 
