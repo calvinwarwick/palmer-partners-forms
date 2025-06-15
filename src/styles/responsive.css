@@ -1,41 +1,44 @@
 
-/* Enhanced mobile responsiveness */
+/* Enhanced mobile responsiveness with improved touch targets */
 @media (max-width: 640px) {
   .form-control,
   .form-select {
     @apply text-base;
-    min-height: 48px;
-    padding: 0.875rem;
-    margin-bottom: 10px !important;
+    min-height: 52px !important; /* Increased for better touch targets */
+    padding: 0.875rem 1rem;
+    margin-bottom: 12px !important;
+    font-size: 16px !important; /* Prevents zoom on iOS */
   }
   
   input[type="date"] {
-    padding-left: 2.75rem !important;
+    padding-left: 3rem !important;
+    min-height: 52px !important;
   }
   
   .date-input-container {
-    margin-bottom: 10px !important;
+    margin-bottom: 12px !important;
   }
   
   .container {
-    @apply px-2;
+    @apply px-3;
   }
   
   .mobile-form-grid {
-    gap: 10px !important;
+    gap: 12px !important;
   }
   
   .mobile-form-grid > * {
     @apply w-full;
-    margin-bottom: 10px !important;
+    margin-bottom: 12px !important;
   }
   
   .card {
-    @apply mx-1;
+    @apply mx-2;
+    border-radius: 12px;
   }
   
   .card-content {
-    @apply p-4;
+    @apply p-5;
   }
   
   .step-indicator {
@@ -48,100 +51,167 @@
   }
   
   .step-indicator span {
-    font-size: 0.65rem;
-    line-height: 1.1;
+    font-size: 0.75rem;
+    line-height: 1.2;
   }
 
-  /* Fixed mobile checkbox and switch sizing */
+  /* Enhanced mobile checkbox and switch sizing */
   .mobile-checkbox {
-    @apply w-5 h-5 !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
+    @apply w-6 h-6 !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
     flex-shrink: 0 !important;
   }
 
-  /* Switch component mobile improvements - enhanced for better touch targets */
+  /* Switch component mobile improvements with better touch targets */
   [role="switch"] {
-    @apply w-12 h-7 !important;
-    min-width: 48px !important;
-    min-height: 28px !important;
+    @apply w-14 h-8 !important;
+    min-width: 56px !important;
+    min-height: 32px !important;
     flex-shrink: 0 !important;
-    margin: 4px !important;
+    margin: 6px !important;
   }
 
   /* Better switch thumb sizing on mobile */
   [role="switch"] [data-state] {
-    @apply w-5 h-5 !important;
+    @apply w-6 h-6 !important;
   }
 
   /* Checkbox component mobile improvements */
   [data-state] {
-    @apply w-5 h-5 !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
+    @apply w-6 h-6 !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
     flex-shrink: 0 !important;
   }
 
   .btn,
   button {
-    min-height: 48px;
+    min-height: 52px !important;
     @apply text-base;
-    padding: 0.75rem 1.5rem;
+    padding: 0.875rem 1.75rem;
+    border-radius: 8px;
   }
 
   /* Improved spacing for mobile */
   .space-y-6 > * + * {
-    margin-top: 1rem !important;
+    margin-top: 1.25rem !important;
   }
 
   .space-y-4 > * + * {
-    margin-top: 0.75rem !important;
+    margin-top: 1rem !important;
   }
 
-  /* Better touch targets */
+  /* Better touch targets for labels */
   label {
     @apply text-sm;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
   }
 
   /* Dialog improvements for mobile */
   .max-w-4xl {
-    @apply max-w-full mx-2;
+    @apply max-w-full mx-3;
   }
 
   /* Card spacing on mobile */
   .border-t {
-    margin-top: 1rem !important;
-    padding-top: 1rem !important;
+    margin-top: 1.25rem !important;
+    padding-top: 1.25rem !important;
   }
 
   /* Improved toggle container spacing on mobile */
   .flex.items-center.justify-between {
-    min-height: 48px;
-    padding: 8px 0;
+    min-height: 56px;
+    padding: 10px 0;
+    align-items: flex-start;
   }
 
   /* Better label spacing for toggles on mobile */
   .flex.items-center.justify-between label {
-    margin-right: 12px;
+    margin-right: 16px;
     flex: 1;
+    line-height: 1.4;
+  }
+
+  /* Improved grid layouts on mobile */
+  .grid.grid-cols-1.md\\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .grid.grid-cols-1.md\\:grid-cols-3 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  /* Better textarea sizing */
+  textarea {
+    min-height: 120px !important;
+    resize: vertical;
+  }
+
+  /* Improved card headers on mobile */
+  .card-header {
+    padding: 1rem 1.25rem !important;
+  }
+
+  .card-header .text-lg {
+    font-size: 1rem !important;
+    line-height: 1.4 !important;
   }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
   .form-control,
   .form-select {
-    min-height: 44px;
+    min-height: 48px;
+    padding: 0.75rem 1rem;
   }
   
   .container {
     @apply px-6;
   }
+
+  .card {
+    border-radius: 12px;
+  }
+
+  .btn,
+  button {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+  }
 }
 
 /* Hide step indicators on screens 950px and smaller */
 @media (max-width: 950px) {
-  .hidden-below-950\:hidden {
+  .hidden-below-950\\:hidden {
     display: none !important;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1025px) {
+  .form-control,
+  .form-select {
+    min-height: 44px;
+    transition: all 0.2s ease;
+  }
+
+  .form-control:focus,
+  .form-select:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(227, 92, 0, 0.15);
+  }
+
+  .card {
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
 }

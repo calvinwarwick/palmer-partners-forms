@@ -1,22 +1,26 @@
 
-/* Form spacing and styling */
+/* Enhanced form styling with better consistency */
 .form-control,
 .form-select {
-  @apply w-full px-3 py-3 bg-white rounded-md text-foreground;
-  @apply focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500;
+  @apply w-full px-4 py-3 bg-white rounded-lg text-foreground;
+  @apply focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
   @apply disabled:cursor-not-allowed disabled:opacity-50;
+  @apply transition-all duration-200 ease-in-out;
   background-color: white !important;
-  height: 2.75rem !important; /* Consistent height for all inputs */
-  margin-bottom: 8px !important; /* Base spacing for mobile */
-  border: 1px solid rgb(228, 228, 231) !important;
-  box-shadow: none !important; /* Remove all box shadows */
+  height: 2.75rem !important;
+  margin-bottom: 8px !important;
+  border: 1.5px solid rgb(228, 228, 231) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  font-size: 0.875rem;
 }
 
 /* Desktop-only increased spacing */
 @media (min-width: 768px) {
   .form-control,
   .form-select {
-    margin-bottom: 16px !important; /* Increased spacing on desktop */
+    margin-bottom: 16px !important;
+    height: 3rem !important;
+    font-size: 1rem;
   }
   
   .form-control + *,
@@ -24,115 +28,122 @@
   input + *,
   select + *,
   textarea + * {
-    margin-top: 16px !important; /* Increased spacing on desktop */
+    margin-top: 16px !important;
   }
 }
 
+/* Focus states with smooth transitions */
+.form-control:focus,
+.form-select:focus {
+  border-color: #e35c00 !important;
+  box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
 .form-select {
-  @apply bg-white;
-  border: 1px solid rgb(228, 228, 231) !important;
+  @apply bg-white cursor-pointer;
+  border: 1.5px solid rgb(228, 228, 231) !important;
   appearance: none !important;
-  background-image: none !important;
-  box-shadow: none !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.75rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.25rem 1.25rem !important;
+  padding-right: 3rem !important;
 }
 
 .form-select option {
-  @apply bg-white text-foreground;
-  padding: 0.75rem;
+  @apply bg-white text-foreground py-2 px-3;
 }
 
-/* Remove left padding from all select dropdown items and ensure no tickmarks */
+/* Remove all select dropdown customizations for consistency */
 [data-radix-select-content] [data-radix-select-item] {
-  padding-left: 0.5rem !important;
-  padding-right: 0.5rem !important;
+  padding: 0.75rem 1rem !important;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease;
 }
 
-/* Hide all select item indicators (tickmarks) */
+[data-radix-select-content] [data-radix-select-item]:hover {
+  background-color: #fef7f0 !important;
+}
+
+/* Hide all select item indicators for cleaner look */
 [data-radix-select-item] span:first-child {
   display: none !important;
 }
 
-/* Ensure select items have no left margin for indicators */
 [data-radix-select-item] [data-radix-select-item-text] {
   margin-left: 0 !important;
 }
 
-/* Improved label styling */
+/* Enhanced label styling */
 .form-label {
-  @apply block text-sm font-medium text-gray-700 mb-2;
+  @apply block text-sm font-semibold text-gray-800 mb-2;
+  line-height: 1.4;
 }
 
-/* Required field asterisk styling */
+/* Required field styling */
 .required-asterisk {
-  color: #ef4444 !important; /* Red color for required asterisks */
+  color: #dc2626 !important;
+  font-weight: 600;
 }
 
-/* Helper tooltip styling */
-.help-tooltip {
-  @apply text-orange-500 hover:text-orange-600 cursor-help;
-}
-
-/* Date input specific styling with icon inside - CALENDAR VISIBLE */
+/* Date input with improved icon positioning */
 .date-input-container {
   @apply relative;
-  margin-bottom: 8px !important; /* Base spacing for mobile */
+  margin-bottom: 8px !important;
 }
 
 @media (min-width: 768px) {
   .date-input-container {
-    margin-bottom: 16px !important; /* Increased spacing on desktop */
+    margin-bottom: 16px !important;
   }
 }
 
 .date-input-icon {
-  @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-primary z-10;
-  pointer-events: none !important; /* Prevent icon from capturing clicks */
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500 z-10;
+  pointer-events: none !important;
+  width: 1.25rem;
+  height: 1.25rem;
 }
 
 input[type="date"] {
-  @apply pl-10;
+  @apply pl-12;
   direction: ltr;
-  padding-left: 2.75rem !important;
-  height: 2.75rem !important; /* Match other inputs */
-  border: 1px solid rgb(228, 228, 231) !important;
+  padding-left: 3rem !important;
+  height: 2.75rem !important;
+  border: 1.5px solid rgb(228, 228, 231) !important;
   background-color: white !important;
-  box-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
   position: relative;
   z-index: 1;
+  border-radius: 0.5rem;
 }
 
-/* Keep calendar picker visible and functional */
+@media (min-width: 768px) {
+  input[type="date"] {
+    height: 3rem !important;
+  }
+}
+
+/* Enhanced calendar picker visibility */
 input[type="date"]::-webkit-calendar-picker-indicator {
-  opacity: 1 !important; /* Make calendar icon visible */
-  width: 20px !important;
-  height: 20px !important;
+  opacity: 1 !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
   position: absolute;
-  right: 8px !important;
+  right: 0.75rem !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   cursor: pointer;
   z-index: 2;
   background: none !important;
-  color: #FF6F00 !important; /* Orange color to match theme */
+  color: #e35c00 !important;
 }
 
 input[type="date"]::-webkit-inner-spin-button {
   display: none;
 }
 
-/* Prevent accidental focus but allow intentional clicks */
-input[type="date"] {
-  pointer-events: auto;
-}
-
-/* Fix search input padding to prevent icon overlap */
-.search-input {
-  padding-left: 2.75rem !important;
-  height: 2.75rem !important; /* Match other inputs */
-  box-shadow: none !important;
-}
-
-/* Currency input styling - improved positioning */
+/* Currency input with better spacing */
 .currency-input-container {
   @apply relative;
   margin-bottom: 8px !important;
@@ -147,89 +158,130 @@ input[type="date"] {
 .currency-input-icon {
   @apply absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none z-10;
   font-size: 1rem;
-  font-weight: 600;
-  color: #FF6F00 !important; /* Orange color */
+  font-weight: 700;
+  color: #e35c00 !important;
 }
 
 .currency-input {
-  padding-left: 2.25rem !important; /* Proper spacing for £ symbol */
+  padding-left: 2.5rem !important;
   height: 2.75rem !important;
-  border: 1px solid rgb(228, 228, 231) !important;
+  border: 1.5px solid rgb(228, 228, 231) !important;
   background-color: white !important;
-  box-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0.5rem;
 }
 
-/* Signature input full width styling */
+@media (min-width: 768px) {
+  .currency-input {
+    height: 3rem !important;
+  }
+}
+
+/* Enhanced signature input */
 .signature-input {
   @apply w-full;
   width: 100% !important;
-  min-height: 120px !important; /* Consistent signature pad height */
-  border: 1px solid rgb(228, 228, 231) !important;
-  border-radius: 0.375rem;
-  box-shadow: none !important;
+  min-height: 150px !important;
+  border: 1.5px solid rgb(228, 228, 231) !important;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Input component override for consistent sizing */
+/* Input component override for perfect consistency */
 .form-field input,
 .form-field select,
 .form-field textarea {
   height: 2.75rem !important;
-  font-size: 0.875rem !important; /* Consistent font size */
+  font-size: 0.875rem !important;
   line-height: 1.25rem !important;
-  border: 1px solid rgb(228, 228, 231) !important;
+  border: 1.5px solid rgb(228, 228, 231) !important;
   background-color: white !important;
-  box-shadow: none !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .form-field input,
+  .form-field select {
+    height: 3rem !important;
+    font-size: 1rem !important;
+  }
 }
 
 .form-field textarea {
-  min-height: 4rem !important; /* Minimum height for textareas */
-  height: auto !important; /* Allow textareas to expand */
+  min-height: 6rem !important;
+  height: auto !important;
   resize: vertical !important;
+  padding: 0.75rem 1rem;
 }
 
-/* Card form containers with subtle shadows */
+/* Card styling improvements */
 .form-card {
-  @apply bg-white rounded-lg border;
+  @apply bg-white rounded-xl border shadow-sm;
   border-color: rgb(228, 228, 231) !important;
+  transition: all 0.3s ease;
 }
 
-/* Form sections with subtle styling */
+.form-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
 .form-section {
-  @apply bg-white rounded-lg border p-6;
+  @apply bg-white rounded-xl border p-6 shadow-sm;
   border-color: rgb(228, 228, 231) !important;
 }
 
-/* Remove all duplicate dropdown arrows and custom styling */
+/* Remove all shadows from inputs for cleaner look */
 select {
   background-image: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
-  box-shadow: none !important;
 }
 
-/* Ensure all select components use consistent styling */
 .custom-select,
 [role="combobox"] {
   background-image: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
   appearance: none !important;
-  box-shadow: none !important;
 }
 
-/* Remove any custom background styling for dropdowns */
 *[class*="select"] {
   background-image: none !important;
-  box-shadow: none !important;
 }
 
-/* Global input styling to ensure no box shadows */
+/* Global consistency for all form elements */
 input, select, textarea {
-  box-shadow: none !important;
+  transition: all 0.2s ease !important;
 }
 
-/* Override any focus states that might add box shadows */
 input:focus, select:focus, textarea:focus {
-  box-shadow: none !important;
+  outline: none !important;
+  border-color: #e35c00 !important;
+  box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Enhanced switch and checkbox styling */
+[role="switch"] {
+  border-radius: 9999px !important;
+  transition: all 0.2s ease !important;
+}
+
+[role="switch"]:focus {
+  box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1) !important;
+}
+
+/* Better error states */
+.form-control.error,
+.form-select.error {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+}
+
+/* Placeholder styling */
+::placeholder {
+  color: #9ca3af !important;
+  opacity: 1 !important;
 }
