@@ -98,7 +98,7 @@ const TenancyApplicationFormContent = () => {
 const TenancyApplicationFormRHF = () => {
   return (
     <RHFFormProvider>
-      {() => <TenancyApplicationFormContent />}
+      {(formContext) => <TenancyApplicationFormContent />}
     </RHFFormProvider>
   );
 };
