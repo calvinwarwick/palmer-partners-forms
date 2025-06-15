@@ -20,7 +20,7 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     console.log('PDF generated, length:', pdfBase64.length);
     
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners <submitted@forms.palmerpartners.uk>",
+      from: "Palmer & Partners <onboarding@resend.dev>", // Using verified Resend domain
       to: [primaryApplicant.email],
       cc: ["admin@palmerandpartners.com.au"],
       subject: "Tenancy Application Received - Palmer & Partners",
