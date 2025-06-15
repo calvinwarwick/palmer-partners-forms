@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Trash2 } from "lucide-react";
+import { User, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Applicant } from "@/domain/types/Applicant";
@@ -140,13 +140,14 @@ const PersonalInfoStep = ({
                 </div>
                 <div>
                   <Label htmlFor={`dateOfBirth-${applicant.id}`}>Date of Birth *</Label>
-                  <div className="date-input-container">
+                  <div className="date-input-container relative">
+                    <Calendar className="date-input-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500 h-5 w-5 z-10 pointer-events-none" />
                     <Input
                       id={`dateOfBirth-${applicant.id}`}
                       type="date"
                       value={applicant.dateOfBirth}
                       onChange={(e) => onUpdateApplicant(applicant.id, 'dateOfBirth', e.target.value)}
-                      className="form-control"
+                      className="form-control pl-10"
                     />
                   </div>
                 </div>
