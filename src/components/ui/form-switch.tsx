@@ -1,5 +1,5 @@
 
-import { Switch } from "@/components/ui/switch";
+import { CustomSwitch } from "@/components/ui/custom-switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ const FormSwitch = ({
       >
         {label}
       </Label>
-      <Switch
+      <CustomSwitch
         id={id}
         checked={checked}
         onCheckedChange={onCheckedChange}

@@ -2,5 +2,4 @@
 /* Main responsive styles - imports focused modules */
 @import './mobile-forms.css';
 @import './mobile-layout.css';
-@import './switch-styling.css';
 @import './tablet-desktop.css';
