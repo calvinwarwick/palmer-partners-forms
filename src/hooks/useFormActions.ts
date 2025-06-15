@@ -10,6 +10,7 @@ interface UseFormActionsProps {
   setDataSharing: (update: (prev: any) => any) => void;
   setSelectedApplicantForGuarantor: (applicant: Applicant | null) => void;
   setGuarantorFormOpen: (open: boolean) => void;
+  selectedApplicantForGuarantor: Applicant | null;
 }
 
 export const useFormActions = ({
@@ -19,7 +20,8 @@ export const useFormActions = ({
   setAdditionalDetails,
   setDataSharing,
   setSelectedApplicantForGuarantor,
-  setGuarantorFormOpen
+  setGuarantorFormOpen,
+  selectedApplicantForGuarantor
 }: UseFormActionsProps) => {
   
   const createEmptyApplicant = (id: string): Applicant => ({
@@ -118,24 +120,23 @@ export const useFormActions = ({
   }, [setSelectedApplicantForGuarantor, setGuarantorFormOpen]);
 
   const handleGuarantorSave = useCallback((guarantorData?: any) => {
-    if (guarantorData) {
+    if (guarantorData && selectedApplicantForGuarantor) {
       // Update the applicant with guarantor information
-      setApplicants(prevApplicants => 
-        prevApplicants.map(applicant => 
-          applicant.id === selectedApplicantForGuarantor?.id 
-            ? { 
-                ...applicant, 
-                guarantorAdded: true,
-                guarantorName: `${guarantorData.firstName} ${guarantorData.lastName}`,
-                guarantorRelationship: guarantorData.relationship
-              }
-            : applicant
-        )
+      const updatedApplicants = applicants.map(applicant => 
+        applicant.id === selectedApplicantForGuarantor.id 
+          ? { 
+              ...applicant, 
+              guarantorAdded: true,
+              guarantorName: `${guarantorData.firstName} ${guarantorData.lastName}`,
+              guarantorRelationship: guarantorData.relationship
+            }
+          : applicant
       );
+      setApplicants(updatedApplicants);
     }
     setGuarantorFormOpen(false);
     setSelectedApplicantForGuarantor(null);
-  }, [setGuarantorFormOpen, setSelectedApplicantForGuarantor, setApplicants]);
+  }, [applicants, setApplicants, setGuarantorFormOpen, setSelectedApplicantForGuarantor, selectedApplicantForGuarantor]);
 
   return {
     addApplicant,

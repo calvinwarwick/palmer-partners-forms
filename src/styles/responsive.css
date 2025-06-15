@@ -52,10 +52,28 @@
     line-height: 1.1;
   }
 
+  /* Fixed mobile checkbox and switch sizing */
   .mobile-checkbox {
-    @apply w-4 h-4;
-    min-width: 16px !important;
-    min-height: 16px !important;
+    @apply w-5 h-5 !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Switch component mobile improvements */
+  [role="switch"] {
+    @apply w-11 h-6 !important;
+    min-width: 44px !important;
+    min-height: 24px !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Checkbox component mobile improvements */
+  [data-state] {
+    @apply w-5 h-5 !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    flex-shrink: 0 !important;
   }
 
   .btn,
@@ -100,14 +118,5 @@
   
   .container {
     @apply px-6;
-  }
-}
-
-/* Improved Switch component for mobile */
-@media (max-width: 640px) {
-  [role="switch"] {
-    @apply w-11 h-6;
-    min-width: 44px !important;
-    min-height: 24px !important;
   }
 }

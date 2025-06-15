@@ -10,11 +10,11 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
   const isMobile = useIsMobile();
 
   const allSteps = [
-    { step: 1, icon: Home, label: "Rental property details" },
+    { step: 1, icon: Home, label: "Rental Property" },
     { step: 2, icon: User, label: "Personal Information" },
-    { step: 3, icon: Briefcase, label: "Employment Details" },
-    { step: 4, icon: MapPin, label: "Current Address Details" },
-    { step: 5, icon: Info, label: "Additional Details" },
+    { step: 3, icon: Briefcase, label: "Employment" },
+    { step: 4, icon: MapPin, label: "Current Address" },
+    { step: 5, icon: Info, label: "Additional Information" },
     { step: 6, icon: CheckCircle, label: "Terms & Signature" }
   ];
 

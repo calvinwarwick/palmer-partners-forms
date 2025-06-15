@@ -1,15 +1,21 @@
-
-import { Application } from "@/domain/types/Applicant";
+import React, { createContext, useContext, useState } from "react";
+import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
-import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
-import { useFormState } from "@/hooks/useFormState";
 import { useFormActions } from "@/hooks/useFormActions";
 import { useTestData } from "@/hooks/useTestData";
-import { validateAndHighlightFields, handleValidationErrors } from "@/utils/fieldValidation";
-import { FormContextType } from "@/types/FormContext";
+
+const FormContext = createContext<any>(null);
+
+export const useFormContext = () => {
+  const context = useContext(FormContext);
+  if (!context) {
+    throw new Error("useFormContext must be used within FormProvider");
+  }
+  return context;
+};
 
 interface FormProviderProps {
-  children: (props: FormContextType) => React.ReactNode;
+  children: (formContext: any) => React.ReactNode;
 }
 
 const FormProvider = ({ children }: FormProviderProps) => {
@@ -44,24 +50,15 @@ const FormProvider = ({ children }: FormProviderProps) => {
     setSelectedApplicantForGuarantor
   } = useFormState();
 
-  const {
-    addApplicant,
-    removeApplicant,
-    handleApplicantCountChange,
-    updateApplicant,
-    updatePropertyPreferences,
-    updateAdditionalDetails,
-    updateDataSharing,
-    handleGuarantorOpen,
-    handleGuarantorSave
-  } = useFormActions({
+  const formActions = useFormActions({
     applicants,
     setApplicants,
     setPropertyPreferences,
     setAdditionalDetails,
     setDataSharing,
     setSelectedApplicantForGuarantor,
-    setGuarantorFormOpen
+    setGuarantorFormOpen,
+    selectedApplicantForGuarantor
   });
 
   const { fillAllTestData, fillStepData } = useTestData({

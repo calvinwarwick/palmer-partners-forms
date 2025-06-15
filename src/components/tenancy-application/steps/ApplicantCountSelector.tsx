@@ -13,16 +13,16 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
   return (
     <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
       <CardContent className="p-6">
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-orange-500 rounded-lg">
+        <div className="flex items-start gap-4 md:flex-row flex-col md:gap-4 gap-3">
+          <div className="p-3 bg-orange-500 rounded-lg md:self-start self-center">
             <Users className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1 space-y-4">
             <div>
-              <Label htmlFor="applicantCount" className="text-lg font-semibold text-dark-grey mb-2">
+              <Label htmlFor="applicantCount" className="text-lg font-semibold text-dark-grey mb-2 text-center md:text-left block">
                 How many adults will be living in the property? <span className="text-red-500">*</span>
               </Label>
-              <p className="text-sm text-gray-600 mt-1">Please ensure you provide details for each applicant below.</p>
+              <p className="text-sm text-gray-600 mt-1 text-center md:text-left">Please ensure you provide details for each applicant below.</p>
             </div>
             <Select
               value={applicantCount <= 0 ? "" : applicantCount.toString()}
