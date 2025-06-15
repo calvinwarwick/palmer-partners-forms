@@ -9,52 +9,16 @@ const Switch = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SwitchPrimitives.Root
     className={cn(
-      // Remove all Tailwind classes that might conflict
-      "switch-root",
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-orange-500 data-[state=unchecked]:bg-gray-300",
       className
     )}
     {...props}
     ref={ref}
-    data-radix-switch-root=""
-    style={{
-      width: '44px',
-      height: '24px',
-      minWidth: '44px',
-      minHeight: '24px',
-      flexShrink: 0,
-      border: '2px solid transparent',
-      borderRadius: '12px',
-      cursor: 'pointer',
-      outline: 'none',
-      position: 'relative',
-      transition: 'all 0.2s ease',
-      display: 'inline-flex',
-      alignItems: 'center',
-      padding: 0,
-      margin: 0,
-      boxSizing: 'border-box',
-      backgroundColor: props.checked ? '#FF6F00' : '#9E9E9E'
-    }}
   >
     <SwitchPrimitives.Thumb
-      className="switch-thumb"
-      data-radix-switch-thumb=""
-      style={{
-        width: '20px',
-        height: '20px',
-        borderRadius: '10px',
-        backgroundColor: 'white',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-        transition: 'transform 0.2s ease',
-        display: 'block',
-        pointerEvents: 'none',
-        position: 'relative',
-        margin: 0,
-        padding: 0,
-        boxSizing: 'border-box',
-        border: 'none',
-        transform: props.checked ? 'translateX(22px)' : 'translateX(2px)'
-      }}
+      className={cn(
+        "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+      )}
     />
   </SwitchPrimitives.Root>
 ))

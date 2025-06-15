@@ -21,41 +21,20 @@ const FormSwitch = ({
   className 
 }: FormSwitchProps) => {
   return (
-    <div 
-      className={cn("form-switch-container", className)}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '12px',
-        padding: '12px 0',
-        width: '100%',
-        minHeight: '48px'
-      }}
-    >
+    <div className={cn("flex items-center justify-between gap-3 py-3", className)}>
       <Label 
         htmlFor={id} 
-        className="text-sm md:text-base font-medium text-gray-700 leading-relaxed cursor-pointer"
-        style={{
-          flex: 1,
-          margin: 0,
-          cursor: 'pointer',
-          lineHeight: '1.4'
-        }}
+        className="text-sm font-medium text-gray-700 leading-relaxed cursor-pointer flex-1"
       >
         {label}
       </Label>
-      <div style={{ flexShrink: 0 }}>
-        <Switch
-          id={id}
-          checked={checked}
-          onCheckedChange={onCheckedChange}
-          disabled={disabled}
-          style={{
-            flexShrink: 0
-          }}
-        />
-      </div>
+      <Switch
+        id={id}
+        checked={checked}
+        onCheckedChange={onCheckedChange}
+        disabled={disabled}
+        className="shrink-0"
+      />
     </div>
   );
 };
