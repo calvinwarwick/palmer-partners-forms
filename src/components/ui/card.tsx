@@ -1,4 +1,3 @@
-
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
@@ -20,15 +19,11 @@ Card.displayName = "Card"
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: 'default' | 'gradient' }
->(({ className, variant = 'default', ...props }, ref) => (
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "flex flex-col space-y-1.5 p-6",
-      variant === 'gradient' && "bg-gradient-to-r from-orange-50 to-orange-100/50 border-b border-orange-100",
-      className
-    )}
+    className={cn("flex flex-col space-y-1.5 p-6", className)}
     {...props}
   />
 ))
@@ -41,10 +36,9 @@ const CardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight font-lexend",
+      "text-2xl font-semibold leading-none tracking-tight",
       className
     )}
-    style={{ fontFamily: 'Lexend, sans-serif' }}
     {...props}
   />
 ))
@@ -56,8 +50,7 @@ const CardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-muted-foreground font-lexend", className)}
-    style={{ fontFamily: 'Lexend, sans-serif' }}
+    className={cn("text-sm text-muted-foreground", className)}
     {...props}
   />
 ))
