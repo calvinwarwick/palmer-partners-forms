@@ -1,5 +1,5 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, Users, CheckCircle2 } from "lucide-react";
 
 interface TenancyApplication {
@@ -51,10 +51,12 @@ const AdminStats = ({ applications }: AdminStatsProps) => {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
       {stats.map((stat) => (
         <Card key={stat.title} className="shadow-sm border border-gray-200">
+          <CardHeader variant="gradient">
+            <CardTitle className="text-sm font-medium text-orange-800">{stat.title}</CardTitle>
+          </CardHeader>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
                 <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
               </div>
               <div className={`p-2 rounded-lg bg-gray-50 ${stat.color}`}>

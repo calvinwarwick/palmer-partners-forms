@@ -1,5 +1,5 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PropertyPreferences } from "@/domain/types/Applicant";
@@ -14,6 +14,9 @@ const PreferencesStep = ({ propertyPreferences, onUpdatePreferences }: Preferenc
     <div className="space-y-6">
       <h3 className="text-lg font-semibold">Property Preferences</h3>
       <Card>
+        <CardHeader variant="gradient">
+          <CardTitle className="text-base text-orange-800">Your Property Requirements</CardTitle>
+        </CardHeader>
         <CardContent className="pt-6 space-y-4">
           <div>
             <Label htmlFor="propertyType">Preferred Property Type *</Label>

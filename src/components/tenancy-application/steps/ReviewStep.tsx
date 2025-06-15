@@ -18,8 +18,8 @@ const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureCha
       <h3 className="text-lg font-semibold">Review & Digital Signature</h3>
       
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Application Summary</CardTitle>
+        <CardHeader variant="gradient">
+          <CardTitle className="text-base text-orange-800">Application Summary</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -43,8 +43,8 @@ const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureCha
       </Card>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-base">Digital Signature *</CardTitle>
+        <CardHeader variant="gradient">
+          <CardTitle className="text-base text-orange-800">Digital Signature *</CardTitle>
           <CardDescription>
             You can either draw your signature or type your full name
           </CardDescription>
