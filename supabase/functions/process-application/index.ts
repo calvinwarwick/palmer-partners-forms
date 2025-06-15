@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
 import { Resend } from 'npm:resend@2.0.0';
@@ -26,7 +25,7 @@ const sendApplicationConfirmation = async (application: any): Promise<boolean> =
     const primaryApplicant = application.applicants[0];
     
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners <noreply@palmerandpartners.com.au>",
+      from: "Palmer & Partners <onboarding@resend.dev>",
       to: [primaryApplicant.email],
       subject: "Tenancy Application Received - Palmer & Partners",
       html: `
@@ -83,7 +82,7 @@ const sendAdminNotification = async (application: any): Promise<boolean> => {
     const primaryApplicant = application.applicants[0];
     
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners System <system@palmerandpartners.com.au>",
+      from: "Palmer & Partners System <onboarding@resend.dev>",
       to: ["admin@palmerandpartners.com.au"], // Replace with actual admin email
       subject: `New Tenancy Application - ${application.propertyPreferences.streetAddress}`,
       html: `
