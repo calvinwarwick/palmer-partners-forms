@@ -25,7 +25,7 @@ const sendApplicationConfirmation = async (application: any): Promise<boolean> =
     const primaryApplicant = application.applicants[0];
     
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners <onboarding@resend.dev>",
+      from: "Palmer & Partners <submitted@forms.palmerpartners.uk>",
       to: [primaryApplicant.email],
       subject: "Tenancy Application Received - Palmer & Partners",
       html: `
@@ -82,7 +82,7 @@ const sendAdminNotification = async (application: any): Promise<boolean> => {
     const primaryApplicant = application.applicants[0];
     
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners System <onboarding@resend.dev>",
+      from: "Palmer & Partners System <submitted@forms.palmerpartners.uk>",
       to: ["admin@palmerandpartners.com.au"], // Replace with actual admin email
       subject: `New Tenancy Application - ${application.propertyPreferences.streetAddress}`,
       html: `
