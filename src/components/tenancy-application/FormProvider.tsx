@@ -1,8 +1,12 @@
+
 import React, { createContext, useContext, useState } from "react";
 import { Applicant, PropertyPreferences, AdditionalDetails } from "@/domain/types/Applicant";
 import { useMultiStepForm } from "@/hooks/useMultiStepForm";
 import { useFormActions } from "@/hooks/useFormActions";
 import { useTestData } from "@/hooks/useTestData";
+import { useApplicationSubmission } from "@/hooks/useApplicationSubmission";
+import { useFormState } from "@/hooks/useFormState";
+import { validateAndHighlightFields, handleValidationErrors } from "@/utils/fieldValidation";
 
 const FormContext = createContext<any>(null);
 
@@ -16,6 +20,14 @@ export const useFormContext = () => {
 
 interface FormProviderProps {
   children: (formContext: any) => React.ReactNode;
+}
+
+interface Application {
+  applicants: Applicant[];
+  propertyPreferences: PropertyPreferences;
+  additionalDetails: AdditionalDetails;
+  dataSharing: any;
+  signature: string;
 }
 
 const FormProvider = ({ children }: FormProviderProps) => {
@@ -123,19 +135,19 @@ const FormProvider = ({ children }: FormProviderProps) => {
     termsAccepted,
     guarantorFormOpen,
     selectedApplicantForGuarantor,
-    updatePropertyPreferences,
-    updateApplicant,
-    updateAdditionalDetails,
-    updateDataSharing,
+    updatePropertyPreferences: formActions.updatePropertyPreferences,
+    updateApplicant: formActions.updateApplicant,
+    updateAdditionalDetails: formActions.updateAdditionalDetails,
+    updateDataSharing: formActions.updateDataSharing,
     setSignature,
     setFullName,
     setTermsAccepted,
     setGuarantorFormOpen,
-    addApplicant,
-    removeApplicant,
-    handleApplicantCountChange,
-    handleGuarantorOpen,
-    handleGuarantorSave,
+    addApplicant: formActions.addApplicant,
+    removeApplicant: formActions.removeApplicant,
+    handleApplicantCountChange: formActions.handleApplicantCountChange,
+    handleGuarantorOpen: formActions.handleGuarantorOpen,
+    handleGuarantorSave: formActions.handleGuarantorSave,
     handleNext,
     handleSubmit,
     fillAllTestData,
