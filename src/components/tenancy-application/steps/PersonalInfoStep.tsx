@@ -4,7 +4,8 @@ import { User, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
-import PersonalInfoFields from "./personal-info/PersonalInfoFields";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -35,8 +36,8 @@ const PersonalInfoStep = ({
       </div>
 
       <ApplicantCountSelector
-        currentCount={applicants.length}
-        onCountChange={onApplicantCountChange}
+        applicantCount={applicants.length}
+        onApplicantCountChange={onApplicantCountChange}
       />
 
       {applicants.map((applicant, index) => (
@@ -69,11 +70,64 @@ const PersonalInfoStep = ({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            <PersonalInfoFields 
-              applicant={applicant}
-              onUpdateApplicant={onUpdateApplicant}
-              onGuarantorOpen={onGuarantorOpen}
-            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor={`firstName-${applicant.id}`}>First Name *</Label>
+                <Input
+                  id={`firstName-${applicant.id}`}
+                  value={applicant.firstName}
+                  onChange={(e) => onUpdateApplicant(applicant.id, 'firstName', e.target.value)}
+                  placeholder="Enter first name"
+                />
+              </div>
+              <div>
+                <Label htmlFor={`lastName-${applicant.id}`}>Last Name *</Label>
+                <Input
+                  id={`lastName-${applicant.id}`}
+                  value={applicant.lastName}
+                  onChange={(e) => onUpdateApplicant(applicant.id, 'lastName', e.target.value)}
+                  placeholder="Enter last name"
+                />
+              </div>
+              <div>
+                <Label htmlFor={`email-${applicant.id}`}>Email *</Label>
+                <Input
+                  id={`email-${applicant.id}`}
+                  type="email"
+                  value={applicant.email}
+                  onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
+                  placeholder="Enter email address"
+                />
+              </div>
+              <div>
+                <Label htmlFor={`phone-${applicant.id}`}>Phone Number *</Label>
+                <Input
+                  id={`phone-${applicant.id}`}
+                  value={applicant.phone}
+                  onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
+                  placeholder="Enter phone number"
+                />
+              </div>
+              <div>
+                <Label htmlFor={`dateOfBirth-${applicant.id}`}>Date of Birth *</Label>
+                <Input
+                  id={`dateOfBirth-${applicant.id}`}
+                  type="date"
+                  value={applicant.dateOfBirth}
+                  onChange={(e) => onUpdateApplicant(applicant.id, 'dateOfBirth', e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div className="flex justify-end pt-4">
+              <Button
+                variant="outline"
+                onClick={() => onGuarantorOpen(applicant)}
+                className="border-orange-300 text-orange-600 hover:bg-orange-50"
+              >
+                Add Guarantor
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ))}
