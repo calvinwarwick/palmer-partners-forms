@@ -168,21 +168,22 @@ const Admin = () => {
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
       <ApplicationHeader title="Admin Dashboard" />
       
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8 max-w-7xl">
         {/* Welcome Card */}
-        <Card className="mb-8 border-0 bg-white/90 backdrop-blur-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold text-dark-grey mb-2">Welcome back!</h1>
-                <p className="text-light-grey">
+        <Card className="mb-4 sm:mb-8 border-0 bg-white/95 backdrop-blur-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold text-dark-grey mb-2">Welcome back!</h1>
+                <p className="text-sm sm:text-base text-light-grey break-all sm:break-normal">
                   Logged in as: <span className="font-medium text-dark-grey">{user?.email}</span>
                 </p>
               </div>
               <Button
                 variant="outline"
                 onClick={handleSignOut}
-                className="border-orange-300 text-orange-600 hover:bg-orange-50"
+                className="border-orange-300 text-orange-600 hover:bg-orange-50 w-full sm:w-auto"
+                size="sm"
               >
                 <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
@@ -192,27 +193,30 @@ const Admin = () => {
         </Card>
 
         {/* Admin Tabs */}
-        <Tabs defaultValue="stats" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white/90 backdrop-blur-sm">
-            <TabsTrigger value="stats" className="flex items-center gap-2">
-              <BarChart3 className="h-4 w-4" />
-              Statistics
+        <Tabs defaultValue="stats" className="space-y-4 sm:space-y-6">
+          <TabsList className="grid w-full grid-cols-3 bg-white/95 backdrop-blur-sm h-auto p-1">
+            <TabsTrigger value="stats" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3">
+              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Statistics</span>
+              <span className="sm:hidden">Stats</span>
             </TabsTrigger>
-            <TabsTrigger value="applications" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Applications
+            <TabsTrigger value="applications" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3">
+              <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Applications</span>
+              <span className="sm:hidden">Apps</span>
             </TabsTrigger>
-            <TabsTrigger value="applicants" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Applicants
+            <TabsTrigger value="applicants" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3">
+              <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Applicants</span>
+              <span className="sm:hidden">People</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="stats">
+          <TabsContent value="stats" className="mt-4 sm:mt-6">
             <AdminStats applications={applications} />
           </TabsContent>
 
-          <TabsContent value="applications">
+          <TabsContent value="applications" className="mt-4 sm:mt-6">
             <ApplicationsTable
               applications={filteredApplications}
               selectedApplications={selectedApplications}
@@ -228,7 +232,7 @@ const Admin = () => {
             />
           </TabsContent>
 
-          <TabsContent value="applicants">
+          <TabsContent value="applicants" className="mt-4 sm:mt-6">
             <ApplicantsTab />
           </TabsContent>
         </Tabs>
