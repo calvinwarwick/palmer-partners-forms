@@ -15,12 +15,23 @@ const Switch = React.forwardRef<
     {...props}
     ref={ref}
     data-radix-switch-root=""
+    style={{
+      width: '44px',
+      height: '24px',
+      minWidth: '44px',
+      minHeight: '24px',
+      flexShrink: 0
+    }}
   >
     <SwitchPrimitives.Thumb
       className={cn(
         "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
       )}
       data-radix-switch-thumb=""
+      style={{
+        width: '20px',
+        height: '20px'
+      }}
     />
   </SwitchPrimitives.Root>
 ))

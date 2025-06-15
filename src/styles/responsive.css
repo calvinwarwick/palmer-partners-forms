@@ -63,41 +63,6 @@
     flex-shrink: 0 !important;
   }
 
-  /* Enhanced switch styling for mobile - maintain aspect ratio and styling */
-  [data-radix-switch-root] {
-    width: 44px !important;
-    height: 24px !important;
-    min-width: 44px !important;
-    min-height: 24px !important;
-    flex-shrink: 0 !important;
-    border-radius: 12px !important;
-    position: relative !important;
-    transition: all 0.2s ease !important;
-  }
-
-  [data-radix-switch-thumb] {
-    width: 20px !important;
-    height: 20px !important;
-    border-radius: 10px !important;
-    transform: translateX(2px) !important;
-    transition: transform 0.2s ease !important;
-    display: block !important;
-    background-color: white !important;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-  }
-
-  [data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
-    transform: translateX(22px) !important;
-  }
-
-  [data-radix-switch-root][data-state="checked"] {
-    background-color: #FF6F00 !important;
-  }
-
-  [data-radix-switch-root][data-state="unchecked"] {
-    background-color: #9E9E9E !important;
-  }
-
   /* Form switch container improvements for mobile */
   .form-switch-container {
     display: flex !important;
@@ -194,20 +159,6 @@
     min-height: 48px;
     padding: 0.75rem 1.5rem;
   }
-
-  /* Tablet switch styling */
-  [data-radix-switch-root] {
-    width: 44px !important;
-    height: 24px !important;
-    min-width: 44px !important;
-    min-height: 24px !important;
-    flex-shrink: 0 !important;
-  }
-
-  [data-radix-switch-thumb] {
-    width: 20px !important;
-    height: 20px !important;
-  }
 }
 
 @media (max-width: 950px) {
@@ -238,32 +189,35 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
-
-  /* Desktop switch styling - maintain consistency */
-  [data-radix-switch-root] {
-    width: 44px !important;
-    height: 24px !important;
-    min-width: 44px !important;
-    min-height: 24px !important;
-    flex-shrink: 0 !important;
-  }
-
-  [data-radix-switch-thumb] {
-    width: 20px !important;
-    height: 20px !important;
-  }
 }
 
 /* Global switch styling - ensures consistency across all screen sizes */
 [data-radix-switch-root] {
+  width: 44px !important;
+  height: 24px !important;
+  min-width: 44px !important;
+  min-height: 24px !important;
+  flex-shrink: 0 !important;
   border: 2px solid transparent !important;
+  border-radius: 12px !important;
   cursor: pointer !important;
   outline: none !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+[data-radix-switch-root][data-state="checked"] {
+  background-color: #FF6F00 !important;
+}
+
+[data-radix-switch-root][data-state="unchecked"] {
+  background-color: #9E9E9E !important;
 }
 
 [data-radix-switch-root]:focus-visible {
-  ring: 2px solid #FF6F00 !important;
-  ring-offset: 2px !important;
+  box-shadow: 0 0 0 2px #FF6F00 !important;
 }
 
 [data-radix-switch-root]:disabled {
@@ -272,6 +226,22 @@
 }
 
 [data-radix-switch-thumb] {
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 10px !important;
+  background-color: white !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.2s ease !important;
+  display: block !important;
   pointer-events: none !important;
   position: relative !important;
+  transform: translateX(2px) !important;
+}
+
+[data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+  transform: translateX(22px) !important;
+}
+
+[data-radix-switch-root][data-state="unchecked"] [data-radix-switch-thumb] {
+  transform: translateX(2px) !important;
 }
