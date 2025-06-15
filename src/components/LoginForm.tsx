@@ -19,12 +19,6 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
     setPassword,
     showPassword,
     setShowPassword,
-    isLogin,
-    setIsLogin,
-    firstName,
-    setFirstName,
-    lastName,
-    setLastName,
     isLoading,
     handleSubmit,
     fillDemoCredentials,
@@ -46,45 +40,30 @@ const LoginForm = ({ onLogin }: LoginFormProps) => {
               <Lock className="h-12 w-12 text-blue-600" />
             </div>
             <CardTitle className="text-2xl text-center">
-              {isLogin ? "Sign in to your account" : "Create your account"}
+              Sign in to your account
             </CardTitle>
             <CardDescription className="text-center">
-              {isLogin 
-                ? "Enter your credentials to access the estate agent portal"
-                : "Enter your details to create a new account"
-              }
+              Enter your credentials to access the estate agent portal
             </CardDescription>
           </CardHeader>
           <CardContent>
             <AuthFormFields
-              isLogin={isLogin}
+              isLogin={true}
               email={email}
               setEmail={setEmail}
               password={password}
               setPassword={setPassword}
               showPassword={showPassword}
               setShowPassword={setShowPassword}
-              firstName={firstName}
-              setFirstName={setFirstName}
-              lastName={lastName}
-              setLastName={setLastName}
+              firstName=""
+              setFirstName={() => {}}
+              lastName=""
+              setLastName={() => {}}
               isLoading={isLoading}
               onSubmit={handleSubmit}
             />
 
-            <div className="mt-4 text-center">
-              <button
-                type="button"
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-sm text-blue-600 hover:text-blue-700"
-              >
-                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-              </button>
-            </div>
-
-            {isLogin && (
-              <DemoCredentials onFillCredentials={fillDemoCredentials} />
-            )}
+            <DemoCredentials onFillCredentials={fillDemoCredentials} />
           </CardContent>
         </Card>
       </div>
