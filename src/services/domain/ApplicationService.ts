@@ -3,6 +3,15 @@ import { sendEmail } from '../api/emailApi';
 import { generateApplicationPDF } from '../pdfService';
 import { Application } from '@/domain/types/Applicant';
 
+const convertArrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+  const bytes = new Uint8Array(buffer);
+  let binary = '';
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+};
+
 export const sendApplicationConfirmation = async (application: Application): Promise<boolean> => {
   console.log('Generating PDF for confirmation email...');
   
@@ -12,17 +21,15 @@ export const sendApplicationConfirmation = async (application: Application): Pro
       propertyPreferences: application.propertyPreferences,
       additionalDetails: application.additionalDetails,
       dataSharing: application.dataSharing,
-      signature: application.signature
+      signature: application.signature,
+      submittedAt: new Date().toISOString(),
+      applicationId: 'APP-' + Date.now()
     });
-    console.log('PDF generated, size:', pdfBuffer.byteLength, 'bytes');
     
-    // Convert ArrayBuffer to base64 safely
-    const uint8Array = new Uint8Array(pdfBuffer);
-    let binaryString = '';
-    for (let i = 0; i < uint8Array.byteLength; i++) {
-      binaryString += String.fromCharCode(uint8Array[i]);
-    }
-    const pdfBase64 = btoa(binaryString);
+    console.log('PDF generated successfully, size:', pdfBuffer.byteLength, 'bytes');
+    
+    // Convert to base64 for email attachment
+    const pdfBase64 = convertArrayBufferToBase64(pdfBuffer.buffer);
     console.log('PDF converted to base64, length:', pdfBase64.length);
     
     const applicantEmail = application.applicants[0]?.email;
@@ -35,34 +42,55 @@ export const sendApplicationConfirmation = async (application: Application): Pro
 
     const emailHtml = `
       <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #FF6F00; border-bottom: 2px solid #FF6F00; padding-bottom: 10px;">
-              Tenancy Application Confirmation
-            </h2>
-            
-            <p>Dear ${applicantName},</p>
-            
-            <p>Thank you for submitting your tenancy application. We have received your application and it is now being processed.</p>
-            
-            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="color: #FF6F00; margin-top: 0;">Application Details:</h3>
-              <p><strong>Property:</strong> ${application.propertyPreferences.streetAddress}, ${application.propertyPreferences.postcode}</p>
-              <p><strong>Maximum Rent:</strong> £${application.propertyPreferences.maxRent}</p>
-              <p><strong>Preferred Move-in Date:</strong> ${application.propertyPreferences.moveInDate}</p>
-              <p><strong>Number of Applicants:</strong> ${application.applicants.length}</p>
+        <head>
+          <style>
+            body { font-family: 'Lexend', Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .highlight { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .status-badge { display: inline-block; background: #FF6F00; color: white; padding: 15px 30px; border-radius: 6px; font-weight: bold; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Application Received</h1>
             </div>
             
-            <p>Please find your completed application form attached to this email for your records.</p>
-            
-            <p>We will review your application and contact you within 2-3 business days with an update.</p>
-            
-            <p>If you have any questions, please don't hesitate to contact us.</p>
-            
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-              <p style="margin-bottom: 5px;"><strong>Best regards,</strong></p>
-              <p style="margin-bottom: 5px;">The Property Management Team</p>
-              <p style="font-size: 14px; color: #666;">This is an automated confirmation email.</p>
+            <div class="content">
+              <h2 style="color: #212121; margin-bottom: 20px;">Dear ${applicantName},</h2>
+              
+              <p style="margin-bottom: 20px;">
+                Thank you for submitting your tenancy application for <strong>${application.propertyPreferences.streetAddress}</strong>.
+              </p>
+              
+              <div class="highlight">
+                <h3 style="color: #212121; margin-top: 0;">Application Summary:</h3>
+                <ul style="margin: 0;">
+                  <li>Property: ${application.propertyPreferences.streetAddress}</li>
+                  <li>Number of Applicants: ${application.applicants.length}</li>
+                  <li>Preferred Move-in Date: ${application.propertyPreferences.moveInDate}</li>
+                  <li>Maximum Rent: £${application.propertyPreferences.maxRent}</li>
+                </ul>
+              </div>
+              
+              <p style="margin-bottom: 20px;">
+                We'll review your application and get back to you within <strong style="color: #FF6F00;">2-3 business days</strong>.
+              </p>
+              
+              <p style="margin-bottom: 20px;">
+                Please find your completed application form attached to this email for your records.
+              </p>
+              
+              <div style="text-align: center; margin: 30px 0;">
+                <div class="status-badge">Application Status: Processing</div>
+              </div>
+              
+              <p style="color: #888; font-size: 14px; margin-top: 30px;">
+                Best regards,<br>
+                <strong>Palmer & Partners Team</strong>
+              </p>
             </div>
           </div>
         </body>
@@ -71,7 +99,7 @@ export const sendApplicationConfirmation = async (application: Application): Pro
 
     const emailRequest = {
       to: applicantEmail,
-      subject: 'Tenancy Application Confirmation',
+      subject: 'Tenancy Application Confirmation - Palmer & Partners',
       html: emailHtml,
       attachment: {
         filename: 'tenancy-application.pdf',
@@ -81,7 +109,7 @@ export const sendApplicationConfirmation = async (application: Application): Pro
     };
 
     const result = await sendEmail(emailRequest);
-    console.log('Email send result:', result);
+    console.log('Confirmation email send result:', result);
     return result;
   } catch (error) {
     console.error('Error sending confirmation email:', error);
@@ -98,17 +126,15 @@ export const sendAdminNotification = async (application: Application): Promise<b
       propertyPreferences: application.propertyPreferences,
       additionalDetails: application.additionalDetails,
       dataSharing: application.dataSharing,
-      signature: application.signature
+      signature: application.signature,
+      submittedAt: new Date().toISOString(),
+      applicationId: 'APP-' + Date.now()
     });
+    
     console.log('PDF generated for admin, size:', pdfBuffer.byteLength, 'bytes');
     
-    // Convert ArrayBuffer to base64 safely
-    const uint8Array = new Uint8Array(pdfBuffer);
-    let binaryString = '';
-    for (let i = 0; i < uint8Array.byteLength; i++) {
-      binaryString += String.fromCharCode(uint8Array[i]);
-    }
-    const pdfBase64 = btoa(binaryString);
+    // Convert to base64 for email attachment
+    const pdfBase64 = convertArrayBufferToBase64(pdfBuffer.buffer);
     console.log('Admin PDF converted to base64, length:', pdfBase64.length);
     
     const applicantName = `${application.applicants[0]?.firstName} ${application.applicants[0]?.lastName}`;
@@ -116,33 +142,47 @@ export const sendAdminNotification = async (application: Application): Promise<b
     
     const emailHtml = `
       <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-            <h2 style="color: #FF6F00; border-bottom: 2px solid #FF6F00; padding-bottom: 10px;">
-              New Tenancy Application Received
-            </h2>
-            
-            <p>A new tenancy application has been submitted and requires your review.</p>
-            
-            <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
-              <h3 style="color: #FF6F00; margin-top: 0;">Application Summary:</h3>
-              <p><strong>Applicant:</strong> ${applicantName}</p>
-              <p><strong>Email:</strong> ${applicantEmail}</p>
-              <p><strong>Property:</strong> ${application.propertyPreferences.streetAddress}, ${application.propertyPreferences.postcode}</p>
-              <p><strong>Maximum Rent:</strong> £${application.propertyPreferences.maxRent}</p>
-              <p><strong>Preferred Move-in Date:</strong> ${application.propertyPreferences.moveInDate}</p>
-              <p><strong>Number of Applicants:</strong> ${application.applicants.length}</p>
-              <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
+        <head>
+          <style>
+            body { font-family: 'Lexend', Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+            .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+            .highlight { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .action-required { background: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #FF6F00; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1 style="margin: 0; font-size: 28px; font-weight: bold;">New Tenancy Application</h1>
             </div>
             
-            <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; border-left: 4px solid #FF6F00;">
-              <p><strong>Action Required:</strong> Please review the attached application and follow up with the applicant within 2-3 business days.</p>
-            </div>
-            
-            <p>The complete application form is attached to this email.</p>
-            
-            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
-              <p style="font-size: 14px; color: #666;">This is an automated notification from the tenancy application system.</p>
+            <div class="content">
+              <p>A new tenancy application has been submitted and requires your review.</p>
+              
+              <div class="highlight">
+                <h3 style="color: #212121; margin-top: 0;">Application Summary:</h3>
+                <ul style="margin: 0;">
+                  <li><strong>Applicant:</strong> ${applicantName}</li>
+                  <li><strong>Email:</strong> ${applicantEmail}</li>
+                  <li><strong>Property:</strong> ${application.propertyPreferences.streetAddress}</li>
+                  <li><strong>Maximum Rent:</strong> £${application.propertyPreferences.maxRent}</li>
+                  <li><strong>Preferred Move-in Date:</strong> ${application.propertyPreferences.moveInDate}</li>
+                  <li><strong>Number of Applicants:</strong> ${application.applicants.length}</li>
+                  <li><strong>Submitted:</strong> ${new Date().toLocaleString()}</li>
+                </ul>
+              </div>
+              
+              <div class="action-required">
+                <p><strong>Action Required:</strong> Please review the attached application and follow up with the applicant within 2-3 business days.</p>
+              </div>
+              
+              <p>The complete application form is attached to this email.</p>
+              
+              <p style="color: #888; font-size: 14px; margin-top: 30px;">
+                This is an automated notification from the tenancy application system.
+              </p>
             </div>
           </div>
         </body>

@@ -14,6 +14,14 @@ export interface EmailRequest {
 
 export const sendEmail = async (emailRequest: EmailRequest): Promise<boolean> => {
   try {
+    console.log('Sending email to:', emailRequest.to);
+    console.log('Email has attachment:', !!emailRequest.attachment);
+    if (emailRequest.attachment) {
+      console.log('Attachment filename:', emailRequest.attachment.filename);
+      console.log('Attachment content length:', emailRequest.attachment.content.length);
+      console.log('Attachment type:', emailRequest.attachment.type);
+    }
+
     const { data, error } = await supabase.functions.invoke('send-application-email', {
       body: emailRequest,
     });

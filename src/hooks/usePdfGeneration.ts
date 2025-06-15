@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
-import { generatePDFInWorker } from '@/services/pdfWorker';
+import { generateApplicationPDF } from '@/services/pdfService';
 
 export const usePdfGeneration = () => {
   const [isGenerating, setIsGenerating] = useState(false);
@@ -16,7 +16,9 @@ export const usePdfGeneration = () => {
         description: "Please wait while we create your document.",
       });
 
-      const pdfBytes = await generatePDFInWorker(data);
+      console.log('Starting PDF generation with data:', data);
+      const pdfBytes = await generateApplicationPDF(data);
+      console.log('PDF generated successfully, size:', pdfBytes.byteLength, 'bytes');
       
       // Create blob and download
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -33,6 +35,8 @@ export const usePdfGeneration = () => {
         title: "PDF Generated Successfully!",
         description: `${filename} has been downloaded.`,
       });
+
+      return pdfBytes;
     } catch (error) {
       console.error('PDF generation error:', error);
       toast({
@@ -40,6 +44,7 @@ export const usePdfGeneration = () => {
         description: "There was an error generating the PDF. Please try again.",
         variant: "destructive",
       });
+      throw error;
     } finally {
       setIsGenerating(false);
     }
