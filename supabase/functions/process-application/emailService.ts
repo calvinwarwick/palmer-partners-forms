@@ -14,13 +14,16 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     }
     
     console.log('Sending email to:', primaryApplicant.email);
+    console.log('RESEND_API_KEY available:', !!Deno.env.get("RESEND_API_KEY"));
+    console.log('RESEND_API_KEY length:', Deno.env.get("RESEND_API_KEY")?.length || 0);
     
     // Generate PDF (placeholder for now)
     const pdfBase64 = await generateApplicationPDF(application);
     console.log('PDF generated, length:', pdfBase64.length);
     
+    console.log('Attempting to send email with Resend...');
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners <onboarding@resend.dev>", // Using verified Resend domain
+      from: "Palmer & Partners <submitted@forms.palmerpartners.uk>", // Using your verified domain
       to: [primaryApplicant.email],
       cc: ["admin@palmerandpartners.com.au"],
       subject: "Tenancy Application Received - Palmer & Partners",
@@ -74,22 +77,43 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
       }]
     });
 
-    console.log("Email response:", JSON.stringify(emailResponse, null, 2));
+    console.log("Raw email response:", JSON.stringify(emailResponse, null, 2));
     
     if (emailResponse.error) {
-      console.error("Resend API error:", emailResponse.error);
+      console.error("Resend API error details:", JSON.stringify(emailResponse.error, null, 2));
+      console.error("Error type:", typeof emailResponse.error);
+      console.error("Error message:", emailResponse.error?.message || 'No error message');
       return false;
     }
     
-    console.log("Email sent successfully with ID:", emailResponse.data?.id);
-    return true;
+    if (emailResponse.data) {
+      console.log("Email sent successfully!");
+      console.log("Email ID:", emailResponse.data.id);
+      console.log("Email data:", JSON.stringify(emailResponse.data, null, 2));
+      return true;
+    } else {
+      console.error("No data or error in response:", emailResponse);
+      return false;
+    }
+    
   } catch (error) {
-    console.error("Error sending application email:", error);
-    console.error("Error details:", {
-      message: error.message,
-      stack: error.stack,
-      name: error.name
-    });
+    console.error("Caught error in sendApplicationEmailWithPDF:", error);
+    console.error("Error type:", typeof error);
+    console.error("Error name:", error?.name);
+    console.error("Error message:", error?.message);
+    console.error("Error stack:", error?.stack);
+    
+    // Check if it's a network error
+    if (error?.cause) {
+      console.error("Error cause:", error.cause);
+    }
+    
+    // Check if it's a Resend-specific error
+    if (error?.response) {
+      console.error("HTTP response status:", error.response?.status);
+      console.error("HTTP response data:", error.response?.data);
+    }
+    
     return false;
   }
 };
