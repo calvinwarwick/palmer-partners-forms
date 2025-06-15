@@ -34,7 +34,7 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
   };
 
   return (
-    <div className={`flex items-center justify-center gap-2 ${isMobile ? 'flex-wrap' : ''}`}>
+    <div className={`flex items-center justify-center gap-2 ${isMobile ? 'flex-wrap' : ''} hidden-below-950:hidden`}>
       {getVisibleSteps().map(({ step, icon: Icon, label }, index) => (
         <div key={step} className="flex items-center">
           <div className="text-center">

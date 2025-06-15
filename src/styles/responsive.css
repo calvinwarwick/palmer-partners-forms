@@ -120,3 +120,10 @@
     @apply px-6;
   }
 }
+
+/* Hide step indicators on screens 950px and smaller */
+@media (max-width: 950px) {
+  .hidden-below-950\:hidden {
+    display: none !important;
+  }
+}
