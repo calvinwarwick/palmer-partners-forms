@@ -85,6 +85,7 @@ const DemoDataForm = ({ data, onUpdate }: DemoDataFormProps) => {
 
     const demoApplication = {
       applicants: [{
+        id: '1', // Added missing id property
         firstName: data.name.split(' ')[0] || 'John',
         lastName: data.name.split(' ')[1] || 'Doe',
         email: data.email,
