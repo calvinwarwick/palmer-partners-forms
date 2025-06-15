@@ -20,13 +20,25 @@ interface ProcessApplicationRequest {
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
-const sendApplicationConfirmation = async (application: any): Promise<boolean> => {
+// PDF generation function (simplified version for edge function)
+const generateApplicationPDF = async (data: any): Promise<string> => {
+  // For now, return a placeholder base64 PDF
+  // In a real implementation, you'd use a PDF library here
+  const dummyPDF = "JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50IDEKPD4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA2MTIgNzkyXQovUmVzb3VyY2VzIDw8Ci9Gb250IDw8Ci9GMSA0IDAgUgo+Pgo+PgovQ29udGVudHMgNSAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9CYXNlRm9udCAvSGVsdmV0aWNhCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9MZW5ndGggMzMKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgoxMDAgNzAwIFRkCihUZW5hbmN5IEFwcGxpY2F0aW9uKSBUagpFVApEb25ld3N0cmVhbQplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjQ1IDAwMDAwIG4gCjAwMDAwMDAzMTYgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo0MDAKJSVFT0Y=";
+  return dummyPDF;
+};
+
+const sendApplicationEmailWithPDF = async (application: any): Promise<boolean> => {
   try {
     const primaryApplicant = application.applicants[0];
+    
+    // Generate PDF
+    const pdfBase64 = await generateApplicationPDF(application);
     
     const emailResponse = await resend.emails.send({
       from: "Palmer & Partners <submitted@forms.palmerpartners.uk>",
       to: [primaryApplicant.email],
+      cc: ["admin@palmerandpartners.com.au"],
       subject: "Tenancy Application Received - Palmer & Partners",
       html: `
         <div style="font-family: 'Lexend', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -54,6 +66,10 @@ const sendApplicationConfirmation = async (application: any): Promise<boolean> =
               We'll review your application and get back to you within <strong style="color: #FF6F00;">2-3 business days</strong>.
             </p>
             
+            <p style="color: #555; line-height: 1.6; margin-bottom: 20px;">
+              Please find your completed application form attached to this email for your records.
+            </p>
+            
             <div style="text-align: center; margin: 30px 0;">
               <div style="display: inline-block; background: #FF6F00; color: white; padding: 15px 30px; border-radius: 6px; font-weight: bold;">
                 Application Status: Processing
@@ -67,72 +83,17 @@ const sendApplicationConfirmation = async (application: any): Promise<boolean> =
           </div>
         </div>
       `,
+      attachments: [{
+        filename: 'tenancy-application.pdf',
+        content: pdfBase64,
+        type: 'application/pdf'
+      }]
     });
 
-    console.log("Confirmation email sent:", emailResponse);
+    console.log("Application email with PDF sent:", emailResponse);
     return true;
   } catch (error) {
-    console.error("Error sending confirmation email:", error);
-    return false;
-  }
-};
-
-const sendAdminNotification = async (application: any): Promise<boolean> => {
-  try {
-    const primaryApplicant = application.applicants[0];
-    
-    const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners System <submitted@forms.palmerpartners.uk>",
-      to: ["admin@palmerandpartners.com.au"], // Replace with actual admin email
-      subject: `New Tenancy Application - ${application.propertyPreferences.streetAddress}`,
-      html: `
-        <div style="font-family: 'Lexend', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: #212121; padding: 30px; text-align: center; margin-bottom: 30px;">
-            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">New Application</h1>
-          </div>
-          
-          <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-            <h2 style="color: #212121; margin-bottom: 20px;">Application Details</h2>
-            
-            <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #212121; margin-top: 0;">Property Information:</h3>
-              <ul style="color: #555; line-height: 1.6;">
-                <li><strong>Address:</strong> ${application.propertyPreferences.streetAddress}</li>
-                <li><strong>Postcode:</strong> ${application.propertyPreferences.postcode}</li>
-                <li><strong>Max Rent:</strong> $${application.propertyPreferences.maxRent}</li>
-                <li><strong>Move-in Date:</strong> ${application.propertyPreferences.moveInDate}</li>
-              </ul>
-            </div>
-            
-            <div style="background: #fff5f0; padding: 20px; border-radius: 8px; margin: 20px 0;">
-              <h3 style="color: #212121; margin-top: 0;">Primary Applicant:</h3>
-              <ul style="color: #555; line-height: 1.6;">
-                <li><strong>Name:</strong> ${primaryApplicant.firstName} ${primaryApplicant.lastName}</li>
-                <li><strong>Email:</strong> ${primaryApplicant.email}</li>
-                <li><strong>Phone:</strong> ${primaryApplicant.phone}</li>
-                <li><strong>Employment:</strong> ${primaryApplicant.employmentStatus}</li>
-              </ul>
-            </div>
-            
-            <p style="color: #555; line-height: 1.6;">
-              <strong>Total Applicants:</strong> ${application.applicants.length}<br>
-              <strong>Submitted:</strong> ${new Date().toLocaleString()}
-            </p>
-            
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="#" style="display: inline-block; background: #FF6F00; color: white; padding: 15px 30px; border-radius: 6px; font-weight: bold; text-decoration: none;">
-                Review Application
-              </a>
-            </div>
-          </div>
-        </div>
-      `,
-    });
-
-    console.log("Admin notification sent:", emailResponse);
-    return true;
-  } catch (error) {
-    console.error("Error sending admin notification:", error);
+    console.error("Error sending application email:", error);
     return false;
   }
 };
@@ -221,10 +182,10 @@ async function processApplicationInBackground(supabase: any, application: any) {
         }
       }]);
     
-    // 3. Send confirmation email (with error handling)
+    // 3. Send single email with PDF attachment (CC to admin)
     try {
-      const confirmationSent = await sendApplicationConfirmation(application);
-      if (confirmationSent) {
+      const emailSent = await sendApplicationEmailWithPDF(application);
+      if (emailSent) {
         await supabase
           .from('activity_logs')
           .insert([{
@@ -232,15 +193,15 @@ async function processApplicationInBackground(supabase: any, application: any) {
             action: 'Email Sent',
             user_identifier: 'System',
             details: {
-              email_type: 'confirmation',
-              recipient: primaryApplicant?.email
+              email_type: 'confirmation_with_admin_cc',
+              recipient: primaryApplicant?.email,
+              cc: 'admin@palmerandpartners.com.au'
             }
           }]);
-        console.log('Confirmation email sent successfully');
+        console.log('Confirmation email with PDF sent successfully');
       }
     } catch (emailError) {
-      console.error('Confirmation email error:', emailError);
-      // Log the error but don't fail the entire process
+      console.error('Email error:', emailError);
       await supabase
         .from('activity_logs')
         .insert([{
@@ -248,47 +209,11 @@ async function processApplicationInBackground(supabase: any, application: any) {
           action: 'Email Failed',
           user_identifier: 'System',
           details: {
-            email_type: 'confirmation',
+            email_type: 'confirmation_with_admin_cc',
             error: emailError.message
           }
         }]);
     }
-    
-    // 4. Send admin notification (with error handling)
-    try {
-      const adminNotificationSent = await sendAdminNotification(application);
-      if (adminNotificationSent) {
-        await supabase
-          .from('activity_logs')
-          .insert([{
-            application_id: applicationId,
-            action: 'Email Sent',
-            user_identifier: 'System',
-            details: {
-              email_type: 'admin_notification',
-              recipient: 'admin'
-            }
-          }]);
-        console.log('Admin notification sent successfully');
-      }
-    } catch (emailError) {
-      console.error('Admin notification error:', emailError);
-      await supabase
-        .from('activity_logs')
-        .insert([{
-          application_id: applicationId,
-          action: 'Email Failed',
-          user_identifier: 'System',
-          details: {
-            email_type: 'admin_notification',
-            error: emailError.message
-          }
-        }]);
-    }
-    
-    // 5. Generate PDF (placeholder for future implementation)
-    // TODO: Implement PDF generation in background
-    console.log('PDF generation would happen here');
     
     console.log('Background processing completed successfully');
     

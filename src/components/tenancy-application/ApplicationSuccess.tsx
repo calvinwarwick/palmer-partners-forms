@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Mail, Home } from "lucide-react";
+import { Mail, Home } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface ApplicationSuccessProps {
@@ -14,13 +14,6 @@ const ApplicationSuccess = ({ applicants }: ApplicationSuccessProps) => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
       <Card className="max-w-2xl w-full shadow-lg border border-gray-200 bg-white">
         <CardContent className="pt-12 pb-10 px-10 text-center">
-          {/* Success Icon */}
-          <div className="mb-8">
-            <div className="bg-green-500 rounded-full p-3 mx-auto w-12 h-12 flex items-center justify-center">
-              <CheckCircle className="h-6 w-6 text-white" />
-            </div>
-          </div>
-          
           {/* Title */}
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
             Application Submitted Successfully
