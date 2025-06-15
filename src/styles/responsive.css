@@ -55,7 +55,7 @@
     line-height: 1.2;
   }
 
-  /* Enhanced mobile checkbox and switch sizing */
+  /* Enhanced mobile checkbox sizing */
   .mobile-checkbox {
     @apply w-6 h-6 !important;
     min-width: 24px !important;
@@ -63,18 +63,12 @@
     flex-shrink: 0 !important;
   }
 
-  /* Switch component mobile improvements with better touch targets */
+  /* Switch components - completely rebuilt styling */
   [role="switch"] {
-    @apply w-16 h-9 !important;
-    min-width: 64px !important;
-    min-height: 36px !important;
+    min-width: 56px !important;
+    min-height: 32px !important;
     flex-shrink: 0 !important;
-    margin: 8px 0 !important;
-  }
-
-  /* Better switch thumb sizing on mobile */
-  [role="switch"] [data-state] {
-    @apply w-7 h-7 !important;
+    margin: 4px 0 !important;
   }
 
   /* Checkbox component mobile improvements */
@@ -120,7 +114,29 @@
     padding-top: 1.25rem !important;
   }
 
-  /* Improved toggle container spacing on mobile */
+  /* Mobile toggle container - completely new approach */
+  .toggle-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 16px 0 !important;
+    min-height: auto !important;
+  }
+
+  .toggle-container label {
+    width: 100% !important;
+    margin-bottom: 8px !important;
+    font-size: 0.875rem !important;
+    line-height: 1.4 !important;
+    font-weight: 500 !important;
+  }
+
+  .toggle-container [role="switch"] {
+    align-self: flex-start !important;
+    margin: 0 !important;
+  }
+
+  /* Legacy selectors for backward compatibility */
   .flex.items-center.justify-between {
     min-height: 64px !important;
     padding: 12px 0 !important;
@@ -128,7 +144,6 @@
     gap: 16px !important;
   }
 
-  /* Better label spacing for toggles on mobile */
   .flex.items-center.justify-between label {
     margin-right: 16px !important;
     flex: 1 !important;
@@ -136,7 +151,6 @@
     font-size: 0.875rem !important;
   }
 
-  /* Mobile-specific toggle layout improvements */
   .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between {
     flex-direction: column !important;
     align-items: flex-start !important;
@@ -152,7 +166,7 @@
   }
 
   .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between [role="switch"] {
-    align-self: flex-end !important;
+    align-self: flex-start !important;
     margin: 0 !important;
   }
 
