@@ -57,9 +57,17 @@ const DemoDataForm = ({ data, onUpdate }: DemoDataFormProps) => {
         additionalRequests: 'None'
       },
       additionalDetails: {
-        pets: 'no',
-        under18Count: '0',
+        moveInDate: '2024-07-01',
+        tenancyLength: '12 months',
+        pets: false,
+        petDetails: '',
+        smoking: false,
+        parking: false,
+        children: false,
+        childrenDetails: '',
         additionalRequests: 'None',
+        householdIncome: '50000',
+        under18Count: '0',
         conditionsOfOffer: 'Standard',
         depositType: 'Standard'
       },
@@ -117,9 +125,17 @@ const DemoDataForm = ({ data, onUpdate }: DemoDataFormProps) => {
         additionalRequests: 'None'
       },
       additionalDetails: {
-        pets: 'no',
-        under18Count: '0',
+        moveInDate: '2024-07-01',
+        tenancyLength: '12 months',
+        pets: false,
+        petDetails: '',
+        smoking: false,
+        parking: false,
+        children: false,
+        childrenDetails: '',
         additionalRequests: 'None',
+        householdIncome: '50000',
+        under18Count: '0',
         conditionsOfOffer: 'Standard',
         depositType: 'Standard'
       },
