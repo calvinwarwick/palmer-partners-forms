@@ -60,12 +60,18 @@
     flex-shrink: 0 !important;
   }
 
-  /* Switch component mobile improvements */
+  /* Switch component mobile improvements - enhanced for better touch targets */
   [role="switch"] {
-    @apply w-11 h-6 !important;
-    min-width: 44px !important;
-    min-height: 24px !important;
+    @apply w-12 h-7 !important;
+    min-width: 48px !important;
+    min-height: 28px !important;
     flex-shrink: 0 !important;
+    margin: 4px !important;
+  }
+
+  /* Better switch thumb sizing on mobile */
+  [role="switch"] [data-state] {
+    @apply w-5 h-5 !important;
   }
 
   /* Checkbox component mobile improvements */
@@ -107,6 +113,18 @@
   .border-t {
     margin-top: 1rem !important;
     padding-top: 1rem !important;
+  }
+
+  /* Improved toggle container spacing on mobile */
+  .flex.items-center.justify-between {
+    min-height: 48px;
+    padding: 8px 0;
+  }
+
+  /* Better label spacing for toggles on mobile */
+  .flex.items-center.justify-between label {
+    margin-right: 12px;
+    flex: 1;
   }
 }
 
