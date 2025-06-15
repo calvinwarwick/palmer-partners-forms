@@ -1,12 +1,11 @@
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/flowbite-card";
 import { User, Trash2, Calendar } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/flowbite-button";
 import { Switch } from "@/components/ui/switch";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/flowbite-input";
+import { Label } from "@/components/ui/flowbite-label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 

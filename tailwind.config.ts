@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -6,6 +7,8 @@ export default {
 		"./components/**/*.{ts,tsx}",
 		"./app/**/*.{ts,tsx}",
 		"./src/**/*.{ts,tsx}",
+		"./node_modules/flowbite/**/*.js",
+		"./node_modules/flowbite-react/lib/**/*.js"
 	],
 	prefix: "",
 	theme: {
@@ -28,11 +31,21 @@ export default {
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: '#e35c00', // Updated Primary Orange
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: '#e35c00',
+					foreground: 'hsl(var(--primary-foreground))',
+					50: '#FFF3E0',
+					100: '#FFE0B2',
+					200: '#FFCC80',
+					300: '#FFB74D',
+					400: '#FFA726',
+					500: '#e35c00',
+					600: '#cc5200',
+					700: '#b84700',
+					800: '#a33d00',
+					900: '#8f3300',
 				},
 				secondary: {
-					DEFAULT: '#9E9E9E', // Light Grey
+					DEFAULT: '#9E9E9E',
 					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
@@ -65,17 +78,16 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom colors from design system
 				'dark-grey': '#212121',
 				'light-grey': '#9E9E9E',
 				'orange': {
-					DEFAULT: '#e35c00', // Updated Primary Orange
+					DEFAULT: '#e35c00',
 					50: '#FFF3E0',
 					100: '#FFE0B2',
 					200: '#FFCC80',
 					300: '#FFB74D',
-					400: '#FFA726', // Lighter shade for gradient
-					500: '#e35c00', // Updated Primary Orange
+					400: '#FFA726',
+					500: '#e35c00',
 					600: '#cc5200',
 					700: '#b84700',
 					800: '#a33d00',
@@ -111,5 +123,8 @@ export default {
 			}
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		require("flowbite/plugin")
+	],
 } satisfies Config;
