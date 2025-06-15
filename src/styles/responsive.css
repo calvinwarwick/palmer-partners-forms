@@ -18,7 +18,7 @@
   }
   
   .container {
-    @apply px-4;
+    @apply px-2;
   }
   
   .mobile-form-grid {
@@ -53,9 +53,9 @@
   }
 
   .mobile-checkbox {
-    @apply w-3.5 h-3.5;
-    min-width: 14px !important;
-    min-height: 14px !important;
+    @apply w-4 h-4;
+    min-width: 16px !important;
+    min-height: 16px !important;
   }
 
   .btn,
@@ -63,6 +63,32 @@
     min-height: 48px;
     @apply text-base;
     padding: 0.75rem 1.5rem;
+  }
+
+  /* Improved spacing for mobile */
+  .space-y-6 > * + * {
+    margin-top: 1rem !important;
+  }
+
+  .space-y-4 > * + * {
+    margin-top: 0.75rem !important;
+  }
+
+  /* Better touch targets */
+  label {
+    @apply text-sm;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Dialog improvements for mobile */
+  .max-w-4xl {
+    @apply max-w-full mx-2;
+  }
+
+  /* Card spacing on mobile */
+  .border-t {
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
   }
 }
 
@@ -74,5 +100,14 @@
   
   .container {
     @apply px-6;
+  }
+}
+
+/* Improved Switch component for mobile */
+@media (max-width: 640px) {
+  [role="switch"] {
+    @apply w-11 h-6;
+    min-width: 44px !important;
+    min-height: 24px !important;
   }
 }

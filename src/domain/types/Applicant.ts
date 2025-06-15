@@ -10,7 +10,9 @@ export interface Applicant {
   adverseCredit?: string;
   adverseCreditDetails?: string;
   guarantorRequired?: string;
-  passportPhoto?: string;
+  guarantorAdded?: boolean;
+  guarantorName?: string;
+  guarantorRelationship?: string;
   
   // Employment Information
   employment?: string;

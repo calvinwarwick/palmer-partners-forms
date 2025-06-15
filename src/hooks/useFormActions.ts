@@ -117,10 +117,25 @@ export const useFormActions = ({
     setGuarantorFormOpen(true);
   }, [setSelectedApplicantForGuarantor, setGuarantorFormOpen]);
 
-  const handleGuarantorSave = useCallback(() => {
+  const handleGuarantorSave = useCallback((guarantorData?: any) => {
+    if (guarantorData) {
+      // Update the applicant with guarantor information
+      setApplicants(prevApplicants => 
+        prevApplicants.map(applicant => 
+          applicant.id === selectedApplicantForGuarantor?.id 
+            ? { 
+                ...applicant, 
+                guarantorAdded: true,
+                guarantorName: `${guarantorData.firstName} ${guarantorData.lastName}`,
+                guarantorRelationship: guarantorData.relationship
+              }
+            : applicant
+        )
+      );
+    }
     setGuarantorFormOpen(false);
     setSelectedApplicantForGuarantor(null);
-  }, [setGuarantorFormOpen, setSelectedApplicantForGuarantor]);
+  }, [setGuarantorFormOpen, setSelectedApplicantForGuarantor, setApplicants]);
 
   return {
     addApplicant,

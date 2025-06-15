@@ -14,7 +14,7 @@ interface GuarantorFormProps {
   applicationId: string;
   isOpen: boolean;
   onClose: () => void;
-  onSave: () => void;
+  onSave: (guarantorData: GuarantorData) => void;
 }
 
 interface GuarantorData {
@@ -64,8 +64,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
   const handleSave = async () => {
     setSaving(true);
     try {
-      // Here you would typically save to your database
-      // For now, we'll just simulate a save operation
+      // Simulate save operation
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       console.log('Saving guarantor data:', {
@@ -74,7 +73,7 @@ const GuarantorForm = ({ applicant, applicationId, isOpen, onClose, onSave }: Gu
         guarantorData
       });
       
-      onSave();
+      onSave(guarantorData);
     } catch (error) {
       console.error('Error saving guarantor:', error);
     } finally {

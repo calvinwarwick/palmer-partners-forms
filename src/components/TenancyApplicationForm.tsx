@@ -48,12 +48,12 @@ const TenancyApplicationForm = () => {
           <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
             <ApplicationHeader title="Tenancy Application" />
             
-            <div className="py-8">
-              <div className="container mx-auto px-4 max-w-5xl">
+            <div className="py-4 sm:py-8">
+              <div className="container mx-auto px-2 sm:px-4 max-w-5xl">
                 {/* Progress and step indicators */}
-                <div className="mb-8">
+                <div className="mb-4 sm:mb-8">
                   <Card className="bg-white/90 backdrop-blur-sm border-0" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                    <CardContent className="p-8">
+                    <CardContent className="p-4 sm:p-8">
                       <ProgressHeader 
                         progress={progress}
                         totalSteps={totalSteps}
@@ -66,8 +66,8 @@ const TenancyApplicationForm = () => {
 
                 {/* Main form content */}
                 <Card className="bg-white/95 backdrop-blur-sm border-0" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                  <CardContent className="p-8 md:p-12">
-                    <div className="min-h-[500px]">
+                  <CardContent className="p-4 sm:p-8 md:p-12">
+                    <div className="min-h-[400px] sm:min-h-[500px]">
                       <FormSteps formContext={formContext} />
                     </div>
                     
