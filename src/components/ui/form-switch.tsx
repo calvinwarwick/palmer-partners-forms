@@ -21,7 +21,7 @@ const FormSwitch = ({
   className 
 }: FormSwitchProps) => {
   return (
-    <div className={cn("flex items-center justify-between gap-4 py-2", className)}>
+    <div className={cn("form-switch-container", className)}>
       <Label 
         htmlFor={id} 
         className="text-sm md:text-base font-medium text-gray-700 leading-relaxed flex-1 cursor-pointer"
