@@ -28,14 +28,6 @@
     margin-bottom: 12px !important;
   }
 
-  /* Mobile checkbox sizing */
-  .mobile-checkbox {
-    @apply w-6 h-6 !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
-    flex-shrink: 0 !important;
-  }
-
   /* Enhanced switch container for mobile */
   .form-switch-container {
     display: flex !important;

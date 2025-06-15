@@ -164,7 +164,7 @@ const PersonalInfoStep = ({
                     id={`ukPassport-${applicant.id}`}
                     checked={toggles.ukPassport}
                     onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'ukPassport', !!checked)}
-                    className="mobile-checkbox mt-1"
+                    className="mt-1"
                   />
                   <Label
                     htmlFor={`ukPassport-${applicant.id}`}
@@ -180,7 +180,7 @@ const PersonalInfoStep = ({
                       id={`adverseCredit-${applicant.id}`}
                       checked={toggles.adverseCredit}
                       onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', !!checked)}
-                      className="mobile-checkbox mt-1"
+                      className="mt-1"
                     />
                     <Label
                       htmlFor={`adverseCredit-${applicant.id}`}
@@ -211,7 +211,7 @@ const PersonalInfoStep = ({
                     id={`guarantorRequired-${applicant.id}`}
                     checked={toggles.guarantorRequired}
                     onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'guarantorRequired', !!checked)}
-                    className="mobile-checkbox mt-1"
+                    className="mt-1"
                   />
                   <Label
                     htmlFor={`guarantorRequired-${applicant.id}`}

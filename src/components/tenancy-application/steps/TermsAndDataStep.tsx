@@ -175,7 +175,7 @@ const TermsAndDataStep = ({
               id="terms"
               checked={termsAccepted}
               onCheckedChange={(checked) => onTermsChange(!!checked)}
-              className="mobile-checkbox mt-1"
+              className="mt-1"
             />
             <Label 
               htmlFor="terms" 
@@ -204,7 +204,7 @@ const TermsAndDataStep = ({
               id="utilities"
               checked={dataSharing.utilities}
               onCheckedChange={(checked) => handleDataSharingChange('utilities', !!checked)}
-              className="mobile-checkbox mt-1"
+              className="mt-1"
             />
             <Label 
               htmlFor="utilities" 
@@ -219,7 +219,7 @@ const TermsAndDataStep = ({
               id="insurance"
               checked={dataSharing.insurance}
               onCheckedChange={(checked) => handleDataSharingChange('insurance', !!checked)}
-              className="mobile-checkbox mt-1"
+              className="mt-1"
             />
             <Label 
               htmlFor="insurance" 
