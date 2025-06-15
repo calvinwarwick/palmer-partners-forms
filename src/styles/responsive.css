@@ -4,10 +4,10 @@
   .form-control,
   .form-select {
     @apply text-base;
-    min-height: 52px !important; /* Increased for better touch targets */
+    min-height: 52px !important;
     padding: 0.875rem 1rem;
     margin-bottom: 12px !important;
-    font-size: 16px !important; /* Prevents zoom on iOS */
+    font-size: 16px !important;
   }
   
   input[type="date"] {
@@ -55,7 +55,7 @@
     line-height: 1.2;
   }
 
-  /* Enhanced mobile checkbox sizing */
+  /* Mobile checkbox sizing */
   .mobile-checkbox {
     @apply w-6 h-6 !important;
     min-width: 24px !important;
@@ -63,20 +63,39 @@
     flex-shrink: 0 !important;
   }
 
-  /* Switch components - completely rebuilt styling */
+  /* Better mobile switch styling */
   [role="switch"] {
-    min-width: 56px !important;
-    min-height: 32px !important;
+    min-height: 40px !important;
+    min-width: 72px !important;
+    height: 40px !important;
+    width: 72px !important;
     flex-shrink: 0 !important;
-    margin: 4px 0 !important;
   }
 
-  /* Checkbox component mobile improvements */
-  [data-state] {
-    @apply w-6 h-6 !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
-    flex-shrink: 0 !important;
+  /* Mobile toggle containers */
+  .flex.items-center.justify-between,
+  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+    padding: 20px 0 !important;
+    min-height: auto !important;
+  }
+
+  .flex.items-center.justify-between label,
+  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between label {
+    width: 100% !important;
+    margin-bottom: 12px !important;
+    margin-right: 0 !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+  }
+
+  .flex.items-center.justify-between [role="switch"],
+  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between [role="switch"] {
+    align-self: flex-start !important;
+    margin: 0 !important;
   }
 
   .btn,
@@ -87,7 +106,6 @@
     border-radius: 8px;
   }
 
-  /* Improved spacing for mobile */
   .space-y-6 > * + * {
     margin-top: 1.25rem !important;
   }
@@ -96,81 +114,21 @@
     margin-top: 1rem !important;
   }
 
-  /* Better touch targets for labels */
   label {
     @apply text-sm;
     margin-bottom: 0.5rem;
     line-height: 1.4;
   }
 
-  /* Dialog improvements for mobile */
   .max-w-4xl {
     @apply max-w-full mx-3;
   }
 
-  /* Card spacing on mobile */
   .border-t {
     margin-top: 1.25rem !important;
     padding-top: 1.25rem !important;
   }
 
-  /* Mobile toggle container - completely new approach */
-  .toggle-container {
-    display: flex !important;
-    flex-direction: column !important;
-    gap: 12px !important;
-    padding: 16px 0 !important;
-    min-height: auto !important;
-  }
-
-  .toggle-container label {
-    width: 100% !important;
-    margin-bottom: 8px !important;
-    font-size: 0.875rem !important;
-    line-height: 1.4 !important;
-    font-weight: 500 !important;
-  }
-
-  .toggle-container [role="switch"] {
-    align-self: flex-start !important;
-    margin: 0 !important;
-  }
-
-  /* Legacy selectors for backward compatibility */
-  .flex.items-center.justify-between {
-    min-height: 64px !important;
-    padding: 12px 0 !important;
-    align-items: flex-start !important;
-    gap: 16px !important;
-  }
-
-  .flex.items-center.justify-between label {
-    margin-right: 16px !important;
-    flex: 1 !important;
-    line-height: 1.4 !important;
-    font-size: 0.875rem !important;
-  }
-
-  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 12px !important;
-    padding: 16px 0 !important;
-    min-height: auto !important;
-  }
-
-  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between label {
-    width: 100% !important;
-    margin-bottom: 8px !important;
-    margin-right: 0 !important;
-  }
-
-  .flex.flex-col.md\\:flex-row.md\\:items-center.md\\:justify-between [role="switch"] {
-    align-self: flex-start !important;
-    margin: 0 !important;
-  }
-
-  /* Improved grid layouts on mobile */
   .grid.grid-cols-1.md\\:grid-cols-2 {
     grid-template-columns: 1fr !important;
     gap: 1rem !important;
@@ -181,13 +139,11 @@
     gap: 1rem !important;
   }
 
-  /* Better textarea sizing */
   textarea {
     min-height: 120px !important;
     resize: vertical;
   }
 
-  /* Improved card headers on mobile */
   .card-header {
     padding: 1rem 1.25rem !important;
   }
@@ -220,14 +176,12 @@
   }
 }
 
-/* Hide step indicators on screens 950px and smaller */
 @media (max-width: 950px) {
   .hidden-below-950\\:hidden {
     display: none !important;
   }
 }
 
-/* Large screen optimizations */
 @media (min-width: 1025px) {
   .form-control,
   .form-select {

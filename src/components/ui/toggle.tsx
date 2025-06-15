@@ -5,17 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const toggleVariants = cva(
-  "inline-flex items-center justify-center rounded-lg text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-orange-500 data-[state=on]:text-white",
   {
     variants: {
       variant: {
-        default: "bg-transparent hover:bg-gray-100 data-[state=on]:bg-orange-500 data-[state=on]:text-white data-[state=on]:hover:bg-orange-600",
-        outline: "border border-gray-200 bg-transparent hover:bg-gray-50 hover:text-gray-900 data-[state=on]:bg-orange-500 data-[state=on]:text-white data-[state=on]:border-orange-500",
+        default: "bg-transparent",
+        outline:
+          "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
       },
       size: {
-        default: "h-10 px-3 min-w-10",
-        sm: "h-8 px-2 min-w-8",
-        lg: "h-12 px-4 min-w-12",
+        default: "h-12 px-4 py-2 min-w-12 md:h-10 md:px-3 md:min-w-10",
+        sm: "h-10 px-3 py-2 min-w-10 md:h-8 md:px-2 md:min-w-8",
+        lg: "h-14 px-5 py-3 min-w-14 md:h-12 md:px-4 md:min-w-12",
       },
     },
     defaultVariants: {
