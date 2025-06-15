@@ -69,7 +69,7 @@ const TenancyApplicationFormContent = () => {
                 isFirstStep={isFirstStep}
                 isLastStep={isLastStep}
                 isSubmitting={isSubmitting}
-                canSubmit={true} // RHF handles validation
+                canSubmit={true}
                 onPrevious={goToPrevious}
                 onNext={handleNext}
                 onSubmit={handleSubmit}
@@ -98,7 +98,7 @@ const TenancyApplicationFormContent = () => {
 const TenancyApplicationFormRHF = () => {
   return (
     <RHFFormProvider>
-      {(formContext) => <TenancyApplicationFormContent />}
+      <TenancyApplicationFormContent />
     </RHFFormProvider>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext } from "react";
 import { useForm, UseFormReturn, FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -44,7 +43,7 @@ export const useRHFFormContext = () => {
 };
 
 interface RHFFormProviderProps {
-  children: (formContext: RHFFormContextType) => React.ReactNode;
+  children: React.ReactNode;
 }
 
 const createEmptyApplicant = (id: string): Partial<Applicant> => ({
@@ -155,16 +154,22 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
     if (isValid) {
       const formData = form.getValues();
       
-      // Transform the RHF data to match the expected Application type
       const applicationData = {
         propertyPreferences: formData.propertyPreferences,
-        applicants: formData.personalInfo.applicants as Applicant[],
+        applicants: formData.personalInfo.applicants.map(applicant => ({
+          ...applicant,
+          firstName: applicant.firstName || "",
+          lastName: applicant.lastName || "",
+          email: applicant.email || "",
+          phone: applicant.phone || "",
+          dateOfBirth: applicant.dateOfBirth || ""
+        })) as Applicant[],
         additionalDetails: formData.additionalDetails,
         signature: formData.termsAndData.signature,
         dataSharing: formData.termsAndData.dataSharing
       };
       
-      await submitApplication(applicationData as any);
+      await submitApplication(applicationData);
     }
   };
 
@@ -315,7 +320,6 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
           dateOfBirth: "1990-01-01"
         });
         break;
-      // Add other cases as needed
     }
   };
 
@@ -345,7 +349,11 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
     fillStepData
   };
 
-  return children(contextValue);
+  return (
+    <RHFFormContext.Provider value={contextValue}>
+      {children}
+    </RHFFormContext.Provider>
+  );
 };
 
 export default RHFFormProvider;
