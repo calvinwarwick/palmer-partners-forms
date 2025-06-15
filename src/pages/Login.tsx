@@ -31,9 +31,21 @@ const Login = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <AuthFormFields 
-              {...authForm} 
+              isLogin={authForm.isLogin}
+              email={authForm.email}
+              setEmail={authForm.setEmail}
+              password={authForm.password}
+              setPassword={authForm.setPassword}
+              showPassword={authForm.showPassword}
+              setShowPassword={authForm.setShowPassword}
+              firstName={authForm.firstName}
+              setFirstName={authForm.setFirstName}
+              lastName={authForm.lastName}
+              setLastName={authForm.setLastName}
+              isLoading={authForm.isLoading}
               onSubmit={authForm.handleSubmit}
             />
+            
             <div className="mt-4 text-center">
               <button
                 type="button"
@@ -43,6 +55,7 @@ const Login = () => {
                 {authForm.isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
               </button>
             </div>
+            
             {authForm.isLogin && (
               <DemoCredentials onFillCredentials={authForm.fillDemoCredentials} />
             )}

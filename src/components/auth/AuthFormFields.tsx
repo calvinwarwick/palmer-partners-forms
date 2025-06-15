@@ -110,16 +110,6 @@ const AuthFormFields = ({
       >
         {isLoading ? (isLogin ? "Signing in..." : "Creating account...") : (isLogin ? "Sign In" : "Sign Up")}
       </Button>
-
-      <div className="mt-4 text-center">
-        <button
-          type="button"
-          onClick={() => window.location.reload()} // This will be handled by the parent component
-          className="text-sm text-orange-600 hover:text-orange-700 font-medium"
-        >
-          {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
-        </button>
-      </div>
     </form>
   );
 };
