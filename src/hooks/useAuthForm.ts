@@ -33,13 +33,26 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!email || !password) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
+    if (!isLogin && (!firstName || !lastName)) {
+      toast.error("Please fill in all required fields");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       if (isLogin) {
+        console.log("Attempting to sign in with:", email);
         const { error } = await signIn(email, password);
         
         if (error) {
+          console.error("Sign in error:", error);
           // If it's demo credentials and login fails, try to create the demo account
           if (isDemoCredentials(email, password) && error.message.includes('Invalid login credentials')) {
             toast.info("Creating demo account...");
@@ -60,6 +73,7 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
             toast.error(error.message);
           }
         } else {
+          console.log("Sign in successful, navigating to admin");
           toast.success("Signed in successfully!");
           if (onLogin) {
             onLogin(email, "User");
@@ -67,13 +81,16 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
           navigate("/admin");
         }
       } else {
+        console.log("Attempting to sign up with:", email);
         const { error } = await signUp(email, password, {
           first_name: firstName,
           last_name: lastName,
         });
         if (error) {
+          console.error("Sign up error:", error);
           if (error.message.includes('User already registered')) {
             toast.error("This email is already registered. Please try signing in instead.");
+            setIsLogin(true);
           } else {
             toast.error(error.message);
           }
@@ -91,6 +108,7 @@ export const useAuthForm = ({ onLogin }: UseAuthFormProps) => {
   };
 
   const fillDemoCredentials = () => {
+    console.log("Filling demo credentials");
     setEmail("demo.user@example.com");
     setPassword("demo123456");
     setIsLogin(true);
