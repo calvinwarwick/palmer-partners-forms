@@ -7,6 +7,7 @@ import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
 interface PersonalInfoStepProps {
@@ -164,15 +165,32 @@ const PersonalInfoStep = ({
                   />
                 </div>
                 
-                <div className="flex items-center justify-between">
-                  <Label htmlFor={`adverseCredit-${applicant.id}`} className="text-sm">
-                    Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
-                  </Label>
-                  <Switch
-                    id={`adverseCredit-${applicant.id}`}
-                    checked={toggles.adverseCredit}
-                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
-                  />
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor={`adverseCredit-${applicant.id}`} className="text-sm">
+                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
+                    </Label>
+                    <Switch
+                      id={`adverseCredit-${applicant.id}`}
+                      checked={toggles.adverseCredit}
+                      onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
+                    />
+                  </div>
+                  
+                  {toggles.adverseCredit && (
+                    <div className="ml-4">
+                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm text-gray-600">
+                        Please provide more details about your adverse credit history:
+                      </Label>
+                      <Textarea
+                        id={`adverseCreditDetails-${applicant.id}`}
+                        value={applicant.adverseCreditDetails || ''}
+                        onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
+                        placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
+                        className="mt-2 min-h-[100px]"
+                      />
+                    </div>
+                  )}
                 </div>
                 
                 <div className="flex items-center justify-between">
