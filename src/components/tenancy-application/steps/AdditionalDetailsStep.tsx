@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Heart } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
@@ -114,18 +114,13 @@ const AdditionalDetailsStep = ({
             </div>
           )}
 
-          <div className="flex items-center gap-3">
-            <Switch
-              checked={additionalDetails.pets}
-              onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-            />
-            <Label 
-              className="text-gray-700 font-medium cursor-pointer mb-0"
-              onClick={() => onUpdateDetails("pets", !additionalDetails.pets)}
-            >
-              Do you intend to have any pets at the property? <span className="text-red-500">*</span>
-            </Label>
-          </div>
+          <CustomToggle
+            id="pets"
+            label="Do you intend to have any pets at the property?"
+            checked={additionalDetails.pets}
+            onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
+            required={true}
+          />
 
           {additionalDetails.pets && (
             <div className="space-y-2">

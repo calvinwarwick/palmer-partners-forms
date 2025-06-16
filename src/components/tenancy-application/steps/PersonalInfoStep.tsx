@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FormSwitch } from "@/components/ui/form-switch";
+import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
@@ -68,7 +68,7 @@ const PersonalInfoStep = ({
         
         return (
           <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
-            <CardHeader className="pb-3 md:pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+            <CardHeader className="pb-3 md:pb-4 bg-orange-500 text-white rounded-t-lg">
               <CardTitle className="text-base md:text-lg font-semibold flex items-center justify-between">
                 <div className="flex items-center gap-2 md:gap-3">
                   <div className="p-1.5 md:p-2 bg-white/20 rounded-lg">
@@ -155,7 +155,7 @@ const PersonalInfoStep = ({
 
               {/* Switch Questions */}
               <div className="space-y-4 md:space-y-6 border-t border-gray-200 pt-4 md:pt-6">
-                <FormSwitch
+                <CustomToggle
                   id={`ukPassport-${applicant.id}`}
                   label="Do you hold a UK or Republic of Ireland passport?"
                   checked={toggles.ukPassport}
@@ -163,7 +163,7 @@ const PersonalInfoStep = ({
                 />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <FormSwitch
+                  <CustomToggle
                     id={`adverseCredit-${applicant.id}`}
                     label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
                     checked={toggles.adverseCredit}
@@ -186,7 +186,7 @@ const PersonalInfoStep = ({
                   )}
                 </div>
                 
-                <FormSwitch
+                <CustomToggle
                   id={`guarantorRequired-${applicant.id}`}
                   label="If required, can you supply a guarantor for this proposed tenancy?"
                   checked={toggles.guarantorRequired}
