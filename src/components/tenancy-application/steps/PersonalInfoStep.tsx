@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -171,7 +170,7 @@ const PersonalInfoStep = ({
               </div>
 
               {/* Switch Questions */}
-              <div className="space-y-4 md:space-y-6 border-t border-gray-200 pt-4 md:pt-6">
+              <div className="space-y-4 md:space-y-6 pt-4 md:pt-6">
                 <CustomToggle
                   id={`ukPassport-${applicant.id}`}
                   label="Do you hold a UK or Republic of Ireland passport?"
@@ -197,7 +196,7 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[120px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        className="form-control min-h-[180px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
                       />
                     </div>
                   )}

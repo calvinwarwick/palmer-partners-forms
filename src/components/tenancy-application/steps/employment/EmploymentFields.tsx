@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Applicant } from "@/domain/types/Applicant";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
+import { Info } from "lucide-react";
 
 interface EmploymentFieldsProps {
   applicant: Applicant;
@@ -34,6 +35,26 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
           </SelectContent>
         </Select>
       </div>
+
+      {/* Self-Employment Information Message */}
+      {applicant.employmentStatus === "self-employed" && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div className="flex items-start gap-3">
+            <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-blue-800">
+              <h4 className="font-semibold mb-2">Self-Employment Information</h4>
+              <p className="mb-3">
+                We note you have stated that you are self-employed. To ensure you have the best chance of successfully completing the referencing procedure, please note the following:
+              </p>
+              <ul className="list-disc list-inside space-y-1 ml-2">
+                <li>You must have been self-employed for at least 2 years and be able to supply at least one completed HMRC Tax Return or SA302. Alternatively, proof of earnings via a Chartered Accountant may be sufficient.</li>
+                <li>Any salary figures you provide must be your salary and not figures based on the turnover of a business.</li>
+                <li>Any salary figures that you supply must be what you take as "salary" and must not include any dividends that you receive.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Employment Details for Full Time, Part Time, Zero Hours, and Self Employed */}
       {(applicant.employmentStatus === "full-time" || 
