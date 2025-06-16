@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
@@ -11,6 +11,10 @@ import { Textarea } from "@/components/ui/textarea";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
 import { useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -59,6 +63,19 @@ const PersonalInfoStep = ({
     onUpdateApplicant(applicantId, 'guarantorRelationship' as keyof Applicant, '');
   };
 
+  const handleDateSelect = (applicantId: string, date: Date | undefined) => {
+    if (date) {
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      onUpdateApplicant(applicantId, 'dateOfBirth', formattedDate);
+    }
+  };
+
+  const parseDate = (dateString: string): Date | undefined => {
+    if (!dateString) return undefined;
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? undefined : date;
+  };
+
   return (
     <div className="space-y-6 md:space-y-8">
       <div>
@@ -73,6 +90,7 @@ const PersonalInfoStep = ({
 
       {applicants.map((applicant, index) => {
         const toggles = getApplicantToggles(applicant.id);
+        const selectedDate = parseDate(applicant.dateOfBirth);
         
         return (
           <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
@@ -98,7 +116,7 @@ const PersonalInfoStep = ({
                     onClick={() => onRemoveApplicant(applicant.id)}
                     className="text-white hover:bg-white/20 h-7 w-7 md:h-8 md:w-8 p-0"
                   >
-                    ×
+                    <Calendar className="h-3 w-3 md:h-4 md:w-4" />
                   </Button>
                 )}
               </CardTitle>
@@ -137,15 +155,33 @@ const PersonalInfoStep = ({
 
                 <div className="space-y-2">
                   <Label htmlFor={`dateOfBirth-${applicant.id}`} className="form-label">Date of Birth *</Label>
-                  <Input
-                    id={`dateOfBirth-${applicant.id}`}
-                    type="date"
-                    value={applicant.dateOfBirth}
-                    onChange={(e) => onUpdateApplicant(applicant.id, 'dateOfBirth', e.target.value)}
-                    className="form-control"
-                    max={new Date().toISOString().split('T')[0]}
-                    min="1900-01-01"
-                  />
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
+                          !selectedDate && "text-muted-foreground"
+                        )}
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                      >
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={(date) => handleDateSelect(applicant.id, date)}
+                        disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                        className="p-3 pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
                 </div>
 
                 <FormFieldWithTooltip
@@ -194,8 +230,8 @@ const PersonalInfoStep = ({
                   />
                   
                   {toggles.adverseCredit && (
-                    <div className="mt-4 space-y-3">
-                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700 block">
+                    <div className="bg-orange-50/50 rounded-lg p-4 border border-orange-200">
+                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-3 block">
                         Please provide more details about your adverse credit history:
                       </Label>
                       <Textarea
@@ -203,8 +239,8 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[200px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
-                        rows={10}
+                        className="form-control min-h-[400px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        rows={20}
                       />
                     </div>
                   )}
