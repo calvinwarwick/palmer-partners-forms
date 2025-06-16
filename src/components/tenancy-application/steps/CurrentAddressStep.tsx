@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, MapPin } from "lucide-react";
+import { User } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface CurrentAddressStepProps {
@@ -12,6 +12,10 @@ interface CurrentAddressStepProps {
 }
 
 const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressStepProps) => {
+  const shouldShowRentalAmount = (status: string) => {
+    return status === "rented-privately" || status === "rented-through-agent";
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -36,23 +40,17 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            {/* Current Address */}
             <div className="space-y-4">
-              <h4 className="text-lg font-semibold text-dark-grey mb-4 flex items-center gap-2">
-                <MapPin className="h-5 w-5 text-orange-500" />
-                Current Address
-              </h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor={`currentAddress-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Current Address <span className="text-red-500">*</span>
+                    Street Address <span className="text-red-500">*</span>
                   </Label>
                   <Input
                     id={`currentAddress-${applicant.id}`}
                     value={applicant.currentAddress || ""}
                     onChange={(e) => onUpdateApplicant(applicant.id, "currentAddress", e.target.value)}
-                    placeholder="Enter your current address"
+                    placeholder="Enter your street address"
                     className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                     style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                     required
@@ -72,45 +70,74 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                     required
                   />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor={`residencyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Residency Status <span className="text-red-500">*</span>
+                  <Label htmlFor={`currentPropertyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                    Current Property Status <span className="text-red-500">*</span>
                   </Label>
-                  <Select value={applicant.residencyStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "residencyStatus", value)}>
+                  <Select value={applicant.currentPropertyStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "currentPropertyStatus", value)}>
                     <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                      <SelectValue placeholder="Select residency status" />
+                      <SelectValue placeholder="Select property status" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="tenant">Tenant</SelectItem>
-                      <SelectItem value="owner">Owner</SelectItem>
-                      <SelectItem value="living-with-parents">Living with Parents</SelectItem>
-                      <SelectItem value="living-with-family">Living with Family</SelectItem>
-                      <SelectItem value="lodger">Lodger</SelectItem>
+                      <SelectItem value="rented-privately">Rented Privately</SelectItem>
+                      <SelectItem value="rented-through-agent">Rented through Agent</SelectItem>
+                      <SelectItem value="owner-occupied">Owner Occupied</SelectItem>
                       <SelectItem value="other">Other</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <Label htmlFor={`timeAtAddress-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Time at Current Address <span className="text-red-500">*</span>
+                  <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                    Move In Date <span className="text-red-500">*</span>
                   </Label>
-                  <Select value={applicant.timeAtAddress} onValueChange={(value) => onUpdateApplicant(applicant.id, "timeAtAddress", value)}>
-                    <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                      <SelectValue placeholder="Select time at address" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="less-than-6-months">Less than 6 months</SelectItem>
-                      <SelectItem value="6-12-months">6-12 months</SelectItem>
-                      <SelectItem value="1-2-years">1-2 years</SelectItem>
-                      <SelectItem value="2-5-years">2-5 years</SelectItem>
-                      <SelectItem value="more-than-5-years">More than 5 years</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <Input
+                    id={`moveInDate-${applicant.id}`}
+                    type="date"
+                    value={applicant.moveInDate || ""}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                    Vacate Date <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id={`vacateDate-${applicant.id}`}
+                    type="date"
+                    value={applicant.vacateDate || ""}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    required
+                  />
                 </div>
               </div>
+
+              {shouldShowRentalAmount(applicant.currentPropertyStatus || "") && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label htmlFor={`currentRentalAmount-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                      Current Rental Amount (£) <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id={`currentRentalAmount-${applicant.id}`}
+                      type="number"
+                      value={applicant.currentRentalAmount || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
+                      placeholder="Enter monthly rental amount"
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                      required
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
