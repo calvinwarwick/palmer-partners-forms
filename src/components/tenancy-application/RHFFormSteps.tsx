@@ -1,5 +1,10 @@
 
 import RHFPropertyDetailsStep from "@/components/tenancy-application/steps/rhf/RHFPropertyDetailsStep";
+import RHFPersonalInfoStep from "@/components/tenancy-application/steps/rhf/RHFPersonalInfoStep";
+import RHFEmploymentStep from "@/components/tenancy-application/steps/rhf/RHFEmploymentStep";
+import RHFCurrentAddressStep from "@/components/tenancy-application/steps/rhf/RHFCurrentAddressStep";
+import RHFAdditionalDetailsStep from "@/components/tenancy-application/steps/rhf/RHFAdditionalDetailsStep";
+import RHFTermsAndDataStep from "@/components/tenancy-application/steps/rhf/RHFTermsAndDataStep";
 import { useRHFFormContext } from "@/components/tenancy-application/RHFFormProvider";
 
 const RHFFormSteps = () => {
@@ -9,15 +14,15 @@ const RHFFormSteps = () => {
     case 1:
       return <RHFPropertyDetailsStep />;
     case 2:
-      return <div className="p-8 text-center text-gray-600">Personal Info Step - Coming Soon</div>;
+      return <RHFPersonalInfoStep />;
     case 3:
-      return <div className="p-8 text-center text-gray-600">Employment Step - Coming Soon</div>;
+      return <RHFEmploymentStep />;
     case 4:
-      return <div className="p-8 text-center text-gray-600">Current Address Step - Coming Soon</div>;
+      return <RHFCurrentAddressStep />;
     case 5:
-      return <div className="p-8 text-center text-gray-600">Additional Details Step - Coming Soon</div>;
+      return <RHFAdditionalDetailsStep />;
     case 6:
-      return <div className="p-8 text-center text-gray-600">Terms and Data Step - Coming Soon</div>;
+      return <RHFTermsAndDataStep />;
     default:
       return null;
   }
