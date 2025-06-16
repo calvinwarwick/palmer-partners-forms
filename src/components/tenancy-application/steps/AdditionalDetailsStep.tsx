@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart } from "lucide-react";
+import { Heart, FileText } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import { PetDetails } from "./PetDetails";
 
@@ -23,6 +23,7 @@ interface AdditionalDetailsStepProps {
     additionalRequests: string;
     householdIncome: string;
     childrenCount?: string;
+    conditionsOfOffer?: string;
   };
   onUpdateDetails: (field: string, value: string | boolean) => void;
   onFillAllTestData?: () => void;
@@ -64,6 +65,34 @@ const AdditionalDetailsStep = ({
         <p className="text-light-grey mb-4">Tell us more about your requirements and preferences</p>
         <div className="border-b border-gray-200 mb-6" style={{ marginTop: '10px' }}></div>
       </div>
+
+      {/* Conditions of Offer */}
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <FileText className="h-5 w-5" />
+            </div>
+            Conditions of Offer
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          <div className="space-y-2">
+            <Label htmlFor="conditionsOfOffer" className="form-label text-gray-700 font-medium">
+              Please provide any conditions attached to your offer that you would like to discuss with your landlord.
+              If approved, these conditions will be added to your tenancy agreement.
+            </Label>
+            <Textarea
+              id="conditionsOfOffer"
+              value={additionalDetails.conditionsOfOffer || ""}
+              onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
+              placeholder="Enter any conditions you would like to discuss with your landlord..."
+              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Further Information */}
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
