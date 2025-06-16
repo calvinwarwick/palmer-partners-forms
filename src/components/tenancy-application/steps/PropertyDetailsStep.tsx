@@ -25,7 +25,6 @@ const PropertyDetailsStep = ({
       <div>
         <h3 className="text-2xl font-bold text-dark-grey mb-2">Proposed Rental Property Details</h3>
         <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
-        <div className="border-b border-gray-200 mb-6"></div>
       </div>
 
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
@@ -135,7 +134,7 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.initialTenancyTerm} 
                 onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
               >
-                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-select border-gray-200 focus:border-orange-500 focus:ring-orange-500">
+                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4">
                   <SelectValue placeholder="Please select an option" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-gray-300 z-50">

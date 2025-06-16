@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface CurrentAddressStepProps {
@@ -74,7 +74,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                     Current Property Status <span className="text-red-500">*</span>
                   </Label>
                   <Select value={applicant.currentPropertyStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "currentPropertyStatus", value)}>
-                    <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                    <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
                       <SelectValue placeholder="Select property status" />
                     </SelectTrigger>
                     <SelectContent>
@@ -92,43 +92,52 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                   <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
                     Move In Date
                   </Label>
-                  <Input
-                    id={`moveInDate-${applicant.id}`}
-                    type="date"
-                    value={applicant.moveInDate || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
-                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  />
+                  <div className="date-input-container">
+                    <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+                    <Input
+                      id={`moveInDate-${applicant.id}`}
+                      type="date"
+                      value={applicant.moveInDate || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
                     Vacate Date
                   </Label>
-                  <Input
-                    id={`vacateDate-${applicant.id}`}
-                    type="date"
-                    value={applicant.vacateDate || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
-                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  />
+                  <div className="date-input-container">
+                    <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
+                    <Input
+                      id={`vacateDate-${applicant.id}`}
+                      type="date"
+                      value={applicant.vacateDate || ""}
+                      onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                    />
+                  </div>
                 </div>
                 {shouldShowRentalAmount(applicant.currentPropertyStatus || "") && (
                   <div className="space-y-2">
                     <Label htmlFor={`currentRentalAmount-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Current Rental Amount (£) <span className="text-red-500">*</span>
                     </Label>
-                    <Input
-                      id={`currentRentalAmount-${applicant.id}`}
-                      type="number"
-                      value={applicant.currentRentalAmount || ""}
-                      onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
-                      placeholder="Enter monthly rental amount"
-                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                      style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                      required
-                    />
+                    <div className="currency-input-container">
+                      <span className="currency-input-icon text-orange-500">£</span>
+                      <Input
+                        id={`currentRentalAmount-${applicant.id}`}
+                        type="number"
+                        value={applicant.currentRentalAmount || ""}
+                        onChange={(e) => onUpdateApplicant(applicant.id, "currentRentalAmount", e.target.value)}
+                        placeholder="Enter monthly rental amount"
+                        className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        required
+                      />
+                    </div>
                   </div>
                 )}
               </div>
