@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, MapPin, Calendar } from "lucide-react";
+import { User, MapPin } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 
 interface CurrentAddressStepProps {
@@ -109,45 +109,6 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                       <SelectItem value="more-than-5-years">More than 5 years</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
-              </div>
-            </div>
-
-            {/* Move in and Vacate Dates */}
-            <div className="border-t border-gray-200 pt-6">
-              <h4 className="text-lg font-semibold text-dark-grey mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-orange-500" />
-                Move Dates
-              </h4>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Move In Date <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id={`moveInDate-${applicant.id}`}
-                    type="date"
-                    value={applicant.moveInDate || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
-                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Vacate Date <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id={`vacateDate-${applicant.id}`}
-                    type="date"
-                    value={applicant.vacateDate || ""}
-                    onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
-                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                    required
-                  />
                 </div>
               </div>
             </div>

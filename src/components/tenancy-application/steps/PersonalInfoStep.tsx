@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -54,10 +55,6 @@ const PersonalInfoStep = ({
     <div className="space-y-6 md:space-y-8">
       <div>
         <h3 className="text-xl md:text-2xl font-bold text-dark-grey mb-2">Personal Information</h3>
-        <div className="text-left">
-          <p className="text-light-grey mb-1 text-sm md:text-base">How many adults will be living in the property? <span className="text-red-500">*</span></p>
-          <p className="text-light-grey mb-4 text-sm md:text-base">Please ensure you provide details for each applicant below.</p>
-        </div>
         <div className="border-b border-gray-200 mb-4 md:mb-6"></div>
       </div>
 
@@ -175,7 +172,7 @@ const PersonalInfoStep = ({
                   
                   {toggles.adverseCredit && (
                     <div className="ml-0 md:ml-4 space-y-2">
-                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-600">
+                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700">
                         Please provide more details about your adverse credit history:
                       </Label>
                       <Textarea
@@ -183,7 +180,7 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[120px] resize-vertical"
+                        className="form-control min-h-[120px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
                       />
                     </div>
                   )}
