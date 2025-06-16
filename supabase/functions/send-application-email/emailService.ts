@@ -13,7 +13,7 @@ export const sendApplicationConfirmation = async (application: any): Promise<boo
       subject: "Tenancy Application Received - Palmer & Partners",
       html: `
         <div style="font-family: 'Lexend', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%); padding: 30px; text-align: center; margin-bottom: 30px;">
+          <div style="background: #FF6F00; padding: 30px; text-align: center; margin-bottom: 30px;">
             <h1 style="color: white; margin: 0; font-size: 28px; font-weight: bold;">Application Received</h1>
           </div>
           
