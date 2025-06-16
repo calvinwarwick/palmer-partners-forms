@@ -8,6 +8,7 @@ import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import { useState } from "react";
 
 interface PersonalInfoStepProps {
@@ -96,9 +97,13 @@ const PersonalInfoStep = ({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <div className="space-y-2">
-                  <Label htmlFor={`firstName-${applicant.id}`} className="form-label">First Name *</Label>
+              <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
+                <FormFieldWithTooltip
+                  label="First Name"
+                  tooltip="This should be your name as it appears on your passport."
+                  required={true}
+                  htmlFor={`firstName-${applicant.id}`}
+                >
                   <Input
                     id={`firstName-${applicant.id}`}
                     value={applicant.firstName}
@@ -106,9 +111,14 @@ const PersonalInfoStep = ({
                     placeholder="Enter first name"
                     className="form-control"
                   />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor={`lastName-${applicant.id}`} className="form-label">Last Name *</Label>
+                </FormFieldWithTooltip>
+
+                <FormFieldWithTooltip
+                  label="Last Name"
+                  tooltip="This should be your name as it appears on your passport."
+                  required={true}
+                  htmlFor={`lastName-${applicant.id}`}
+                >
                   <Input
                     id={`lastName-${applicant.id}`}
                     value={applicant.lastName}
@@ -116,29 +126,9 @@ const PersonalInfoStep = ({
                     placeholder="Enter last name"
                     className="form-control"
                   />
-                </div>
+                </FormFieldWithTooltip>
+
                 <div className="space-y-2">
-                  <Label htmlFor={`email-${applicant.id}`} className="form-label">Email *</Label>
-                  <Input
-                    id={`email-${applicant.id}`}
-                    type="email"
-                    value={applicant.email}
-                    onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
-                    placeholder="Enter email address"
-                    className="form-control"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor={`phone-${applicant.id}`} className="form-label">Phone Number *</Label>
-                  <Input
-                    id={`phone-${applicant.id}`}
-                    value={applicant.phone}
-                    onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
-                    placeholder="Enter phone number"
-                    className="form-control"
-                  />
-                </div>
-                <div className="space-y-2 md:col-span-1">
                   <Label htmlFor={`dateOfBirth-${applicant.id}`} className="form-label">Date of Birth *</Label>
                   <div className="date-input-container">
                     <Calendar className="date-input-icon" />
@@ -150,6 +140,33 @@ const PersonalInfoStep = ({
                       className="form-control"
                     />
                   </div>
+                </div>
+
+                <FormFieldWithTooltip
+                  label="Email Address"
+                  tooltip="We must have a different email address for each applicant"
+                  required={true}
+                  htmlFor={`email-${applicant.id}`}
+                >
+                  <Input
+                    id={`email-${applicant.id}`}
+                    type="email"
+                    value={applicant.email}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
+                    placeholder="Enter email address"
+                    className="form-control"
+                  />
+                </FormFieldWithTooltip>
+
+                <div className="space-y-2">
+                  <Label htmlFor={`phone-${applicant.id}`} className="form-label">Mobile Number *</Label>
+                  <Input
+                    id={`phone-${applicant.id}`}
+                    value={applicant.phone}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
+                    placeholder="Enter mobile number"
+                    className="form-control"
+                  />
                 </div>
               </div>
 
