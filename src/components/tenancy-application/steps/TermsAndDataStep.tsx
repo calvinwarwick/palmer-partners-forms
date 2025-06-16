@@ -50,7 +50,7 @@ const TermsAndDataStep = ({
 
       {/* Terms & Conditions Section */}
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
+        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-lg">
               <FileText className="h-5 w-5" />
@@ -189,7 +189,7 @@ const TermsAndDataStep = ({
 
       {/* Data Sharing Section */}
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-400 text-white rounded-t-lg">
+        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-lg">
               <Shield className="h-5 w-5" />
