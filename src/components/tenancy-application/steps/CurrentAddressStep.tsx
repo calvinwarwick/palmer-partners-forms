@@ -3,13 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { User, Calendar } from "lucide-react";
+import { User } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
-import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 interface CurrentAddressStepProps {
   applicants: Applicant[];
@@ -19,19 +14,6 @@ interface CurrentAddressStepProps {
 const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressStepProps) => {
   const shouldShowRentalAmount = (status: string) => {
     return status === "rented-privately" || status === "rented-through-agent";
-  };
-
-  const parseDate = (dateString: string): Date | undefined => {
-    if (!dateString) return undefined;
-    const date = new Date(dateString);
-    return isNaN(date.getTime()) ? undefined : date;
-  };
-
-  const handleDateSelect = (applicantId: string, field: keyof Applicant, date: Date | undefined) => {
-    if (date) {
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      onUpdateApplicant(applicantId, field, formattedDate);
-    }
   };
 
   return (
@@ -110,59 +92,27 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                   <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
                     Move In Date
                   </Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
-                          !parseDate(applicant.moveInDate || '') && "text-muted-foreground"
-                        )}
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                      >
-                        <Calendar className="mr-2 h-4 w-4" />
-                        {parseDate(applicant.moveInDate || '') ? format(parseDate(applicant.moveInDate || '')!, "PPP") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={parseDate(applicant.moveInDate || '')}
-                        onSelect={(date) => handleDateSelect(applicant.id, 'moveInDate', date)}
-                        initialFocus
-                        className="p-3 pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <Input
+                    id={`moveInDate-${applicant.id}`}
+                    type="date"
+                    value={applicant.moveInDate || ''}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "moveInDate", e.target.value)}
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
                     Vacate Date
                   </Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
-                          !parseDate(applicant.vacateDate || '') && "text-muted-foreground"
-                        )}
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                      >
-                        <Calendar className="mr-2 h-4 w-4" />
-                        {parseDate(applicant.vacateDate || '') ? format(parseDate(applicant.vacateDate || '')!, "PPP") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={parseDate(applicant.vacateDate || '')}
-                        onSelect={(date) => handleDateSelect(applicant.id, 'vacateDate', date)}
-                        initialFocus
-                        className="p-3 pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <Input
+                    id={`vacateDate-${applicant.id}`}
+                    type="date"
+                    value={applicant.vacateDate || ''}
+                    onChange={(e) => onUpdateApplicant(applicant.id, "vacateDate", e.target.value)}
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                    style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  />
                 </div>
                 {shouldShowRentalAmount(applicant.currentPropertyStatus || "") && (
                   <div className="space-y-2">
