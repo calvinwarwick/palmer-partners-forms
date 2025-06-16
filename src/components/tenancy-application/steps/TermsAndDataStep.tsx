@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Shield, FileText } from "lucide-react";
+import { Shield, FileText, PenTool } from "lucide-react";
 import SignaturePad from "@/components/ui/signature-pad";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 
@@ -212,16 +212,27 @@ const TermsAndDataStep = ({
         </CardContent>
       </Card>
 
-      <div className="w-full">
-        <SignaturePad
-          value={signature}
-          onChange={onSignatureChange}
-          fullName={fullName}
-          onFullNameChange={onFullNameChange}
-          width={800}
-          height={200}
-        />
-      </div>
+      {/* Digital Signature Section */}
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <PenTool className="h-5 w-5" />
+            </div>
+            Digital Signature
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-6">
+          <SignaturePad
+            value={signature}
+            onChange={onSignatureChange}
+            fullName={fullName}
+            onFullNameChange={onFullNameChange}
+            width={800}
+            height={200}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 };
