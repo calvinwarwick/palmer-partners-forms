@@ -114,9 +114,10 @@ const PropertyDetailsStep = ({
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
+                      "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500",
                       !parseDate(propertyPreferences.moveInDate) && "text-muted-foreground"
                     )}
+                    style={{ transition: 'none' }}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     {parseDate(propertyPreferences.moveInDate) ? format(parseDate(propertyPreferences.moveInDate)!, "PPP") : <span>Pick a date</span>}
@@ -129,6 +130,9 @@ const PropertyDetailsStep = ({
                     onSelect={(date) => handleDateSelect('moveInDate', date)}
                     disabled={(date) => date < new Date()}
                     initialFocus
+                    captionLayout="dropdown-buttons"
+                    fromYear={new Date().getFullYear()}
+                    toYear={new Date().getFullYear() + 2}
                     className="p-3 pointer-events-auto"
                   />
                 </PopoverContent>
@@ -144,9 +148,10 @@ const PropertyDetailsStep = ({
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
+                      "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500",
                       !parseDate(propertyPreferences.latestMoveInDate) && "text-muted-foreground"
                     )}
+                    style={{ transition: 'none' }}
                   >
                     <Calendar className="mr-2 h-4 w-4" />
                     {parseDate(propertyPreferences.latestMoveInDate) ? format(parseDate(propertyPreferences.latestMoveInDate)!, "PPP") : <span>Pick a date</span>}
@@ -159,6 +164,9 @@ const PropertyDetailsStep = ({
                     onSelect={(date) => handleDateSelect('latestMoveInDate', date)}
                     disabled={(date) => date < new Date()}
                     initialFocus
+                    captionLayout="dropdown-buttons"
+                    fromYear={new Date().getFullYear()}
+                    toYear={new Date().getFullYear() + 2}
                     className="p-3 pointer-events-auto"
                   />
                 </PopoverContent>

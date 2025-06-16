@@ -115,10 +115,13 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500",
                           !parseDate(applicant.moveInDate || '') && "text-muted-foreground"
                         )}
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
+                          transition: 'none'
+                        }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
                         {parseDate(applicant.moveInDate || '') ? format(parseDate(applicant.moveInDate || '')!, "PPP") : <span>Pick a date</span>}
@@ -130,6 +133,9 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                         selected={parseDate(applicant.moveInDate || '')}
                         onSelect={(date) => handleDateSelect(applicant.id, 'moveInDate', date)}
                         initialFocus
+                        captionLayout="dropdown-buttons"
+                        fromYear={1990}
+                        toYear={new Date().getFullYear() + 2}
                         className="p-3 pointer-events-auto"
                       />
                     </PopoverContent>
@@ -144,10 +150,13 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500",
                           !parseDate(applicant.vacateDate || '') && "text-muted-foreground"
                         )}
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
+                          transition: 'none'
+                        }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
                         {parseDate(applicant.vacateDate || '') ? format(parseDate(applicant.vacateDate || '')!, "PPP") : <span>Pick a date</span>}
@@ -159,6 +168,9 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                         selected={parseDate(applicant.vacateDate || '')}
                         onSelect={(date) => handleDateSelect(applicant.id, 'vacateDate', date)}
                         initialFocus
+                        captionLayout="dropdown-buttons"
+                        fromYear={1990}
+                        toYear={new Date().getFullYear() + 5}
                         className="p-3 pointer-events-auto"
                       />
                     </PopoverContent>

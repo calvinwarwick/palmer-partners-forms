@@ -160,10 +160,13 @@ const PersonalInfoStep = ({
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500",
                           !selectedDate && "text-muted-foreground"
                         )}
-                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                        style={{ 
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
+                          transition: 'none'
+                        }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
                         {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
@@ -178,6 +181,9 @@ const PersonalInfoStep = ({
                           date > new Date() || date < new Date("1900-01-01")
                         }
                         initialFocus
+                        captionLayout="dropdown-buttons"
+                        fromYear={1940}
+                        toYear={new Date().getFullYear()}
                         className="p-3 pointer-events-auto"
                       />
                     </PopoverContent>
@@ -239,8 +245,8 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[400px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
-                        rows={20}
+                        className="form-control min-h-[500px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        rows={25}
                       />
                     </div>
                   )}
