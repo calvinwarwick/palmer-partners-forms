@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -237,8 +238,8 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[200px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
-                        rows={8}
+                        className="form-control min-h-[320px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        rows={15}
                       />
                     </div>
                   )}

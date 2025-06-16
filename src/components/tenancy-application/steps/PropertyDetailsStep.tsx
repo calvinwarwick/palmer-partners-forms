@@ -3,10 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { TestTube, Calendar, Home } from "lucide-react";
+import { Calendar, Home } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 interface PropertyDetailsStepProps {
   propertyPreferences: PropertyPreferences;
@@ -19,6 +22,19 @@ const PropertyDetailsStep = ({
   onUpdatePreferences,
   onFillAllTestData,
 }: PropertyDetailsStepProps) => {
+
+  const parseDate = (dateString: string): Date | undefined => {
+    if (!dateString) return undefined;
+    const date = new Date(dateString);
+    return isNaN(date.getTime()) ? undefined : date;
+  };
+
+  const handleDateSelect = (field: keyof PropertyPreferences, date: Date | undefined) => {
+    if (date) {
+      const formattedDate = format(date, 'yyyy-MM-dd');
+      onUpdatePreferences(field, formattedDate);
+    }
+  };
 
   return (
     <div className="space-y-8 font-lexend">
@@ -93,37 +109,60 @@ const PropertyDetailsStep = ({
               <Label htmlFor="moveInDate" className="form-label text-gray-700 font-medium">
                 Preferred move-in date <span className="text-red-500">*</span>
               </Label>
-              <div className="date-input-container">
-                <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                <Input
-                  id="moveInDate"
-                  name="moveInDate"
-                  type="date"
-                  value={propertyPreferences.moveInDate}
-                  onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  placeholder="dd/mm/yyyy"
-                  required
-                />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal form-control",
+                      !parseDate(propertyPreferences.moveInDate) && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {parseDate(propertyPreferences.moveInDate) ? format(parseDate(propertyPreferences.moveInDate)!, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={parseDate(propertyPreferences.moveInDate)}
+                    onSelect={(date) => handleDateSelect('moveInDate', date)}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="latestMoveInDate" className="form-label text-gray-700 font-medium">
                 Latest move-in date <span className="text-red-500">*</span>
               </Label>
-              <div className="date-input-container">
-                <Calendar className="date-input-icon h-4 w-4 text-orange-500" />
-                <Input
-                  id="latestMoveInDate"
-                  name="latestMoveInDate"
-                  type="date"
-                  value={propertyPreferences.latestMoveInDate}
-                  onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  placeholder="dd/mm/yyyy"
-                />
-              </div>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal form-control",
+                      !parseDate(propertyPreferences.latestMoveInDate) && "text-muted-foreground"
+                    )}
+                  >
+                    <Calendar className="mr-2 h-4 w-4" />
+                    {parseDate(propertyPreferences.latestMoveInDate) ? format(parseDate(propertyPreferences.latestMoveInDate)!, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={parseDate(propertyPreferences.latestMoveInDate)}
+                    onSelect={(date) => handleDateSelect('latestMoveInDate', date)}
+                    disabled={(date) => date < new Date()}
+                    initialFocus
+                    className="p-3 pointer-events-auto"
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="space-y-2">
