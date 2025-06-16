@@ -73,11 +73,11 @@ export const useFormState = () => {
     childrenDetails: "",
     additionalRequests: "",
     householdIncome: "",
-    childrenCount: "None"
+    childrenCount: ""
   });
 
   const [dataSharing, setDataSharing] = useState({
-    utilities: false,
+    utilities: true,
     insurance: true
   });
 

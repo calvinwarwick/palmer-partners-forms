@@ -160,9 +160,10 @@ const PersonalInfoStep = ({
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal form-control",
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
                           !selectedDate && "text-muted-foreground"
                         )}
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
                         {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
@@ -229,8 +230,8 @@ const PersonalInfoStep = ({
                   />
                   
                   {toggles.adverseCredit && (
-                    <div className="mt-4 space-y-2 px-3 pb-4">
-                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700">
+                    <div className="bg-orange-50/50 rounded-lg p-4 border border-orange-200">
+                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-3 block">
                         Please provide more details about your adverse credit history:
                       </Label>
                       <Textarea
@@ -238,8 +239,8 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[320px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
-                        rows={15}
+                        className="form-control min-h-[400px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        rows={20}
                       />
                     </div>
                   )}

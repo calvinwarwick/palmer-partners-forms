@@ -115,9 +115,10 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal form-control",
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
                           !parseDate(applicant.moveInDate || '') && "text-muted-foreground"
                         )}
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
                         {parseDate(applicant.moveInDate || '') ? format(parseDate(applicant.moveInDate || '')!, "PPP") : <span>Pick a date</span>}
@@ -143,9 +144,10 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full justify-start text-left font-normal form-control",
+                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
                           !parseDate(applicant.vacateDate || '') && "text-muted-foreground"
                         )}
+                        style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
                         {parseDate(applicant.vacateDate || '') ? format(parseDate(applicant.vacateDate || '')!, "PPP") : <span>Pick a date</span>}
@@ -165,7 +167,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 {shouldShowRentalAmount(applicant.currentPropertyStatus || "") && (
                   <div className="space-y-2">
                     <Label htmlFor={`currentRentalAmount-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                      Current Rental Amount (£) <span className="text-red-500">*</span>
+                      Current Rental Amount <span className="text-red-500">*</span>
                     </Label>
                     <div className="currency-input-container">
                       <span className="currency-input-icon text-orange-500">£</span>

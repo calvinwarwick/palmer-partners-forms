@@ -114,7 +114,7 @@ const PropertyDetailsStep = ({
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal form-control",
+                      "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
                       !parseDate(propertyPreferences.moveInDate) && "text-muted-foreground"
                     )}
                   >
@@ -144,7 +144,7 @@ const PropertyDetailsStep = ({
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal form-control",
+                      "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 hover:bg-white",
                       !parseDate(propertyPreferences.latestMoveInDate) && "text-muted-foreground"
                     )}
                   >
