@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -221,30 +220,28 @@ const PersonalInfoStep = ({
                 />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <div className="p-4 border border-gray-200 rounded-lg bg-white/50">
-                    <CustomToggle
-                      id={`adverseCredit-${applicant.id}`}
-                      label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
-                      checked={toggles.adverseCredit}
-                      onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
-                    />
-                    
-                    {toggles.adverseCredit && (
-                      <div className="mt-4 space-y-2">
-                        <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700">
-                          Please provide more details about your adverse credit history:
-                        </Label>
-                        <Textarea
-                          id={`adverseCreditDetails-${applicant.id}`}
-                          value={applicant.adverseCreditDetails || ''}
-                          onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
-                          placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                          className="form-control min-h-[160px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
-                          rows={7}
-                        />
-                      </div>
-                    )}
-                  </div>
+                  <CustomToggle
+                    id={`adverseCredit-${applicant.id}`}
+                    label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
+                    checked={toggles.adverseCredit}
+                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
+                  />
+                  
+                  {toggles.adverseCredit && (
+                    <div className="mt-4 space-y-2 px-3 pb-4">
+                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700">
+                        Please provide more details about your adverse credit history:
+                      </Label>
+                      <Textarea
+                        id={`adverseCreditDetails-${applicant.id}`}
+                        value={applicant.adverseCreditDetails || ''}
+                        onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
+                        placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
+                        className="form-control min-h-[200px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        rows={8}
+                      />
+                    </div>
+                  )}
                 </div>
                 
                 <CustomToggle
