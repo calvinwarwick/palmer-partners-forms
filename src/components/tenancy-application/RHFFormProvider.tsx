@@ -155,7 +155,17 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
       const formData = form.getValues();
       
       const applicationData = {
-        propertyPreferences: formData.propertyPreferences,
+        propertyPreferences: {
+          propertyType: formData.propertyPreferences.propertyType || "",
+          streetAddress: formData.propertyPreferences.streetAddress || "",
+          postcode: formData.propertyPreferences.postcode || "",
+          maxRent: formData.propertyPreferences.maxRent || "",
+          preferredLocation: formData.propertyPreferences.preferredLocation || "",
+          moveInDate: formData.propertyPreferences.moveInDate || "",
+          latestMoveInDate: formData.propertyPreferences.latestMoveInDate || "",
+          initialTenancyTerm: formData.propertyPreferences.initialTenancyTerm || "",
+          additionalRequests: formData.propertyPreferences.additionalRequests || ""
+        },
         applicants: formData.personalInfo.applicants.map(applicant => ({
           ...applicant,
           firstName: applicant.firstName || "",
@@ -164,7 +174,18 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
           phone: applicant.phone || "",
           dateOfBirth: applicant.dateOfBirth || ""
         })) as Applicant[],
-        additionalDetails: formData.additionalDetails,
+        additionalDetails: {
+          moveInDate: formData.additionalDetails.moveInDate || "",
+          tenancyLength: formData.additionalDetails.tenancyLength || "",
+          pets: formData.additionalDetails.pets,
+          petDetails: formData.additionalDetails.petDetails || "",
+          smoking: formData.additionalDetails.smoking || false,
+          parking: formData.additionalDetails.parking || false,
+          children: formData.additionalDetails.children,
+          childrenDetails: formData.additionalDetails.childrenDetails || "",
+          additionalRequests: formData.additionalDetails.additionalRequests || "",
+          householdIncome: formData.additionalDetails.householdIncome || ""
+        },
         signature: formData.termsAndData.signature,
         dataSharing: formData.termsAndData.dataSharing
       };
