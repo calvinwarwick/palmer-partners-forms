@@ -107,8 +107,25 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div className="space-y-2">
+                  <Label htmlFor={`residencyStatus-${applicant.id}`} className="form-label text-gray-700 font-medium">
+                    Residency Status <span className="text-red-500">*</span>
+                  </Label>
+                  <Select value={applicant.residencyStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "residencyStatus", value)}>
+                    <SelectTrigger id={`residencyStatus-${applicant.id}`} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                      <SelectValue placeholder="Select residency status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="uk-citizen">UK Citizen</SelectItem>
+                      <SelectItem value="eu-citizen">EU Citizen</SelectItem>
+                      <SelectItem value="visa-holder">Visa Holder</SelectItem>
+                      <SelectItem value="indefinite-leave">Indefinite Leave to Remain</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor={`moveInDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Move In Date
+                    Move In Date <span className="text-red-500">*</span>
                   </Label>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -119,8 +136,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                           !parseDate(applicant.moveInDate || '') && "text-muted-foreground"
                         )}
                         style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                          transition: 'none'
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
@@ -143,7 +159,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor={`vacateDate-${applicant.id}`} className="form-label text-gray-700 font-medium">
-                    Vacate Date
+                    Vacate Date <span className="text-red-500">*</span>
                   </Label>
                   <Popover>
                     <PopoverTrigger asChild>
@@ -154,8 +170,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                           !parseDate(applicant.vacateDate || '') && "text-muted-foreground"
                         )}
                         style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                          transition: 'none'
+                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                         }}
                       >
                         <Calendar className="mr-2 h-4 w-4" />
@@ -176,7 +191,10 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                     </PopoverContent>
                   </Popover>
                 </div>
-                {shouldShowRentalAmount(applicant.currentPropertyStatus || "") && (
+              </div>
+
+              {shouldShowRentalAmount(applicant.currentPropertyStatus || "") && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div className="space-y-2">
                     <Label htmlFor={`currentRentalAmount-${applicant.id}`} className="form-label text-gray-700 font-medium">
                       Current Rental Amount <span className="text-red-500">*</span>
@@ -195,8 +213,8 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                       />
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
