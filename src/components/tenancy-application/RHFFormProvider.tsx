@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext } from "react";
 import { useForm, UseFormReturn, FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -187,7 +188,10 @@ const RHFFormProvider = ({ children }: RHFFormProviderProps) => {
           householdIncome: formData.additionalDetails.householdIncome || ""
         },
         signature: formData.termsAndData.signature,
-        dataSharing: formData.termsAndData.dataSharing
+        dataSharing: {
+          utilities: formData.termsAndData.dataSharing.utilities ?? false,
+          insurance: formData.termsAndData.dataSharing.insurance ?? true
+        }
       };
       
       await submitApplication(applicationData);
