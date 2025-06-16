@@ -26,12 +26,11 @@
   .form-control,
   .form-select {
     min-height: 44px;
-    transition: all 0.2s ease;
+    transition: box-shadow 0.2s ease;
   }
 
   .form-control:focus,
   .form-select:focus {
-    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(227, 92, 0, 0.15);
   }
 

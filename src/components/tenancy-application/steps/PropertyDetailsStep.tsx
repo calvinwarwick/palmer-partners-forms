@@ -23,7 +23,7 @@ const PropertyDetailsStep = ({
   return (
     <div className="space-y-8 font-lexend">
       <div>
-        <h3 className="text-2xl font-bold text-dark-grey mb-2">Rental Property Details</h3>
+        <h3 className="text-2xl font-bold text-dark-grey mb-2">Proposed Rental Property Details</h3>
         <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
         <div className="border-b border-gray-200 mb-6"></div>
       </div>

@@ -1,7 +1,7 @@
 
 /* Professional switch styling for all screen sizes */
 
-/* Base switch styling with clean design */
+/* Base switch styling with consistent dimensions */
 [data-radix-switch-root] {
   position: relative !important;
   width: 44px !important;
@@ -17,6 +17,7 @@
   padding: 0 !important;
   margin: 0 !important;
   box-sizing: border-box !important;
+  flex-shrink: 0 !important;
 }
 
 /* Checked state - orange background */
@@ -36,7 +37,7 @@
   cursor: not-allowed !important;
 }
 
-/* Switch thumb (the sliding circle) */
+/* Switch thumb (the sliding circle) with consistent sizing */
 [data-radix-switch-thumb] {
   width: 20px !important;
   height: 20px !important;
@@ -50,6 +51,7 @@
   padding: 0 !important;
   border: none !important;
   pointer-events: none !important;
+  flex-shrink: 0 !important;
 }
 
 /* Thumb position when unchecked */
@@ -62,24 +64,61 @@
   transform: translateX(22px) !important;
 }
 
-/* Mobile optimizations */
-@media (max-width: 640px) {
+/* Consistent sizing across all screen sizes */
+@media (max-width: 1000px) {
   [data-radix-switch-root] {
     width: 44px !important;
     height: 24px !important;
     min-width: 44px !important;
     min-height: 24px !important;
+    border-radius: 12px !important;
   }
   
   [data-radix-switch-thumb] {
     width: 20px !important;
     height: 20px !important;
+    border-radius: 10px !important;
+  }
+
+  /* Maintain consistent thumb positions */
+  [data-radix-switch-root][data-state="unchecked"] [data-radix-switch-thumb] {
+    transform: translateX(2px) !important;
+  }
+
+  [data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+    transform: translateX(22px) !important;
   }
 }
 
-/* Ensure switches work in all container types */
+/* Override any potential conflicting styles */
 .form-switch-container [data-radix-switch-root],
 .flex [data-radix-switch-root],
-.grid [data-radix-switch-root] {
+.grid [data-radix-switch-root],
+div [data-radix-switch-root] {
   flex-shrink: 0 !important;
+  width: 44px !important;
+  height: 24px !important;
+  min-width: 44px !important;
+  min-height: 24px !important;
+}
+
+/* Ensure switches maintain their aspect ratio in all containers */
+[data-radix-switch-root] * {
+  box-sizing: border-box !important;
+}
+
+/* Prevent any scaling or transform interference */
+@media (max-width: 640px) {
+  [data-radix-switch-root] {
+    transform: none !important;
+    scale: 1 !important;
+  }
+  
+  [data-radix-switch-thumb] {
+    transform: translateX(2px) !important;
+  }
+  
+  [data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+    transform: translateX(22px) !important;
+  }
 }
