@@ -1,5 +1,5 @@
 
-import { CustomSwitch } from "@/components/ui/custom-switch";
+import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -21,14 +21,14 @@ const FormSwitch = ({
   className 
 }: FormSwitchProps) => {
   return (
-    <div className={cn("form-switch-container", className)}>
+    <div className={cn("flex items-center justify-between gap-3 py-3", className)}>
       <Label 
         htmlFor={id} 
         className="text-sm font-medium text-gray-700 leading-relaxed cursor-pointer flex-1"
       >
         {label}
       </Label>
-      <CustomSwitch
+      <Switch
         id={id}
         checked={checked}
         onCheckedChange={onCheckedChange}

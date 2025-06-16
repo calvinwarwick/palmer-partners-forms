@@ -17,32 +17,25 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
               <img 
                 src="/lovable-uploads/fb64eebc-b467-4dd1-b635-6d1817b04c67.png" 
                 alt="Palmer & Partners P Logo" 
-                className="h-20 w-auto object-contain"
+                className="h-20 w-20"
               />
             </div>
             <div className="flex flex-col items-start">
               <img 
                 src="/lovable-uploads/8958574e-86f0-4482-9a99-322142a0f734.png" 
                 alt="Palmer & Partners Text Logo" 
-                className="h-12 w-auto object-contain"
+                className="h-12"
               />
             </div>
           </div>
           {title && (
-            <div className="text-right hidden sm:block">
+            <div className="text-right">
               <h1 className="text-xl font-bold text-white font-lexend">{title}</h1>
             </div>
           )}
         </div>
       </div>
       <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400 w-full"></div>
-      
-      {/* Mobile title section - appears below logos on mobile */}
-      {title && (
-        <div className="px-6 py-3 sm:hidden">
-          <h1 className="text-lg font-semibold text-white font-lexend text-center">{title}</h1>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import { Shield, FileText } from "lucide-react";
 import SignaturePad from "@/components/ui/signature-pad";
 
@@ -170,16 +170,15 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <div className="flex items-start gap-3">
-            <Checkbox
+          <div className="flex items-center gap-3">
+            <Switch
               id="terms"
               checked={termsAccepted}
-              onCheckedChange={(checked) => onTermsChange(!!checked)}
-              className="mt-1"
+              onCheckedChange={onTermsChange}
             />
             <Label 
               htmlFor="terms" 
-              className="text-sm font-medium text-gray-700 leading-relaxed cursor-pointer flex-1"
+              className="text-gray-700 font-medium cursor-pointer mb-0"
               onClick={() => onTermsChange(!termsAccepted)}
             >
               I confirm that I have read and understood the terms and conditions and I am bound by their contents <span className="text-red-500">*</span>
@@ -199,31 +198,31 @@ const TermsAndDataStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div className="flex items-start gap-3">
-            <Checkbox
+          <div className="flex items-center gap-3">
+            <Switch
               id="utilities"
               checked={dataSharing.utilities}
-              onCheckedChange={(checked) => handleDataSharingChange('utilities', !!checked)}
-              className="mt-1"
+              onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
             />
             <Label 
               htmlFor="utilities" 
-              className="text-sm font-medium text-gray-700 leading-relaxed cursor-pointer flex-1"
+              className="text-gray-700 font-medium cursor-pointer"
+              onClick={() => handleDataSharingChange('utilities', !dataSharing.utilities)}
             >
               I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
             </Label>
           </div>
           
-          <div className="flex items-start gap-3">
-            <Checkbox
+          <div className="flex items-center gap-3">
+            <Switch
               id="insurance"
               checked={dataSharing.insurance}
-              onCheckedChange={(checked) => handleDataSharingChange('insurance', !!checked)}
-              className="mt-1"
+              onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
             />
             <Label 
               htmlFor="insurance" 
-              className="text-sm font-medium text-gray-700 leading-relaxed cursor-pointer flex-1"
+              className="text-gray-700 font-medium cursor-pointer"
+              onClick={() => handleDataSharingChange('insurance', !dataSharing.insurance)}
             >
               I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
             </Label>

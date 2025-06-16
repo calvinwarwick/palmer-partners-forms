@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,8 +18,8 @@ const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureCha
       <h3 className="text-lg font-semibold">Review & Digital Signature</h3>
       
       <Card>
-        <CardHeader variant="gradient">
-          <CardTitle className="text-base text-orange-700">Application Summary</CardTitle>
+        <CardHeader>
+          <CardTitle className="text-base">Application Summary</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -42,8 +43,8 @@ const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureCha
       </Card>
 
       <Card>
-        <CardHeader variant="gradient">
-          <CardTitle className="text-base text-orange-700">Digital Signature *</CardTitle>
+        <CardHeader>
+          <CardTitle className="text-base">Digital Signature *</CardTitle>
           <CardDescription>
             You can either draw your signature or type your full name
           </CardDescription>
