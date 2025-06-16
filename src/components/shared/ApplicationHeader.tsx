@@ -29,13 +29,23 @@ const ApplicationHeader: React.FC<ApplicationHeaderProps> = ({
             </div>
           </div>
           {title && (
-            <div className="text-right">
+            <div className="text-right hidden sm:block">
               <h1 className="text-xl font-bold text-white font-lexend">{title}</h1>
             </div>
           )}
         </div>
       </div>
       <div className="h-1 bg-gradient-to-r from-orange-500 to-orange-400 w-full"></div>
+      
+      {/* Mobile title section - appears below logos on mobile */}
+      {title && (
+        <>
+          <div className="border-t border-white/20 sm:hidden"></div>
+          <div className="px-6 py-3 sm:hidden">
+            <h1 className="text-lg font-semibold text-white font-lexend text-center">{title}</h1>
+          </div>
+        </>
+      )}
     </div>
   );
 };
