@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, Send, FileText, Zap } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send, TestTube, Zap } from "lucide-react";
 
 interface NavigationButtonsProps {
   isFirstStep: boolean;
@@ -10,9 +10,8 @@ interface NavigationButtonsProps {
   onPrevious: () => void;
   onNext: () => void;
   onSubmit: () => void;
-  onFillTestData?: () => void;
-  onFillStepData?: () => void;
-  onClearData?: () => void;
+  onFillTestData: () => void;
+  onFillStepData: () => void;
 }
 
 const NavigationButtons = ({
@@ -27,81 +26,72 @@ const NavigationButtons = ({
   onFillStepData
 }: NavigationButtonsProps) => {
   return (
-    <div className="flex flex-col sm:flex-row justify-between items-center gap-4 pt-8 border-t border-gray-200">
-      {/* Left side - Previous button */}
-      <div className="flex-1 flex justify-start">
-        {!isFirstStep && (
-          <Button
-            variant="outline"
-            onClick={onPrevious}
-            className="flex items-center gap-2 text-gray-600 border-gray-300 hover:bg-gray-50"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-          >
-            <ChevronLeft className="h-4 w-4" />
-            Previous
-          </Button>
-        )}
-      </div>
-
-      {/* Center - Test data buttons */}
-      <div className="flex gap-2">
-        {onFillStepData && (
+    <div className="pt-8">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="flex gap-2 order-2 sm:order-1">
           <Button
             type="button"
             variant="outline"
-            onClick={onFillStepData}
-            className="flex items-center gap-2 text-orange-600 border-orange-300 hover:bg-orange-50"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+            size="sm"
+            onClick={onFillTestData}
+            className="text-xs border-blue-300 text-blue-600 hover:bg-blue-50"
           >
-            <Zap className="h-4 w-4" />
+            <TestTube className="h-3 w-3 mr-1" />
+            Fill All Test Data
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onFillStepData}
+            className="text-xs border-green-300 text-green-600 hover:bg-green-50"
+          >
+            <Zap className="h-3 w-3 mr-1" />
             Fill Step
           </Button>
-        )}
-        {onFillTestData && (
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onFillTestData}
-            className="flex items-center gap-2 text-orange-600 border-orange-300 hover:bg-orange-50"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-          >
-            <FileText className="h-4 w-4" />
-            Fill Form
-          </Button>
-        )}
-      </div>
+        </div>
 
-      {/* Right side - Next/Submit button */}
-      <div className="flex-1 flex justify-end">
-        {isLastStep ? (
-          <Button
-            onClick={onSubmit}
-            disabled={!canSubmit || isSubmitting}
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-          >
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                Submitting...
-              </>
-            ) : (
-              <>
-                <Send className="h-4 w-4" />
-                Submit Application
-              </>
-            )}
-          </Button>
-        ) : (
-          <Button
-            onClick={onNext}
-            className="bg-orange-500 hover:bg-orange-600 text-white flex items-center gap-2"
-            style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-          >
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
-        )}
+        <div className="flex gap-3 order-1 sm:order-2">
+          {!isFirstStep && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onPrevious}
+              className="min-w-[120px] border-gray-300 hover:bg-gray-50"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Previous
+            </Button>
+          )}
+
+          {isLastStep ? (
+            <Button
+              type="button"
+              onClick={onSubmit}
+              disabled={!canSubmit || isSubmitting}
+              className="min-w-[120px] bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              {isSubmitting ? (
+                "Submitting..."
+              ) : (
+                <>
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Application
+                </>
+              )}
+            </Button>
+          ) : (
+            <Button
+              type="button"
+              onClick={onNext}
+              disabled={!canSubmit}
+              className="min-w-[120px] bg-orange-500 hover:bg-orange-600 text-white"
+            >
+              Next
+              <ArrowRight className="h-4 w-4 ml-2" />
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

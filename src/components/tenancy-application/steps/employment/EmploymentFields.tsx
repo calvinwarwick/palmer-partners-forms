@@ -38,10 +38,10 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
 
       {/* Self-Employment Information Message */}
       {applicant.employmentStatus === "self-employed" && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
           <div className="flex items-start gap-3">
-            <Info className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-            <div className="text-sm text-blue-800">
+            <Info className="h-5 w-5 text-orange-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-orange-800">
               <h4 className="font-semibold mb-2">Self-Employment Information</h4>
               <p className="mb-3">
                 We note you have stated that you are self-employed. To ensure you have the best chance of successfully completing the referencing procedure, please note the following:

@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Trash2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
+import GuarantorSummary from "@/components/applicants/GuarantorSummary";
 import { useState } from "react";
 
 interface PersonalInfoStepProps {
@@ -49,6 +51,12 @@ const PersonalInfoStep = ({
       adverseCredit: false,
       guarantorRequired: false
     };
+  };
+
+  const handleDeleteGuarantor = (applicantId: string) => {
+    onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorName' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorRelationship' as keyof Applicant, '');
   };
 
   return (
@@ -179,27 +187,30 @@ const PersonalInfoStep = ({
                 />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <CustomToggle
-                    id={`adverseCredit-${applicant.id}`}
-                    label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
-                    checked={toggles.adverseCredit}
-                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
-                  />
-                  
-                  {toggles.adverseCredit && (
-                    <div className="ml-0 md:ml-4 space-y-2">
-                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700">
-                        Please provide more details about your adverse credit history:
-                      </Label>
-                      <Textarea
-                        id={`adverseCreditDetails-${applicant.id}`}
-                        value={applicant.adverseCreditDetails || ''}
-                        onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
-                        placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[180px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
-                      />
-                    </div>
-                  )}
+                  <div className="p-4 border border-gray-200 rounded-lg bg-white/50">
+                    <CustomToggle
+                      id={`adverseCredit-${applicant.id}`}
+                      label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
+                      checked={toggles.adverseCredit}
+                      onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
+                    />
+                    
+                    {toggles.adverseCredit && (
+                      <div className="mt-4 space-y-2">
+                        <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700">
+                          Please provide more details about your adverse credit history:
+                        </Label>
+                        <Textarea
+                          id={`adverseCreditDetails-${applicant.id}`}
+                          value={applicant.adverseCreditDetails || ''}
+                          onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
+                          placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
+                          className="form-control min-h-[120px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                          rows={5}
+                        />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
                 <CustomToggle
@@ -211,14 +222,25 @@ const PersonalInfoStep = ({
               </div>
               
               {toggles.guarantorRequired && (
-                <div className="flex justify-end pt-4">
-                  <Button
-                    variant="outline"
-                    onClick={() => onGuarantorOpen(applicant)}
-                    className="border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors"
-                  >
-                    Add Guarantor
-                  </Button>
+                <div className="space-y-4">
+                  {(applicant as any).guarantorAdded && (applicant as any).guarantorName ? (
+                    <GuarantorSummary
+                      guarantorName={(applicant as any).guarantorName}
+                      guarantorRelationship={(applicant as any).guarantorRelationship}
+                      onEdit={() => onGuarantorOpen(applicant)}
+                      onDelete={() => handleDeleteGuarantor(applicant.id)}
+                    />
+                  ) : (
+                    <div className="flex justify-end pt-4">
+                      <Button
+                        variant="outline"
+                        onClick={() => onGuarantorOpen(applicant)}
+                        className="border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors"
+                      >
+                        Add Guarantor
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
             </CardContent>
