@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -99,7 +98,7 @@ const PersonalInfoStep = ({
         return (
           <Card key={applicant.id} className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
             <CardHeader className="pb-3 md:pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
-              <CardTitle className="text-base md:text-lg font-semibold flex items-center justify-between">
+              <CardTitle className="text-base md:text-lg font-semibold flex items-center">
                 <div className="flex items-center gap-2 md:gap-3">
                   <div className="p-1.5 md:p-2 bg-white/20 rounded-lg">
                     <User className="h-4 w-4 md:h-5 md:w-5 text-white" />
@@ -111,9 +110,6 @@ const PersonalInfoStep = ({
                       </span>}
                   </span>
                 </div>
-                {applicants.length > 1 && <Button variant="ghost" size="sm" onClick={() => onRemoveApplicant(applicant.id)} className="text-white hover:bg-white/20 h-7 w-7 md:h-8 md:w-8 p-0">
-                    <Calendar className="h-3 w-3 md:h-4 md:w-4" />
-                  </Button>}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
