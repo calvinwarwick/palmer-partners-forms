@@ -36,6 +36,24 @@
     flex-shrink: 0 !important;
   }
 
+  /* Mobile toggle switches - ensure proper sizing */
+  [data-radix-switch-root] {
+    min-width: 56px !important;
+    min-height: 32px !important;
+    width: 56px !important;
+    height: 32px !important;
+  }
+
+  [data-radix-switch-thumb] {
+    width: 28px !important;
+    height: 28px !important;
+    transform: translateX(2px) !important;
+  }
+
+  [data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+    transform: translateX(26px) !important;
+  }
+
   .btn,
   button {
     min-height: 52px !important;
