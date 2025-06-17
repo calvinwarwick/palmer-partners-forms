@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Send, TestTube, Zap } from "lucide-react";
 interface NavigationButtonsProps {
@@ -27,7 +28,7 @@ const NavigationButtons = ({
         <div className="flex gap-2 order-2 sm:order-1">
           <Button type="button" variant="outline" size="sm" onClick={onFillTestData} className="text-xs border-gray-300 text-gray-600 hover:bg-gray-900 hover:text-white ">
             <TestTube className="h-3 w-3 mr-1 hover:bg-gray-200 " />
-            Fill All Test Data
+            Fill All Data
           </Button>
           <Button type="button" variant="outline" size="sm" onClick={onFillStepData} className="text-xs border-gray-300 text-gray-600 hover:bg-gray-900 hover:text-white ">
             <Zap className="h-3 w-3 mr-1" />
