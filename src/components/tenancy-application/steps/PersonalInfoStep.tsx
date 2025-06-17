@@ -15,7 +15,6 @@ interface PersonalInfoStepProps {
   onAddApplicant: () => void;
   onRemoveApplicant: (id: string) => void;
   onGuarantorOpen: (applicant: Applicant) => void;
-  onGuarantorDelete: (applicantId: string) => void;
 }
 
 const PersonalInfoStep = ({ 
@@ -23,8 +22,7 @@ const PersonalInfoStep = ({
   onUpdateApplicant, 
   onAddApplicant, 
   onRemoveApplicant,
-  onGuarantorOpen,
-  onGuarantorDelete
+  onGuarantorOpen
 }: PersonalInfoStepProps) => {
   
   const formatDateForDisplay = (dateString: string) => {
@@ -44,6 +42,23 @@ const PersonalInfoStep = ({
       const isoDate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
       onUpdateApplicant(applicantId, 'dateOfBirth', isoDate);
     }
+  };
+
+  const handleGuarantorDelete = (applicantId: string) => {
+    // Reset all guarantor fields for this applicant
+    onUpdateApplicant(applicantId, 'guarantorAdded', 'false');
+    onUpdateApplicant(applicantId, 'guarantorName', '');
+    onUpdateApplicant(applicantId, 'guarantorLastName', '');
+    onUpdateApplicant(applicantId, 'guarantorEmail', '');
+    onUpdateApplicant(applicantId, 'guarantorPhone', '');
+    onUpdateApplicant(applicantId, 'guarantorDateOfBirth', '');
+    onUpdateApplicant(applicantId, 'guarantorEmploymentStatus', '');
+    onUpdateApplicant(applicantId, 'guarantorCompanyName', '');
+    onUpdateApplicant(applicantId, 'guarantorJobTitle', '');
+    onUpdateApplicant(applicantId, 'guarantorIncome', '');
+    onUpdateApplicant(applicantId, 'guarantorLengthOfService', '');
+    onUpdateApplicant(applicantId, 'guarantorAddress', '');
+    onUpdateApplicant(applicantId, 'guarantorPostcode', '');
   };
 
   return (
@@ -209,7 +224,7 @@ const PersonalInfoStep = ({
                   guarantorEmail={applicant.guarantorEmail}
                   guarantorPhone={applicant.guarantorPhone}
                   onEdit={() => onGuarantorOpen(applicant)}
-                  onDelete={() => onGuarantorDelete(applicant.id)}
+                  onDelete={() => handleGuarantorDelete(applicant.id)}
                 />
               ) : (
                 <Button

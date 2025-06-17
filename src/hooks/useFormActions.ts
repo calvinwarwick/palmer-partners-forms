@@ -70,13 +70,14 @@ export const useFormActions = ({
     // Guarantor fields
     guarantorAdded: false,
     guarantorName: "",
+    guarantorLastName: "",
     guarantorRelationship: "",
     guarantorEmail: "",
     guarantorPhone: "",
     guarantorDateOfBirth: "",
     guarantorAddress: "",
     guarantorPostcode: "",
-    guarantorEmployment: "",
+    guarantorEmploymentStatus: "",
     guarantorCompanyName: "",
     guarantorJobTitle: "",
     guarantorIncome: "",
@@ -141,18 +142,18 @@ export const useFormActions = ({
           ? { 
               ...applicant, 
               guarantorAdded: true,
-              guarantorName: `${guarantorData.firstName} ${guarantorData.lastName}`,
-              guarantorRelationship: guarantorData.relationship,
-              guarantorEmail: guarantorData.email,
-              guarantorPhone: guarantorData.phone,
-              guarantorDateOfBirth: guarantorData.dateOfBirth,
-              guarantorAddress: guarantorData.address,
-              guarantorPostcode: guarantorData.postcode,
-              guarantorEmployment: guarantorData.employment,
-              guarantorCompanyName: guarantorData.companyName,
-              guarantorJobTitle: guarantorData.jobTitle,
-              guarantorIncome: guarantorData.annualIncome,
-              guarantorLengthOfService: guarantorData.lengthOfService
+              guarantorName: guarantorData.guarantorName,
+              guarantorLastName: guarantorData.guarantorLastName,
+              guarantorEmail: guarantorData.guarantorEmail,
+              guarantorPhone: guarantorData.guarantorPhone,
+              guarantorDateOfBirth: guarantorData.guarantorDateOfBirth,
+              guarantorAddress: guarantorData.guarantorAddress,
+              guarantorPostcode: guarantorData.guarantorPostcode,
+              guarantorEmploymentStatus: guarantorData.guarantorEmploymentStatus,
+              guarantorCompanyName: guarantorData.guarantorCompanyName,
+              guarantorJobTitle: guarantorData.guarantorJobTitle,
+              guarantorIncome: guarantorData.guarantorIncome,
+              guarantorLengthOfService: guarantorData.guarantorLengthOfService
             }
           : applicant
       );

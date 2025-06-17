@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -326,7 +325,6 @@ const Applicants = () => {
         {showGuarantorForm && selectedApplicant && (
           <GuarantorForm
             applicant={selectedApplicant}
-            applicationId={(selectedApplicant as ApplicantWithApplication).applicationId}
             isOpen={showGuarantorForm}
             onClose={() => setShowGuarantorForm(false)}
             onSave={handleGuarantorSaved}

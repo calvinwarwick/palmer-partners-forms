@@ -94,7 +94,6 @@ const TenancyApplicationForm = () => {
                 {guarantorFormOpen && selectedApplicantForGuarantor && (
                   <GuarantorForm
                     applicant={selectedApplicantForGuarantor}
-                    applicationId="current-application"
                     isOpen={guarantorFormOpen}
                     onClose={() => setGuarantorFormOpen(false)}
                     onSave={handleGuarantorSave}

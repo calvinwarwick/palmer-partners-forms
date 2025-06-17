@@ -30,7 +30,6 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
     setTermsAccepted,
     addApplicant,
     removeApplicant,
-    handleApplicantCountChange,
     handleGuarantorOpen
   } = formContext;
 
@@ -49,7 +48,6 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
           onAddApplicant={addApplicant}
           onRemoveApplicant={removeApplicant}
           onUpdateApplicant={updateApplicant}
-          onApplicantCountChange={handleApplicantCountChange}
           onGuarantorOpen={handleGuarantorOpen}
         />
       );

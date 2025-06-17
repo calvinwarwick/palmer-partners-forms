@@ -113,6 +113,7 @@ export interface AdditionalDetails {
   childrenDetails: string;
   additionalRequests: string;
   householdIncome: string;
+  conditionsOfOffer: string;
   
   // Additional fields used in validation and forms
   hasPets?: boolean;
