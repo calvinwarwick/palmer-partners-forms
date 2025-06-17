@@ -37,18 +37,24 @@
     touch-action: manipulation;
   }
 
-  .checkbox-container:has(input:checked) {
+  .checkbox-container:has([data-state="checked"]) {
     @apply border-orange-300 bg-orange-50;
   }
 
   /* Mobile checkbox specific sizing - larger touch targets */
   .mobile-checkbox {
-    @apply w-6 h-6 !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
+    @apply w-7 h-7 !important;
+    min-width: 28px !important;
+    min-height: 28px !important;
     flex-shrink: 0 !important;
     border-width: 2px !important;
     border-radius: 6px !important;
+    margin-top: 0 !important;
+  }
+
+  /* Override any conflicting styles for mobile checkboxes */
+  .mobile-checkbox[data-state="checked"] {
+    @apply bg-white border-orange-500 !important;
   }
 
   /* Mobile checkbox labels - larger text and better spacing */
@@ -56,6 +62,7 @@
     @apply text-base font-medium text-gray-800 leading-relaxed cursor-pointer select-none;
     line-height: 1.5 !important;
     margin-top: 2px;
+    padding-top: 2px;
   }
 
   .btn,
@@ -86,8 +93,21 @@
     min-height: 56px !important;
   }
 
+  .checkbox-container:has([data-state="checked"]) {
+    @apply border-orange-300 bg-orange-50;
+  }
+
+  .mobile-checkbox {
+    @apply w-5 h-5 !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    flex-shrink: 0 !important;
+    margin-top: 0 !important;
+  }
+
   .checkbox-label {
     @apply text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none;
+    padding-top: 1px;
   }
 }
 
@@ -99,7 +119,20 @@
     min-height: 48px !important;
   }
 
+  .checkbox-container:has([data-state="checked"]) {
+    @apply border-orange-300 bg-orange-50;
+  }
+
+  .mobile-checkbox {
+    @apply w-4 h-4 !important;
+    min-width: 16px !important;
+    min-height: 16px !important;
+    flex-shrink: 0 !important;
+    margin-top: 0 !important;
+  }
+
   .checkbox-label {
     @apply text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none;
+    padding-top: 0;
   }
 }
