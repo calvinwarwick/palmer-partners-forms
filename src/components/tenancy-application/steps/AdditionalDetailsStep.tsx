@@ -44,17 +44,13 @@ const AdditionalDetailsStep = ({
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Pets Section */}
         <div className="space-y-4">
-          <div className="form-switch-container">
-            <Label htmlFor="pets" className="text-sm font-medium text-gray-700">
-              Do you have any pets? <span className="text-red-500">*</span>
-            </Label>
-            <CustomToggle
-              id="pets"
-              checked={additionalDetails.pets}
-              onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-              className="ml-auto"
-            />
-          </div>
+          <CustomToggle
+            id="pets"
+            label="Do you have any pets?"
+            checked={additionalDetails.pets}
+            onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
+            required={true}
+          />
           
           {additionalDetails.pets && (
             <div>
@@ -76,17 +72,13 @@ const AdditionalDetailsStep = ({
 
         {/* Children Section */}
         <div className="space-y-4">
-          <div className="form-switch-container">
-            <Label htmlFor="children" className="text-sm font-medium text-gray-700">
-              Do you have any children? <span className="text-red-500">*</span>
-            </Label>
-            <CustomToggle
-              id="children"
-              checked={additionalDetails.children}
-              onCheckedChange={(checked) => onUpdateDetails("children", checked)}
-              className="ml-auto"
-            />
-          </div>
+          <CustomToggle
+            id="children"
+            label="Do you have any children?"
+            checked={additionalDetails.children}
+            onCheckedChange={(checked) => onUpdateDetails("children", checked)}
+            required={true}
+          />
           
           {additionalDetails.children && (
             <div>
