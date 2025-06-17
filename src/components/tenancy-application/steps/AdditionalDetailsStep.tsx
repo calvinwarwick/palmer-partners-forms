@@ -172,29 +172,29 @@ const AdditionalDetailsStep = ({
         </CardContent>
       </Card>
 
-      {/* Additional Requests */}
+      {/* Conditions of Offer */}
       <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
         <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-xl">
               <MessageSquare className="h-5 w-5" />
             </div>
-            Additional Comments
+            Conditions of Offer
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div>
-            <Label htmlFor="additionalRequests" className="text-sm font-medium text-gray-700 mb-2 block">
-              Additional Requests or Comments
-            </Label>
             <Textarea
-              id="additionalRequests"
-              value={additionalDetails.additionalRequests || ""}
-              onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
-              placeholder="Any additional requests or comments..."
+              id="conditionsOfOffer"
+              value={additionalDetails.conditionsOfOffer || ""}
+              onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
+              placeholder="Please provide any conditions attached to your offer that you would like to discuss with your landlord."
               className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
               style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
             />
+            <p className="text-sm text-muted-foreground mt-2">
+              If approved, these conditions will be added to your tenancy agreement.
+            </p>
           </div>
         </CardContent>
       </Card>
