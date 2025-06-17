@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Shield, FileText, PenTool } from "lucide-react";
 import SignaturePad from "@/components/ui/signature-pad";
-import { Checkbox } from "@/components/ui/checkbox";
+import { CustomToggle } from "@/components/ui/custom-toggle";
 
 interface TermsAndDataStepProps {
   dataSharing: {
@@ -171,22 +171,13 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <div className="checkbox-container">
-            <Checkbox 
-              id="terms"
-              checked={termsAccepted}
-              onCheckedChange={onTermsChange}
-              className="mobile-checkbox mt-1"
-              required={true}
-            />
-            <Label 
-              htmlFor="terms" 
-              className="checkbox-label flex-1"
-            >
-              I confirm that I have read and understood the terms and conditions and I am bound by their contents
-              <span className="text-red-500 ml-1">*</span>
-            </Label>
-          </div>
+          <CustomToggle
+            id="terms"
+            label="I confirm that I have read and understood the terms and conditions and I am bound by their contents"
+            checked={termsAccepted}
+            onCheckedChange={onTermsChange}
+            required={true}
+          />
         </CardContent>
       </Card>
 
@@ -201,35 +192,19 @@ const TermsAndDataStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div className="checkbox-container">
-            <Checkbox 
-              id="utilities"
-              checked={dataSharing.utilities}
-              onCheckedChange={(checked) => handleDataSharingChange('utilities', !!checked)}
-              className="mobile-checkbox mt-1"
-            />
-            <Label 
-              htmlFor="utilities" 
-              className="checkbox-label flex-1"
-            >
-              I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
-            </Label>
-          </div>
+          <CustomToggle
+            id="utilities"
+            label="I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts."
+            checked={dataSharing.utilities}
+            onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
+          />
           
-          <div className="checkbox-container">
-            <Checkbox 
-              id="insurance"
-              checked={dataSharing.insurance}
-              onCheckedChange={(checked) => handleDataSharingChange('insurance', !!checked)}
-              className="mobile-checkbox mt-1"
-            />
-            <Label 
-              htmlFor="insurance" 
-              className="checkbox-label flex-1"
-            >
-              I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
-            </Label>
-          </div>
+          <CustomToggle
+            id="insurance"
+            label="I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options."
+            checked={dataSharing.insurance}
+            onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
+          />
 
           <p className="text-sm text-gray-500 mt-4">
             We may share your details with relevant providers to set up utilities, Council Tax, and discuss insurance options in line with GDPR.

@@ -8,7 +8,6 @@ interface GuarantorSummaryProps {
   guarantorName: string;
   guarantorRelationship: string;
   guarantorEmail?: string;
-  guarantorPhone?: string;
   onEdit: () => void;
   onDelete: () => void;
 }
@@ -17,7 +16,6 @@ const GuarantorSummary = ({
   guarantorName, 
   guarantorRelationship, 
   guarantorEmail,
-  guarantorPhone,
   onEdit, 
   onDelete 
 }: GuarantorSummaryProps) => {
@@ -42,11 +40,6 @@ const GuarantorSummary = ({
               {guarantorEmail && (
                 <p className="text-sm text-gray-600">
                   Email: <span className="font-medium">{guarantorEmail}</span>
-                </p>
-              )}
-              {guarantorPhone && (
-                <p className="text-sm text-gray-600">
-                  Phone: <span className="font-medium">{guarantorPhone}</span>
                 </p>
               )}
             </div>

@@ -28,39 +28,35 @@
     margin-bottom: 12px !important;
   }
 
-  /* Enhanced mobile toggle switch styling */
-  .toggle-container {
-    @apply flex items-center justify-between gap-4 p-4 rounded-xl border-2 border-gray-200 bg-white;
-    @apply hover:bg-orange-50 hover:border-orange-200 transition-all duration-200;
-    @apply active:bg-orange-100 active:scale-[0.98];
-    min-height: 60px !important;
-    touch-action: manipulation;
-  }
-
-  .toggle-container:has(.toggle-switch[data-state="checked"]) {
-    @apply border-orange-300 bg-orange-50;
-  }
-
-  /* Mobile toggle switch specific sizing - larger touch targets */
-  .toggle-switch {
-    @apply h-8 w-14 !important;
-    min-width: 56px !important;
-    min-height: 32px !important;
+  /* Mobile checkbox sizing */
+  .mobile-checkbox {
+    @apply w-6 h-6 !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
     flex-shrink: 0 !important;
   }
 
-  .toggle-thumb {
-    @apply h-7 w-7 !important;
-    min-width: 28px !important;
-    min-height: 28px !important;
+  /* Form switch container improvements for mobile */
+  .form-switch-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+    padding: 12px 0 !important;
+    width: 100% !important;
+    min-height: 48px !important;
+    box-sizing: border-box !important;
   }
 
-  /* Mobile toggle labels - larger text and better spacing */
-  .toggle-label {
-    @apply text-base font-medium text-gray-800 leading-relaxed cursor-pointer select-none;
-    line-height: 1.5 !important;
-    margin-top: 2px;
-    padding-top: 2px;
+  .form-switch-container label {
+    flex: 1 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
+    color: #374151 !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    padding-right: 12px !important;
   }
 
   .btn,
@@ -80,67 +76,5 @@
   textarea {
     min-height: 120px !important;
     resize: vertical;
-  }
-}
-
-/* Tablet adjustments */
-@media (min-width: 641px) and (max-width: 1024px) {
-  .toggle-container {
-    @apply flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200 bg-white;
-    @apply hover:bg-gray-50 transition-colors;
-    min-height: 56px !important;
-  }
-
-  .toggle-container:has(.toggle-switch[data-state="checked"]) {
-    @apply border-orange-300 bg-orange-50;
-  }
-
-  .toggle-switch {
-    @apply h-7 w-12 !important;
-    min-width: 48px !important;
-    min-height: 28px !important;
-    flex-shrink: 0 !important;
-  }
-
-  .toggle-thumb {
-    @apply h-6 w-6 !important;
-    min-width: 24px !important;
-    min-height: 24px !important;
-  }
-
-  .toggle-label {
-    @apply text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none;
-    padding-top: 1px;
-  }
-}
-
-/* Desktop - smaller, more compact */
-@media (min-width: 1025px) {
-  .toggle-container {
-    @apply flex items-center justify-between gap-3 p-3 rounded-lg border border-gray-200 bg-white;
-    @apply hover:bg-gray-50 transition-colors;
-    min-height: 48px !important;
-  }
-
-  .toggle-container:has(.toggle-switch[data-state="checked"]) {
-    @apply border-orange-300 bg-orange-50;
-  }
-
-  .toggle-switch {
-    @apply h-6 w-11 !important;
-    min-width: 44px !important;
-    min-height: 24px !important;
-    flex-shrink: 0 !important;
-  }
-
-  .toggle-thumb {
-    @apply h-5 w-5 !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
-  }
-
-  .toggle-label {
-    @apply text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none;
-    padding-top: 0;
   }
 }

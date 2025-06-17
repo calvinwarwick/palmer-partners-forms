@@ -57,16 +57,7 @@ export const useFormState = () => {
       noticePeriod: "",
       noticePeriodLength: "",
       previousLandlordName: "",
-      previousLandlordPhone: "",
-      // Guarantor fields
-      guarantorAdded: false,
-      guarantorName: "",
-      guarantorRelationship: "",
-      guarantorEmail: "",
-      guarantorPhone: "",
-      guarantorAddress: "",
-      guarantorEmployment: "",
-      guarantorIncome: ""
+      previousLandlordPhone: ""
     }
   ]);
 

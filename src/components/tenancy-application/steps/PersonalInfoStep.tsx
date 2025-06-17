@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
@@ -56,19 +56,9 @@ const PersonalInfoStep = ({
   };
 
   const handleDeleteGuarantor = (applicantId: string) => {
-    onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, 'false');
+    onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, '');
     onUpdateApplicant(applicantId, 'guarantorName' as keyof Applicant, '');
     onUpdateApplicant(applicantId, 'guarantorRelationship' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorEmail' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorPhone' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorDateOfBirth' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorAddress' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorPostcode' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorEmployment' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorCompanyName' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorJobTitle' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorIncome' as keyof Applicant, '');
-    onUpdateApplicant(applicantId, 'guarantorLengthOfService' as keyof Applicant, '');
   };
 
   const handleDateOfBirthChange = (applicantId: string, value: string) => {
@@ -160,38 +150,12 @@ const PersonalInfoStep = ({
                 </div>
               </div>
 
-              {/* Enhanced Checkbox Questions */}
-              <div className="space-y-3 md:space-y-4 pt-4 md:pt-6">
-                <div className="checkbox-container">
-                  <Checkbox 
-                    id={`ukPassport-${applicant.id}`}
-                    checked={toggles.ukPassport}
-                    onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', !!checked)}
-                    className="mobile-checkbox mt-1"
-                  />
-                  <Label 
-                    htmlFor={`ukPassport-${applicant.id}`} 
-                    className="checkbox-label flex-1"
-                  >
-                    Do you hold a UK or Republic of Ireland passport?
-                  </Label>
-                </div>
+              {/* Switch Questions */}
+              <div className="space-y-4 md:space-y-6 pt-4 md:pt-6">
+                <CustomToggle id={`ukPassport-${applicant.id}`} label="Do you hold a UK or Republic of Ireland passport?" checked={toggles.ukPassport} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', checked)} />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <div className="checkbox-container">
-                    <Checkbox 
-                      id={`adverseCredit-${applicant.id}`}
-                      checked={toggles.adverseCredit}
-                      onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', !!checked)}
-                      className="mobile-checkbox mt-1"
-                    />
-                    <Label 
-                      htmlFor={`adverseCredit-${applicant.id}`} 
-                      className="checkbox-label flex-1"
-                    >
-                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
-                    </Label>
-                  </div>
+                  <CustomToggle id={`adverseCredit-${applicant.id}`} label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?" checked={toggles.adverseCredit} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', checked)} />
                   
                   {toggles.adverseCredit && <Textarea id={`adverseCreditDetails-${applicant.id}`} value={applicant.adverseCreditDetails || ''} onChange={e => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)} placeholder="Please provide more details about your adverse credit history:" className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3" rows={25} style={{
                   minHeight: '200px',
@@ -199,46 +163,16 @@ const PersonalInfoStep = ({
                 }} />}
                 </div>
                 
-                <div className="checkbox-container">
-                  <Checkbox 
-                    id={`guarantorRequired-${applicant.id}`}
-                    checked={toggles.guarantorRequired}
-                    onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', !!checked)}
-                    className="mobile-checkbox mt-1"
-                  />
-                  <Label 
-                    htmlFor={`guarantorRequired-${applicant.id}`} 
-                    className="checkbox-label flex-1"
-                  >
-                    If required, can you supply a guarantor for this proposed tenancy?
-                  </Label>
-                </div>
+                <CustomToggle id={`guarantorRequired-${applicant.id}`} label="If required, can you supply a guarantor for this proposed tenancy?" checked={toggles.guarantorRequired} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)} />
               </div>
               
-              {toggles.guarantorRequired && (
-                <div className="space-y-4">
-                  {applicant.guarantorAdded && applicant.guarantorName ? (
-                    <GuarantorSummary 
-                      guarantorName={applicant.guarantorName} 
-                      guarantorRelationship={applicant.guarantorRelationship || ''} 
-                      guarantorEmail={applicant.guarantorEmail}
-                      guarantorPhone={applicant.guarantorPhone}
-                      onEdit={() => onGuarantorOpen(applicant)} 
-                      onDelete={() => handleDeleteGuarantor(applicant.id)} 
-                    />
-                  ) : (
-                    <div className="flex justify-end pt-4">
-                      <Button 
-                        variant="outline" 
-                        onClick={() => onGuarantorOpen(applicant)} 
-                        className="border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors"
-                      >
+              {toggles.guarantorRequired && <div className="space-y-4">
+                  {(applicant as any).guarantorAdded && (applicant as any).guarantorName ? <GuarantorSummary guarantorName={(applicant as any).guarantorName} guarantorRelationship={(applicant as any).guarantorRelationship} onEdit={() => onGuarantorOpen(applicant)} onDelete={() => handleDeleteGuarantor(applicant.id)} /> : <div className="flex justify-end pt-4">
+                      <Button variant="outline" onClick={() => onGuarantorOpen(applicant)} className="border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors">
                         Add Guarantor
                       </Button>
-                    </div>
-                  )}
-                </div>
-              )}
+                    </div>}
+                </div>}
             </CardContent>
           </Card>
         );

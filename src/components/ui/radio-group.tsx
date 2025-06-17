@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as RadioGroupPrimitive from "@radix-ui/react-radio-group"
 import { Circle } from "lucide-react"
@@ -27,22 +26,13 @@ const RadioGroupItem = React.forwardRef<
     <RadioGroupPrimitive.Item
       ref={ref}
       className={cn(
-        // Mobile-first: Large touch targets for mobile
-        "peer w-6 h-6 shrink-0 rounded-full border-2 border-orange-400 bg-white shadow-sm",
-        "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 focus-visible:ring-offset-2",
-        "disabled:cursor-not-allowed disabled:opacity-50",
-        "data-[state=checked]:bg-white data-[state=checked]:border-orange-500",
-        "hover:bg-orange-50 hover:border-orange-500 transition-colors duration-200",
-        // Tablet sizing
-        "sm:w-5 sm:h-5 sm:border",
-        // Desktop sizing  
-        "md:w-4 md:h-4",
+        "aspect-square h-4 w-4 rounded-full border border-primary text-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
         className
       )}
       {...props}
     >
       <RadioGroupPrimitive.Indicator className="flex items-center justify-center">
-        <Circle className="h-2.5 w-2.5 sm:h-2 sm:w-2 md:h-1.5 md:w-1.5 fill-orange-500 text-orange-500" />
+        <Circle className="h-2.5 w-2.5 fill-current text-current" />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   )

@@ -1,3 +1,4 @@
+
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -114,45 +115,6 @@ const ApplicationPreviewContent = ({ application }: ApplicationPreviewContentPro
                 <DataRow label="Requires Guarantor" value={application.additional_details?.guarantorRequired === 'yes' ? 'Yes' : 'No'} />
                 {application.additional_details?.pets === 'yes' && application.additional_details?.petDetails && (
                   <DataRow label="Pet Details" value={application.additional_details.petDetails} />
-                )}
-
-                {/* Guarantor Information - Only show if guarantor is added */}
-                {applicant.guarantorAdded && applicant.guarantorName && (
-                  <>
-                    <SubsectionHeader title="Guarantor Information" />
-                    <DataRow label="Guarantor Name" value={applicant.guarantorName} />
-                    <DataRow label="Relationship" value={applicant.guarantorRelationship} />
-                    {applicant.guarantorEmail && (
-                      <DataRow label="Guarantor Email" value={applicant.guarantorEmail} />
-                    )}
-                    {applicant.guarantorPhone && (
-                      <DataRow label="Guarantor Phone" value={applicant.guarantorPhone} />
-                    )}
-                    {applicant.guarantorDateOfBirth && (
-                      <DataRow label="Guarantor Date of Birth" value={applicant.guarantorDateOfBirth} />
-                    )}
-                    {applicant.guarantorAddress && (
-                      <DataRow label="Guarantor Address" value={applicant.guarantorAddress} />
-                    )}
-                    {applicant.guarantorPostcode && (
-                      <DataRow label="Guarantor Postcode" value={applicant.guarantorPostcode} />
-                    )}
-                    {applicant.guarantorEmployment && (
-                      <DataRow label="Guarantor Employment" value={applicant.guarantorEmployment} />
-                    )}
-                    {applicant.guarantorCompanyName && (
-                      <DataRow label="Guarantor Company" value={applicant.guarantorCompanyName} />
-                    )}
-                    {applicant.guarantorJobTitle && (
-                      <DataRow label="Guarantor Job Title" value={applicant.guarantorJobTitle} />
-                    )}
-                    {applicant.guarantorIncome && (
-                      <DataRow label="Guarantor Annual Income" value={`£${applicant.guarantorIncome}`} />
-                    )}
-                    {applicant.guarantorLengthOfService && (
-                      <DataRow label="Guarantor Length of Service" value={applicant.guarantorLengthOfService} />
-                    )}
-                  </>
                 )}
               </TableBody>
             </Table>
