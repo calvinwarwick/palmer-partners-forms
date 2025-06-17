@@ -19,6 +19,19 @@ const PropertyDetailsStep = ({
   onFillAllTestData,
 }: PropertyDetailsStepProps) => {
 
+  const handleDateChange = (field: keyof PropertyPreferences, value: string) => {
+    // Extract parts and limit year to 4 digits
+    const parts = value.split('-');
+    if (parts.length === 3) {
+      const [year, month, day] = parts;
+      const limitedYear = year.slice(0, 4);
+      const formattedDate = `${limitedYear}-${month}-${day}`;
+      onUpdatePreferences(field, formattedDate);
+    } else {
+      onUpdatePreferences(field, value);
+    }
+  };
+
   return (
     <div className="space-y-8 font-lexend">
       <div>
@@ -49,6 +62,10 @@ const PropertyDetailsStep = ({
                 placeholder="Rental property address"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                 required
+                style={{ 
+                  minHeight: '100px',
+                  paddingLeft: '1rem'
+                }}
               />
             </div>
 
@@ -64,6 +81,10 @@ const PropertyDetailsStep = ({
                 placeholder="Rental property postcode"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                 required
+                style={{ 
+                  minHeight: '100px',
+                  paddingLeft: '1rem'
+                }}
               />
             </div>
 
@@ -82,6 +103,9 @@ const PropertyDetailsStep = ({
                   placeholder=""
                   className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
+                  style={{ 
+                    minHeight: '100px'
+                  }}
                 />
               </div>
             </div>
@@ -99,9 +123,13 @@ const PropertyDetailsStep = ({
                   name="moveInDate"
                   type="date"
                   value={propertyPreferences.moveInDate}
-                  onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+                  onChange={(e) => handleDateChange("moveInDate", e.target.value)}
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
+                  max="9999-12-31"
+                  style={{ 
+                    minHeight: '100px'
+                  }}
                 />
               </div>
             </div>
@@ -117,9 +145,13 @@ const PropertyDetailsStep = ({
                   name="latestMoveInDate"
                   type="date"
                   value={propertyPreferences.latestMoveInDate}
-                  onChange={(e) => onUpdatePreferences("latestMoveInDate", e.target.value)}
+                  onChange={(e) => handleDateChange("latestMoveInDate", e.target.value)}
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
+                  max="9999-12-31"
+                  style={{ 
+                    minHeight: '100px'
+                  }}
                 />
               </div>
             </div>
@@ -132,7 +164,7 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.initialTenancyTerm} 
                 onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
               >
-                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4">
+                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4" style={{ minHeight: '100px' }}>
                   <SelectValue placeholder="Please select an option" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-gray-300 z-50">

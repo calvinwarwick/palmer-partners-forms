@@ -11,10 +11,6 @@ import { Textarea } from "@/components/ui/textarea";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
 import { useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -63,23 +59,24 @@ const PersonalInfoStep = ({
     onUpdateApplicant(applicantId, 'guarantorRelationship' as keyof Applicant, '');
   };
 
-  const handleDateSelect = (applicantId: string, date: Date | undefined) => {
-    if (date) {
-      const formattedDate = format(date, 'yyyy-MM-dd');
+  const handleDateOfBirthChange = (applicantId: string, value: string) => {
+    // Extract parts and limit year to 4 digits
+    const parts = value.split('-');
+    if (parts.length === 3) {
+      const [year, month, day] = parts;
+      const limitedYear = year.slice(0, 4);
+      const formattedDate = `${limitedYear}-${month}-${day}`;
       onUpdateApplicant(applicantId, 'dateOfBirth', formattedDate);
+    } else {
+      onUpdateApplicant(applicantId, 'dateOfBirth', value);
     }
   };
 
-  const parseDate = (dateString: string): Date | undefined => {
-    if (!dateString) return undefined;
-    const date = new Date(dateString);
-    return isNaN(date.getTime()) ? undefined : date;
-  };
-
   return (
-    <div className="space-y-6 md:space-y-8">
+    <div className="space-y-6 md:space-y-8 font-lexend">
       <div>
         <h3 className="text-xl md:text-2xl font-bold text-dark-grey mb-2">Personal Information</h3>
+        <p className="text-light-grey mb-4">Please provide your personal details as they appear on your passport or government-issued ID. This information will be used for referencing purposes.</p>
         <div className="border-b border-gray-200 mb-4 md:mb-6"></div>
       </div>
 
@@ -90,11 +87,10 @@ const PersonalInfoStep = ({
 
       {applicants.map((applicant, index) => {
         const toggles = getApplicantToggles(applicant.id);
-        const selectedDate = parseDate(applicant.dateOfBirth);
         
         return (
           <Card key={applicant.id} className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
-            <CardHeader className="pb-3 md:pb-4 bg-orange-500 text-white rounded-t-lg">
+            <CardHeader className="pb-3 md:pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
               <CardTitle className="text-base md:text-lg font-semibold flex items-center justify-between">
                 <div className="flex items-center gap-2 md:gap-3">
                   <div className="p-1.5 md:p-2 bg-white/20 rounded-lg">
@@ -135,6 +131,7 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, 'firstName', e.target.value)}
                     placeholder="Enter first name"
                     className="form-control"
+                    style={{ paddingLeft: '1rem' }}
                   />
                 </FormFieldWithTooltip>
 
@@ -150,44 +147,29 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, 'lastName', e.target.value)}
                     placeholder="Enter last name"
                     className="form-control"
+                    style={{ paddingLeft: '1rem' }}
                   />
                 </FormFieldWithTooltip>
 
                 <div className="space-y-2">
                   <Label htmlFor={`dateOfBirth-${applicant.id}`} className="form-label">Date of Birth *</Label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500",
-                          !selectedDate && "text-muted-foreground"
-                        )}
-                        style={{ 
-                          boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                          transition: 'none'
-                        }}
-                      >
-                        <Calendar className="mr-2 h-4 w-4" />
-                        {selectedDate ? format(selectedDate, "PPP") : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={(date) => handleDateSelect(applicant.id, date)}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }
-                        initialFocus
-                        captionLayout="dropdown-buttons"
-                        fromYear={1940}
-                        toYear={new Date().getFullYear()}
-                        className="p-3 pointer-events-auto"
-                      />
-                    </PopoverContent>
-                  </Popover>
+                  <div className="date-input-container">
+                    <Calendar className="date-input-icon text-orange-500" />
+                    <Input
+                      id={`dateOfBirth-${applicant.id}`}
+                      name={`dateOfBirth-${applicant.id}`}
+                      type="date"
+                      value={applicant.dateOfBirth}
+                      onChange={(e) => handleDateOfBirthChange(applicant.id, e.target.value)}
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                      required
+                      max="9999-12-31"
+                      style={{ 
+                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
+                        minHeight: '100px'
+                      }}
+                    />
+                  </div>
                 </div>
 
                 <FormFieldWithTooltip
@@ -203,6 +185,7 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
                     placeholder="Enter email address"
                     className="form-control"
+                    style={{ paddingLeft: '1rem', minHeight: '100px' }}
                   />
                 </FormFieldWithTooltip>
 
@@ -214,6 +197,7 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
                     placeholder="Enter mobile number"
                     className="form-control"
+                    style={{ paddingLeft: '1rem', minHeight: '100px' }}
                   />
                 </div>
               </div>
@@ -245,8 +229,12 @@ const PersonalInfoStep = ({
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
                         placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
-                        className="form-control min-h-[500px] resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
+                        className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
                         rows={25}
+                        style={{ 
+                          minHeight: '200px',
+                          paddingLeft: '1rem'
+                        }}
                       />
                     </div>
                   )}
