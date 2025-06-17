@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
-import { PawPrint, Baby, CreditCard, MessageSquare } from "lucide-react";
+import { PawPrint, Baby, CreditCard, MessageSquare, Users } from "lucide-react";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: any;
@@ -43,55 +43,68 @@ const AdditionalDetailsStep = ({
         <p className="text-gray-600 mb-4">Please provide additional details about your application</p>
       </div>
 
-      {/* Pets Section */}
-      <div className="space-y-6">
-        <CustomToggle
-          id="pets"
-          label="Do you intend to have any pets at the property?"
-          checked={additionalDetails.pets}
-          onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-          required={true}
-        />
-        
-        {additionalDetails.pets && (
-          <div>
-            <Textarea
-              id="petDetails"
-              value={additionalDetails.petDetails || ""}
-              onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
-              placeholder="Please provide details about your pets (type, breed, age, etc.)"
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-              required={additionalDetails.pets}
+      {/* Pets and Family Section */}
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-xl">
+              <Users className="h-5 w-5" />
+            </div>
+            Pets and Family
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          {/* Pets Section */}
+          <div className="space-y-6">
+            <CustomToggle
+              id="pets"
+              label="Do you intend to have any pets at the property?"
+              checked={additionalDetails.pets}
+              onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
+              required={true}
             />
+            
+            {additionalDetails.pets && (
+              <div>
+                <Textarea
+                  id="petDetails"
+                  value={additionalDetails.petDetails || ""}
+                  onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
+                  placeholder="Please provide details about your pets (type, breed, age, etc.)"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  required={additionalDetails.pets}
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      {/* Children Section */}
-      <div className="space-y-6">
-        <CustomToggle
-          id="children"
-          label="Do you have any children?"
-          checked={additionalDetails.children}
-          onCheckedChange={(checked) => onUpdateDetails("children", checked)}
-          required={true}
-        />
-        
-        {additionalDetails.children && (
-          <div>
-            <Textarea
-              id="childrenDetails"
-              value={additionalDetails.childrenDetails || ""}
-              onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
-              placeholder="Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15)*"
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-              required={additionalDetails.children}
+          {/* Children Section */}
+          <div className="space-y-6">
+            <CustomToggle
+              id="children"
+              label="Do you have any children?"
+              checked={additionalDetails.children}
+              onCheckedChange={(checked) => onUpdateDetails("children", checked)}
+              required={true}
             />
+            
+            {additionalDetails.children && (
+              <div>
+                <Textarea
+                  id="childrenDetails"
+                  value={additionalDetails.childrenDetails || ""}
+                  onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
+                  placeholder="Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15)*"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
+                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                  required={additionalDetails.children}
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Deposit Type Section */}
       <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
