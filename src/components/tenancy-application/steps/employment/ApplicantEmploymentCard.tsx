@@ -16,7 +16,7 @@ const ApplicantEmploymentCard = ({
     boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
   }}>
       <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
-        <CardTitle className="font-semibold flex items-center gap-3 text-white text-sm">
+        <CardTitle className="font-semibold flex items-center gap-3 text-white text-lg">
           <div className="p-2 bg-white/20 rounded-lg">
             <User className="h-5 w-5" />
           </div>
