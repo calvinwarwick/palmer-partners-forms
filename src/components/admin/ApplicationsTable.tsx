@@ -16,6 +16,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import type { DateRange } from "react-day-picker";
 import ApplicationActivityModal from "./ApplicationActivityModal";
 import ApplicationPreviewContent from "./ApplicationPreviewContent";
+
 interface TenancyApplication {
   id: string;
   applicants: any[];
@@ -25,6 +26,7 @@ interface TenancyApplication {
   signature: string;
   submitted_at: string;
 }
+
 interface ApplicationsTableProps {
   applications: TenancyApplication[];
   selectedApplications: string[];
@@ -35,15 +37,10 @@ interface ApplicationsTableProps {
   onSearchChange: (value: string) => void;
   dateFilter: string;
   onDateFilterChange: (value: string) => void;
-  customDateRange?: {
-    from: Date;
-    to: Date;
-  } | null;
-  onCustomDateRangeChange?: (range: {
-    from: Date;
-    to: Date;
-  } | null) => void;
+  customDateRange?: { from: Date; to: Date } | null;
+  onCustomDateRangeChange?: (range: { from: Date; to: Date } | null) => void;
 }
+
 const ApplicationsTable = ({
   applications,
   selectedApplications,
@@ -58,34 +55,33 @@ const ApplicationsTable = ({
   onCustomDateRangeChange
 }: ApplicationsTableProps) => {
   const navigate = useNavigate();
-  const {
-    generatePdf,
-    isGenerating
-  } = usePdfGeneration();
-  const [dateRange, setDateRange] = useState<DateRange | undefined>(customDateRange ? {
-    from: customDateRange.from,
-    to: customDateRange.to
-  } : undefined);
+  const { generatePdf, isGenerating } = usePdfGeneration();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(
+    customDateRange ? { from: customDateRange.from, to: customDateRange.to } : undefined
+  );
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [selectedApplicationForActivity, setSelectedApplicationForActivity] = useState<TenancyApplication | null>(null);
   const [isActivityModalOpen, setIsActivityModalOpen] = useState(false);
   const [selectedApplicationForPreview, setSelectedApplicationForPreview] = useState<TenancyApplication | null>(null);
   const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
   const checkboxRef = useRef<HTMLButtonElement>(null);
+  
   const isAllSelected = selectedApplications.length === applications.length && applications.length > 0;
   const isIndeterminate = selectedApplications.length > 0 && selectedApplications.length < applications.length;
+
   useEffect(() => {
     if (checkboxRef.current) {
       (checkboxRef.current as any).indeterminate = isIndeterminate;
     }
   }, [isIndeterminate]);
+
   const formatTimeAgo = (dateString: string) => {
-    return formatDistanceToNow(new Date(dateString), {
-      addSuffix: true
-    });
+    return formatDistanceToNow(new Date(dateString), { addSuffix: true });
   };
+
   const getSiteBadge = (application: TenancyApplication) => {
     const postcode = application.property_preferences?.postcode?.toLowerCase() || '';
+    
     if (postcode.startsWith('co') || postcode.includes('colchester')) {
       return <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">Colchester</Badge>;
     } else if (postcode.startsWith('ip') || postcode.includes('ipswich')) {
@@ -94,10 +90,12 @@ const ApplicationsTable = ({
       return <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200 text-xs">Other</Badge>;
     }
   };
+
   const handlePreviewApplication = (application: TenancyApplication) => {
     setSelectedApplicationForPreview(application);
     setIsPreviewSheetOpen(true);
   };
+
   const handleGeneratePdf = async (application: TenancyApplication) => {
     const pdfData = {
       applicants: application.applicants,
@@ -107,32 +105,36 @@ const ApplicationsTable = ({
       signature: application.signature,
       submittedAt: application.submitted_at
     };
+
     const primaryApplicant = application.applicants[0];
     const filename = `${primaryApplicant?.firstName || 'Unknown'}_${primaryApplicant?.lastName || 'Applicant'}_Application.pdf`;
+    
     await generatePdf(pdfData, filename);
   };
+
   const handleViewActivity = (application: TenancyApplication) => {
     setSelectedApplicationForActivity(application);
     setIsActivityModalOpen(true);
   };
+
   const handleDateRangeSelect = (range: DateRange | undefined) => {
     setDateRange(range);
     if (range?.from && range?.to && onCustomDateRangeChange) {
-      onCustomDateRangeChange({
-        from: range.from,
-        to: range.to
-      });
+      onCustomDateRangeChange({ from: range.from, to: range.to });
       onDateFilterChange('custom');
       setIsDatePickerOpen(false);
     }
   };
+
   const getDateRangeDisplay = () => {
     if (customDateRange?.from && customDateRange?.to) {
       return `${format(customDateRange.from, "MMM dd")} - ${format(customDateRange.to, "MMM dd")}`;
     }
     return "Custom range";
   };
-  return <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
       {/* Always Visible Table Header with Filters */}
       <div className="bg-gray-50 border-b px-4 py-4">
         <div className="space-y-4">
@@ -146,20 +148,31 @@ const ApplicationsTable = ({
             </div>
 
             {/* Bulk Actions */}
-            {selectedApplications.length > 0 && <div className="flex items-center gap-2">
+            {selectedApplications.length > 0 && (
+              <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
                   {selectedApplications.length} selected
                 </span>
-                <Button variant="outline" size="sm" onClick={onBulkExport} className="h-8 text-xs border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={onBulkExport}
+                  className="h-8 text-xs border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
+                >
                   <Download className="h-3 w-3 mr-1" />
                   Export
                 </Button>
                 
-                <Button variant="outline" size="sm" className="h-8 text-xs border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 text-xs border-red-500 hover:bg-red-50 text-red-600 hover:text-red-700"
+                >
                   <Trash2 className="h-3 w-3 mr-1" />
                   Delete
                 </Button>
-              </div>}
+              </div>
+            )}
           </div>
 
           {/* Search and Filter Controls */}
@@ -169,7 +182,12 @@ const ApplicationsTable = ({
               <label className="text-sm font-medium text-gray-700">Search</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input placeholder="Search by name, email, or address..." value={searchTerm} onChange={e => onSearchChange(e.target.value)} className="pl-12 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500" />
+                <Input
+                  placeholder="Search by name, email, or address..."
+                  value={searchTerm}
+                  onChange={(e) => onSearchChange(e.target.value)}
+                  className="pl-10 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+                />
               </div>
             </div>
 
@@ -195,17 +213,31 @@ const ApplicationsTable = ({
                 {/* Custom Date Range Picker */}
                 <Popover open={isDatePickerOpen} onOpenChange={setIsDatePickerOpen}>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="shadow-sm border-gray-300 hover:bg-gray-50" onClick={() => setIsDatePickerOpen(true)}>
+                    <Button 
+                      variant="outline" 
+                      className="shadow-sm border-gray-300 hover:bg-gray-50"
+                      onClick={() => setIsDatePickerOpen(true)}
+                    >
                       <CalendarIcon className="h-4 w-4" />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="end">
-                    <Calendar initialFocus mode="range" defaultMonth={dateRange?.from} selected={dateRange} onSelect={handleDateRangeSelect} numberOfMonths={2} className="pointer-events-auto" />
-                    {dateRange?.from && dateRange?.to && <div className="p-3 border-t bg-gray-50">
+                    <Calendar
+                      initialFocus
+                      mode="range"
+                      defaultMonth={dateRange?.from}
+                      selected={dateRange}
+                      onSelect={handleDateRangeSelect}
+                      numberOfMonths={2}
+                      className="pointer-events-auto"
+                    />
+                    {dateRange?.from && dateRange?.to && (
+                      <div className="p-3 border-t bg-gray-50">
                         <div className="text-sm text-gray-700 text-center">
                           {format(dateRange.from, "MMM dd, yyyy")} - {format(dateRange.to, "MMM dd, yyyy")}
                         </div>
-                      </div>}
+                      </div>
+                    )}
                   </PopoverContent>
                 </Popover>
               </div>
@@ -213,24 +245,37 @@ const ApplicationsTable = ({
           </div>
 
           {/* Select All Checkbox */}
-          {applications.length > 0 && <div className="flex items-center gap-3 pt-2 border-t border-gray-200">
-              <Checkbox ref={checkboxRef} checked={isAllSelected} onCheckedChange={onSelectAll} className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500" />
+          {applications.length > 0 && (
+            <div className="flex items-center gap-3 pt-2 border-t border-gray-200">
+              <Checkbox
+                ref={checkboxRef}
+                checked={isAllSelected}
+                onCheckedChange={onSelectAll}
+                className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+              />
               <span className="text-sm font-medium text-gray-900">
                 Select all applications
               </span>
-            </div>}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Applications Content */}
-      {applications.length > 0 ? <>
+      {applications.length > 0 ? (
+        <>
           {/* Mobile Card View */}
           <div className="block sm:hidden">
             <div className="space-y-3 p-4">
-              {applications.map(application => <div key={application.id} className="bg-gray-50 border rounded-lg p-4 space-y-3">
+              {applications.map((application) => (
+                <div key={application.id} className="bg-gray-50 border rounded-lg p-4 space-y-3">
                   <div className="flex items-start justify-between">
                     <div className="flex items-center gap-3">
-                      <Checkbox checked={selectedApplications.includes(application.id)} onCheckedChange={checked => onSelectApplication(application.id, !!checked)} className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500" />
+                      <Checkbox
+                        checked={selectedApplications.includes(application.id)}
+                        onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
+                        className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                      />
                       <div>
                         <p className="font-medium text-gray-900 text-sm">
                           {application.applicants?.[0]?.firstName} {application.applicants?.[0]?.lastName}
@@ -254,7 +299,12 @@ const ApplicationsTable = ({
                       {formatTimeAgo(application.submitted_at)}
                     </span>
                     <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm" onClick={() => handlePreviewApplication(application)} className="h-7 text-xs">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handlePreviewApplication(application)}
+                        className="h-7 text-xs"
+                      >
                         <Eye className="h-3 w-3 mr-1" />
                         View
                       </Button>
@@ -278,7 +328,8 @@ const ApplicationsTable = ({
                       </DropdownMenu>
                     </div>
                   </div>
-                </div>)}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -298,9 +349,14 @@ const ApplicationsTable = ({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {applications.map(application => <TableRow key={application.id} className="hover:bg-gray-50 border-b">
+                {applications.map((application) => (
+                  <TableRow key={application.id} className="hover:bg-gray-50 border-b">
                     <TableCell>
-                      <Checkbox checked={selectedApplications.includes(application.id)} onCheckedChange={checked => onSelectApplication(application.id, !!checked)} className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500" />
+                      <Checkbox
+                        checked={selectedApplications.includes(application.id)}
+                        onCheckedChange={(checked) => onSelectApplication(application.id, !!checked)}
+                        className="h-4 w-4 border-gray-300 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
+                      />
                     </TableCell>
                     
                     <TableCell>
@@ -343,7 +399,12 @@ const ApplicationsTable = ({
                     
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <Button variant="outline" size="sm" onClick={() => handlePreviewApplication(application)} className="h-8">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePreviewApplication(application)}
+                          className="h-8"
+                        >
                           <Eye className="h-4 w-4 mr-1" />
                           View
                         </Button>
@@ -367,11 +428,14 @@ const ApplicationsTable = ({
                         </DropdownMenu>
                       </div>
                     </TableCell>
-                  </TableRow>)}
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </div>
-        </> : <div className="text-center py-16">
+        </>
+      ) : (
+        <div className="text-center py-16">
           <div className="text-gray-400 mb-4">
             <svg className="mx-auto h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -380,7 +444,8 @@ const ApplicationsTable = ({
           <p className="text-gray-500 mb-4 text-lg">
             {searchTerm || dateFilter !== "all" ? "No applications found matching your search." : "No applications found."}
           </p>
-        </div>}
+        </div>
+      )}
 
       {/* Preview Sheet */}
       <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
@@ -390,14 +455,22 @@ const ApplicationsTable = ({
               <h2 className="text-xl font-semibold">Application Preview</h2>
             </div>
             <div className="flex-1 p-6 overflow-hidden">
-              {selectedApplicationForPreview && <ApplicationPreviewContent application={selectedApplicationForPreview} />}
+              {selectedApplicationForPreview && (
+                <ApplicationPreviewContent application={selectedApplicationForPreview} />
+              )}
             </div>
           </div>
         </SheetContent>
       </Sheet>
 
       {/* Activity Modal */}
-      <ApplicationActivityModal application={selectedApplicationForActivity} isOpen={isActivityModalOpen} onClose={() => setIsActivityModalOpen(false)} />
-    </div>;
+      <ApplicationActivityModal
+        application={selectedApplicationForActivity}
+        isOpen={isActivityModalOpen}
+        onClose={() => setIsActivityModalOpen(false)}
+      />
+    </div>
+  );
 };
+
 export default ApplicationsTable;
