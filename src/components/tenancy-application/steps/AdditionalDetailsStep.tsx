@@ -56,7 +56,7 @@ const AdditionalDetailsStep = ({
         <CardContent className="space-y-6 p-6">
           <CustomToggle
             id="pets"
-            label="Do you have any pets?"
+            label="Do you intend to have any pets at the property?"
             checked={additionalDetails.pets}
             onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
             required={true}
