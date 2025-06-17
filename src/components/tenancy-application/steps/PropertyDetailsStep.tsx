@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -5,16 +6,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Calendar, Home } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
+
 interface PropertyDetailsStepProps {
   propertyPreferences: PropertyPreferences;
   onUpdatePreferences: (field: keyof PropertyPreferences, value: string) => void;
   onFillAllTestData?: () => void;
 }
+
 const PropertyDetailsStep = ({
   propertyPreferences,
   onUpdatePreferences,
-  onFillAllTestData
+  onFillAllTestData,
 }: PropertyDetailsStepProps) => {
+
   const handleDateChange = (field: keyof PropertyPreferences, value: string) => {
     // Extract parts and limit year to 4 digits
     const parts = value.split('-');
@@ -27,14 +31,16 @@ const PropertyDetailsStep = ({
       onUpdatePreferences(field, value);
     }
   };
-  return <div className="space-y-8 font-lexend">
+
+  return (
+    <div className="space-y-8 font-lexend">
       <div>
         <h3 className="text-2xl font-bold text-dark-grey mb-2">Proposed Rental Property Details</h3>
         <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
       </div>
 
       <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
-        <CardHeader className="">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-lg">
               <Home className="h-5 w-5" />
@@ -48,14 +54,30 @@ const PropertyDetailsStep = ({
               <Label htmlFor="streetAddress" className="form-label text-gray-700 font-medium">
                 Address <span className="text-red-500">*</span>
               </Label>
-              <Input id="streetAddress" name="streetAddress" value={propertyPreferences.streetAddress} onChange={e => onUpdatePreferences("streetAddress", e.target.value)} placeholder="Rental property address" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required />
+              <Input
+                id="streetAddress"
+                name="streetAddress"
+                value={propertyPreferences.streetAddress}
+                onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
+                placeholder="Rental property address"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                required
+              />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="postcode" className="form-label text-gray-700 font-medium">
                 Postcode <span className="text-red-500">*</span>
               </Label>
-              <Input id="postcode" name="postcode" value={propertyPreferences.postcode} onChange={e => onUpdatePreferences("postcode", e.target.value)} placeholder="Rental property postcode" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required />
+              <Input
+                id="postcode"
+                name="postcode"
+                value={propertyPreferences.postcode}
+                onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
+                placeholder="Rental property postcode"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                required
+              />
             </div>
 
             <div className="space-y-2">
@@ -64,7 +86,16 @@ const PropertyDetailsStep = ({
               </Label>
               <div className="currency-input-container">
                 <span className="currency-input-icon text-orange-500">£</span>
-                <Input id="maxRent" name="maxRent" type="number" value={propertyPreferences.maxRent} onChange={e => onUpdatePreferences("maxRent", e.target.value)} placeholder="" className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500" required />
+                <Input
+                  id="maxRent"
+                  name="maxRent"
+                  type="number"
+                  value={propertyPreferences.maxRent}
+                  onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
+                  placeholder=""
+                  className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  required
+                />
               </div>
             </div>
           </div>
@@ -76,7 +107,16 @@ const PropertyDetailsStep = ({
               </Label>
               <div className="date-input-container">
                 <Calendar className="date-input-icon" />
-                <Input id="moveInDate" name="moveInDate" type="date" value={propertyPreferences.moveInDate} onChange={e => handleDateChange("moveInDate", e.target.value)} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required max="9999-12-31" />
+                <Input
+                  id="moveInDate"
+                  name="moveInDate"
+                  type="date"
+                  value={propertyPreferences.moveInDate}
+                  onChange={(e) => handleDateChange("moveInDate", e.target.value)}
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  required
+                  max="9999-12-31"
+                />
               </div>
             </div>
 
@@ -86,7 +126,16 @@ const PropertyDetailsStep = ({
               </Label>
               <div className="date-input-container">
                 <Calendar className="date-input-icon" />
-                <Input id="latestMoveInDate" name="latestMoveInDate" type="date" value={propertyPreferences.latestMoveInDate} onChange={e => handleDateChange("latestMoveInDate", e.target.value)} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required max="9999-12-31" />
+                <Input
+                  id="latestMoveInDate"
+                  name="latestMoveInDate"
+                  type="date"
+                  value={propertyPreferences.latestMoveInDate}
+                  onChange={(e) => handleDateChange("latestMoveInDate", e.target.value)}
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  required
+                  max="9999-12-31"
+                />
               </div>
             </div>
 
@@ -94,7 +143,10 @@ const PropertyDetailsStep = ({
               <Label htmlFor="initialTenancyTerm" className="form-label text-gray-700 font-medium">
                 Preferred initial tenancy term <span className="text-red-500">*</span>
               </Label>
-              <Select value={propertyPreferences.initialTenancyTerm} onValueChange={value => onUpdatePreferences("initialTenancyTerm", value)}>
+              <Select 
+                value={propertyPreferences.initialTenancyTerm} 
+                onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
+              >
                 <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4">
                   <SelectValue placeholder="Please select an option" />
                 </SelectTrigger>
@@ -109,6 +161,8 @@ const PropertyDetailsStep = ({
           </div>
         </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
+
 export default PropertyDetailsStep;
