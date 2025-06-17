@@ -13,7 +13,7 @@ const ProgressHeader = ({ progress, totalSteps, currentStep }: ProgressHeaderPro
   const stepsText = stepsRemaining === 1 ? 'step' : 'steps';
   
   return (
-    <div className="mb-6">
+    <div className="mb-0 sm:mb-6">
       <div className="flex justify-between text-sm mb-3">
         <span className="font-medium text-dark-grey">{Math.round(progress)}% Complete</span>
         <span className="text-light-grey">{stepsRemaining} {stepsText} remaining</span>
