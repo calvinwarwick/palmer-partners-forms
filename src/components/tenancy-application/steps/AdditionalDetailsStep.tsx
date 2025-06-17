@@ -159,7 +159,7 @@ const AdditionalDetailsStep = ({
             <div className="p-2 bg-white/20 rounded-xl">
               <MessageSquare className="h-5 w-5" />
             </div>
-            Additional Comments
+            Conditions of Offer
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
