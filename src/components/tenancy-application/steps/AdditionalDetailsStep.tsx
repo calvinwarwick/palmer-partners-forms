@@ -165,7 +165,7 @@ const AdditionalDetailsStep = ({
         <CardContent className="space-y-6 p-6">
           <div>
             <Label htmlFor="additionalRequests" className="text-sm font-medium text-gray-700 mb-2 block">
-              Additional Requests or Comments
+              Please provide any conditions attached to your offer that you would like to discuss with your landlord.
             </Label>
             <Textarea
               id="additionalRequests"
@@ -175,6 +175,9 @@ const AdditionalDetailsStep = ({
               className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
               style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
             />
+            <p className="text-sm text-gray-500 mt-2">
+              If approved, these conditions will be added to your tenancy agreement.
+            </p>
           </div>
         </CardContent>
       </Card>
