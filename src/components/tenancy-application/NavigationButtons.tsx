@@ -29,7 +29,7 @@ const NavigationButtons = ({
             <TestTube className="h-3 w-3 mr-1 hover:bg-gray-200 " />
             Fill All Test Data
           </Button>
-          <Button type="button" variant="outline" size="sm" onClick={onFillStepData} className="text-xs border-green-300 text-green-600 hover:bg-green-50">
+          <Button type="button" variant="outline" size="sm" onClick={onFillStepData} className="text-xs border-gray-300 text-gray-600 hover:bg-gray-900 hover:text-white ">
             <Zap className="h-3 w-3 mr-1" />
             Fill Step
           </Button>
