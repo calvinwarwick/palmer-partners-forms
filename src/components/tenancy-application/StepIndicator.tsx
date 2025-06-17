@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 import { Home, User, Briefcase, MapPin, Info, Check } from "lucide-react";
 
@@ -8,7 +9,7 @@ interface StepIndicatorProps {
 const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
   const steps = [
     { name: "Rental Property", icon: Home },
-    { name: "Personal Information", icon: User },
+    { name: "Personal Details", icon: User },
     { name: "Employment Details", icon: Briefcase },
     { name: "Current Address", icon: MapPin },
     { name: "Additional Information", icon: Info },
