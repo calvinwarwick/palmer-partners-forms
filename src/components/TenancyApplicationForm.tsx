@@ -64,7 +64,7 @@ const TenancyApplicationForm = () => {
                 <Card className="bg-white/95 backdrop-blur-sm border-0" style={{
               boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
             }}>
-                  <CardContent className="p-4 sm:p-8 md:p-12 bg-transparent ">
+                  <CardContent className="p-4 sm:p-8 md:p-12 bg-white/0">
                     <div className="min-h-[400px] sm:min-h-[500px]">
                       <FormSteps formContext={formContext} />
                     </div>
