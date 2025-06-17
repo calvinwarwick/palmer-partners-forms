@@ -33,14 +33,26 @@ const CustomToggle = React.forwardRef<
         onCheckedChange={onCheckedChange}
         disabled={disabled}
         className={cn(
-          "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50",
-          checked ? "bg-orange-500" : "bg-gray-300"
+          // Base styles with consistent sizing
+          "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
+          // Focus styles
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+          // Disabled styles
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          // Background colors
+          checked ? "bg-orange-500" : "bg-gray-300",
+          // Mobile-specific overrides
+          "sm:h-6 sm:w-11 h-6 w-11 min-h-[24px] min-w-[44px]"
         )}
       >
         <SwitchPrimitives.Thumb
           className={cn(
-            "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform",
-            checked ? "translate-x-5" : "translate-x-0"
+            // Base thumb styles
+            "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ease-in-out",
+            // Position based on state
+            checked ? "translate-x-5" : "translate-x-0",
+            // Mobile consistency
+            "sm:h-5 sm:w-5 h-5 w-5"
           )}
         />
       </SwitchPrimitives.Root>
