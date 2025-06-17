@@ -1,4 +1,5 @@
 
+
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { Check } from "lucide-react"
@@ -16,7 +17,7 @@ const Checkbox = React.forwardRef<
       "peer w-6 h-6 shrink-0 rounded-md border-2 border-orange-400 bg-white shadow-sm",
       "ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-600 focus-visible:ring-offset-2",
       "disabled:cursor-not-allowed disabled:opacity-50",
-      "data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500 data-[state=checked]:text-white",
+      "data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500",
       "hover:bg-orange-50 hover:border-orange-500 transition-colors duration-200",
       // Tablet sizing
       "sm:w-5 sm:h-5 sm:border sm:rounded-sm",
@@ -36,3 +37,4 @@ const Checkbox = React.forwardRef<
 Checkbox.displayName = CheckboxPrimitive.Root.displayName
 
 export { Checkbox }
+
