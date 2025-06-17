@@ -98,9 +98,6 @@ const AdditionalDetailsStep = ({
           
           {additionalDetails.children && (
             <div>
-              <Label htmlFor="childrenDetails" className="text-sm font-medium text-gray-700 mb-2 block">
-                Children Details <span className="text-red-500">*</span>
-              </Label>
               <Textarea
                 id="childrenDetails"
                 value={additionalDetails.childrenDetails || ""}
