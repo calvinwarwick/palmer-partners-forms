@@ -12,13 +12,14 @@ export interface Applicant {
   guarantorRequired?: string;
   guarantorAdded?: boolean;
   guarantorName?: string;
+  guarantorLastName?: string;
   guarantorRelationship?: string;
   guarantorEmail?: string;
   guarantorPhone?: string;
   guarantorDateOfBirth?: string;
   guarantorAddress?: string;
   guarantorPostcode?: string;
-  guarantorEmployment?: string;
+  guarantorEmploymentStatus?: string;
   guarantorCompanyName?: string;
   guarantorJobTitle?: string;
   guarantorIncome?: string;

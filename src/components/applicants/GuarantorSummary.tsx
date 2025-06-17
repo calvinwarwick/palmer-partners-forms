@@ -6,7 +6,7 @@ import { Shield, Edit, Trash2 } from "lucide-react";
 
 interface GuarantorSummaryProps {
   guarantorName: string;
-  guarantorRelationship: string;
+  guarantorLastName?: string;
   guarantorEmail?: string;
   guarantorPhone?: string;
   onEdit: () => void;
@@ -15,12 +15,14 @@ interface GuarantorSummaryProps {
 
 const GuarantorSummary = ({ 
   guarantorName, 
-  guarantorRelationship, 
+  guarantorLastName,
   guarantorEmail,
   guarantorPhone,
   onEdit, 
   onDelete 
 }: GuarantorSummaryProps) => {
+  const fullName = guarantorLastName ? `${guarantorName} ${guarantorLastName}` : guarantorName;
+  
   return (
     <Card className="border-green-200 bg-green-50/50">
       <CardContent className="p-4">
@@ -31,14 +33,11 @@ const GuarantorSummary = ({
             </div>
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h4 className="font-medium text-gray-900">{guarantorName}</h4>
+                <h4 className="font-medium text-gray-900">{fullName}</h4>
                 <Badge variant="secondary" className="bg-green-100 text-green-700">
                   Guarantor Added
                 </Badge>
               </div>
-              <p className="text-sm text-gray-600">
-                Relationship: <span className="font-medium">{guarantorRelationship}</span>
-              </p>
               {guarantorEmail && (
                 <p className="text-sm text-gray-600">
                   Email: <span className="font-medium">{guarantorEmail}</span>
