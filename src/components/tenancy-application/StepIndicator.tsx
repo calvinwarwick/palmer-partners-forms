@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 import { Home, User, Briefcase, MapPin, Info, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +27,7 @@ const StepIndicator = ({
     name: "Terms & Signature",
     icon: Check
   }];
-  return <div className="hidden sm:flex justify-between mt-6 pt-4 border-t border-gray-200">
+  return <div className="hidden sm:flex justify-around mt-6 pt-4 border-t border-gray-200">
       {steps.map((step, index) => {
       const stepNumber = index + 1;
       const isActive = currentStep === stepNumber;
