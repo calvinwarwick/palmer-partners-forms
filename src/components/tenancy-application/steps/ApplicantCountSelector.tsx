@@ -1,4 +1,3 @@
-
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
@@ -10,7 +9,7 @@ interface ApplicantCountSelectorProps {
 
 const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: ApplicantCountSelectorProps) => {
   return (
-    <Card className="border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white shadow-sm hover:shadow-md transition-all duration-300">
+    <Card className="border-2 border-gray-200 bg-gradient-to-br from-orange-50 to-white shadow-sm hover:shadow-md transition-all duration-300">
       <CardContent className="p-4 md:p-6">
         <div className="w-full space-y-3 md:space-y-4">
           <div className="text-left">
