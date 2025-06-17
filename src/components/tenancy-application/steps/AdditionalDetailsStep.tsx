@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
 import { PawPrint, Baby, CreditCard, MessageSquare, Users } from "lucide-react";
@@ -81,7 +82,6 @@ const AdditionalDetailsStep = ({
               label="Do you intend to have any pets at the property?"
               checked={additionalDetails.pets}
               onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-              required={true}
             />
             
             {additionalDetails.pets && (
@@ -101,15 +101,32 @@ const AdditionalDetailsStep = ({
 
           {/* Children Section */}
           <div className="space-y-6">
-            <CustomToggle
-              id="children"
-              label="Do you have any children?"
-              checked={additionalDetails.children}
-              onCheckedChange={(checked) => onUpdateDetails("children", checked)}
-              required={true}
-            />
+            <div className="space-y-3">
+              <Label className="text-sm font-medium text-gray-700">
+                Do you have any children? <span className="text-red-500">*</span>
+              </Label>
+              <Select 
+                value={additionalDetails.childrenCount || ""} 
+                onValueChange={(value) => {
+                  onUpdateDetails("childrenCount", value);
+                  onUpdateDetails("children", value !== "none");
+                }}
+              >
+                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                  <SelectValue placeholder="Select an option" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl z-50">
+                  <SelectItem value="none">None</SelectItem>
+                  <SelectItem value="1">1</SelectItem>
+                  <SelectItem value="2">2</SelectItem>
+                  <SelectItem value="3">3</SelectItem>
+                  <SelectItem value="4">4</SelectItem>
+                  <SelectItem value="5+">5+</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             
-            {additionalDetails.children && (
+            {additionalDetails.children && additionalDetails.childrenCount !== "none" && (
               <div>
                 <Textarea
                   id="childrenDetails"
