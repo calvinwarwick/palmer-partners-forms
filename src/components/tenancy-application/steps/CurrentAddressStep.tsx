@@ -51,7 +51,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                     value={applicant.currentAddress || ""}
                     onChange={(e) => onUpdateApplicant(applicant.id, "currentAddress", e.target.value)}
                     placeholder="Enter your street address"
-                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[52px]"
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                     style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                     required
                   />
@@ -65,7 +65,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                     value={applicant.currentPostcode || ""}
                     onChange={(e) => onUpdateApplicant(applicant.id, "currentPostcode", e.target.value)}
                     placeholder="Enter postcode"
-                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[52px]"
+                    className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                     style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                     required
                   />
@@ -75,7 +75,7 @@ const CurrentAddressStep = ({ applicants, onUpdateApplicant }: CurrentAddressSte
                     Current Property Status <span className="text-red-500">*</span>
                   </Label>
                   <Select value={applicant.currentPropertyStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "currentPropertyStatus", value)}>
-                    <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                    <SelectTrigger id={`currentPropertyStatus-${applicant.id}`} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
                       <SelectValue placeholder="Select property status" />
                     </SelectTrigger>
                     <SelectContent>

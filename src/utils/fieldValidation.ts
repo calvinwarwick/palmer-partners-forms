@@ -76,9 +76,17 @@ export const validateAndHighlightFields = (
       applicants.forEach((applicant, index) => {
         if (!applicant.currentAddress) invalidFields.push(`currentAddress-${applicant.id}`);
         if (!applicant.currentPostcode) invalidFields.push(`currentPostcode-${applicant.id}`);
-        if (!applicant.residencyStatus) invalidFields.push(`residencyStatus-${applicant.id}`);
+        if (!applicant.currentPropertyStatus) invalidFields.push(`currentPropertyStatus-${applicant.id}`);
         if (!applicant.moveInDate) invalidFields.push(`moveInDate-${applicant.id}`);
         if (!applicant.vacateDate) invalidFields.push(`vacateDate-${applicant.id}`);
+        
+        // Check if rental amount is required based on property status
+        const shouldShowRentalAmount = applicant.currentPropertyStatus === "rented-privately" || 
+                                     applicant.currentPropertyStatus === "rented-through-agent";
+        
+        if (shouldShowRentalAmount && !applicant.currentRentalAmount) {
+          invalidFields.push(`currentRentalAmount-${applicant.id}`);
+        }
       });
       break;
     

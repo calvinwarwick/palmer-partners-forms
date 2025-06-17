@@ -34,13 +34,23 @@ export const validateStep = (
       );
     
     case 4:
-      return applicants.every(applicant => 
-        applicant.currentAddress &&
-        applicant.currentPostcode &&
-        applicant.residencyStatus &&
-        applicant.moveInDate &&
-        applicant.vacateDate
-      );
+      return applicants.every(applicant => {
+        const basicFieldsValid = Boolean(
+          applicant.currentAddress &&
+          applicant.currentPostcode &&
+          applicant.currentPropertyStatus &&
+          applicant.moveInDate &&
+          applicant.vacateDate
+        );
+
+        // Check if rental amount is required based on property status
+        const shouldShowRentalAmount = applicant.currentPropertyStatus === "rented-privately" || 
+                                     applicant.currentPropertyStatus === "rented-through-agent";
+        
+        const rentalAmountValid = !shouldShowRentalAmount || Boolean(applicant.currentRentalAmount);
+
+        return basicFieldsValid && rentalAmountValid;
+      });
     
     case 5:
       // Helper function to normalize "yes"/"no" string and boolean values
