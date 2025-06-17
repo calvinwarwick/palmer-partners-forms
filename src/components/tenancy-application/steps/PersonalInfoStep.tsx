@@ -116,7 +116,7 @@ const PersonalInfoStep = ({
                   <Label htmlFor={`dateOfBirth-${applicant.id}`} className="form-label">Date of Birth *</Label>
                   <div className="date-input-container">
                     <Calendar className="date-input-icon text-orange-500" />
-                    <Input id={`dateOfBirth-${applicant.id}`} name={`dateOfBirth-${applicant.id}`} type="date" value={applicant.dateOfBirth} onChange={e => handleDateOfBirthChange(applicant.id, e.target.value)} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required max="9999-12-31" style={{
+                    <Input id={`dateOfBirth-${applicant.id}`} name={`dateOfBirth-${applicant.id}`} type="date" value={applicant.dateOfBirth} onChange={e => handleDateOfBirthChange(applicant.id, e.target.value)} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required max="2300-12-31" style={{
                   boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                 }} />
                   </div>

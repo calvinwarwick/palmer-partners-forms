@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -114,7 +113,7 @@ const PropertyDetailsStep = ({
                   onChange={e => handleDateChange("moveInDate", e.target.value)} 
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12" 
                   required 
-                  max="9999-12-31" 
+                  max="2300-12-31" 
                 />
               </div>
             </div>
@@ -133,7 +132,7 @@ const PropertyDetailsStep = ({
                   onChange={e => handleDateChange("latestMoveInDate", e.target.value)} 
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12" 
                   required 
-                  max="9999-12-31" 
+                  max="2300-12-31" 
                 />
               </div>
             </div>
