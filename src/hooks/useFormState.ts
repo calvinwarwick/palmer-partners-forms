@@ -49,7 +49,6 @@ export const useFormState = () => {
       // Current address fields
       currentAddress: "",
       currentPostcode: "",
-      residencyStatus: "",
       timeAtAddress: "",
       landlordName: "",
       landlordPhone: "",
@@ -73,7 +72,8 @@ export const useFormState = () => {
     childrenDetails: "",
     additionalRequests: "",
     householdIncome: "",
-    childrenCount: ""
+    childrenCount: "",
+    conditionsOfOffer: ""
   });
 
   const [dataSharing, setDataSharing] = useState({

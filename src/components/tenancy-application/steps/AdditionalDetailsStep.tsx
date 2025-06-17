@@ -67,7 +67,7 @@ const AdditionalDetailsStep = ({
       </div>
 
       {/* Conditions of Offer */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
         <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-lg">
@@ -76,7 +76,7 @@ const AdditionalDetailsStep = ({
             Conditions of Offer
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6 p-6">
+        <CardContent className="space-y-6 p-4 sm:p-6">
           <div className="space-y-2">
             <Label htmlFor="conditionsOfOffer" className="form-label text-gray-700 font-medium">
               Please provide any conditions attached to your offer that you would like to discuss with your landlord.
@@ -95,7 +95,7 @@ const AdditionalDetailsStep = ({
       </Card>
 
       {/* Further Information */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
         <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
             <div className="p-2 bg-white/20 rounded-lg">
@@ -104,7 +104,7 @@ const AdditionalDetailsStep = ({
             Further Information
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6 p-6">
+        <CardContent className="space-y-6 p-4 sm:p-6">
           <div className="space-y-2">
             <Label htmlFor="childrenCount" className="form-label text-gray-700 font-medium">
               How many people under the age of 18 will be living in the property? <span className="text-red-500">*</span>
