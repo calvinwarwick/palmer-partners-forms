@@ -74,7 +74,10 @@
   }
 
   textarea {
-    min-height: 120px !important;
+    min-height: 140px !important;
     resize: vertical;
+    @apply text-base;
+    font-size: 16px !important;
+    padding: 0.875rem 1rem !important;
   }
 }
