@@ -179,7 +179,7 @@ const AdditionalDetailsStep = ({
                     )}
                     You can find more information about Reposit's deposit replacement scheme{" "}
                     <a 
-                      href="https://forms.palmerpartners.uk/Reposit_Tenant_deposit_information.pdf" 
+                      href="/Reposit_Tenant_deposit_information.pdf" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="text-orange-500 hover:text-orange-600 underline"
