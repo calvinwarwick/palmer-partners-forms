@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CustomToggle } from "@/components/ui/custom-toggle";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
@@ -150,12 +150,38 @@ const PersonalInfoStep = ({
                 </div>
               </div>
 
-              {/* Switch Questions */}
+              {/* Checkbox Questions */}
               <div className="space-y-4 md:space-y-6 pt-4 md:pt-6">
-                <CustomToggle id={`ukPassport-${applicant.id}`} label="Do you hold a UK or Republic of Ireland passport?" checked={toggles.ukPassport} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', checked)} />
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+                  <Checkbox 
+                    id={`ukPassport-${applicant.id}`}
+                    checked={toggles.ukPassport}
+                    onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', !!checked)}
+                    className="mobile-checkbox mt-1"
+                  />
+                  <Label 
+                    htmlFor={`ukPassport-${applicant.id}`} 
+                    className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+                  >
+                    Do you hold a UK or Republic of Ireland passport?
+                  </Label>
+                </div>
                 
                 <div className="space-y-3 md:space-y-4">
-                  <CustomToggle id={`adverseCredit-${applicant.id}`} label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?" checked={toggles.adverseCredit} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', checked)} />
+                  <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+                    <Checkbox 
+                      id={`adverseCredit-${applicant.id}`}
+                      checked={toggles.adverseCredit}
+                      onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', !!checked)}
+                      className="mobile-checkbox mt-1"
+                    />
+                    <Label 
+                      htmlFor={`adverseCredit-${applicant.id}`} 
+                      className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+                    >
+                      Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
+                    </Label>
+                  </div>
                   
                   {toggles.adverseCredit && <Textarea id={`adverseCreditDetails-${applicant.id}`} value={applicant.adverseCreditDetails || ''} onChange={e => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)} placeholder="Please provide more details about your adverse credit history:" className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3" rows={25} style={{
                   minHeight: '200px',
@@ -163,7 +189,20 @@ const PersonalInfoStep = ({
                 }} />}
                 </div>
                 
-                <CustomToggle id={`guarantorRequired-${applicant.id}`} label="If required, can you supply a guarantor for this proposed tenancy?" checked={toggles.guarantorRequired} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)} />
+                <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+                  <Checkbox 
+                    id={`guarantorRequired-${applicant.id}`}
+                    checked={toggles.guarantorRequired}
+                    onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', !!checked)}
+                    className="mobile-checkbox mt-1"
+                  />
+                  <Label 
+                    htmlFor={`guarantorRequired-${applicant.id}`} 
+                    className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+                  >
+                    If required, can you supply a guarantor for this proposed tenancy?
+                  </Label>
+                </div>
               </div>
               
               {toggles.guarantorRequired && <div className="space-y-4">
