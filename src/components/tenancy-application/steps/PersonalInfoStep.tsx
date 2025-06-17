@@ -76,7 +76,7 @@ const PersonalInfoStep = ({
     <div className="space-y-6 md:space-y-8 font-lexend">
       <div>
         <h3 className="text-xl md:text-2xl font-bold text-dark-grey mb-2">Personal Information</h3>
-        <p className="text-light-grey mb-4">Please provide your personal details as they appear on your passport or government-issued ID. This information will be used for referencing purposes.</p>
+        <p className="text-light-grey mb-4">Please provide personal details for each applicant.</p>
         <div className="border-b border-gray-200 mb-4 md:mb-6"></div>
       </div>
 
