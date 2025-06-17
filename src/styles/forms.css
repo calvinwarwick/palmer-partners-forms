@@ -117,6 +117,7 @@ input[type="date"] {
   position: relative;
   z-index: 1;
   border-radius: 0.5rem;
+  text-align: left !important;
 }
 
 @media (min-width: 768px) {
