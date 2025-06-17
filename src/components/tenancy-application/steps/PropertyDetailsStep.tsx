@@ -62,10 +62,6 @@ const PropertyDetailsStep = ({
                 placeholder="Rental property address"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                 required
-                style={{ 
-                  minHeight: '100px',
-                  paddingLeft: '1rem'
-                }}
               />
             </div>
 
@@ -81,10 +77,6 @@ const PropertyDetailsStep = ({
                 placeholder="Rental property postcode"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                 required
-                style={{ 
-                  minHeight: '100px',
-                  paddingLeft: '1rem'
-                }}
               />
             </div>
 
@@ -103,9 +95,6 @@ const PropertyDetailsStep = ({
                   placeholder=""
                   className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
-                  style={{ 
-                    minHeight: '100px'
-                  }}
                 />
               </div>
             </div>
@@ -127,9 +116,6 @@ const PropertyDetailsStep = ({
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
                   max="9999-12-31"
-                  style={{ 
-                    minHeight: '100px'
-                  }}
                 />
               </div>
             </div>
@@ -149,9 +135,6 @@ const PropertyDetailsStep = ({
                   className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                   required
                   max="9999-12-31"
-                  style={{ 
-                    minHeight: '100px'
-                  }}
                 />
               </div>
             </div>
@@ -164,7 +147,7 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.initialTenancyTerm} 
                 onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
               >
-                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4" style={{ minHeight: '100px' }}>
+                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4">
                   <SelectValue placeholder="Please select an option" />
                 </SelectTrigger>
                 <SelectContent className="bg-white border-gray-300 z-50">
