@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -165,8 +164,7 @@ const PersonalInfoStep = ({
                       required
                       max="9999-12-31"
                       style={{ 
-                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                        minHeight: '100px'
+                        boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
                       }}
                     />
                   </div>
@@ -185,7 +183,7 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
                     placeholder="Enter email address"
                     className="form-control"
-                    style={{ paddingLeft: '1rem', minHeight: '100px' }}
+                    style={{ paddingLeft: '1rem' }}
                   />
                 </FormFieldWithTooltip>
 
@@ -197,7 +195,7 @@ const PersonalInfoStep = ({
                     onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
                     placeholder="Enter mobile number"
                     className="form-control"
-                    style={{ paddingLeft: '1rem', minHeight: '100px' }}
+                    style={{ paddingLeft: '1rem' }}
                   />
                 </div>
               </div>
@@ -221,14 +219,11 @@ const PersonalInfoStep = ({
                   
                   {toggles.adverseCredit && (
                     <div className="bg-orange-50/50 rounded-lg p-4 border border-orange-200">
-                      <Label htmlFor={`adverseCreditDetails-${applicant.id}`} className="text-sm font-medium text-gray-700 mb-3 block">
-                        Please provide more details about your adverse credit history:
-                      </Label>
                       <Textarea
                         id={`adverseCreditDetails-${applicant.id}`}
                         value={applicant.adverseCreditDetails || ''}
                         onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
-                        placeholder="Please describe your adverse credit history including type (IVA, CCJ, bankruptcy, etc.), dates, and current status..."
+                        placeholder="Please provide more details about your adverse credit history:"
                         className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3"
                         rows={25}
                         style={{ 

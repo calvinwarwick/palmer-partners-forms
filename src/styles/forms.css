@@ -7,7 +7,6 @@
   @apply disabled:cursor-not-allowed disabled:opacity-50;
   background-color: white !important;
   height: 2.75rem !important;
-  min-height: 100px !important;
   margin-bottom: 8px !important;
   border: 1.5px solid rgb(228, 228, 231) !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
@@ -22,7 +21,6 @@
   .form-select {
     margin-bottom: 16px !important;
     height: 3rem !important;
-    min-height: 100px !important;
     font-size: 1rem;
   }
   
@@ -113,7 +111,6 @@ input[type="date"] {
   direction: ltr;
   padding-left: 3rem !important;
   height: 2.75rem !important;
-  min-height: 100px !important;
   border: 1.5px solid rgb(228, 228, 231) !important;
   background-color: white !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
@@ -125,7 +122,6 @@ input[type="date"] {
 @media (min-width: 768px) {
   input[type="date"] {
     height: 3rem !important;
-    min-height: 100px !important;
   }
 }
 
@@ -170,7 +166,6 @@ input[type="date"]::-webkit-inner-spin-button {
 .currency-input {
   padding-left: 2.5rem !important;
   height: 2.75rem !important;
-  min-height: 100px !important;
   border: 1.5px solid rgb(228, 228, 231) !important;
   background-color: white !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
@@ -180,7 +175,6 @@ input[type="date"]::-webkit-inner-spin-button {
 @media (min-width: 768px) {
   .currency-input {
     height: 3rem !important;
-    min-height: 100px !important;
   }
 }
 
@@ -207,10 +201,8 @@ input[type="number"] {
 
 /* Input component override for perfect consistency */
 .form-field input,
-.form-field select,
-.form-field textarea {
+.form-field select {
   height: 2.75rem !important;
-  min-height: 100px !important;
   font-size: 0.875rem !important;
   line-height: 1.25rem !important;
   border: 1.5px solid rgb(228, 228, 231) !important;
@@ -221,25 +213,29 @@ input[type="number"] {
   padding-left: 1rem !important;
 }
 
+.form-field textarea {
+  min-height: 100px !important;
+  height: auto !important;
+  resize: vertical !important;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid rgb(228, 228, 231) !important;
+  background-color: white !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 0.5rem;
+  transition: none !important;
+}
+
 @media (min-width: 768px) {
   .form-field input,
   .form-field select {
     height: 3rem !important;
-    min-height: 100px !important;
     font-size: 1rem !important;
   }
 }
 
-.form-field textarea {
-  min-height: 200px !important;
-  height: auto !important;
-  resize: vertical !important;
-  padding: 0.75rem 1rem;
-}
-
-/* Enhanced textarea styling */
+/* Enhanced textarea styling - only textareas get 100px minimum height */
 textarea {
-  min-height: 200px !important;
+  min-height: 100px !important;
   resize: vertical !important;
   padding: 0.75rem 1rem !important;
   border: 1.5px solid rgb(228, 228, 231) !important;
