@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -102,7 +103,7 @@ const AdditionalDetailsStep = ({
                 id="childrenDetails"
                 value={additionalDetails.childrenDetails || ""}
                 onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
-                placeholder="Please provide details about your children (ages, etc.)"
+                placeholder="Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15)*"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                 style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 required={additionalDetails.children}
