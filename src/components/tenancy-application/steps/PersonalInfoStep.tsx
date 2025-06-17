@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -35,6 +36,8 @@ const PersonalInfoStep = ({
       guarantorRequired: boolean;
     };
   }>({});
+  const [hasApplicantSelection, setHasApplicantSelection] = useState(false);
+
   const updateApplicantToggle = (applicantId: string, field: string, value: boolean) => {
     setApplicantToggles(prev => ({
       ...prev,
@@ -44,6 +47,7 @@ const PersonalInfoStep = ({
       }
     }));
   };
+
   const getApplicantToggles = (applicantId: string) => {
     return applicantToggles[applicantId] || {
       ukPassport: false,
@@ -51,11 +55,13 @@ const PersonalInfoStep = ({
       guarantorRequired: false
     };
   };
+
   const handleDeleteGuarantor = (applicantId: string) => {
     onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, '');
     onUpdateApplicant(applicantId, 'guarantorName' as keyof Applicant, '');
     onUpdateApplicant(applicantId, 'guarantorRelationship' as keyof Applicant, '');
   };
+
   const handleDateOfBirthChange = (applicantId: string, value: string) => {
     // Extract parts and limit year to 4 digits
     const parts = value.split('-');
@@ -68,6 +74,12 @@ const PersonalInfoStep = ({
       onUpdateApplicant(applicantId, 'dateOfBirth', value);
     }
   };
+
+  const handleApplicantCountChange = (count: number) => {
+    setHasApplicantSelection(true);
+    onApplicantCountChange(count);
+  };
+
   return (
     <div className="space-y-6 md:space-y-8 font-lexend">
       <div>
@@ -78,10 +90,11 @@ const PersonalInfoStep = ({
 
       <ApplicantCountSelector 
         applicantCount={applicants.length} 
-        onApplicantCountChange={onApplicantCountChange} 
+        onApplicantCountChange={handleApplicantCountChange}
+        hasSelection={hasApplicantSelection}
       />
 
-      {applicants.length > 0 && applicants.map((applicant, index) => {
+      {hasApplicantSelection && applicants.length > 0 && applicants.map((applicant, index) => {
         const toggles = getApplicantToggles(applicant.id);
         return (
           <Card key={applicant.id} className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">

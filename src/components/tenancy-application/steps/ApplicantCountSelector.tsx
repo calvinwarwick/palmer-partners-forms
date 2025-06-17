@@ -6,9 +6,10 @@ import { Card, CardContent } from "@/components/ui/card";
 interface ApplicantCountSelectorProps {
   applicantCount: number;
   onApplicantCountChange: (count: number) => void;
+  hasSelection: boolean;
 }
 
-const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: ApplicantCountSelectorProps) => {
+const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange, hasSelection }: ApplicantCountSelectorProps) => {
   return (
     <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
       <CardContent className="p-4 md:p-6">
@@ -21,7 +22,7 @@ const ApplicantCountSelector = ({ applicantCount, onApplicantCountChange }: Appl
           </div>
           <div className="w-full">
             <Select
-              value={applicantCount <= 0 ? "" : applicantCount.toString()}
+              value={hasSelection ? applicantCount.toString() : ""}
               onValueChange={(value) => onApplicantCountChange(parseInt(value))}
             >
               <SelectTrigger 
