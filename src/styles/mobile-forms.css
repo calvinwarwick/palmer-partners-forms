@@ -28,12 +28,34 @@
     margin-bottom: 12px !important;
   }
 
-  /* Mobile checkbox sizing */
+  /* Enhanced mobile checkbox container styling */
+  .checkbox-container {
+    @apply flex items-start gap-4 p-4 rounded-xl border-2 border-gray-200 bg-white;
+    @apply hover:bg-orange-50 hover:border-orange-200 transition-all duration-200;
+    @apply active:bg-orange-100 active:scale-[0.98];
+    min-height: 60px !important;
+    touch-action: manipulation;
+  }
+
+  .checkbox-container:has(input:checked) {
+    @apply border-orange-300 bg-orange-50;
+  }
+
+  /* Mobile checkbox specific sizing - larger touch targets */
   .mobile-checkbox {
     @apply w-6 h-6 !important;
     min-width: 24px !important;
     min-height: 24px !important;
     flex-shrink: 0 !important;
+    border-width: 2px !important;
+    border-radius: 6px !important;
+  }
+
+  /* Mobile checkbox labels - larger text and better spacing */
+  .checkbox-label {
+    @apply text-base font-medium text-gray-800 leading-relaxed cursor-pointer select-none;
+    line-height: 1.5 !important;
+    margin-top: 2px;
   }
 
   .btn,
@@ -53,5 +75,31 @@
   textarea {
     min-height: 120px !important;
     resize: vertical;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .checkbox-container {
+    @apply flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-white;
+    @apply hover:bg-gray-50 transition-colors;
+    min-height: 56px !important;
+  }
+
+  .checkbox-label {
+    @apply text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none;
+  }
+}
+
+/* Desktop - smaller, more compact */
+@media (min-width: 1025px) {
+  .checkbox-container {
+    @apply flex items-start gap-3 p-3 rounded-lg border border-gray-200 bg-white;
+    @apply hover:bg-gray-50 transition-colors;
+    min-height: 48px !important;
+  }
+
+  .checkbox-label {
+    @apply text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none;
   }
 }

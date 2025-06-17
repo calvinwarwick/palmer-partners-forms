@@ -150,9 +150,9 @@ const PersonalInfoStep = ({
                 </div>
               </div>
 
-              {/* Checkbox Questions */}
-              <div className="space-y-4 md:space-y-6 pt-4 md:pt-6">
-                <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+              {/* Enhanced Checkbox Questions */}
+              <div className="space-y-3 md:space-y-4 pt-4 md:pt-6">
+                <div className="checkbox-container">
                   <Checkbox 
                     id={`ukPassport-${applicant.id}`}
                     checked={toggles.ukPassport}
@@ -161,14 +161,14 @@ const PersonalInfoStep = ({
                   />
                   <Label 
                     htmlFor={`ukPassport-${applicant.id}`} 
-                    className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+                    className="checkbox-label flex-1"
                   >
                     Do you hold a UK or Republic of Ireland passport?
                   </Label>
                 </div>
                 
                 <div className="space-y-3 md:space-y-4">
-                  <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+                  <div className="checkbox-container">
                     <Checkbox 
                       id={`adverseCredit-${applicant.id}`}
                       checked={toggles.adverseCredit}
@@ -177,7 +177,7 @@ const PersonalInfoStep = ({
                     />
                     <Label 
                       htmlFor={`adverseCredit-${applicant.id}`} 
-                      className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+                      className="checkbox-label flex-1"
                     >
                       Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?
                     </Label>
@@ -189,7 +189,7 @@ const PersonalInfoStep = ({
                 }} />}
                 </div>
                 
-                <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+                <div className="checkbox-container">
                   <Checkbox 
                     id={`guarantorRequired-${applicant.id}`}
                     checked={toggles.guarantorRequired}
@@ -198,7 +198,7 @@ const PersonalInfoStep = ({
                   />
                   <Label 
                     htmlFor={`guarantorRequired-${applicant.id}`} 
-                    className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+                    className="checkbox-label flex-1"
                   >
                     If required, can you supply a guarantor for this proposed tenancy?
                   </Label>

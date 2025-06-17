@@ -171,7 +171,7 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+          <div className="checkbox-container">
             <Checkbox 
               id="terms"
               checked={termsAccepted}
@@ -181,7 +181,7 @@ const TermsAndDataStep = ({
             />
             <Label 
               htmlFor="terms" 
-              className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+              className="checkbox-label flex-1"
             >
               I confirm that I have read and understood the terms and conditions and I am bound by their contents
               <span className="text-red-500 ml-1">*</span>
@@ -201,7 +201,7 @@ const TermsAndDataStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+          <div className="checkbox-container">
             <Checkbox 
               id="utilities"
               checked={dataSharing.utilities}
@@ -210,13 +210,13 @@ const TermsAndDataStep = ({
             />
             <Label 
               htmlFor="utilities" 
-              className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+              className="checkbox-label flex-1"
             >
               I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts.
             </Label>
           </div>
           
-          <div className="flex items-start gap-3 p-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors">
+          <div className="checkbox-container">
             <Checkbox 
               id="insurance"
               checked={dataSharing.insurance}
@@ -225,7 +225,7 @@ const TermsAndDataStep = ({
             />
             <Label 
               htmlFor="insurance" 
-              className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+              className="checkbox-label flex-1"
             >
               I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options.
             </Label>
