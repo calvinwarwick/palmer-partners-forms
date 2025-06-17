@@ -1,11 +1,13 @@
 
 import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
+import { PawPrint, Baby, CreditCard, MessageSquare } from "lucide-react";
 
 interface AdditionalDetailsStepProps {
   additionalDetails: any;
@@ -35,15 +37,23 @@ const AdditionalDetailsStep = ({
   };
 
   return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-dark-grey mb-2">Additional Information</h2>
-        <p className="text-gray-600">Please provide additional details about your application</p>
+    <div className="space-y-8 font-lexend">
+      <div>
+        <h2 className="text-2xl font-bold text-dark-grey mb-2">Additional Information</h2>
+        <p className="text-gray-600 mb-4">Please provide additional details about your application</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Pets Section */}
-        <div className="space-y-4">
+      {/* Pets Section */}
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-xl">
+              <PawPrint className="h-5 w-5" />
+            </div>
+            Pet Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
           <CustomToggle
             id="pets"
             label="Do you have any pets?"
@@ -62,16 +72,26 @@ const AdditionalDetailsStep = ({
                 value={additionalDetails.petDetails || ""}
                 onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
                 placeholder="Please provide details about your pets (type, breed, age, etc.)"
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                 style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 required={additionalDetails.pets}
               />
             </div>
           )}
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Children Section */}
-        <div className="space-y-4">
+      {/* Children Section */}
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-xl">
+              <Baby className="h-5 w-5" />
+            </div>
+            Children Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
           <CustomToggle
             id="children"
             label="Do you have any children?"
@@ -90,76 +110,100 @@ const AdditionalDetailsStep = ({
                 value={additionalDetails.childrenDetails || ""}
                 onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
                 placeholder="Please provide details about your children (ages, etc.)"
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                 style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
                 required={additionalDetails.children}
               />
             </div>
           )}
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Deposit Type Section */}
-      <div className="space-y-4">
-        <Label className="text-sm font-medium text-gray-700">
-          Deposit type <span className="text-red-500">*</span>
-        </Label>
-        
-        <RadioGroup 
-          value={additionalDetails.depositType || ""} 
-          onValueChange={(value) => onUpdateDetails("depositType", value)}
-          className="space-y-4"
-        >
-          <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
-            <RadioGroupItem value="deposit-replacement" id="deposit-replacement" className="mt-1" />
-            <div className="flex-1">
-              <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
-                Deposit replacement
-              </Label>
-              <p className="text-sm text-gray-600 mt-1">
-                I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. You can find more information about Reposit's deposit replacement scheme{" "}
-                <a href="#" className="text-orange-500 hover:text-orange-600">here</a>.
-              </p>
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-xl">
+              <CreditCard className="h-5 w-5" />
             </div>
+            Deposit Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          <div className="space-y-4">
+            <Label className="text-sm font-medium text-gray-700">
+              Deposit type <span className="text-red-500">*</span>
+            </Label>
+            
+            <RadioGroup 
+              value={additionalDetails.depositType || ""} 
+              onValueChange={(value) => onUpdateDetails("depositType", value)}
+              className="space-y-4"
+            >
+              <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-xl">
+                <RadioGroupItem value="deposit-replacement" id="deposit-replacement" className="mt-1" />
+                <div className="flex-1">
+                  <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
+                    Deposit replacement
+                  </Label>
+                  <p className="text-sm text-gray-600 mt-1">
+                    I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. You can find more information about Reposit's deposit replacement scheme{" "}
+                    <a href="#" className="text-orange-500 hover:text-orange-600">here</a>.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-xl">
+                <RadioGroupItem value="traditional-deposit" id="traditional-deposit" className="mt-1" />
+                <div className="flex-1">
+                  <Label htmlFor="traditional-deposit" className="font-medium text-gray-900 cursor-pointer">
+                    Traditional deposit
+                  </Label>
+                  <p className="text-sm text-gray-600 mt-1">
+                    I would like to provide a traditional deposit equivalent to 5 weeks' rent and I will ensure the full amount is paid before the tenancy begins.
+                  </p>
+                  {maxRent && (
+                    <p className="text-sm text-gray-500 mt-2">
+                      Based on rent of {formatCurrency(maxRent)}, deposit would be approximately £{calculateDepositAmount(maxRent)}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </RadioGroup>
+            
+            <p className="text-sm text-gray-500 mt-2">
+              Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
+            </p>
           </div>
-          
-          <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
-            <RadioGroupItem value="traditional-deposit" id="traditional-deposit" className="mt-1" />
-            <div className="flex-1">
-              <Label htmlFor="traditional-deposit" className="font-medium text-gray-900 cursor-pointer">
-                Traditional deposit
-              </Label>
-              <p className="text-sm text-gray-600 mt-1">
-                I would like to provide a traditional deposit equivalent to 5 weeks' rent and I will ensure the full amount is paid before the tenancy begins.
-              </p>
-              {maxRent && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Based on rent of {formatCurrency(maxRent)}, deposit would be approximately £{calculateDepositAmount(maxRent)}
-                </p>
-              )}
-            </div>
-          </div>
-        </RadioGroup>
-        
-        <p className="text-sm text-gray-500 mt-2">
-          Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
-        </p>
-      </div>
+        </CardContent>
+      </Card>
 
       {/* Additional Requests */}
-      <div>
-        <Label htmlFor="additionalRequests" className="text-sm font-medium text-gray-700 mb-2 block">
-          Additional Requests or Comments
-        </Label>
-        <Textarea
-          id="additionalRequests"
-          value={additionalDetails.additionalRequests || ""}
-          onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
-          placeholder="Any additional requests or comments..."
-          className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-          style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-        />
-      </div>
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-xl">
+              <MessageSquare className="h-5 w-5" />
+            </div>
+            Additional Comments
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-6">
+          <div>
+            <Label htmlFor="additionalRequests" className="text-sm font-medium text-gray-700 mb-2 block">
+              Additional Requests or Comments
+            </Label>
+            <Textarea
+              id="additionalRequests"
+              value={additionalDetails.additionalRequests || ""}
+              onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
+              placeholder="Any additional requests or comments..."
+              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
+              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+            />
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

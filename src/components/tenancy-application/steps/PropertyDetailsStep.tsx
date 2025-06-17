@@ -39,10 +39,10 @@ const PropertyDetailsStep = ({
         <p className="text-light-grey mb-4">Please provide the details of the property you are applying for.</p>
       </div>
 
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30">
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
+        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
           <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
+            <div className="p-2 bg-white/20 rounded-xl">
               <Home className="h-5 w-5" />
             </div>
             Property Information
@@ -60,7 +60,7 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.streetAddress}
                 onChange={(e) => onUpdatePreferences("streetAddress", e.target.value)}
                 placeholder="Rental property address"
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                 required
               />
             </div>
@@ -75,7 +75,7 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.postcode}
                 onChange={(e) => onUpdatePreferences("postcode", e.target.value)}
                 placeholder="Rental property postcode"
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                 required
               />
             </div>
@@ -93,7 +93,7 @@ const PropertyDetailsStep = ({
                   value={propertyPreferences.maxRent}
                   onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
                   placeholder=""
-                  className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                   required
                 />
               </div>
@@ -113,7 +113,7 @@ const PropertyDetailsStep = ({
                   type="date"
                   value={propertyPreferences.moveInDate}
                   onChange={(e) => handleDateChange("moveInDate", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                   required
                   max="9999-12-31"
                 />
@@ -132,7 +132,7 @@ const PropertyDetailsStep = ({
                   type="date"
                   value={propertyPreferences.latestMoveInDate}
                   onChange={(e) => handleDateChange("latestMoveInDate", e.target.value)}
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                   required
                   max="9999-12-31"
                 />
@@ -147,10 +147,10 @@ const PropertyDetailsStep = ({
                 value={propertyPreferences.initialTenancyTerm} 
                 onValueChange={(value) => onUpdatePreferences("initialTenancyTerm", value)}
               >
-                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4">
+                <SelectTrigger id="initialTenancyTerm" name="initialTenancyTerm" className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 px-4 rounded-xl">
                   <SelectValue placeholder="Please select an option" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border-gray-300 z-50">
+                <SelectContent className="bg-white border-gray-300 z-50 rounded-xl">
                   <SelectItem value="1 year">1 year</SelectItem>
                   <SelectItem value="2 years">2 years</SelectItem>
                   <SelectItem value="3 years">3 years</SelectItem>

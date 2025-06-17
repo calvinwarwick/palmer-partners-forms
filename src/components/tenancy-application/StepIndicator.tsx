@@ -29,7 +29,7 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
             <div className="flex flex-col items-center">
               <div
                 className={cn(
-                  "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
+                  "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
                   isCompleted
                     ? "bg-green-500 text-white"
                     : isActive
