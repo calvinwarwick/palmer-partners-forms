@@ -18,10 +18,10 @@ const CustomToggle = React.forwardRef<
   CustomToggleProps
 >(({ id, label, checked, onCheckedChange, disabled = false, className, required = false }, ref) => {
   return (
-    <div className={cn("flex items-center justify-between gap-4 py-4 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors", className)}>
+    <div className={cn("toggle-container", className)}>
       <label 
         htmlFor={id} 
-        className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
+        className="toggle-label flex-1"
       >
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
@@ -33,7 +33,6 @@ const CustomToggle = React.forwardRef<
         onCheckedChange={onCheckedChange}
         disabled={disabled}
         className={cn(
-          // Mobile-first: larger touch targets for mobile
           "toggle-switch relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -43,7 +42,8 @@ const CustomToggle = React.forwardRef<
         <SwitchPrimitives.Thumb
           className={cn(
             "toggle-thumb pointer-events-none block rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ease-in-out",
-            "shadow-md border border-gray-200"
+            "shadow-md border border-gray-200",
+            checked ? "translate-x-6 sm:translate-x-5 md:translate-x-5" : "translate-x-0"
           )}
         />
       </SwitchPrimitives.Root>
