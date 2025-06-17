@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -64,9 +63,6 @@ const AdditionalDetailsStep = ({
           
           {additionalDetails.pets && (
             <div>
-              <Label htmlFor="petDetails" className="text-sm font-medium text-gray-700 mb-2 block">
-                Pet Details <span className="text-red-500">*</span>
-              </Label>
               <Textarea
                 id="petDetails"
                 value={additionalDetails.petDetails || ""}
