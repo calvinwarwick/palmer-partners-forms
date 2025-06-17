@@ -1,4 +1,3 @@
-
 import jsPDF from 'jspdf';
 import { Applicant, PropertyPreferences, AdditionalDetails } from '@/domain/types/Applicant';
 
@@ -240,7 +239,7 @@ export const generateApplicationPDF = async (data: {
   if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
     yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
   }
-  yPosition = addDataRow('Conditions of Offer', data.additionalDetails?.conditionsOfOffer || '', yPosition);
+  yPosition = addDataRow('Additional Requests', data.additionalDetails?.additionalRequests || '', yPosition);
 
   // Applicants Section
   data.applicants.forEach((applicant, index) => {
@@ -280,43 +279,6 @@ export const generateApplicationPDF = async (data: {
     yPosition = addDataRow('Requires Guarantor', applicant.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
     if (hasPets() && data.additionalDetails?.petDetails) {
       yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
-    }
-
-    // Guarantor Information - Only show if guarantor is added
-    if (applicant.guarantorAdded && applicant.guarantorName) {
-      yPosition = addDataRow('Guarantor Information', '', yPosition, true);
-      const guarantorFullName = applicant.guarantorLastName ? 
-        `${applicant.guarantorName} ${applicant.guarantorLastName}` : 
-        applicant.guarantorName;
-      yPosition = addDataRow('Guarantor Name', guarantorFullName, yPosition);
-      yPosition = addDataRow('Date of Birth', formatDate(applicant.guarantorDateOfBirth || ''), yPosition);
-      if (applicant.guarantorEmail) {
-        yPosition = addDataRow('Email Address', applicant.guarantorEmail, yPosition);
-      }
-      if (applicant.guarantorPhone) {
-        yPosition = addDataRow('Mobile Number', applicant.guarantorPhone, yPosition);
-      }
-      if (applicant.guarantorEmploymentStatus) {
-        yPosition = addDataRow('Employment Status', applicant.guarantorEmploymentStatus, yPosition);
-      }
-      if (applicant.guarantorCompanyName) {
-        yPosition = addDataRow('Company Name', applicant.guarantorCompanyName, yPosition);
-      }
-      if (applicant.guarantorJobTitle) {
-        yPosition = addDataRow('Job Title', applicant.guarantorJobTitle, yPosition);
-      }
-      if (applicant.guarantorIncome) {
-        yPosition = addDataRow('Annual Salary', `£${applicant.guarantorIncome}`, yPosition);
-      }
-      if (applicant.guarantorLengthOfService) {
-        yPosition = addDataRow('Length of Service', applicant.guarantorLengthOfService, yPosition);
-      }
-      if (applicant.guarantorAddress) {
-        yPosition = addDataRow('Street Address', applicant.guarantorAddress, yPosition);
-      }
-      if (applicant.guarantorPostcode) {
-        yPosition = addDataRow('Postcode', applicant.guarantorPostcode, yPosition);
-      }
     }
   });
 

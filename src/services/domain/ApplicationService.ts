@@ -97,7 +97,6 @@ export const sendApplicationConfirmation = async (application: Application): Pro
       </html>
     `;
 
-    console.log('Sending confirmation email with PDF attachment...');
     const emailRequest = {
       to: applicantEmail,
       subject: 'Tenancy Application Confirmation - Palmer & Partners',
@@ -190,7 +189,6 @@ export const sendAdminNotification = async (application: Application): Promise<b
       </html>
     `;
 
-    console.log('Sending admin notification with PDF attachment...');
     const emailRequest = {
       to: 'calvinwarwick+admin@gmail.com',
       subject: `New Tenancy Application - ${applicantName}`,

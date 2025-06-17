@@ -12,14 +12,13 @@ export interface Applicant {
   guarantorRequired?: string;
   guarantorAdded?: boolean;
   guarantorName?: string;
-  guarantorLastName?: string;
   guarantorRelationship?: string;
   guarantorEmail?: string;
   guarantorPhone?: string;
   guarantorDateOfBirth?: string;
   guarantorAddress?: string;
   guarantorPostcode?: string;
-  guarantorEmploymentStatus?: string;
+  guarantorEmployment?: string;
   guarantorCompanyName?: string;
   guarantorJobTitle?: string;
   guarantorIncome?: string;
@@ -113,7 +112,6 @@ export interface AdditionalDetails {
   childrenDetails: string;
   additionalRequests: string;
   householdIncome: string;
-  conditionsOfOffer: string;
   
   // Additional fields used in validation and forms
   hasPets?: boolean;

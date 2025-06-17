@@ -61,18 +61,12 @@ export const useFormState = () => {
       // Guarantor fields
       guarantorAdded: false,
       guarantorName: "",
-      guarantorLastName: "",
       guarantorRelationship: "",
       guarantorEmail: "",
       guarantorPhone: "",
-      guarantorDateOfBirth: "",
       guarantorAddress: "",
-      guarantorPostcode: "",
-      guarantorEmploymentStatus: "",
-      guarantorCompanyName: "",
-      guarantorJobTitle: "",
-      guarantorIncome: "",
-      guarantorLengthOfService: ""
+      guarantorEmployment: "",
+      guarantorIncome: ""
     }
   ]);
 

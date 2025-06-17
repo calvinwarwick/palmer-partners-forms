@@ -1,4 +1,3 @@
-
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -121,42 +120,37 @@ const ApplicationPreviewContent = ({ application }: ApplicationPreviewContentPro
                 {applicant.guarantorAdded && applicant.guarantorName && (
                   <>
                     <SubsectionHeader title="Guarantor Information" />
-                    <DataRow 
-                      label="Guarantor Name" 
-                      value={applicant.guarantorLastName ? 
-                        `${applicant.guarantorName} ${applicant.guarantorLastName}` : 
-                        applicant.guarantorName
-                      } 
-                    />
-                    {applicant.guarantorDateOfBirth && (
-                      <DataRow label="Date of Birth" value={applicant.guarantorDateOfBirth} />
-                    )}
+                    <DataRow label="Guarantor Name" value={applicant.guarantorName} />
+                    <DataRow label="Relationship" value={applicant.guarantorRelationship} />
                     {applicant.guarantorEmail && (
-                      <DataRow label="Email Address" value={applicant.guarantorEmail} />
+                      <DataRow label="Guarantor Email" value={applicant.guarantorEmail} />
                     )}
                     {applicant.guarantorPhone && (
-                      <DataRow label="Mobile Number" value={applicant.guarantorPhone} />
+                      <DataRow label="Guarantor Phone" value={applicant.guarantorPhone} />
                     )}
-                    {applicant.guarantorEmploymentStatus && (
-                      <DataRow label="Employment Status" value={applicant.guarantorEmploymentStatus} />
-                    )}
-                    {applicant.guarantorCompanyName && (
-                      <DataRow label="Company Name" value={applicant.guarantorCompanyName} />
-                    )}
-                    {applicant.guarantorJobTitle && (
-                      <DataRow label="Job Title" value={applicant.guarantorJobTitle} />
-                    )}
-                    {applicant.guarantorIncome && (
-                      <DataRow label="Annual Salary" value={`£${applicant.guarantorIncome}`} />
-                    )}
-                    {applicant.guarantorLengthOfService && (
-                      <DataRow label="Length of Service" value={applicant.guarantorLengthOfService} />
+                    {applicant.guarantorDateOfBirth && (
+                      <DataRow label="Guarantor Date of Birth" value={applicant.guarantorDateOfBirth} />
                     )}
                     {applicant.guarantorAddress && (
-                      <DataRow label="Street Address" value={applicant.guarantorAddress} />
+                      <DataRow label="Guarantor Address" value={applicant.guarantorAddress} />
                     )}
                     {applicant.guarantorPostcode && (
-                      <DataRow label="Postcode" value={applicant.guarantorPostcode} />
+                      <DataRow label="Guarantor Postcode" value={applicant.guarantorPostcode} />
+                    )}
+                    {applicant.guarantorEmployment && (
+                      <DataRow label="Guarantor Employment" value={applicant.guarantorEmployment} />
+                    )}
+                    {applicant.guarantorCompanyName && (
+                      <DataRow label="Guarantor Company" value={applicant.guarantorCompanyName} />
+                    )}
+                    {applicant.guarantorJobTitle && (
+                      <DataRow label="Guarantor Job Title" value={applicant.guarantorJobTitle} />
+                    )}
+                    {applicant.guarantorIncome && (
+                      <DataRow label="Guarantor Annual Income" value={`£${applicant.guarantorIncome}`} />
+                    )}
+                    {applicant.guarantorLengthOfService && (
+                      <DataRow label="Guarantor Length of Service" value={applicant.guarantorLengthOfService} />
                     )}
                   </>
                 )}

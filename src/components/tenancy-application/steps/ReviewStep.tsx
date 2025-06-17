@@ -34,12 +34,7 @@ const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureCha
                   {applicant.guarantorAdded && applicant.guarantorName && (
                     <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-md">
                       <Shield className="h-3 w-3" />
-                      <span className="text-xs font-medium">
-                        Guarantor: {applicant.guarantorLastName ? 
-                          `${applicant.guarantorName} ${applicant.guarantorLastName}` : 
-                          applicant.guarantorName
-                        }
-                      </span>
+                      <span className="text-xs font-medium">Guarantor: {applicant.guarantorName}</span>
                     </div>
                   )}
                 </li>
