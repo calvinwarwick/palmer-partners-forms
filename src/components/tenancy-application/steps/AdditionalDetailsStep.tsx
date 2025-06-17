@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, FileText } from "lucide-react";
+import { Heart, FileText, CreditCard } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
 import { PetDetails } from "./PetDetails";
 
@@ -24,6 +24,7 @@ interface AdditionalDetailsStepProps {
     householdIncome: string;
     childrenCount?: string;
     conditionsOfOffer?: string;
+    depositType?: string;
   };
   onUpdateDetails: (field: string, value: string | boolean) => void;
   onFillAllTestData?: () => void;
@@ -78,18 +79,86 @@ const AdditionalDetailsStep = ({
         </CardHeader>
         <CardContent className="space-y-6 p-4 sm:p-6">
           <div className="space-y-2">
-            <Label htmlFor="conditionsOfOffer" className="form-label text-gray-700 font-medium">
-              Please provide any conditions attached to your offer that you would like to discuss with your landlord.
-              If approved, these conditions will be added to your tenancy agreement.
-            </Label>
             <Textarea
               id="conditionsOfOffer"
               value={additionalDetails.conditionsOfOffer || ""}
               onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
-              placeholder="Enter any conditions you would like to discuss with your landlord..."
+              placeholder="Please provide any conditions attached to your offer that you would like to discuss with your landlord."
               className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
               style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
             />
+            <p className="text-sm text-muted-foreground">
+              If approved, these conditions will be added to your tenancy agreement.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Deposit */}
+      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
+        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
+          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
+            <div className="p-2 bg-white/20 rounded-lg">
+              <CreditCard className="h-5 w-5" />
+            </div>
+            Deposit
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 p-4 sm:p-6">
+          <div className="space-y-4">
+            <p className="text-gray-700">
+              Please select which deposit option you would prefer to use. Please note that a deposit replacement can only be offered upon agreement from the landlord of your preferred property.
+            </p>
+            
+            <div className="space-y-2">
+              <Label htmlFor="depositType" className="form-label text-gray-700 font-medium">
+                Deposit type <span className="text-red-500">*</span>
+              </Label>
+              <Select
+                value={additionalDetails.depositType || ""}
+                onValueChange={(value) => onUpdateDetails("depositType", value)}
+              >
+                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
+                  <SelectValue placeholder="Select deposit type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="replacement">Deposit replacement</SelectItem>
+                  <SelectItem value="traditional">Traditional deposit</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {additionalDetails.depositType === "replacement" && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-gray-700 mb-2">
+                  I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process.
+                </p>
+                <a 
+                  href="/Reposit_Tenant_deposit_information.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-orange-600 hover:text-orange-700 underline text-sm"
+                >
+                  You can find more information about Reposit's deposit replacement scheme here.
+                </a>
+              </div>
+            )}
+
+            {additionalDetails.depositType === "traditional" && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <p className="text-sm text-gray-700">
+                  I would like to provide a traditional deposit equivalent to 5 weeks' rent and I will ensure the full amount is paid before the tenancy begins.
+                </p>
+              </div>
+            )}
+
+            {additionalDetails.depositType && (
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                <p className="text-xs text-gray-600">
+                  Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
+                </p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

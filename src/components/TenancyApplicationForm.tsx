@@ -46,10 +46,15 @@ const TenancyApplicationForm = () => {
 
         return (
           <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
-            <ApplicationHeader title="Tenancy Application" />
+            <ApplicationHeader />
             
             <div className="py-4 sm:py-8">
               <div className="container mx-auto px-2 sm:px-4 max-w-5xl">
+                {/* Page Title */}
+                <div className="text-center mb-6">
+                  <h1 className="text-2xl md:text-3xl font-bold text-dark-grey">Tenancy Application</h1>
+                </div>
+
                 {/* Progress and step indicators */}
                 <div className="mb-4 sm:mb-8">
                   <Card className="bg-white/90 backdrop-blur-sm border-0" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
