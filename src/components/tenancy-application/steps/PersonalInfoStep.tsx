@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
 import { useState } from "react";
+
 interface PersonalInfoStepProps {
   applicants: Applicant[];
   onAddApplicant: () => void;
@@ -18,6 +19,7 @@ interface PersonalInfoStepProps {
   onApplicantCountChange: (count: number) => void;
   onGuarantorOpen: (applicant: Applicant) => void;
 }
+
 const PersonalInfoStep = ({
   applicants,
   onAddApplicant,
@@ -141,12 +143,10 @@ const PersonalInfoStep = ({
                 <div className="space-y-3 md:space-y-4">
                   <CustomToggle id={`adverseCredit-${applicant.id}`} label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?" checked={toggles.adverseCredit} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', checked)} />
                   
-                  {toggles.adverseCredit && <div className="bg-orange-50/50 rounded-lg p-4 border border-orange-200">
-                      <Textarea id={`adverseCreditDetails-${applicant.id}`} value={applicant.adverseCreditDetails || ''} onChange={e => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)} placeholder="Please provide more details about your adverse credit history:" className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3" rows={25} style={{
+                  {toggles.adverseCredit && <Textarea id={`adverseCreditDetails-${applicant.id}`} value={applicant.adverseCreditDetails || ''} onChange={e => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)} placeholder="Please provide more details about your adverse credit history:" className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3" rows={25} style={{
                   minHeight: '200px',
                   paddingLeft: '1rem'
-                }} />
-                    </div>}
+                }} />}
                 </div>
                 
                 <CustomToggle id={`guarantorRequired-${applicant.id}`} label="If required, can you supply a guarantor for this proposed tenancy?" checked={toggles.guarantorRequired} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)} />
@@ -164,4 +164,5 @@ const PersonalInfoStep = ({
     })}
     </div>;
 };
+
 export default PersonalInfoStep;
