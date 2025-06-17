@@ -1,4 +1,3 @@
-
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -111,7 +110,7 @@ const AdminSearchFilters = ({
               placeholder="Search by name, email, address, or postcode..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-12 border-gray-300 focus:border-orange-500 focus:ring-orange-500 h-11"
+              className="pl-14 border-gray-300 focus:border-orange-500 focus:ring-orange-500 h-11"
             />
             {searchTerm && (
               <Button

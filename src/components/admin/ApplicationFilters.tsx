@@ -32,7 +32,7 @@ const ApplicationFilters = ({
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-12 w-48 h-8 text-sm"
+            className="pl-14 w-48 h-8 text-sm"
           />
         </div>
         
@@ -89,7 +89,7 @@ const ApplicationFilters = ({
               placeholder="Search by name, email, or address..."
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-12 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500"
+              className="pl-14 shadow-sm border-gray-300 focus:border-orange-500 focus:ring-orange-500"
             />
           </div>
         </div>
