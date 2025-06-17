@@ -20,7 +20,7 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
           Employment Status <span className="text-red-500">*</span>
         </Label>
         <Select value={applicant.employmentStatus} onValueChange={(value) => onUpdateApplicant(applicant.id, "employmentStatus", value)}>
-          <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', minHeight: '100px' }}>
+          <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
             <SelectValue placeholder="Select employment status" />
           </SelectTrigger>
           <SelectContent>
@@ -73,11 +73,6 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                 onChange={(e) => onUpdateApplicant(applicant.id, "companyName", e.target.value)}
                 placeholder="Enter company name"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                style={{ 
-                  boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                  minHeight: '100px',
-                  paddingLeft: '1rem'
-                }}
               />
             </div>
             <div className="space-y-2">
@@ -90,11 +85,6 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                 onChange={(e) => onUpdateApplicant(applicant.id, "jobTitle", e.target.value)}
                 placeholder="Enter job title"
                 className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                style={{ 
-                  boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                  minHeight: '100px',
-                  paddingLeft: '1rem'
-                }}
               />
             </div>
           </div>
@@ -114,10 +104,6 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                   onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                   placeholder="Enter annual salary"
                   className="currency-input form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
-                  style={{ 
-                    boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px',
-                    minHeight: '100px'
-                  }}
                 />
               </div>
             </FormFieldWithTooltip>
@@ -127,7 +113,7 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
                 Length of Service
               </Label>
               <Select value={applicant.lengthOfService} onValueChange={(value) => onUpdateApplicant(applicant.id, "lengthOfService", value)}>
-                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px', minHeight: '100px' }}>
+                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
                   <SelectValue placeholder="Select an option" />
                 </SelectTrigger>
                 <SelectContent>
