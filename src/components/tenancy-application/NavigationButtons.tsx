@@ -25,7 +25,7 @@ const NavigationButtons = ({
   return <div className="pt-8">
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="flex gap-2 order-2 sm:order-1">
-          <Button type="button" variant="outline" size="sm" onClick={onFillTestData} className="text-xs border-blue-300 text-blue-600 hover:bg-blue-50">
+          <Button type="button" variant="outline" size="sm" onClick={onFillTestData} className="text-xs border-gray-300 text-gray-600 hover:bg-gray-900:text-gray-600 ">
             <TestTube className="h-3 w-3 mr-1 hover:bg-gray-200 " />
             Fill All Test Data
           </Button>
