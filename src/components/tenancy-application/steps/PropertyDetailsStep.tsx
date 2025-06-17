@@ -112,7 +112,7 @@ const PropertyDetailsStep = ({
                   type="date" 
                   value={propertyPreferences.moveInDate} 
                   onChange={e => handleDateChange("moveInDate", e.target.value)} 
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl" 
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12" 
                   required 
                   max="9999-12-31" 
                 />
@@ -131,7 +131,7 @@ const PropertyDetailsStep = ({
                   type="date" 
                   value={propertyPreferences.latestMoveInDate} 
                   onChange={e => handleDateChange("latestMoveInDate", e.target.value)} 
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl" 
+                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12" 
                   required 
                   max="9999-12-31" 
                 />
