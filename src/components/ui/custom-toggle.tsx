@@ -32,28 +32,17 @@ const CustomToggle = React.forwardRef<
         checked={checked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
-        style={{
-          width: '52px',
-          height: '28px',
-          minWidth: '52px',
-          minHeight: '28px'
-        }}
         className={cn(
-          "relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
+          // Mobile-first: larger touch targets for mobile
+          "toggle-switch relative inline-flex shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
           "disabled:cursor-not-allowed disabled:opacity-50",
           checked ? "bg-orange-500" : "bg-gray-400"
         )}
       >
         <SwitchPrimitives.Thumb
-          style={{
-            width: '24px',
-            height: '24px',
-            transform: checked ? 'translateX(24px)' : 'translateX(2px)',
-            transition: 'transform 200ms ease-in-out'
-          }}
           className={cn(
-            "pointer-events-none block rounded-full bg-white shadow-lg ring-0",
+            "toggle-thumb pointer-events-none block rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ease-in-out",
             "shadow-md border border-gray-200"
           )}
         />

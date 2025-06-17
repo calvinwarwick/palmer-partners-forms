@@ -36,6 +36,24 @@
     flex-shrink: 0 !important;
   }
 
+  /* Mobile toggle switches - proper touch targets */
+  .toggle-switch {
+    width: 60px !important;
+    height: 32px !important;
+    min-width: 60px !important;
+    min-height: 32px !important;
+  }
+
+  .toggle-thumb {
+    width: 28px !important;
+    height: 28px !important;
+    transform: translateX(2px) !important;
+  }
+
+  .toggle-switch[data-state="checked"] .toggle-thumb {
+    transform: translateX(30px) !important;
+  }
+
   .btn,
   button {
     min-height: 52px !important;
@@ -53,5 +71,45 @@
   textarea {
     min-height: 120px !important;
     resize: vertical;
+  }
+}
+
+/* Tablet sizing */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .toggle-switch {
+    width: 56px !important;
+    height: 30px !important;
+    min-width: 56px !important;
+    min-height: 30px !important;
+  }
+
+  .toggle-thumb {
+    width: 26px !important;
+    height: 26px !important;
+    transform: translateX(2px) !important;
+  }
+
+  .toggle-switch[data-state="checked"] .toggle-thumb {
+    transform: translateX(28px) !important;
+  }
+}
+
+/* Desktop sizing */
+@media (min-width: 1025px) {
+  .toggle-switch {
+    width: 52px !important;
+    height: 28px !important;
+    min-width: 52px !important;
+    min-height: 28px !important;
+  }
+
+  .toggle-thumb {
+    width: 24px !important;
+    height: 24px !important;
+    transform: translateX(2px) !important;
+  }
+
+  .toggle-switch[data-state="checked"] .toggle-thumb {
+    transform: translateX(26px) !important;
   }
 }
