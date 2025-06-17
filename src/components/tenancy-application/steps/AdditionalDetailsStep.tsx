@@ -36,6 +36,26 @@ const AdditionalDetailsStep = ({
     return isNaN(numericRent) ? "0" : (numericRent * 5).toLocaleString();
   };
 
+  const calculateRepositFees = (rentAmount: string) => {
+    if (!rentAmount) return { cashDeposit: "0", repositFee: "0", upfrontSavings: "0" };
+    
+    const monthlyRent = parseFloat(rentAmount.replace(/[^\d.]/g, ''));
+    if (isNaN(monthlyRent)) return { cashDeposit: "0", repositFee: "0", upfrontSavings: "0" };
+    
+    const cashDeposit = parseFloat((monthlyRent * 12 / 52 * 5).toFixed(2));
+    let repositFee = parseFloat((cashDeposit / 5).toFixed(2));
+    repositFee = repositFee < 150 ? 150 : repositFee;
+    const upfrontSavings = parseFloat((cashDeposit - repositFee).toFixed(2));
+    
+    return {
+      cashDeposit: cashDeposit.toFixed(2),
+      repositFee: repositFee.toFixed(2),
+      upfrontSavings: upfrontSavings.toFixed(2)
+    };
+  };
+
+  const repositCalculations = calculateRepositFees(maxRent);
+
   return (
     <div className="space-y-8 font-lexend">
       <div>
@@ -134,8 +154,21 @@ const AdditionalDetailsStep = ({
                     Deposit replacement
                   </Label>
                   <p className="text-sm text-gray-600 mt-1">
-                    I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. You can find more information about Reposit's deposit replacement scheme{" "}
-                    <a href="#" className="text-orange-500 hover:text-orange-600">here</a>.
+                    I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. 
+                    {maxRent && (
+                      <>
+                        The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment. 
+                      </>
+                    )}
+                    You can find more information about Reposit's deposit replacement scheme{" "}
+                    <a 
+                      href="/Reposit_Tenant_deposit_information.pdf" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-orange-500 hover:text-orange-600 underline"
+                    >
+                      here
+                    </a>.
                   </p>
                 </div>
               </div>
@@ -147,13 +180,11 @@ const AdditionalDetailsStep = ({
                     Traditional deposit
                   </Label>
                   <p className="text-sm text-gray-600 mt-1">
-                    I would like to provide a traditional deposit equivalent to 5 weeks' rent and I will ensure the full amount is paid before the tenancy begins.
+                    I would like to provide a traditional deposit equivalent to 5 weeks' rent
+                    {maxRent && (
+                      <> totalling £{calculateDepositAmount(maxRent)}</>
+                    )} and I will ensure the full amount is paid before the tenancy begins.
                   </p>
-                  {maxRent && (
-                    <p className="text-sm text-gray-500 mt-2">
-                      Based on rent of {formatCurrency(maxRent)}, deposit would be approximately £{calculateDepositAmount(maxRent)}
-                    </p>
-                  )}
                 </div>
               </div>
             </RadioGroup>
