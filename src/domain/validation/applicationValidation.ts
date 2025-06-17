@@ -62,11 +62,12 @@ export const validateStep = (
 
       const petsValid = additionalDetails.pets !== undefined && additionalDetails.pets !== null;
       const childrenValid = additionalDetails.children !== undefined && additionalDetails.children !== null;
+      const depositTypeValid = Boolean(additionalDetails.depositType);
 
       const petDetailsValid = !hasPets || Boolean(additionalDetails.petDetails?.trim());
       const childrenDetailsValid = !hasChildren || Boolean(additionalDetails.childrenDetails?.trim());
 
-      return petsValid && childrenValid && petDetailsValid && childrenDetailsValid;
+      return petsValid && childrenValid && depositTypeValid && petDetailsValid && childrenDetailsValid;
     
     case 6:
       return termsAccepted && signature.trim() !== '';

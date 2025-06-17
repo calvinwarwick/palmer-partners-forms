@@ -93,6 +93,7 @@ export const validateAndHighlightFields = (
     case 5:
       if (additionalDetails.pets === undefined || additionalDetails.pets === null) invalidFields.push('pets');
       if (additionalDetails.children === undefined || additionalDetails.children === null) invalidFields.push('children');
+      if (!additionalDetails.depositType) invalidFields.push('depositType');
       if (additionalDetails.children && !additionalDetails.childrenDetails) invalidFields.push('childrenDetails');
       if (additionalDetails.pets && !additionalDetails.petDetails) invalidFields.push('petDetails');
       break;

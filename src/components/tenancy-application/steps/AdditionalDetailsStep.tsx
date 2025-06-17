@@ -1,34 +1,16 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import React from "react";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { CustomToggle } from "@/components/ui/custom-toggle";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Heart, FileText, CreditCard } from "lucide-react";
 import { Applicant } from "@/domain/types/Applicant";
-import { PetDetails } from "./PetDetails";
 
 interface AdditionalDetailsStepProps {
-  additionalDetails: {
-    moveInDate: string;
-    tenancyLength: string;
-    pets: boolean;
-    petDetails: string;
-    smoking: boolean;
-    parking: boolean;
-    children: boolean;
-    childrenDetails: string;
-    additionalRequests: string;
-    householdIncome: string;
-    childrenCount?: string;
-    conditionsOfOffer?: string;
-    depositType?: string;
-  };
+  additionalDetails: any;
   onUpdateDetails: (field: string, value: string | boolean) => void;
-  onFillAllTestData?: () => void;
-  maxRent?: string;
+  maxRent: string;
   applicants: Applicant[];
   onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
 }
@@ -36,220 +18,156 @@ interface AdditionalDetailsStepProps {
 const AdditionalDetailsStep = ({ 
   additionalDetails, 
   onUpdateDetails, 
-  onFillAllTestData,
-  maxRent,
-  applicants,
-  onUpdateApplicant
+  maxRent, 
+  applicants, 
+  onUpdateApplicant 
 }: AdditionalDetailsStepProps) => {
-  const handleChildrenCountChange = (value: string) => {
-    const hasChildren = value !== "None";
-    onUpdateDetails("children", hasChildren);
-    onUpdateDetails("childrenCount", value);
-    if (!hasChildren) {
-      onUpdateDetails("childrenDetails", "");
-    }
+  const formatCurrency = (amount: string) => {
+    if (!amount) return "";
+    const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ''));
+    return isNaN(numericAmount) ? "" : `£${numericAmount.toLocaleString()}`;
   };
 
-  // Get current children count value for select
-  const getCurrentChildrenCount = () => {
-    if (additionalDetails.childrenCount) {
-      return additionalDetails.childrenCount;
-    }
-    if (!additionalDetails.children) return "None";
-    return "1"; // Default fallback
+  const calculateDepositAmount = (rentAmount: string) => {
+    if (!rentAmount) return "0";
+    const numericRent = parseFloat(rentAmount.replace(/[^\d.]/g, ''));
+    return isNaN(numericRent) ? "0" : (numericRent * 5).toLocaleString();
   };
 
   return (
     <div className="space-y-8">
-      <div>
-        <h3 className="text-2xl font-bold text-dark-grey mb-2">Additional Details</h3>
-        <p className="text-light-grey mb-4">Tell us more about your requirements and preferences</p>
-        <div className="border-b border-gray-200 mb-6" style={{ marginTop: '10px' }}></div>
+      <div className="text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-dark-grey mb-2">Additional Information</h2>
+        <p className="text-gray-600">Please provide additional details about your application</p>
       </div>
 
-      {/* Conditions of Offer */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
-        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <FileText className="h-5 w-5" />
-            </div>
-            Conditions of Offer
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-4 sm:p-6">
-          <div className="space-y-2">
-            <Textarea
-              id="conditionsOfOffer"
-              value={additionalDetails.conditionsOfOffer || ""}
-              onChange={(e) => onUpdateDetails("conditionsOfOffer", e.target.value)}
-              placeholder="Please provide any conditions attached to your offer that you would like to discuss with your landlord."
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[120px]"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-            />
-            <p className="text-sm text-muted-foreground">
-              If approved, these conditions will be added to your tenancy agreement.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Deposit */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
-        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <CreditCard className="h-5 w-5" />
-            </div>
-            Deposit
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-4 sm:p-6">
-          <div className="space-y-4">
-            <p className="text-gray-700">
-              Please select which deposit option you would prefer to use. Please note that a deposit replacement can only be offered upon agreement from the landlord of your preferred property.
-            </p>
-            
-            <div className="space-y-2">
-              <Label htmlFor="depositType" className="form-label text-gray-700 font-medium">
-                Deposit type <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                value={additionalDetails.depositType || ""}
-                onValueChange={(value) => onUpdateDetails("depositType", value)}
-              >
-                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
-                  <SelectValue placeholder="Select deposit type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="replacement">Deposit replacement</SelectItem>
-                  <SelectItem value="traditional">Traditional deposit</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {additionalDetails.depositType === "replacement" && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="text-sm text-gray-700 mb-2">
-                  I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process.
-                </p>
-                <a 
-                  href="/Reposit_Tenant_deposit_information.pdf" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-orange-600 hover:text-orange-700 underline text-sm"
-                >
-                  You can find more information about Reposit's deposit replacement scheme here.
-                </a>
-              </div>
-            )}
-
-            {additionalDetails.depositType === "traditional" && (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <p className="text-sm text-gray-700">
-                  I would like to provide a traditional deposit equivalent to 5 weeks' rent and I will ensure the full amount is paid before the tenancy begins.
-                </p>
-              </div>
-            )}
-
-            {additionalDetails.depositType && (
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <p className="text-xs text-gray-600">
-                  Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
-                </p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Further Information */}
-      <Card className="border-2 border-orange-100 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
-        <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-lg">
-              <Heart className="h-5 w-5" />
-            </div>
-            Further Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-4 sm:p-6">
-          <div className="space-y-2">
-            <Label htmlFor="childrenCount" className="form-label text-gray-700 font-medium">
-              How many people under the age of 18 will be living in the property? <span className="text-red-500">*</span>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Pets Section */}
+        <div className="space-y-4">
+          <div className="form-switch-container">
+            <Label htmlFor="pets" className="text-sm font-medium text-gray-700">
+              Do you have any pets? <span className="text-red-500">*</span>
             </Label>
-            <Select
-              value={getCurrentChildrenCount()}
-              onValueChange={handleChildrenCountChange}
-            >
-              <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500">
-                <SelectValue placeholder="Select number of children" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="None">None</SelectItem>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5+">5+</SelectItem>
-              </SelectContent>
-            </Select>
+            <CustomToggle
+              id="pets"
+              checked={additionalDetails.pets}
+              onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
+              className="ml-auto"
+            />
           </div>
-
-          {additionalDetails.children && (
-            <div className="space-y-2">
-              <Label htmlFor="childrenDetails" className="form-label text-gray-700 font-medium">
-                Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15) <span className="text-red-500">*</span>
-              </Label>
-              <Textarea
-                id="childrenDetails"
-                value={additionalDetails.childrenDetails}
-                onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
-                placeholder="Please provide ages of children..."
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
-                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-              />
-            </div>
-          )}
-
-          <CustomToggle
-            id="pets"
-            label="Do you intend to have any pets at the property?"
-            checked={additionalDetails.pets}
-            onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-            required={true}
-          />
-
+          
           {additionalDetails.pets && (
-            <div className="space-y-2">
-              <Label htmlFor="petDetails" className="form-label text-gray-700 font-medium">
-                Please provide details about your pets: <span className="text-red-500">*</span>
+            <div>
+              <Label htmlFor="petDetails" className="text-sm font-medium text-gray-700 mb-2 block">
+                Pet Details <span className="text-red-500">*</span>
               </Label>
               <Textarea
                 id="petDetails"
-                value={additionalDetails.petDetails}
+                value={additionalDetails.petDetails || ""}
                 onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
-                placeholder="Please provide details about the pets..."
-                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 min-h-[100px]"
+                placeholder="Please provide details about your pets (type, breed, age, etc.)"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
                 style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                required={additionalDetails.pets}
               />
             </div>
           )}
-        </CardContent>
-      </Card>
-
-      {/* Test Data Button */}
-      {onFillAllTestData && (
-        <div className="flex justify-center">
-          <Button 
-            variant="outline" 
-            onClick={onFillAllTestData}
-            className="text-orange-600 border-orange-300 hover:bg-orange-50"
-          >
-            Fill Form
-          </Button>
         </div>
-      )}
+
+        {/* Children Section */}
+        <div className="space-y-4">
+          <div className="form-switch-container">
+            <Label htmlFor="children" className="text-sm font-medium text-gray-700">
+              Do you have any children? <span className="text-red-500">*</span>
+            </Label>
+            <CustomToggle
+              id="children"
+              checked={additionalDetails.children}
+              onCheckedChange={(checked) => onUpdateDetails("children", checked)}
+              className="ml-auto"
+            />
+          </div>
+          
+          {additionalDetails.children && (
+            <div>
+              <Label htmlFor="childrenDetails" className="text-sm font-medium text-gray-700 mb-2 block">
+                Children Details <span className="text-red-500">*</span>
+              </Label>
+              <Textarea
+                id="childrenDetails"
+                value={additionalDetails.childrenDetails || ""}
+                onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
+                placeholder="Please provide details about your children (ages, etc.)"
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+                required={additionalDetails.children}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Deposit Type Section */}
+      <div className="space-y-4">
+        <Label className="text-sm font-medium text-gray-700">
+          Deposit type <span className="text-red-500">*</span>
+        </Label>
+        
+        <RadioGroup 
+          value={additionalDetails.depositType || ""} 
+          onValueChange={(value) => onUpdateDetails("depositType", value)}
+          className="space-y-4"
+        >
+          <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
+            <RadioGroupItem value="deposit-replacement" id="deposit-replacement" className="mt-1" />
+            <div className="flex-1">
+              <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
+                Deposit replacement
+              </Label>
+              <p className="text-sm text-gray-600 mt-1">
+                I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. You can find more information about Reposit's deposit replacement scheme{" "}
+                <a href="#" className="text-orange-500 hover:text-orange-600">here</a>.
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-lg">
+            <RadioGroupItem value="traditional-deposit" id="traditional-deposit" className="mt-1" />
+            <div className="flex-1">
+              <Label htmlFor="traditional-deposit" className="font-medium text-gray-900 cursor-pointer">
+                Traditional deposit
+              </Label>
+              <p className="text-sm text-gray-600 mt-1">
+                I would like to provide a traditional deposit equivalent to 5 weeks' rent and I will ensure the full amount is paid before the tenancy begins.
+              </p>
+              {maxRent && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Based on rent of {formatCurrency(maxRent)}, deposit would be approximately £{calculateDepositAmount(maxRent)}
+                </p>
+              )}
+            </div>
+          </div>
+        </RadioGroup>
+        
+        <p className="text-sm text-gray-500 mt-2">
+          Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
+        </p>
+      </div>
+
+      {/* Additional Requests */}
+      <div>
+        <Label htmlFor="additionalRequests" className="text-sm font-medium text-gray-700 mb-2 block">
+          Additional Requests or Comments
+        </Label>
+        <Textarea
+          id="additionalRequests"
+          value={additionalDetails.additionalRequests || ""}
+          onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
+          placeholder="Any additional requests or comments..."
+          className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+          style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+        />
+      </div>
     </div>
   );
 };
