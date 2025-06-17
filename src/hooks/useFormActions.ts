@@ -66,7 +66,21 @@ export const useFormActions = ({
     noticePeriod: "",
     noticePeriodLength: "",
     previousLandlordName: "",
-    previousLandlordPhone: ""
+    previousLandlordPhone: "",
+    // Guarantor fields
+    guarantorAdded: false,
+    guarantorName: "",
+    guarantorRelationship: "",
+    guarantorEmail: "",
+    guarantorPhone: "",
+    guarantorDateOfBirth: "",
+    guarantorAddress: "",
+    guarantorPostcode: "",
+    guarantorEmployment: "",
+    guarantorCompanyName: "",
+    guarantorJobTitle: "",
+    guarantorIncome: "",
+    guarantorLengthOfService: ""
   });
 
   const addApplicant = useCallback(() => {
@@ -128,7 +142,17 @@ export const useFormActions = ({
               ...applicant, 
               guarantorAdded: true,
               guarantorName: `${guarantorData.firstName} ${guarantorData.lastName}`,
-              guarantorRelationship: guarantorData.relationship
+              guarantorRelationship: guarantorData.relationship,
+              guarantorEmail: guarantorData.email,
+              guarantorPhone: guarantorData.phone,
+              guarantorDateOfBirth: guarantorData.dateOfBirth,
+              guarantorAddress: guarantorData.address,
+              guarantorPostcode: guarantorData.postcode,
+              guarantorEmployment: guarantorData.employment,
+              guarantorCompanyName: guarantorData.companyName,
+              guarantorJobTitle: guarantorData.jobTitle,
+              guarantorIncome: guarantorData.annualIncome,
+              guarantorLengthOfService: guarantorData.lengthOfService
             }
           : applicant
       );

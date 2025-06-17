@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Applicant, PropertyPreferences } from "@/domain/types/Applicant";
 import SignaturePad from "@/components/ui/signature-pad";
+import { Shield } from "lucide-react";
 
 interface ReviewStepProps {
   applicants: Applicant[];
@@ -14,7 +15,7 @@ interface ReviewStepProps {
 
 const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureChange }: ReviewStepProps) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-lexend">
       <h3 className="text-lg font-semibold">Review & Digital Signature</h3>
       
       <Card>
@@ -24,10 +25,18 @@ const ReviewStep = ({ applicants, propertyPreferences, signature, onSignatureCha
         <CardContent className="space-y-4">
           <div>
             <p className="font-medium">Applicants: {applicants.length}</p>
-            <ul className="text-sm text-gray-600 mt-1">
+            <ul className="text-sm text-gray-600 mt-1 space-y-1">
               {applicants.map((applicant, index) => (
-                <li key={applicant.id}>
-                  {index + 1}. {applicant.firstName} {applicant.lastName} - {applicant.email}
+                <li key={applicant.id} className="flex items-center gap-2">
+                  <span>
+                    {index + 1}. {applicant.firstName} {applicant.lastName} - {applicant.email}
+                  </span>
+                  {applicant.guarantorAdded && applicant.guarantorName && (
+                    <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-md">
+                      <Shield className="h-3 w-3" />
+                      <span className="text-xs font-medium">Guarantor: {applicant.guarantorName}</span>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

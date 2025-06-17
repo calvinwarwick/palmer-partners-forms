@@ -56,9 +56,19 @@ const PersonalInfoStep = ({
   };
 
   const handleDeleteGuarantor = (applicantId: string) => {
-    onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, 'false');
     onUpdateApplicant(applicantId, 'guarantorName' as keyof Applicant, '');
     onUpdateApplicant(applicantId, 'guarantorRelationship' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorEmail' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorPhone' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorDateOfBirth' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorAddress' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorPostcode' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorEmployment' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorCompanyName' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorJobTitle' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorIncome' as keyof Applicant, '');
+    onUpdateApplicant(applicantId, 'guarantorLengthOfService' as keyof Applicant, '');
   };
 
   const handleDateOfBirthChange = (applicantId: string, value: string) => {
@@ -205,13 +215,30 @@ const PersonalInfoStep = ({
                 </div>
               </div>
               
-              {toggles.guarantorRequired && <div className="space-y-4">
-                  {(applicant as any).guarantorAdded && (applicant as any).guarantorName ? <GuarantorSummary guarantorName={(applicant as any).guarantorName} guarantorRelationship={(applicant as any).guarantorRelationship} onEdit={() => onGuarantorOpen(applicant)} onDelete={() => handleDeleteGuarantor(applicant.id)} /> : <div className="flex justify-end pt-4">
-                      <Button variant="outline" onClick={() => onGuarantorOpen(applicant)} className="border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors">
+              {toggles.guarantorRequired && (
+                <div className="space-y-4">
+                  {applicant.guarantorAdded && applicant.guarantorName ? (
+                    <GuarantorSummary 
+                      guarantorName={applicant.guarantorName} 
+                      guarantorRelationship={applicant.guarantorRelationship || ''} 
+                      guarantorEmail={applicant.guarantorEmail}
+                      guarantorPhone={applicant.guarantorPhone}
+                      onEdit={() => onGuarantorOpen(applicant)} 
+                      onDelete={() => handleDeleteGuarantor(applicant.id)} 
+                    />
+                  ) : (
+                    <div className="flex justify-end pt-4">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => onGuarantorOpen(applicant)} 
+                        className="border-orange-300 text-orange-600 hover:bg-orange-50 transition-colors"
+                      >
                         Add Guarantor
                       </Button>
-                    </div>}
-                </div>}
+                    </div>
+                  )}
+                </div>
+              )}
             </CardContent>
           </Card>
         );
