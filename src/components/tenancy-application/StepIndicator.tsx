@@ -1,6 +1,7 @@
 
 import { cn } from "@/lib/utils";
 import { Home, User, Briefcase, MapPin, Info, Check } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -27,17 +28,31 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
         return (
           <div key={stepNumber} className="flex items-center">
             <div className="flex flex-col items-center">
-              <div
-                className={cn(
-                  "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
-                  isCompleted
-                    ? "bg-green-500 text-white"
-                    : isActive
-                    ? "bg-orange-500 text-white"
-                    : "bg-gray-200 text-gray-600"
-                )}
-              >
-                <IconComponent className="w-5 h-5" />
+              <div className="relative">
+                <div
+                  className={cn(
+                    "w-10 h-10 rounded-xl flex items-center justify-center transition-colors",
+                    isCompleted
+                      ? "bg-green-500 text-white"
+                      : isActive
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-200 text-gray-600"
+                  )}
+                >
+                  <IconComponent className="w-5 h-5" />
+                </div>
+                <Badge 
+                  className={cn(
+                    "absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold p-0 border-2 border-white",
+                    isCompleted
+                      ? "bg-green-500 text-white"
+                      : isActive
+                      ? "bg-orange-500 text-white"
+                      : "bg-gray-400 text-white"
+                  )}
+                >
+                  {stepNumber}
+                </Badge>
               </div>
               <span
                 className={cn(
@@ -52,14 +67,6 @@ const StepIndicator = ({ currentStep }: StepIndicatorProps) => {
                 {step.name}
               </span>
             </div>
-            {index < steps.length - 1 && (
-              <div
-                className={cn(
-                  "h-px w-8 mx-2 transition-colors",
-                  isCompleted ? "bg-green-500" : "bg-gray-200"
-                )}
-              />
-            )}
           </div>
         );
       })}
