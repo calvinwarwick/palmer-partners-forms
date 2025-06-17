@@ -68,18 +68,23 @@ const PersonalInfoStep = ({
       onUpdateApplicant(applicantId, 'dateOfBirth', value);
     }
   };
-  return <div className="space-y-6 md:space-y-8 font-lexend">
+  return (
+    <div className="space-y-6 md:space-y-8 font-lexend">
       <div>
         <h3 className="text-xl md:text-2xl font-bold text-dark-grey mb-2">Personal Details</h3>
         <p className="text-light-grey mb-4">Please provide personal details for each applicant.</p>
         <div className="border-b border-gray-200 mb-4 md:mb-6"></div>
       </div>
 
-      <ApplicantCountSelector applicantCount={applicants.length} onApplicantCountChange={onApplicantCountChange} />
+      <ApplicantCountSelector 
+        applicantCount={applicants.length} 
+        onApplicantCountChange={onApplicantCountChange} 
+      />
 
-      {applicants.map((applicant, index) => {
-      const toggles = getApplicantToggles(applicant.id);
-      return <Card key={applicant.id} className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
+      {applicants.length > 0 && applicants.map((applicant, index) => {
+        const toggles = getApplicantToggles(applicant.id);
+        return (
+          <Card key={applicant.id} className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 shadow-sm hover:shadow-md transition-all duration-300">
             <CardHeader className="pb-3 md:pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
               <CardTitle className="text-base md:text-lg font-semibold flex items-center justify-between">
                 <div className="flex items-center gap-2 md:gap-3">
@@ -160,9 +165,11 @@ const PersonalInfoStep = ({
                     </div>}
                 </div>}
             </CardContent>
-          </Card>;
-    })}
-    </div>;
+          </Card>
+        );
+      })}
+    </div>
+  );
 };
 
 export default PersonalInfoStep;
