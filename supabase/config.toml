@@ -1,1 +1,5 @@
+
 project_id = "akgmvwevnljjhcjgnzly"
+
+[functions.serve-file]
+verify_jwt = false

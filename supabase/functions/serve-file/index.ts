@@ -24,7 +24,7 @@ serve(async (req) => {
       return new Response('File name required', { status: 400, headers: corsHeaders })
     }
 
-    // Create Supabase client
+    // Create Supabase client with service role key for admin access
     const supabaseUrl = Deno.env.get('SUPABASE_URL')
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
     
@@ -33,11 +33,16 @@ serve(async (req) => {
       return new Response('Server configuration error', { status: 500, headers: corsHeaders })
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
 
     console.log('Attempting to download file from storage:', fileName)
 
-    // Get the file from storage
+    // Get the file from storage using service role (bypasses RLS)
     const { data, error } = await supabase.storage
       .from('admin-files')
       .download(fileName)
