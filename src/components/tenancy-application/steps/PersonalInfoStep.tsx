@@ -55,6 +55,13 @@ const PersonalInfoStep = ({
     };
   };
 
+  const getApplicantDisplayName = (applicant: Applicant, index: number) => {
+    if (applicant.firstName && applicant.lastName) {
+      return `${applicant.firstName} ${applicant.lastName}`;
+    }
+    return `Applicant ${index + 1}`;
+  };
+
   const handleDeleteGuarantor = (applicantId: string) => {
     onUpdateApplicant(applicantId, 'guarantorAdded' as keyof Applicant, '');
     onUpdateApplicant(applicantId, 'guarantorName' as keyof Applicant, '');
@@ -104,10 +111,7 @@ const PersonalInfoStep = ({
                     <User className="h-4 w-4 md:h-5 md:w-5 text-white" />
                   </div>
                   <span className="text-white text-sm md:text-base">
-                    Applicant {index + 1}
-                    {applicant.firstName && applicant.lastName && <span className="font-normal ml-1 md:ml-2 block md:inline">
-                        - {applicant.firstName} {applicant.lastName}
-                      </span>}
+                    {getApplicantDisplayName(applicant, index)}
                   </span>
                 </div>
               </CardTitle>

@@ -15,6 +15,13 @@ const ApplicantEmploymentCard = ({
   index,
   onUpdateApplicant
 }: ApplicantEmploymentCardProps) => {
+  const getApplicantDisplayName = (applicant: Applicant, index: number) => {
+    if (applicant.firstName && applicant.lastName) {
+      return `${applicant.firstName} ${applicant.lastName}`;
+    }
+    return `Applicant ${index + 1}`;
+  };
+
   return (
     <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl" style={{
       boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
@@ -24,12 +31,7 @@ const ApplicantEmploymentCard = ({
           <div className="p-2 bg-white/20 rounded-xl">
             <User className="h-5 w-5" />
           </div>
-          Applicant {index + 1}
-          {applicant.firstName && applicant.lastName && (
-            <span className="text-white font-normal">
-              - {applicant.firstName} {applicant.lastName}
-            </span>
-          )}
+          {getApplicantDisplayName(applicant, index)}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6 p-6">
