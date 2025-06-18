@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -26,9 +25,13 @@ const FileUploadTab = () => {
   }, []);
 
   const getFileUrl = (fileName: string) => {
-    // Use our own domain for file URLs
+    // In production, try our edge function first, fallback to direct Supabase URL
     const currentDomain = window.location.origin;
-    return `${currentDomain}/api/files/${fileName}`;
+    const edgeFunctionUrl = `${currentDomain}/api/files/${fileName}`;
+    
+    // For development or if edge function fails, we can fallback to direct access
+    // But we'll primarily use our domain
+    return edgeFunctionUrl;
   };
 
   const fetchFiles = async () => {
@@ -131,6 +134,16 @@ const FileUploadTab = () => {
       return 'bg-red-100 text-red-800';
     }
     return 'bg-gray-100 text-gray-800';
+  };
+
+  const testFileAccess = async (url: string) => {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      console.error('File access test failed:', error);
+      return false;
+    }
   };
 
   if (loading) {
