@@ -1,259 +1,130 @@
 
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CustomToggle } from "@/components/ui/custom-toggle";
-import { Button } from "@/components/ui/button";
-import { Applicant } from "@/domain/types/Applicant";
-import { PawPrint, Baby, CreditCard, MessageSquare, Users, Download, ExternalLink } from "lucide-react";
-import { toast } from "@/components/ui/use-toast";
+import { ExternalLink } from "lucide-react";
+import { Applicant, AdditionalDetails } from "@/domain/types/Applicant";
+import PetDetails from "./PetDetails";
 
 interface AdditionalDetailsStepProps {
-  additionalDetails: any;
-  onUpdateDetails: (field: string, value: string | boolean) => void;
-  maxRent: string;
+  additionalDetails: AdditionalDetails;
+  onUpdateDetails: (details: Partial<AdditionalDetails>) => void;
+  maxRent: number;
   applicants: Applicant[];
-  onUpdateApplicant: (id: string, field: keyof Applicant, value: string) => void;
+  onUpdateApplicant: (index: number, field: string, value: any) => void;
 }
 
 const AdditionalDetailsStep = ({ 
   additionalDetails, 
   onUpdateDetails, 
-  maxRent, 
-  applicants, 
+  maxRent,
+  applicants,
   onUpdateApplicant 
 }: AdditionalDetailsStepProps) => {
-  const formatCurrency = (amount: string) => {
-    if (!amount) return "";
-    const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ''));
-    return isNaN(numericAmount) ? "" : `£${numericAmount.toLocaleString()}`;
-  };
-
-  const calculateDepositAmount = (rentAmount: string) => {
-    if (!rentAmount) return "0";
-    const numericRent = parseFloat(rentAmount.replace(/[^\d.]/g, ''));
-    // Calculate 5 weeks rent: monthly rent * 12 months / 52 weeks * 5 weeks
-    return isNaN(numericRent) ? "0" : (numericRent * 12 / 52 * 5).toFixed(2);
-  };
-
-  const calculateRepositFees = (rentAmount: string) => {
-    if (!rentAmount) return { cashDeposit: "0", repositFee: "0", upfrontSavings: "0" };
-    
-    const monthlyRent = parseFloat(rentAmount.replace(/[^\d.]/g, ''));
-    if (isNaN(monthlyRent)) return { cashDeposit: "0", repositFee: "0", upfrontSavings: "0" };
-    
-    const cashDeposit = parseFloat((monthlyRent * 12 / 52 * 5).toFixed(2));
-    let repositFee = parseFloat((cashDeposit / 5).toFixed(2));
-    repositFee = repositFee < 150 ? 150 : repositFee;
-    const upfrontSavings = parseFloat((cashDeposit - repositFee).toFixed(2));
-    
-    return {
-      cashDeposit: cashDeposit.toFixed(2),
-      repositFee: repositFee.toFixed(2),
-      upfrontSavings: upfrontSavings.toFixed(2)
-    };
-  };
-
-  const repositCalculations = calculateRepositFees(maxRent);
-
-  const handlePdfAccess = () => {
-    // Create multiple fallback methods to access the PDF
-    const pdfUrl = '/Reposit_Tenant_deposit_information.pdf';
-    
-    // Try opening in new tab first
-    const newWindow = window.open(pdfUrl, '_blank');
-    
-    // If popup was blocked, fallback to direct navigation
-    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
-      window.location.href = pdfUrl;
-    }
-  };
-
   return (
-    <div className="space-y-8 font-lexend">
-      <div>
-        <h2 className="text-2xl font-bold text-dark-grey mb-2">Additional Information</h2>
-        <p className="text-gray-600 mb-4">Please provide additional details about your application</p>
-      </div>
-
-      {/* Pets and Family Section */}
-      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-xl">
-              <Users className="h-5 w-5" />
-            </div>
-            Pets and Family
-          </CardTitle>
+    <div className="space-y-6">
+      <Card className="border-0 bg-white/95 backdrop-blur-sm" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+        <CardHeader>
+          <CardTitle className="text-xl font-bold text-dark-grey">Additional Details</CardTitle>
+          <CardDescription>
+            Please provide any additional information about your tenancy requirements
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          {/* Pets Section */}
-          <div className="space-y-6">
-            <CustomToggle
-              id="pets"
-              label="Do you intend to have any pets at the property?"
-              checked={additionalDetails.pets}
-              onCheckedChange={(checked) => onUpdateDetails("pets", checked)}
-            />
-            
-            {additionalDetails.pets && (
-              <div>
-                <Textarea
-                  id="petDetails"
-                  value={additionalDetails.petDetails || ""}
-                  onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
-                  placeholder="Please provide details about your pets (type, breed, age, etc.)"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required={additionalDetails.pets}
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Children Section */}
-          <div className="space-y-6">
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
-                Do you have any children? <span className="text-red-500">*</span>
-              </Label>
-              <Select 
-                value={additionalDetails.childrenCount || ""} 
-                onValueChange={(value) => {
-                  onUpdateDetails("childrenCount", value);
-                  onUpdateDetails("children", value !== "none");
-                }}
-              >
-                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-                  <SelectValue placeholder="Select an option" />
-                </SelectTrigger>
-                <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl z-50">
-                  <SelectItem value="none">None</SelectItem>
-                  <SelectItem value="1">1</SelectItem>
-                  <SelectItem value="2">2</SelectItem>
-                  <SelectItem value="3">3</SelectItem>
-                  <SelectItem value="4">4</SelectItem>
-                  <SelectItem value="5+">5+</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {additionalDetails.children && additionalDetails.childrenCount !== "none" && (
-              <div>
-                <Textarea
-                  id="childrenDetails"
-                  value={additionalDetails.childrenDetails || ""}
-                  onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
-                  placeholder="Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15)*"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required={additionalDetails.children}
-                />
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Deposit Type Section */}
-      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-xl">
-              <CreditCard className="h-5 w-5" />
-            </div>
-            Deposit Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          <div className="space-y-4">
-            <Label className="text-sm font-medium text-gray-700">
-              Deposit type <span className="text-red-500">*</span>
+        <CardContent className="space-y-6">
+          {/* Special Requirements */}
+          <div className="space-y-2">
+            <Label htmlFor="specialRequirements" className="text-sm font-medium text-dark-grey">
+              Special Requirements or Requests
             </Label>
-            
-            <RadioGroup 
-              value={additionalDetails.depositType || ""} 
-              onValueChange={(value) => onUpdateDetails("depositType", value)}
-              className="space-y-4"
-            >
-              <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-xl">
-                <RadioGroupItem value="deposit-replacement" id="deposit-replacement" className="mt-1" />
-                <div className="flex-1">
-                  <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
-                    Deposit replacement
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                    I would like to use a deposit replacement option. If application is agreed, please pass my details to Reposit so that I can begin this process.{" "}
-                    {maxRent && (
-                      <>
-                        The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment.{" "}
-                      </>
-                    )}
-                    You can find more information about Reposit's deposit replacement scheme{" "}
-                    <button 
-                      type="button"
-                      onClick={handlePdfAccess}
-                      className="text-orange-500 hover:text-orange-600 underline cursor-pointer bg-transparent border-none p-0"
-                    >
-                      here
-                    </button>.
-                  </p>
-                </div>
+            <Textarea
+              id="specialRequirements"
+              placeholder="Please describe any special requirements, accessibility needs, or requests you may have..."
+              value={additionalDetails.specialRequirements || ''}
+              onChange={(e) => onUpdateDetails({ specialRequirements: e.target.value })}
+              className="min-h-[100px] resize-none"
+            />
+          </div>
+
+          {/* Deposit Information */}
+          <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-dark-grey">Security Deposit Information</h4>
+                <p className="text-sm text-gray-600">
+                  Your security deposit will be protected under the Tenancy Deposit Scheme. 
+                  For detailed information about how your deposit is protected, please review our deposit information guide.
+                </p>
+                <a 
+                  href="https://akgmvwevnljjhcjgnzly.supabase.co/storage/v1/object/public/admin-files/1750247127695-Reposit_Tenant_deposit_information.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-orange-600 hover:text-orange-700 font-medium text-sm transition-colors"
+                >
+                  View Deposit Information Guide
+                  <ExternalLink className="h-3 w-3" />
+                </a>
               </div>
-              
-              <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-xl">
-                <RadioGroupItem value="traditional-deposit" id="traditional-deposit" className="mt-1" />
-                <div className="flex-1">
-                  <Label htmlFor="traditional-deposit" className="font-medium text-gray-900 cursor-pointer">
-                    Traditional deposit
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    I would like to provide a traditional deposit equivalent to 5 weeks' rent
-                    {maxRent && (
-                      <> totalling £{calculateDepositAmount(maxRent)}</>
-                    )} and I will ensure the full amount is paid before the tenancy begins.
-                  </p>
-                </div>
-              </div>
-            </RadioGroup>
-            
-            <p className="text-sm text-gray-500 mt-2">
-              Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
-            </p>
+            </div>
+          </div>
+
+          {/* Deposit Ready Toggle */}
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
+            <div className="space-y-1">
+              <Label htmlFor="depositReady" className="text-sm font-medium text-dark-grey">
+                Deposit Ready
+              </Label>
+              <p className="text-xs text-gray-600">
+                I confirm that I have the required deposit amount (typically equivalent to {maxRent > 0 ? `£${maxRent}` : 'one month\'s rent'}) ready to pay upon successful application
+              </p>
+            </div>
+            <Switch
+              id="depositReady"
+              checked={additionalDetails.depositReady || false}
+              onCheckedChange={(checked) => onUpdateDetails({ depositReady: checked })}
+            />
+          </div>
+
+          {/* References Available */}
+          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
+            <div className="space-y-1">
+              <Label htmlFor="referencesAvailable" className="text-sm font-medium text-dark-grey">
+                References Available
+              </Label>
+              <p className="text-xs text-gray-600">
+                I can provide landlord/employer references upon request
+              </p>
+            </div>
+            <Switch
+              id="referencesAvailable"
+              checked={additionalDetails.referencesAvailable || false}
+              onCheckedChange={(checked) => onUpdateDetails({ referencesAvailable: checked })}
+            />
+          </div>
+
+          {/* Moving Date */}
+          <div className="space-y-2">
+            <Label htmlFor="movingDate" className="text-sm font-medium text-dark-grey">
+              Preferred Moving Date
+            </Label>
+            <Input
+              id="movingDate"
+              type="date"
+              value={additionalDetails.movingDate || ''}
+              onChange={(e) => onUpdateDetails({ movingDate: e.target.value })}
+              min={new Date().toISOString().split('T')[0]}
+            />
           </div>
         </CardContent>
       </Card>
 
-      {/* Additional Requests */}
-      <Card className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 rounded-xl">
-        <CardHeader className="pb-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-xl">
-          <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
-            <div className="p-2 bg-white/20 rounded-xl">
-              <MessageSquare className="h-5 w-5" />
-            </div>
-            Conditions of Offer
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6 p-6">
-          <div>
-            <Textarea
-              id="additionalRequests"
-              value={additionalDetails.additionalRequests || ""}
-              onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
-              placeholder="Please provide any conditions attached to your offer that you would like to discuss with your landlord."
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-            />
-            <p className="text-sm text-gray-500 mt-2">
-              If approved, these conditions will be added to your tenancy agreement.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Pet Details Card */}
+      <PetDetails
+        applicants={applicants}
+        onUpdateApplicant={onUpdateApplicant}
+      />
     </div>
   );
 };
