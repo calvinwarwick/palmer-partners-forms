@@ -25,6 +25,12 @@ const FileUploadTab = () => {
     fetchFiles();
   }, []);
 
+  const getFileUrl = (fileName: string) => {
+    // Use our own domain for file URLs
+    const currentDomain = window.location.origin;
+    return `${currentDomain}/api/files/${fileName}`;
+  };
+
   const fetchFiles = async () => {
     try {
       const { data, error } = await supabase.storage
@@ -36,21 +42,13 @@ const FileUploadTab = () => {
 
       if (error) throw error;
 
-      const filesWithUrls = await Promise.all(
-        (data || []).map(async (file) => {
-          const { data: urlData } = supabase.storage
-            .from('admin-files')
-            .getPublicUrl(file.name);
-
-          return {
-            name: file.name,
-            publicUrl: urlData.publicUrl,
-            size: file.metadata?.size || 0,
-            type: file.metadata?.mimetype || '',
-            created_at: file.created_at || '',
-          };
-        })
-      );
+      const filesWithUrls = (data || []).map((file) => ({
+        name: file.name,
+        publicUrl: getFileUrl(file.name),
+        size: file.metadata?.size || 0,
+        type: file.metadata?.mimetype || '',
+        created_at: file.created_at || '',
+      }));
 
       setFiles(filesWithUrls);
     } catch (error) {
@@ -156,7 +154,7 @@ const FileUploadTab = () => {
             Upload Files
           </CardTitle>
           <CardDescription>
-            Upload PDFs and images to use in forms. Supported formats: PDF, JPEG, PNG, GIF, WebP (Max 10MB each)
+            Upload PDFs and images to use in forms. Files will be accessible via your domain. Supported formats: PDF, JPEG, PNG, GIF, WebP (Max 10MB each)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -184,7 +182,7 @@ const FileUploadTab = () => {
         <CardHeader>
           <CardTitle className="text-xl font-bold text-dark-grey">Uploaded Files</CardTitle>
           <CardDescription>
-            Manage your uploaded files and get their URLs for use in forms
+            Manage your uploaded files and get their URLs for use in forms. All files are served from your domain.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -208,6 +206,7 @@ const FileUploadTab = () => {
                         </Badge>
                         <span className="text-sm text-gray-500">{formatFileSize(file.size)}</span>
                       </div>
+                      <p className="text-xs text-gray-400 mt-1 break-all">{file.publicUrl}</p>
                     </div>
                   </div>
                   
@@ -245,6 +244,80 @@ const FileUploadTab = () => {
       </Card>
     </div>
   );
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const fileList = event.target.files;
+    if (!fileList || fileList.length === 0) return;
+
+    setUploading(true);
+
+    try {
+      for (const file of fileList) {
+        const fileName = `${Date.now()}-${file.name}`;
+        
+        const { error } = await supabase.storage
+          .from('admin-files')
+          .upload(fileName, file);
+
+        if (error) throw error;
+      }
+
+      toast.success(`${fileList.length} file(s) uploaded successfully`);
+      fetchFiles();
+    } catch (error) {
+      console.error('Error uploading files:', error);
+      toast.error('Failed to upload files');
+    } finally {
+      setUploading(false);
+      event.target.value = '';
+    }
+  };
+
+  const handleDeleteFile = async (fileName: string) => {
+    try {
+      const { error } = await supabase.storage
+        .from('admin-files')
+        .remove([fileName]);
+
+      if (error) throw error;
+
+      toast.success('File deleted successfully');
+      fetchFiles();
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      toast.error('Failed to delete file');
+    }
+  };
+
+  const copyToClipboard = (url: string) => {
+    navigator.clipboard.writeText(url);
+    toast.success('URL copied to clipboard');
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const getFileIcon = (type: string) => {
+    if (type.startsWith('image/')) {
+      return <Image className="h-4 w-4" />;
+    }
+    return <File className="h-4 w-4" />;
+  };
+
+  const getFileTypeColor = (type: string) => {
+    if (type.startsWith('image/')) {
+      return 'bg-blue-100 text-blue-800';
+    }
+    if (type === 'application/pdf') {
+      return 'bg-red-100 text-red-800';
+    }
+    return 'bg-gray-100 text-gray-800';
+  };
 };
 
 export default FileUploadTab;

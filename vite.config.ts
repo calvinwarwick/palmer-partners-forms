@@ -11,6 +11,14 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     // Ensure proper MIME types for static files
     middlewareMode: false,
+    proxy: {
+      // Proxy file requests to our Supabase edge function
+      '/api/files': {
+        target: 'https://akgmvwevnljjhcjgnzly.supabase.co/functions/v1/serve-file',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/files/, ''),
+      }
+    }
   },
   plugins: [
     react(),
