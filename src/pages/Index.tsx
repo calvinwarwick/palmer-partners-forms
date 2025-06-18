@@ -1,36 +1,108 @@
 
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { FileText } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { FileText, Users, Clock, Shield } from "lucide-react";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
+import PdfTestLink from "@/components/pdf-test/PdfTestLink";
 
 const Index = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 font-lexend">
       <ApplicationHeader />
       
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-16 max-w-2xl">
-        <div className="flex items-center justify-center">
-          <Card className="border-0 bg-white/90 backdrop-blur-sm hover:bg-white/95 transition-all duration-200 w-full max-w-md" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
-            <CardContent className="p-8 text-center">
-              <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                <FileText className="h-8 w-8 text-orange-500" />
-              </div>
-              <h3 className="text-xl font-semibold text-dark-grey mb-4">Apply for Tenancy</h3>
-              <p className="text-light-grey mb-6">
-                Complete your tenancy application quickly and securely online.
-              </p>
-              <Link to="/tenancy-application">
-                <Button 
-                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold"
-                >
-                  Start Application
-                </Button>
-              </Link>
+      <div className="container mx-auto px-4 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-6xl font-bold text-dark-grey mb-6">
+            Property & <span className="text-orange-500">Paige</span>
+          </h1>
+          <p className="text-xl text-light-grey mb-8 max-w-2xl mx-auto">
+            Streamline your tenancy application process with our modern, secure platform
+          </p>
+          <Button 
+            onClick={() => navigate("/application")}
+            className="bg-orange-500 hover:bg-orange-600 text-white text-lg px-8 py-6 rounded-xl shadow-lg"
+          >
+            Start Your Application
+          </Button>
+        </div>
+
+        {/* PDF Test Section */}
+        <div className="mb-12">
+          <Card className="max-w-md mx-auto">
+            <CardHeader>
+              <CardTitle className="text-center">PDF Test</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center">
+              <PdfTestLink />
             </CardContent>
           </Card>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <Card className="text-center hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <FileText className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+              <CardTitle className="text-dark-grey">Digital Forms</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Complete your tenancy application entirely online with our intuitive forms
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <Users className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+              <CardTitle className="text-dark-grey">Multiple Applicants</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Easily add multiple applicants and guarantors to your application
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <Clock className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+              <CardTitle className="text-dark-grey">Quick Process</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Save time with our streamlined application process and instant submission
+              </CardDescription>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center hover:shadow-lg transition-shadow">
+            <CardHeader>
+              <Shield className="h-12 w-12 text-orange-500 mx-auto mb-4" />
+              <CardTitle className="text-dark-grey">Secure & Private</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                Your personal information is protected with bank-level security
+              </CardDescription>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="text-center">
+          <h2 className="text-3xl font-bold text-dark-grey mb-4">Ready to get started?</h2>
+          <p className="text-light-grey mb-8">
+            Begin your tenancy application today and secure your new home
+          </p>
+          <Button 
+            onClick={() => navigate("/application")}
+            variant="outline"
+            className="border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white text-lg px-8 py-6 rounded-xl"
+          >
+            Begin Application
+          </Button>
         </div>
       </div>
     </div>
