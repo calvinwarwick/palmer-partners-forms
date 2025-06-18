@@ -45,13 +45,48 @@
     padding-top: 1rem !important;
   }
 
-  /* Force all grid layouts to single column on mobile */
+  /* Force ALL grid layouts to single column on mobile with full width */
+  .grid,
   .grid.grid-cols-1.md\\:grid-cols-2,
   .grid.grid-cols-1.md\\:grid-cols-3,
   .grid.grid-cols-1.lg\\:grid-cols-3,
-  .grid.grid-cols-1.xl\\:grid-cols-3 {
-    grid-template-columns: 1fr !important;
+  .grid.grid-cols-1.xl\\:grid-cols-3,
+  .grid.grid-cols-1.sm\\:grid-cols-2,
+  .grid.grid-cols-1.sm\\:grid-cols-2.lg\\:grid-cols-3 {
+    display: flex !important;
+    flex-direction: column !important;
     gap: 0.75rem !important;
+    width: 100% !important;
+  }
+
+  /* Ensure all form field containers take full width */
+  .grid > *,
+  .grid > div,
+  .space-y-2,
+  .space-y-4,
+  .space-y-6 {
+    width: 100% !important;
+    flex: none !important;
+  }
+
+  /* Currency input container must be full width */
+  .currency-input-container,
+  .date-input-container {
+    width: 100% !important;
+    flex: 1 !important;
+  }
+
+  /* All form inputs full width on mobile */
+  .form-control,
+  .form-select,
+  input,
+  select,
+  textarea,
+  .currency-input,
+  [role="combobox"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex: 1 !important;
   }
 
   /* Remove extra spacing from form fields */
@@ -60,6 +95,7 @@
   .space-y-3 > * + * {
     margin-top: 0.5rem !important;
     margin-bottom: 0.5rem !important;
+    width: 100% !important;
   }
 
   .card-header {
@@ -93,6 +129,13 @@
   .form-label + .form-control,
   .form-label + .form-select {
     margin-top: 0.25rem !important;
+  }
+
+  /* Ensure form field spacing containers are full width */
+  .space-y-2 > *,
+  .space-y-4 > *,
+  .space-y-6 > * {
+    width: 100% !important;
   }
 }
 

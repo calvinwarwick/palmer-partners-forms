@@ -8,15 +8,19 @@
     padding: 0.75rem 0.875rem;
     margin-bottom: 0.5rem !important;
     font-size: 16px !important;
+    width: 100% !important;
+    max-width: 100% !important;
   }
   
   input[type="date"] {
     padding-left: 2.75rem !important;
     min-height: 48px !important;
+    width: 100% !important;
   }
   
   .date-input-container {
     margin-bottom: 0.5rem !important;
+    width: 100% !important;
   }
   
   .mobile-form-grid {
@@ -26,6 +30,7 @@
   .mobile-form-grid > * {
     @apply w-full;
     margin-bottom: 0.5rem !important;
+    width: 100% !important;
   }
 
   /* Mobile checkbox sizing */
@@ -56,6 +61,7 @@
     @apply text-base;
     font-size: 16px !important;
     padding: 0.75rem 0.875rem !important;
+    width: 100% !important;
   }
 
   /* Specific mobile toggle adjustments */
@@ -76,5 +82,25 @@
   /* Remove gaps between form elements */
   .form-field + .form-field {
     margin-top: 0.5rem !important;
+  }
+
+  /* Ensure currency input is full width */
+  .currency-input {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .currency-input-container {
+    width: 100% !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* All input containers full width */
+  div:has(> input),
+  div:has(> select),
+  div:has(> textarea),
+  .space-y-2,
+  .space-y-4 {
+    width: 100% !important;
   }
 }
