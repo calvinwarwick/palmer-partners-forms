@@ -35,14 +35,14 @@ const AdditionalDetailsStep = ({
         <CardContent className="space-y-6">
           {/* Special Requirements */}
           <div className="space-y-2">
-            <Label htmlFor="specialRequirements" className="text-sm font-medium text-dark-grey">
+            <Label htmlFor="additionalRequests" className="text-sm font-medium text-dark-grey">
               Special Requirements or Requests
             </Label>
             <Textarea
-              id="specialRequirements"
+              id="additionalRequests"
               placeholder="Please describe any special requirements, accessibility needs, or requests you may have..."
-              value={additionalDetails.specialRequirements || ''}
-              onChange={(e) => onUpdateDetails({ specialRequirements: e.target.value })}
+              value={additionalDetails.additionalRequests || ''}
+              onChange={(e) => onUpdateDetails({ additionalRequests: e.target.value })}
               className="min-h-[100px] resize-none"
             />
           </div>
@@ -70,50 +70,16 @@ const AdditionalDetailsStep = ({
             </div>
           </div>
 
-          {/* Deposit Ready Toggle */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
-            <div className="space-y-1">
-              <Label htmlFor="depositReady" className="text-sm font-medium text-dark-grey">
-                Deposit Ready
-              </Label>
-              <p className="text-xs text-gray-600">
-                I confirm that I have the required deposit amount (typically equivalent to {maxRent > 0 ? `£${maxRent}` : 'one month\'s rent'}) ready to pay upon successful application
-              </p>
-            </div>
-            <Switch
-              id="depositReady"
-              checked={additionalDetails.depositReady || false}
-              onCheckedChange={(checked) => onUpdateDetails({ depositReady: checked })}
-            />
-          </div>
-
-          {/* References Available */}
-          <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
-            <div className="space-y-1">
-              <Label htmlFor="referencesAvailable" className="text-sm font-medium text-dark-grey">
-                References Available
-              </Label>
-              <p className="text-xs text-gray-600">
-                I can provide landlord/employer references upon request
-              </p>
-            </div>
-            <Switch
-              id="referencesAvailable"
-              checked={additionalDetails.referencesAvailable || false}
-              onCheckedChange={(checked) => onUpdateDetails({ referencesAvailable: checked })}
-            />
-          </div>
-
           {/* Moving Date */}
           <div className="space-y-2">
-            <Label htmlFor="movingDate" className="text-sm font-medium text-dark-grey">
+            <Label htmlFor="moveInDate" className="text-sm font-medium text-dark-grey">
               Preferred Moving Date
             </Label>
             <Input
-              id="movingDate"
+              id="moveInDate"
               type="date"
-              value={additionalDetails.movingDate || ''}
-              onChange={(e) => onUpdateDetails({ movingDate: e.target.value })}
+              value={additionalDetails.moveInDate || ''}
+              onChange={(e) => onUpdateDetails({ moveInDate: e.target.value })}
               min={new Date().toISOString().split('T')[0]}
             />
           </div>
@@ -122,8 +88,10 @@ const AdditionalDetailsStep = ({
 
       {/* Pet Details Card */}
       <PetDetails
-        applicants={applicants}
-        onUpdateApplicant={onUpdateApplicant}
+        pets={additionalDetails.pets ? 'yes' : 'no'}
+        petDetails={additionalDetails.petDetails}
+        onPetsChange={(value) => onUpdateDetails({ pets: value === 'yes' })}
+        onPetDetailsChange={(value) => onUpdateDetails({ petDetails: value })}
       />
     </div>
   );

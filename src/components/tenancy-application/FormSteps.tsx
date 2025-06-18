@@ -74,7 +74,12 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
           onUpdateDetails={updateAdditionalDetails}
           maxRent={propertyPreferences.maxRent}
           applicants={applicants}
-          onUpdateApplicant={updateApplicant}
+          onUpdateApplicant={(index: number, field: string, value: any) => {
+            // Convert index-based update to id-based update for compatibility
+            if (applicants[index]) {
+              updateApplicant(applicants[index].id, field as keyof Applicant, value);
+            }
+          }}
         />
       );
     case 6:

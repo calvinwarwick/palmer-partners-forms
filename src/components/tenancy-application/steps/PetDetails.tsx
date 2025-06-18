@@ -11,7 +11,7 @@ interface PetDetailsProps {
   onPetDetailsChange: (value: string) => void;
 }
 
-export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange }: PetDetailsProps) => {
+const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange }: PetDetailsProps) => {
   return (
     <Card>
       <CardHeader>
@@ -52,3 +52,5 @@ export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange 
     </Card>
   );
 };
+
+export default PetDetails;
