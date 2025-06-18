@@ -36,7 +36,8 @@ const AdditionalDetailsStep = ({
   const calculateDepositAmount = (rentAmount: string) => {
     if (!rentAmount) return "0";
     const numericRent = parseFloat(rentAmount.replace(/[^\d.]/g, ''));
-    return isNaN(numericRent) ? "0" : (numericRent * 5).toLocaleString();
+    // Calculate 5 weeks rent: monthly rent * 12 months / 52 weeks * 5 weeks
+    return isNaN(numericRent) ? "0" : (numericRent * 12 / 52 * 5).toFixed(2);
   };
 
   const calculateRepositFees = (rentAmount: string) => {
@@ -185,11 +186,11 @@ const AdditionalDetailsStep = ({
                   <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
                     Deposit replacement
                   </Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    I would like to use a deposit replacement option, if application is agreed, please pass my details to Reposit so that I can begin this process. 
+                  <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                    I would like to use a deposit replacement option. If application is agreed, please pass my details to Reposit so that I can begin this process.{" "}
                     {maxRent && (
                       <>
-                        The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment. 
+                        The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment.{" "}
                       </>
                     )}
                     You can find more information about Reposit's deposit replacement scheme{" "}
