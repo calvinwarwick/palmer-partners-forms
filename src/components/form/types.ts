@@ -11,7 +11,36 @@ export interface BaseFormFieldProps {
   disabled?: boolean;
 }
 
+export interface ToggleFieldProps {
+  id: string;
+  label: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  required?: boolean;
+  error?: string;
+  hint?: string;
+  className?: string;
+  disabled?: boolean;
+}
+
+export interface CheckboxFieldProps {
+  id: string;
+  label: string;
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  required?: boolean;
+  error?: string;
+  hint?: string;
+  className?: string;
+  disabled?: boolean;
+}
+
 export interface SelectOption {
+  value: string;
+  label: string;
+}
+
+export interface RadioOption {
   value: string;
   label: string;
 }
@@ -25,7 +54,7 @@ export interface FormValidationRule {
 }
 
 export interface FormFieldState {
-  value: string;
+  value: string | boolean;
   error?: string;
   touched: boolean;
 }

@@ -6,15 +6,18 @@ import {
   TextareaInput,
   DateInput,
   CurrencyInput,
+  ToggleInput,
+  CheckboxInput,
+  RadioGroupInput,
   FormGrid,
 } from './index';
 
 export interface FormFieldConfig {
   id: string;
-  type: 'text' | 'email' | 'tel' | 'select' | 'textarea' | 'date' | 'currency';
+  type: 'text' | 'email' | 'tel' | 'select' | 'textarea' | 'date' | 'currency' | 'toggle' | 'checkbox' | 'radio';
   label: string;
-  value: string;
-  onChange: (value: string) => void;
+  value: string | boolean;
+  onChange: (value: string | boolean) => void;
   placeholder?: string;
   required?: boolean;
   error?: string;
@@ -25,6 +28,8 @@ export interface FormFieldConfig {
   currency?: string;
   min?: string;
   max?: string;
+  checked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
 }
 
 interface FormBuilderProps {
@@ -42,8 +47,6 @@ export const FormBuilder = ({
     const commonProps = {
       id: field.id,
       label: field.label,
-      value: field.value,
-      onChange: field.onChange,
       required: field.required,
       error: field.error,
       hint: field.hint,
@@ -58,6 +61,8 @@ export const FormBuilder = ({
           <TextInput
             {...commonProps}
             type={field.type}
+            value={field.value as string}
+            onChange={field.onChange as (value: string) => void}
             placeholder={field.placeholder}
           />
         );
@@ -66,6 +71,8 @@ export const FormBuilder = ({
         return (
           <SelectInput
             {...commonProps}
+            value={field.value as string}
+            onChange={field.onChange as (value: string) => void}
             options={field.options || []}
             placeholder={field.placeholder}
           />
@@ -75,6 +82,8 @@ export const FormBuilder = ({
         return (
           <TextareaInput
             {...commonProps}
+            value={field.value as string}
+            onChange={field.onChange as (value: string) => void}
             placeholder={field.placeholder}
             rows={field.rows}
           />
@@ -84,6 +93,8 @@ export const FormBuilder = ({
         return (
           <DateInput
             {...commonProps}
+            value={field.value as string}
+            onChange={field.onChange as (value: string) => void}
             min={field.min}
             max={field.max}
           />
@@ -93,8 +104,38 @@ export const FormBuilder = ({
         return (
           <CurrencyInput
             {...commonProps}
+            value={field.value as string}
+            onChange={field.onChange as (value: string) => void}
             placeholder={field.placeholder}
             currency={field.currency}
+          />
+        );
+
+      case 'toggle':
+        return (
+          <ToggleInput
+            {...commonProps}
+            checked={field.value as boolean}
+            onCheckedChange={field.onCheckedChange || (field.onChange as (checked: boolean) => void)}
+          />
+        );
+
+      case 'checkbox':
+        return (
+          <CheckboxInput
+            {...commonProps}
+            checked={field.value as boolean}
+            onCheckedChange={field.onCheckedChange || (field.onChange as (checked: boolean) => void)}
+          />
+        );
+
+      case 'radio':
+        return (
+          <RadioGroupInput
+            {...commonProps}
+            value={field.value as string}
+            onChange={field.onChange as (value: string) => void}
+            options={field.options || []}
           />
         );
 
