@@ -1,73 +1,171 @@
-# Welcome to your Lovable project
+
+# Tenancy Application System - Palmer & Partners
+
+A comprehensive tenancy application management system built with React, TypeScript, and Supabase.
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/c0c4d145-b715-4d36-855a-41890ccb2e58
 
-## How can I edit this code?
+## Tech Stack
 
-There are several ways of editing your application.
+- **Frontend**: React 18, TypeScript, Vite
+- **UI/Styling**: Tailwind CSS, shadcn/ui, Radix UI, Lexend font
+- **Forms**: React Hook Form, Zod validation
+- **Backend**: Supabase (PostgreSQL, Authentication, Edge Functions)
+- **State Management**: TanStack React Query, React Context
+- **Additional**: jsPDF, Recharts, Lucide React icons
 
-**Use Lovable**
+## Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/c0c4d145-b715-4d36-855a-41890ccb2e58) and start prompting.
+- Multi-step tenancy application form
+- Admin dashboard for application management
+- PDF generation and document handling
+- User authentication and role-based access
+- Responsive design with mobile optimization
+- Guarantor management system
 
-Changes made via Lovable will be committed automatically to this repo.
+## Local Development Setup
 
-**Use your preferred IDE**
+### Prerequisites
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- Node.js (v18 or higher) - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- npm or yarn package manager
+- Git
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation Steps
 
-Follow these steps:
+1. **Clone the repository**
+   ```sh
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Install dependencies**
+   ```sh
+   npm install
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **Environment Setup**
+   
+   This project uses Supabase for backend services. The following environment variables are configured:
+   - `SUPABASE_URL`: https://akgmvwevnljjhcjgnzly.supabase.co
+   - `SUPABASE_ANON_KEY`: Already configured in the codebase
+   
+   No additional `.env` file is needed as the project uses direct configuration.
 
-# Step 3: Install the necessary dependencies.
-npm i
+4. **Start the development server**
+   ```sh
+   npm run dev
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+5. **Access the application**
+   
+   Open your browser and navigate to `http://localhost:8080`
+
+### Available Scripts
+
+- `npm run dev` - Start development server with hot reload
+- `npm run build` - Build the project for production
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint for code quality checks
+
+### Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # shadcn/ui components
+│   ├── tenancy-application/  # Form-specific components
+│   ├── admin/          # Admin dashboard components
+│   └── applicants/     # Applicant management components
+├── pages/              # Route components
+├── hooks/              # Custom React hooks
+├── services/           # API and business logic services
+├── styles/             # CSS modules and global styles
+├── domain/             # TypeScript types and validation
+└── integrations/       # External service integrations
 ```
 
-**Edit a file directly in GitHub**
+### Database Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The project uses Supabase with the following key tables:
+- User profiles and authentication
+- Tenancy applications
+- Email verification codes
+- User roles and permissions
 
-**Use GitHub Codespaces**
+Database functions and RLS policies are automatically configured.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Key Features & Routes
 
-## What technologies are used for this project?
+- `/` - Home page
+- `/tenancy-application` - Multi-step application form
+- `/admin` - Admin dashboard (requires authentication)
+- `/applicants` - Applicant management
+- `/login` - User authentication
 
-This project is built with:
+### Mobile Optimization
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+The application is fully responsive with specific optimizations for:
+- Touch-friendly form inputs (48px minimum height)
+- Mobile-specific CSS classes
+- Optimized spacing and typography
+- Mobile form validation
 
-## How can I deploy this project?
+### Authentication
 
-Simply open [Lovable](https://lovable.dev/projects/c0c4d145-b715-4d36-855a-41890ccb2e58) and click on Share -> Publish.
+The system supports:
+- Email/password authentication
+- Email verification codes
+- Role-based access control
+- Protected routes
 
-## Can I connect a custom domain to my Lovable project?
+## Deployment Options
 
-Yes, you can!
+### Lovable Platform (Recommended)
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+1. Open [Lovable](https://lovable.dev/projects/c0c4d145-b715-4d36-855a-41890ccb2e58)
+2. Click Share → Publish
+3. Your app will be deployed automatically
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+### Custom Domain
+
+To connect a custom domain:
+1. Navigate to Project > Settings > Domains in Lovable
+2. Click "Connect Domain"
+3. Follow the setup instructions
+
+*Note: A paid Lovable plan is required for custom domains.*
+
+### Manual Deployment
+
+You can also deploy to other platforms like Vercel, Netlify, or any static hosting service:
+
+1. Build the project: `npm run build`
+2. Deploy the `dist` folder to your hosting platform
+3. Configure environment variables if needed
+
+## Development Guidelines
+
+- Follow the existing code structure and naming conventions
+- Use TypeScript for all new code
+- Implement responsive design with Tailwind CSS
+- Write focused, single-responsibility components
+- Use React Hook Form for form management
+- Follow the established file organization patterns
+
+## Support & Documentation
+
+- [Lovable Documentation](https://docs.lovable.dev/)
+- [Lovable Discord Community](https://discord.com/channels/1119885301872070706/1280461670979993613)
+- [Project Settings](https://lovable.dev/projects/c0c4d145-b715-4d36-855a-41890ccb2e58)
+
+## Contributing
+
+1. Create a feature branch from main
+2. Make your changes following the project conventions
+3. Test your changes locally
+4. Submit a pull request with a clear description
+
+For questions or issues, please use the Lovable project interface or Discord community.
