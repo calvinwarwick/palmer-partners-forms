@@ -32,36 +32,27 @@ const CustomToggle = React.forwardRef<
         checked={checked}
         onCheckedChange={onCheckedChange}
         disabled={disabled}
-        style={{
-          all: 'unset',
-          width: '44px', // Better mobile touch target
-          height: '24px',
-          backgroundColor: checked ? '#e35c00' : '#d1d5db',
-          borderRadius: '12px',
-          position: 'relative',
-          cursor: 'pointer',
-          border: '2px solid transparent',
-          transition: 'background-color 0.2s ease',
-          display: 'inline-flex',
-          alignItems: 'center',
-          flexShrink: 0,
-        }}
         className={cn(
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50"
+          "relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50",
+          checked ? "bg-orange-500" : "bg-gray-300"
         )}
+        style={{
+          width: '44px !important',
+          height: '24px !important',
+          minWidth: '44px',
+          minHeight: '24px'
+        }}
       >
         <SwitchPrimitives.Thumb
+          className={cn(
+            "pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out",
+            checked ? "translate-x-5" : "translate-x-0"
+          )}
           style={{
-            all: 'unset',
-            display: 'block',
-            width: '20px',
-            height: '20px',
-            backgroundColor: 'white',
-            borderRadius: '10px',
-            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-            transition: 'transform 0.2s ease',
+            width: '20px !important',
+            height: '20px !important',
             transform: checked ? 'translateX(20px)' : 'translateX(0)',
-            willChange: 'transform',
+            transition: 'transform 0.2s ease'
           }}
         />
       </SwitchPrimitives.Root>
