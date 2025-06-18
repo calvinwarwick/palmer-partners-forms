@@ -24,7 +24,7 @@ const CurrentAddressStep = ({
       }}></div>
       </div>
       
-      {applicants.map((applicant, index) => <Card key={applicant.id} className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 ">
+      {applicants.map((applicant, index) => <Card key={applicant.id} className="border-2 border-gray-200 bg-gradient-to-br from-white to-orange-50/30 shadow-lg">
           <CardHeader className="pb-4 bg-orange-500 text-white rounded-t-lg">
             <CardTitle className="text-lg font-semibold flex items-center gap-3 text-white">
               <div className="p-2 bg-white/20 rounded-lg">
