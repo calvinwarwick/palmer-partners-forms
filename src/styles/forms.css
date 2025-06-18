@@ -297,16 +297,6 @@ input:focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Enhanced switch and checkbox styling */
-[role="switch"] {
-  border-radius: 9999px !important;
-  transition: none !important;
-}
-
-[role="switch"]:focus {
-  box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1) !important;
-}
-
 /* Better error states */
 .form-control.error,
 .form-select.error {
