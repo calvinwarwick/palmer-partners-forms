@@ -1,0 +1,112 @@
+
+/* Switch Component Protection - Ensures consistent styling across all screen sizes */
+
+/* Protect switches from global form styling */
+[data-radix-switch-root] {
+  /* Force consistent switch dimensions */
+  height: 1.5rem !important; /* h-6 */
+  width: 2.75rem !important; /* w-11 */
+  border-radius: 9999px !important;
+  border: 2px solid transparent !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  transition-property: background-color !important;
+  transition-duration: 200ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  
+  /* Prevent form CSS from interfering */
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  min-height: unset !important;
+  font-size: unset !important;
+  line-height: unset !important;
+  text-align: unset !important;
+  background-image: none !important;
+}
+
+/* Switch states */
+[data-radix-switch-root][data-state="checked"] {
+  background-color: #e35c00 !important; /* orange-500 */
+}
+
+[data-radix-switch-root][data-state="unchecked"] {
+  background-color: #d1d5db !important; /* gray-300 */
+}
+
+/* Focus states */
+[data-radix-switch-root]:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px #e35c00 !important;
+}
+
+/* Switch thumb protection */
+[data-radix-switch-thumb] {
+  height: 1.25rem !important; /* h-5 */
+  width: 1.25rem !important; /* w-5 */
+  border-radius: 9999px !important;
+  background-color: white !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  pointer-events: none !important;
+  display: block !important;
+  transition-property: transform !important;
+  transition-duration: 200ms !important;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+  ring: 0 !important;
+}
+
+/* Thumb position states */
+[data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+  transform: translateX(1.25rem) !important; /* translate-x-5 */
+}
+
+[data-radix-switch-root][data-state="unchecked"] [data-radix-switch-thumb] {
+  transform: translateX(0) !important;
+}
+
+/* Disabled state */
+[data-radix-switch-root]:disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5 !important;
+}
+
+/* Mobile-specific protection - ensure switches don't get mobile form styling */
+@media (max-width: 640px) {
+  [data-radix-switch-root] {
+    height: 1.5rem !important; /* Keep h-6 on mobile */
+    width: 2.75rem !important; /* Keep w-11 on mobile */
+    min-height: unset !important;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    font-size: unset !important;
+    border-radius: 9999px !important;
+  }
+  
+  [data-radix-switch-thumb] {
+    height: 1.25rem !important; /* Keep h-5 on mobile */
+    width: 1.25rem !important; /* Keep w-5 on mobile */
+  }
+  
+  /* Prevent mobile checkbox styling from affecting switches */
+  [data-radix-switch-root].mobile-checkbox {
+    width: 2.75rem !important;
+    height: 1.5rem !important;
+    min-width: 2.75rem !important;
+    min-height: 1.5rem !important;
+  }
+}
+
+/* Additional protection against any role-based selectors */
+[role="switch"] {
+  /* Reset any conflicting styles */
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+/* Ensure CustomToggle container doesn't interfere */
+.custom-toggle-container [data-radix-switch-root] {
+  flex-shrink: 0 !important;
+}
