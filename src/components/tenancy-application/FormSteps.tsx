@@ -34,14 +34,6 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
     handleGuarantorOpen
   } = formContext;
 
-  // Helper function to convert string ID to index for updateApplicant
-  const handleUpdateApplicant = (index: number, field: string, value: any) => {
-    const applicant = applicants[index];
-    if (applicant) {
-      updateApplicant(applicant.id, field, value);
-    }
-  };
-
   switch (currentStep) {
     case 1:
       return (
@@ -80,9 +72,9 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
         <AdditionalDetailsStep
           additionalDetails={additionalDetails}
           onUpdateDetails={updateAdditionalDetails}
-          maxRent={parseInt(propertyPreferences.maxRent) || 0}
+          maxRent={propertyPreferences.maxRent}
           applicants={applicants}
-          onUpdateApplicant={handleUpdateApplicant}
+          onUpdateApplicant={updateApplicant}
         />
       );
     case 6:
