@@ -36,7 +36,7 @@ const NavigationButtons = ({
         </div>
 
         <div className="flex gap-3 order-1 sm:order-2">
-          {!isFirstStep && <Button type="button" variant="outline" onClick={onPrevious} className="min-w-[120px] border-gray-300 text-dark-grey hover:bg-gray-100 ">
+          {!isFirstStep && <Button type="button" variant="outline" onClick={onPrevious} className="min-w-[120px] border-gray-300 text-dark-grey hover:bg-gray-100 hover:text-light-grey ">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Previous
             </Button>}
