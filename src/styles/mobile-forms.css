@@ -28,6 +28,14 @@
     margin-bottom: 12px !important;
   }
 
+  /* Mobile checkbox sizing */
+  .mobile-checkbox {
+    @apply w-6 h-6 !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    flex-shrink: 0 !important;
+  }
+
   .btn,
   button {
     min-height: 52px !important;
@@ -48,5 +56,11 @@
     @apply text-base;
     font-size: 16px !important;
     padding: 0.875rem 1rem !important;
+  }
+
+  /* Specific mobile toggle adjustments */
+  [data-radix-switch-root] {
+    min-width: 44px !important;
+    min-height: 24px !important;
   }
 }
