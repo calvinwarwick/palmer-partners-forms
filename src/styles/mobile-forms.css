@@ -28,8 +28,8 @@
     margin-bottom: 12px !important;
   }
 
-  /* Mobile checkbox sizing - but NOT switches */
-  .mobile-checkbox:not([data-radix-switch-root]) {
+  /* Mobile checkbox sizing */
+  .mobile-checkbox {
     @apply w-6 h-6 !important;
     min-width: 24px !important;
     min-height: 24px !important;
@@ -37,7 +37,7 @@
   }
 
   .btn,
-  button:not([data-radix-switch-root]) {
+  button {
     min-height: 52px !important;
     @apply text-base;
     padding: 0.875rem 1.75rem;
@@ -57,6 +57,10 @@
     font-size: 16px !important;
     padding: 0.875rem 1rem !important;
   }
-}
 
-/* Remove all switch-specific mobile overrides that were causing issues */
+  /* Specific mobile toggle adjustments */
+  [data-radix-switch-root] {
+    min-width: 44px !important;
+    min-height: 24px !important;
+  }
+}

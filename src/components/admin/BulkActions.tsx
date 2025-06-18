@@ -1,7 +1,8 @@
 
 import { Button } from "@/components/ui/button";
-import { YesNoSelect } from "@/components/ui/yes-no-select";
+import { Switch } from "@/components/ui/switch";
 import { Download, Trash2, Mail, FileText, Users, CheckCircle } from "lucide-react";
+import { useRef, useEffect } from "react";
 
 interface BulkActionsProps {
   selectedApplications: string[];
@@ -16,7 +17,15 @@ const BulkActions = ({
   onBulkExport,
   totalApplications
 }: BulkActionsProps) => {
+  const switchRef = useRef<HTMLButtonElement>(null);
   const isAllSelected = selectedApplications.length === totalApplications && totalApplications > 0;
+  const isIndeterminate = selectedApplications.length > 0 && selectedApplications.length < totalApplications;
+
+  useEffect(() => {
+    if (switchRef.current) {
+      (switchRef.current as any).indeterminate = isIndeterminate;
+    }
+  }, [isIndeterminate]);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
@@ -30,13 +39,15 @@ const BulkActions = ({
             
             <div className="space-y-2">
               <div className="flex items-center space-x-3">
-                <YesNoSelect
-                  id="selectAll"
-                  label="Select all applications"
-                  value={isAllSelected}
-                  onValueChange={onSelectAll}
-                  className="w-64"
+                <Switch
+                  ref={switchRef}
+                  checked={isAllSelected}
+                  onCheckedChange={onSelectAll}
+                  className="data-[state=checked]:bg-orange-500"
                 />
+                <span className="text-sm font-medium text-gray-900">
+                  Select all applications
+                </span>
               </div>
               
               <div className="flex items-center gap-2">

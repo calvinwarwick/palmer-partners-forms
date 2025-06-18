@@ -1,8 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { YesNoSelect } from "@/components/ui/yes-no-select";
+import { Switch } from "@/components/ui/switch";
 import { Shield, FileText, PenTool } from "lucide-react";
 import SignaturePad from "@/components/ui/signature-pad";
+import { CustomToggle } from "@/components/ui/custom-toggle";
 
 interface TermsAndDataStepProps {
   dataSharing: {
@@ -170,11 +171,11 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <YesNoSelect
+          <CustomToggle
             id="terms"
             label="I confirm that I have read and understood the terms and conditions and I am bound by their contents"
-            value={termsAccepted}
-            onValueChange={onTermsChange}
+            checked={termsAccepted}
+            onCheckedChange={onTermsChange}
             required={true}
           />
         </CardContent>
@@ -191,18 +192,18 @@ const TermsAndDataStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <YesNoSelect
+          <CustomToggle
             id="utilities"
             label="I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts."
-            value={dataSharing.utilities}
-            onValueChange={(value) => handleDataSharingChange('utilities', value)}
+            checked={dataSharing.utilities}
+            onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
           />
           
-          <YesNoSelect
+          <CustomToggle
             id="insurance"
             label="I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options."
-            value={dataSharing.insurance}
-            onValueChange={(value) => handleDataSharingChange('insurance', value)}
+            checked={dataSharing.insurance}
+            onCheckedChange={(checked) => handleDataSharingChange('insurance', checked)}
           />
 
           <p className="text-sm text-gray-500 mt-4">
