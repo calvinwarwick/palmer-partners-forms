@@ -58,19 +58,9 @@
     padding: 0.875rem 1rem !important;
   }
 
-  /* Ensure mobile toggles display properly */
+  /* Specific mobile toggle adjustments */
   [data-radix-switch-root] {
-    width: 44px !important;
-    height: 24px !important;
     min-width: 44px !important;
     min-height: 24px !important;
-    display: inline-flex !important;
-    align-items: center !important;
-  }
-  
-  [data-radix-switch-thumb] {
-    width: 20px !important;
-    height: 20px !important;
-    display: block !important;
   }
 }
