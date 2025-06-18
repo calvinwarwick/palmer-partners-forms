@@ -1,8 +1,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface PetDetailsProps {
   pets: string;
@@ -12,22 +12,6 @@ interface PetDetailsProps {
 }
 
 export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange }: PetDetailsProps) => {
-  const handlePetYesChange = (checked: boolean) => {
-    if (checked) {
-      onPetsChange('yes');
-    } else if (pets === 'yes') {
-      onPetsChange('no');
-    }
-  };
-
-  const handlePetNoChange = (checked: boolean) => {
-    if (checked) {
-      onPetsChange('no');
-    } else if (pets === 'no') {
-      onPetsChange('yes');
-    }
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -36,24 +20,20 @@ export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange 
       <CardContent className="space-y-4">
         <div>
           <Label>Do you have any pets?</Label>
-          <div className="flex flex-col sm:flex-row sm:space-x-6 space-y-3 sm:space-y-0 mt-2">
-            <div className="mobile-input-wrapper">
-              <Checkbox 
-                id="pets-yes" 
-                checked={pets === 'yes'}
-                onCheckedChange={handlePetYesChange}
-              />
-              <Label htmlFor="pets-yes" className="flex-1">Yes</Label>
+          <RadioGroup
+            value={pets}
+            onValueChange={onPetsChange}
+            className="flex flex-row space-x-4 mt-2"
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="yes" id="pets-yes" />
+              <Label htmlFor="pets-yes">Yes</Label>
             </div>
-            <div className="mobile-input-wrapper">
-              <Checkbox 
-                id="pets-no" 
-                checked={pets === 'no'}
-                onCheckedChange={handlePetNoChange}
-              />
-              <Label htmlFor="pets-no" className="flex-1">No</Label>
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="no" id="pets-no" />
+              <Label htmlFor="pets-no">No</Label>
             </div>
-          </div>
+          </RadioGroup>
         </div>
 
         {pets === 'yes' && (

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CheckboxToggle } from "@/components/ui/checkbox-toggle";
+import { CustomToggle } from "@/components/ui/custom-toggle";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import { Input } from "@/components/ui/input";
@@ -154,22 +154,12 @@ const PersonalInfoStep = ({
                 </div>
               </div>
 
-              {/* Checkbox Questions */}
+              {/* Switch Questions */}
               <div className="space-y-4 md:space-y-6 pt-4 md:pt-6">
-                <CheckboxToggle 
-                  id={`ukPassport-${applicant.id}`} 
-                  label="Do you hold a UK or Republic of Ireland passport?" 
-                  checked={toggles.ukPassport} 
-                  onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', checked)} 
-                />
+                <CustomToggle id={`ukPassport-${applicant.id}`} label="Do you hold a UK or Republic of Ireland passport?" checked={toggles.ukPassport} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', checked)} />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <CheckboxToggle 
-                    id={`adverseCredit-${applicant.id}`} 
-                    label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?" 
-                    checked={toggles.adverseCredit} 
-                    onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', checked)} 
-                  />
+                  <CustomToggle id={`adverseCredit-${applicant.id}`} label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?" checked={toggles.adverseCredit} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', checked)} />
                   
                   {toggles.adverseCredit && <Textarea id={`adverseCreditDetails-${applicant.id}`} value={applicant.adverseCreditDetails || ''} onChange={e => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)} placeholder="Please provide more details about your adverse credit history:" className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3" rows={25} style={{
                   minHeight: '200px',
@@ -177,12 +167,7 @@ const PersonalInfoStep = ({
                 }} />}
                 </div>
                 
-                <CheckboxToggle 
-                  id={`guarantorRequired-${applicant.id}`} 
-                  label="If required, can you supply a guarantor for this proposed tenancy?" 
-                  checked={toggles.guarantorRequired} 
-                  onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)} 
-                />
+                <CustomToggle id={`guarantorRequired-${applicant.id}`} label="If required, can you supply a guarantor for this proposed tenancy?" checked={toggles.guarantorRequired} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)} />
               </div>
               
               {toggles.guarantorRequired && <div className="space-y-4">
