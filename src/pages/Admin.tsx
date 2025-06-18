@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { LogOut, Users, FileText, BarChart3 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { LogOut, Users, FileText, BarChart3, Upload } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import ApplicationsTable from "@/components/admin/ApplicationsTable";
 import AdminStats from "@/components/admin/AdminStats";
 import ApplicantsTab from "@/components/admin/ApplicantsTab";
+import FileUploadTab from "@/components/admin/FileUploadTab";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
 
 interface TenancyApplication {
@@ -194,7 +195,7 @@ const Admin = () => {
 
         {/* Admin Tabs */}
         <Tabs defaultValue="stats" className="space-y-4 sm:space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-white/95 backdrop-blur-sm h-auto p-1">
+          <TabsList className="grid w-full grid-cols-4 bg-white/95 backdrop-blur-sm h-auto p-1">
             <TabsTrigger value="stats" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3">
               <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Statistics</span>
@@ -209,6 +210,11 @@ const Admin = () => {
               <Users className="h-3 w-3 sm:h-4 sm:w-4" />
               <span className="hidden sm:inline">Applicants</span>
               <span className="sm:hidden">People</span>
+            </TabsTrigger>
+            <TabsTrigger value="files" className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm py-2 sm:py-3">
+              <Upload className="h-3 w-3 sm:h-4 sm:w-4" />
+              <span className="hidden sm:inline">Files</span>
+              <span className="sm:hidden">Files</span>
             </TabsTrigger>
           </TabsList>
 
@@ -234,6 +240,10 @@ const Admin = () => {
 
           <TabsContent value="applicants" className="mt-4 sm:mt-6">
             <ApplicantsTab />
+          </TabsContent>
+
+          <TabsContent value="files" className="mt-4 sm:mt-6">
+            <FileUploadTab />
           </TabsContent>
         </Tabs>
       </div>
