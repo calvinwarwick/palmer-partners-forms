@@ -23,50 +23,18 @@ export const generateApplicationPDF = async (data: {
     return currentY;
   };
 
-  // Header - Dark grey background with logo
+  // Header with logo placeholder
   const headerHeight = 25;
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, headerHeight, 'F');
 
-  try {
-    // Try to load and add the actual logo
-    const logoImg = new Image();
-    logoImg.crossOrigin = 'anonymous';
-    logoImg.src = '/lovable-uploads/fc497427-18c1-4156-888c-56392e2a21cf.png';
-    
-    await new Promise((resolve, reject) => {
-      logoImg.onload = resolve;
-      logoImg.onerror = reject;
-    });
-    
-    // Calculate logo dimensions maintaining aspect ratio
-    const maxLogoWidth = 40;
-    const maxLogoHeight = 20;
-    const aspectRatio = logoImg.naturalWidth / logoImg.naturalHeight;
-    
-    let logoWidth, logoHeight;
-    if (aspectRatio > maxLogoWidth / maxLogoHeight) {
-      logoWidth = maxLogoWidth;
-      logoHeight = maxLogoWidth / aspectRatio;
-    } else {
-      logoHeight = maxLogoHeight;
-      logoWidth = maxLogoHeight * aspectRatio;
-    }
-    
-    const logoX = 105 - logoWidth / 2;
-    const logoY = headerHeight / 2 - logoHeight / 2;
-    
-    doc.addImage(logoImg, 'PNG', logoX, logoY, logoWidth, logoHeight);
-  } catch (error) {
-    console.warn('Could not load logo, using text fallback');
-    // Fallback to text logo
-    doc.setFillColor(255, 255, 255);
-    doc.rect(85, 8, 40, 9, 'F');
-    doc.setTextColor(33, 33, 33);
-    doc.setFontSize(12);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Palmer & Partners', 105, 14, { align: 'center' });
-  }
+  // Logo placeholder (white rectangle with text)
+  doc.setFillColor(255, 255, 255);
+  doc.rect(85, 8, 40, 9, 'F');
+  doc.setTextColor(33, 33, 33);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Palmer & Partners', 105, 14, { align: 'center' });
 
   // Orange bottom border
   doc.setFillColor(255, 111, 0); // #FF6F00 orange
@@ -172,6 +140,13 @@ export const generateApplicationPDF = async (data: {
   yPosition = addDataRow('Preferred Move-in Date', formatDate(data.propertyPreferences?.moveInDate || ''), yPosition);
   yPosition = addDataRow('Latest Move-in Date', formatDate(data.propertyPreferences?.latestMoveInDate || ''), yPosition);
   yPosition = addDataRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm || '', yPosition);
+  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets === 'yes' ? 'Yes' : 'No', yPosition);
+  yPosition = addDataRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
+  if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
+    yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
+  }
+  yPosition = addDataRow('Conditions of Offer', data.additionalDetails?.conditionsOfOffer || '', yPosition);
+  yPosition = addDataRow('Deposit Type', data.additionalDetails?.depositType || '', yPosition);
 
   // Applicants Section
   data.applicants.forEach((applicant, index) => {
@@ -193,12 +168,24 @@ export const generateApplicationPDF = async (data: {
 
     // Current Property Details
     yPosition = addDataRow('Current Property Details', '', yPosition, true);
-    yPosition = addDataRow('Postcode', applicant.currentPostcode || '', yPosition);
-    yPosition = addDataRow('Street Address', applicant.currentAddress || '', yPosition);
+    yPosition = addDataRow('Postcode', applicant.previousPostcode || '', yPosition);
+    yPosition = addDataRow('Street Address', applicant.previousAddress || '', yPosition);
     yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
     yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
     yPosition = addDataRow('Current Property Status', applicant.currentPropertyStatus || '', yPosition);
     yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', yPosition);
+
+    // Additional Information
+    yPosition = addDataRow('Additional Information', '', yPosition, true);
+    yPosition = addDataRow('UK/ROI Passport', data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No', yPosition);
+    yPosition = addDataRow('Adverse Credit', data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No', yPosition);
+    if (data.additionalDetails?.adverseCredit === 'yes' && data.additionalDetails?.adverseCreditDetails) {
+      yPosition = addDataRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails, yPosition);
+    }
+    yPosition = addDataRow('Requires Guarantor', data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
+    if (data.additionalDetails?.pets === 'yes' && data.additionalDetails?.petDetails) {
+      yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
+    }
   });
 
   // Data Sharing Section

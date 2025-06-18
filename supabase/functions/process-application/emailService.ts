@@ -14,16 +14,14 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     }
     
     console.log('Sending email to:', primaryApplicant.email);
-    console.log('RESEND_API_KEY available:', !!Deno.env.get("RESEND_API_KEY"));
-    console.log('RESEND_API_KEY length:', Deno.env.get("RESEND_API_KEY")?.length || 0);
     
-    // Generate PDF (placeholder for now)
+    // Generate actual PDF with application data
     const pdfBase64 = await generateApplicationPDF(application);
     console.log('PDF generated, length:', pdfBase64.length);
     
     console.log('Attempting to send email with Resend...');
     const emailResponse = await resend.emails.send({
-      from: "Palmer & Partners <submitted@forms.palmerpartners.uk>", // Using your verified domain
+      from: "Palmer & Partners <submitted@forms.palmerpartners.uk>",
       to: [primaryApplicant.email],
       cc: ["admin@palmerandpartners.com.au"],
       subject: "Tenancy Application Received - Palmer & Partners",
@@ -46,6 +44,7 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
                 <li>Property: ${application.propertyPreferences.streetAddress}</li>
                 <li>Number of Applicants: ${application.applicants.length}</li>
                 <li>Preferred Move-in Date: ${application.propertyPreferences.moveInDate}</li>
+                <li>Maximum Rent: £${application.propertyPreferences.maxRent}</li>
               </ul>
             </div>
             
@@ -81,15 +80,12 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     
     if (emailResponse.error) {
       console.error("Resend API error details:", JSON.stringify(emailResponse.error, null, 2));
-      console.error("Error type:", typeof emailResponse.error);
-      console.error("Error message:", emailResponse.error?.message || 'No error message');
       return false;
     }
     
     if (emailResponse.data) {
       console.log("Email sent successfully!");
       console.log("Email ID:", emailResponse.data.id);
-      console.log("Email data:", JSON.stringify(emailResponse.data, null, 2));
       return true;
     } else {
       console.error("No data or error in response:", emailResponse);
@@ -98,32 +94,98 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     
   } catch (error) {
     console.error("Caught error in sendApplicationEmailWithPDF:", error);
-    console.error("Error type:", typeof error);
-    console.error("Error name:", error?.name);
-    console.error("Error message:", error?.message);
-    console.error("Error stack:", error?.stack);
-    
-    // Check if it's a network error
-    if (error?.cause) {
-      console.error("Error cause:", error.cause);
-    }
-    
-    // Check if it's a Resend-specific error
-    if (error?.response) {
-      console.error("HTTP response status:", error.response?.status);
-      console.error("HTTP response data:", error.response?.data);
-    }
-    
     return false;
   }
 };
 
-// PDF generation function (simplified version for edge function)
+// Actual PDF generation function for edge environment
 const generateApplicationPDF = async (data: any): Promise<string> => {
-  console.log('Generating PDF for application...');
-  // For now, return a placeholder base64 PDF
-  // In a real implementation, you'd use a PDF library here
-  const dummyPDF = "JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PAovVHlwZSAvQ2F0YWxvZwovUGFnZXMgMiAwIFIKPj4KZW5kb2JqCjIgMCBvYmoKPDwKL1R5cGUgL1BhZ2VzCi9LaWRzIFszIDAgUl0KL0NvdW50IDEKPD4KZW5kb2JqCjMgMCBvYmoKPDwKL1R5cGUgL1BhZ2UKL1BhcmVudCAyIDAgUgovTWVkaWFCb3ggWzAgMCA2MTIgNzkyXQovUmVzb3VyY2VzIDw8Ci9Gb250IDw8Ci9GMSA0IDAgUgo+Pgo+PgovQ29udGVudHMgNSAwIFIKPj4KZW5kb2JqCjQgMCBvYmoKPDwKL1R5cGUgL0ZvbnQKL1N1YnR5cGUgL1R5cGUxCi9CYXNlRm9udCAvSGVsdmV0aWNhCj4+CmVuZG9iago1IDAgb2JqCjw8Ci9MZW5ndGggMzMKPj4Kc3RyZWFtCkJUCi9GMSAxMiBUZgoxMDAgNzAwIFRkCihUZW5hbmN5IEFwcGxpY2F0aW9uKSBUagpFVApEb25ld3N0cmVhbQplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDA5IDAwMDAwIG4gCjAwMDAwMDAwNTggMDAwMDAgbiAKMDAwMDAwMDExNSAwMDAwMCBuIAowMDAwMDAwMjQ1IDAwMDAwIG4gCjAwMDAwMDAzMTYgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA2Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgo0MDAKJSVFT0Y=";
-  console.log('PDF generated successfully');
-  return dummyPDF;
+  console.log('Generating PDF with application data...');
+  
+  // This is a simplified PDF generation for the edge function
+  // In a production environment, you might want to use a different PDF library
+  // that works better in edge functions, or call the main PDF service
+  
+  const pdfContent = `
+%PDF-1.4
+1 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+
+2 0 obj
+<<
+/Type /Pages
+/Kids [3 0 R]
+/Count 1
+>>
+endobj
+
+3 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Resources <<
+/Font <<
+/F1 4 0 R
+>>
+>>
+/Contents 5 0 R
+>>
+endobj
+
+4 0 obj
+<<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+endobj
+
+5 0 obj
+<<
+/Length 200
+>>
+stream
+BT
+/F1 16 Tf
+50 750 Td
+(Palmer & Partners - Tenancy Application) Tj
+0 -30 Td
+/F1 12 Tf
+(Applicant: ${data.applicants[0]?.firstName} ${data.applicants[0]?.lastName}) Tj
+0 -20 Td
+(Property: ${data.propertyPreferences?.streetAddress || 'N/A'}) Tj
+0 -20 Td
+(Max Rent: £${data.propertyPreferences?.maxRent || 'N/A'}) Tj
+0 -20 Td
+(Move-in Date: ${data.propertyPreferences?.moveInDate || 'N/A'}) Tj
+ET
+endstream
+endobj
+
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000245 00000 n 
+0000000316 00000 n 
+trailer
+<<
+/Size 6
+/Root 1 0 R
+>>
+startxref
+567
+%%EOF`;
+  
+  // Convert to base64
+  const base64 = btoa(pdfContent);
+  console.log('PDF generated successfully with application data');
+  return base64;
 };
