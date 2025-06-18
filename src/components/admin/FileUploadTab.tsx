@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,6 +24,16 @@ const FileUploadTab = () => {
     fetchFiles();
   }, []);
 
+  const getFileUrl = (fileName: string) => {
+    // In production, try our edge function first, fallback to direct Supabase URL
+    const currentDomain = window.location.origin;
+    const edgeFunctionUrl = `${currentDomain}/api/files/${fileName}`;
+    
+    // For development or if edge function fails, we can fallback to direct access
+    // But we'll primarily use our domain
+    return edgeFunctionUrl;
+  };
+
   const fetchFiles = async () => {
     try {
       const { data, error } = await supabase.storage
@@ -36,21 +45,13 @@ const FileUploadTab = () => {
 
       if (error) throw error;
 
-      const filesWithUrls = await Promise.all(
-        (data || []).map(async (file) => {
-          const { data: urlData } = supabase.storage
-            .from('admin-files')
-            .getPublicUrl(file.name);
-
-          return {
-            name: file.name,
-            publicUrl: urlData.publicUrl,
-            size: file.metadata?.size || 0,
-            type: file.metadata?.mimetype || '',
-            created_at: file.created_at || '',
-          };
-        })
-      );
+      const filesWithUrls = (data || []).map((file) => ({
+        name: file.name,
+        publicUrl: getFileUrl(file.name),
+        size: file.metadata?.size || 0,
+        type: file.metadata?.mimetype || '',
+        created_at: file.created_at || '',
+      }));
 
       setFiles(filesWithUrls);
     } catch (error) {
@@ -135,6 +136,16 @@ const FileUploadTab = () => {
     return 'bg-gray-100 text-gray-800';
   };
 
+  const testFileAccess = async (url: string) => {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      console.error('File access test failed:', error);
+      return false;
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -156,7 +167,7 @@ const FileUploadTab = () => {
             Upload Files
           </CardTitle>
           <CardDescription>
-            Upload PDFs and images to use in forms. Supported formats: PDF, JPEG, PNG, GIF, WebP (Max 10MB each)
+            Upload PDFs and images to use in forms. Files will be accessible via your domain. Supported formats: PDF, JPEG, PNG, GIF, WebP (Max 10MB each)
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -184,7 +195,7 @@ const FileUploadTab = () => {
         <CardHeader>
           <CardTitle className="text-xl font-bold text-dark-grey">Uploaded Files</CardTitle>
           <CardDescription>
-            Manage your uploaded files and get their URLs for use in forms
+            Manage your uploaded files and get their URLs for use in forms. All files are served from your domain.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -208,6 +219,7 @@ const FileUploadTab = () => {
                         </Badge>
                         <span className="text-sm text-gray-500">{formatFileSize(file.size)}</span>
                       </div>
+                      <p className="text-xs text-gray-400 mt-1 break-all">{file.publicUrl}</p>
                     </div>
                   </div>
                   
