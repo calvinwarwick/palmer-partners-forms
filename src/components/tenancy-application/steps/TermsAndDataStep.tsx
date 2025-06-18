@@ -1,9 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { Shield, FileText, PenTool } from "lucide-react";
 import SignaturePad from "@/components/ui/signature-pad";
-import { CustomToggle } from "@/components/ui/custom-toggle";
+import { CheckboxToggle } from "@/components/ui/checkbox-toggle";
 
 interface TermsAndDataStepProps {
   dataSharing: {
@@ -171,7 +170,7 @@ const TermsAndDataStep = ({
             </div>
           </div>
           
-          <CustomToggle
+          <CheckboxToggle
             id="terms"
             label="I confirm that I have read and understood the terms and conditions and I am bound by their contents"
             checked={termsAccepted}
@@ -192,14 +191,14 @@ const TermsAndDataStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <CustomToggle
+          <CheckboxToggle
             id="utilities"
             label="I would like to share my details with utility providers and One Utility Bill Ltd (OUB) for setting up utilities, Council Tax, and water accounts."
             checked={dataSharing.utilities}
             onCheckedChange={(checked) => handleDataSharingChange('utilities', checked)}
           />
           
-          <CustomToggle
+          <CheckboxToggle
             id="insurance"
             label="I would like to share my details with Colchester Mortgages or Ipswich Mortgages to discuss insurance options."
             checked={dataSharing.insurance}

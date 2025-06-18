@@ -1,8 +1,8 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface PetDetailsProps {
   pets: string;
@@ -12,6 +12,22 @@ interface PetDetailsProps {
 }
 
 export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange }: PetDetailsProps) => {
+  const handlePetYesChange = (checked: boolean) => {
+    if (checked) {
+      onPetsChange('yes');
+    } else if (pets === 'yes') {
+      onPetsChange('no');
+    }
+  };
+
+  const handlePetNoChange = (checked: boolean) => {
+    if (checked) {
+      onPetsChange('no');
+    } else if (pets === 'no') {
+      onPetsChange('yes');
+    }
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -20,20 +36,24 @@ export const PetDetails = ({ pets, petDetails, onPetsChange, onPetDetailsChange 
       <CardContent className="space-y-4">
         <div>
           <Label>Do you have any pets?</Label>
-          <RadioGroup
-            value={pets}
-            onValueChange={onPetsChange}
-            className="flex flex-row space-x-4 mt-2"
-          >
+          <div className="flex flex-row space-x-6 mt-2">
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="yes" id="pets-yes" />
+              <Checkbox 
+                id="pets-yes" 
+                checked={pets === 'yes'}
+                onCheckedChange={handlePetYesChange}
+              />
               <Label htmlFor="pets-yes">Yes</Label>
             </div>
             <div className="flex items-center space-x-2">
-              <RadioGroupItem value="no" id="pets-no" />
+              <Checkbox 
+                id="pets-no" 
+                checked={pets === 'no'}
+                onCheckedChange={handlePetNoChange}
+              />
               <Label htmlFor="pets-no">No</Label>
             </div>
-          </RadioGroup>
+          </div>
         </div>
 
         {pets === 'yes' && (
