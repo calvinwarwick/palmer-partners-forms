@@ -18,7 +18,7 @@ const CustomToggle = React.forwardRef<
   CustomToggleProps
 >(({ id, label, checked, onCheckedChange, disabled = false, className, required = false }, ref) => {
   return (
-    <div className={cn("flex items-center justify-between gap-4 py-4 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors", className)}>
+    <div className={cn("flex items-center justify-between gap-3 py-3 px-3 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors", className)}>
       <label 
         htmlFor={id} 
         className="flex-1 text-sm font-medium text-gray-700 leading-relaxed cursor-pointer select-none"
@@ -33,14 +33,14 @@ const CustomToggle = React.forwardRef<
         onCheckedChange={onCheckedChange}
         disabled={disabled}
         className={cn(
-          "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50",
+          "peer inline-flex h-5 w-9 sm:h-6 sm:w-11 lg:h-6 lg:w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50",
           checked ? "bg-orange-500" : "bg-gray-300"
         )}
       >
         <SwitchPrimitives.Thumb
           className={cn(
-            "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform",
-            checked ? "translate-x-5" : "translate-x-0"
+            "pointer-events-none block h-4 w-4 sm:h-5 sm:w-5 lg:h-5 lg:w-5 rounded-full bg-white shadow-lg ring-0 transition-transform",
+            checked ? "translate-x-4 sm:translate-x-5 lg:translate-x-5" : "translate-x-0"
           )}
         />
       </SwitchPrimitives.Root>
