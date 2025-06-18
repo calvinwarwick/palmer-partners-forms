@@ -9,25 +9,8 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    proxy: {
-      // Proxy file requests to our Supabase edge function
-      '/api/files': {
-        target: 'https://akgmvwevnljjhcjgnzly.supabase.co/functions/v1/serve-file',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/files/, ''),
-        configure: (proxy, _options) => {
-          proxy.on('error', (err, _req, _res) => {
-            console.log('proxy error', err);
-          });
-          proxy.on('proxyReq', (proxyReq, req, _res) => {
-            console.log('Sending Request to the Target:', req.method, req.url);
-          });
-          proxy.on('proxyRes', (proxyRes, req, _res) => {
-            console.log('Received Response from the Target:', proxyRes.statusCode, req.url);
-          });
-        },
-      }
-    }
+    // Ensure proper MIME types for static files
+    middlewareMode: false,
   },
   plugins: [
     react(),
@@ -39,12 +22,15 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  // Ensure static assets are properly handled
   publicDir: 'public',
   assetsInclude: ['**/*.pdf'],
   build: {
+    // Ensure PDFs are copied to build directory
     copyPublicDir: true,
     rollupOptions: {
       output: {
+        // Ensure PDFs maintain their file extension and MIME type
         assetFileNames: (assetInfo) => {
           if (assetInfo.name && assetInfo.name.endsWith('.pdf')) {
             return 'assets/[name].[ext]';
