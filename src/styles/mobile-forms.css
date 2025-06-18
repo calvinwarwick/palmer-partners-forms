@@ -57,4 +57,9 @@
     font-size: 16px !important;
     padding: 0.875rem 1rem !important;
   }
+
+  /* Force reset any conflicting toggle styles on mobile */
+  [data-state] {
+    all: unset !important;
+  }
 }
