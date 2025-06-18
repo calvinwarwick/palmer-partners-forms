@@ -1,4 +1,5 @@
 
+
 /* Switch Component Protection - Ensures consistent styling across all screen sizes */
 
 /* Protect switches from global form styling */
@@ -21,10 +22,18 @@
   padding: 0 !important;
   margin: 0 !important;
   min-height: unset !important;
+  max-height: 1.5rem !important;
+  min-width: 2.75rem !important;
+  max-width: 2.75rem !important;
   font-size: unset !important;
   line-height: unset !important;
   text-align: unset !important;
   background-image: none !important;
+  
+  /* Force exact dimensions regardless of parent styles */
+  flex: none !important;
+  vertical-align: baseline !important;
+  box-sizing: border-box !important;
 }
 
 /* Switch states */
@@ -46,6 +55,10 @@
 [data-radix-switch-thumb] {
   height: 1.25rem !important; /* h-5 */
   width: 1.25rem !important; /* w-5 */
+  min-height: 1.25rem !important;
+  max-height: 1.25rem !important;
+  min-width: 1.25rem !important;
+  max-width: 1.25rem !important;
   border-radius: 9999px !important;
   background-color: white !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
@@ -55,6 +68,8 @@
   transition-duration: 200ms !important;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
   ring: 0 !important;
+  flex: none !important;
+  box-sizing: border-box !important;
 }
 
 /* Thumb position states */
@@ -77,16 +92,29 @@
   [data-radix-switch-root] {
     height: 1.5rem !important; /* Keep h-6 on mobile */
     width: 2.75rem !important; /* Keep w-11 on mobile */
-    min-height: unset !important;
+    min-height: 1.5rem !important;
+    max-height: 1.5rem !important;
+    min-width: 2.75rem !important;
+    max-width: 2.75rem !important;
     padding: 0 !important;
+    margin: 0 !important;
     margin-bottom: 0 !important;
     font-size: unset !important;
     border-radius: 9999px !important;
+    
+    /* Override any mobile checkbox or input styling */
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
   }
   
   [data-radix-switch-thumb] {
     height: 1.25rem !important; /* Keep h-5 on mobile */
     width: 1.25rem !important; /* Keep w-5 on mobile */
+    min-height: 1.25rem !important;
+    max-height: 1.25rem !important;
+    min-width: 1.25rem !important;
+    max-width: 1.25rem !important;
   }
   
   /* Prevent mobile checkbox styling from affecting switches */
@@ -95,6 +123,50 @@
     height: 1.5rem !important;
     min-width: 2.75rem !important;
     min-height: 1.5rem !important;
+    max-width: 2.75rem !important;
+    max-height: 1.5rem !important;
+  }
+}
+
+/* Tablet protection */
+@media (min-width: 641px) and (max-width: 1000px) {
+  [data-radix-switch-root] {
+    height: 1.5rem !important;
+    width: 2.75rem !important;
+    min-height: 1.5rem !important;
+    max-height: 1.5rem !important;
+    min-width: 2.75rem !important;
+    max-width: 2.75rem !important;
+  }
+  
+  [data-radix-switch-thumb] {
+    height: 1.25rem !important;
+    width: 1.25rem !important;
+    min-height: 1.25rem !important;
+    max-height: 1.25rem !important;
+    min-width: 1.25rem !important;
+    max-width: 1.25rem !important;
+  }
+}
+
+/* Desktop protection */
+@media (min-width: 1001px) {
+  [data-radix-switch-root] {
+    height: 1.5rem !important;
+    width: 2.75rem !important;
+    min-height: 1.5rem !important;
+    max-height: 1.5rem !important;
+    min-width: 2.75rem !important;
+    max-width: 2.75rem !important;
+  }
+  
+  [data-radix-switch-thumb] {
+    height: 1.25rem !important;
+    width: 1.25rem !important;
+    min-height: 1.25rem !important;
+    max-height: 1.25rem !important;
+    min-width: 1.25rem !important;
+    max-width: 1.25rem !important;
   }
 }
 
@@ -104,9 +176,34 @@
   appearance: none !important;
   -webkit-appearance: none !important;
   -moz-appearance: none !important;
+  height: 1.5rem !important;
+  width: 2.75rem !important;
+  min-height: 1.5rem !important;
+  max-height: 1.5rem !important;
+  min-width: 2.75rem !important;
+  max-width: 2.75rem !important;
 }
 
 /* Ensure CustomToggle container doesn't interfere */
 .custom-toggle-container [data-radix-switch-root] {
   flex-shrink: 0 !important;
+  height: 1.5rem !important;
+  width: 2.75rem !important;
 }
+
+/* Override any potential Bootstrap or other framework interference */
+button[data-radix-switch-root],
+input[data-radix-switch-root] {
+  height: 1.5rem !important;
+  width: 2.75rem !important;
+  min-height: 1.5rem !important;
+  max-height: 1.5rem !important;
+  min-width: 2.75rem !important;
+  max-width: 2.75rem !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 2px solid transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
