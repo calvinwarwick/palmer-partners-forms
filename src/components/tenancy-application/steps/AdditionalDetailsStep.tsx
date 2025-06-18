@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -61,8 +60,8 @@ const AdditionalDetailsStep = ({
   const repositCalculations = calculateRepositFees(maxRent);
 
   const handlePdfAccess = () => {
-    // Create multiple fallback methods to access the PDF
-    const pdfUrl = '/Reposit_Tenant_deposit_information.pdf';
+    // Use the correct Supabase storage URL for the uploaded PDF
+    const pdfUrl = 'https://akgmvwevnljjhcjgnzly.supabase.co/storage/v1/object/public/admin-files/1750247127695-Reposit_Tenant_deposit_information.pdf';
     
     // Try opening in new tab first
     const newWindow = window.open(pdfUrl, '_blank');
