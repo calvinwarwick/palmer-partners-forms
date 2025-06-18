@@ -39,7 +39,7 @@ const CustomToggle = React.forwardRef<
       >
         <SwitchPrimitives.Thumb
           className={cn(
-            "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform",
+            "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform duration-200 ease-in-out",
             checked ? "translate-x-5" : "translate-x-0"
           )}
         />
