@@ -34,10 +34,10 @@ const CustomToggle = React.forwardRef<
         disabled={disabled}
         style={{
           all: 'unset',
-          width: '2.75rem',
-          height: '1.5rem',
+          width: '44px', // Better mobile touch target
+          height: '24px',
           backgroundColor: checked ? '#e35c00' : '#d1d5db',
-          borderRadius: '9999px',
+          borderRadius: '12px',
           position: 'relative',
           cursor: 'pointer',
           border: '2px solid transparent',
@@ -54,13 +54,13 @@ const CustomToggle = React.forwardRef<
           style={{
             all: 'unset',
             display: 'block',
-            width: '1.25rem',
-            height: '1.25rem',
+            width: '20px',
+            height: '20px',
             backgroundColor: 'white',
-            borderRadius: '9999px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+            borderRadius: '10px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
             transition: 'transform 0.2s ease',
-            transform: checked ? 'translateX(1.25rem)' : 'translateX(0)',
+            transform: checked ? 'translateX(20px)' : 'translateX(0)',
             willChange: 'transform',
           }}
         />

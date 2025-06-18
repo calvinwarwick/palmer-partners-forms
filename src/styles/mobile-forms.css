@@ -58,8 +58,9 @@
     padding: 0.875rem 1rem !important;
   }
 
-  /* Force reset any conflicting toggle styles on mobile */
-  [data-state] {
-    all: unset !important;
+  /* Specific mobile toggle adjustments */
+  [data-radix-switch-root] {
+    min-width: 44px !important;
+    min-height: 24px !important;
   }
 }
