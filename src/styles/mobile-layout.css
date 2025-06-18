@@ -11,7 +11,7 @@
   }
   
   .card-content {
-    @apply p-5;
+    @apply p-4;
   }
   
   .step-indicator {
@@ -29,11 +29,11 @@
   }
 
   .space-y-6 > * + * {
-    margin-top: 1.25rem !important;
+    margin-top: 1rem !important;
   }
 
   .space-y-4 > * + * {
-    margin-top: 1rem !important;
+    margin-top: 0.75rem !important;
   }
 
   .max-w-4xl {
@@ -41,27 +41,58 @@
   }
 
   .border-t {
-    margin-top: 1.25rem !important;
-    padding-top: 1.25rem !important;
+    margin-top: 1rem !important;
+    padding-top: 1rem !important;
   }
 
-  .grid.grid-cols-1.md\\:grid-cols-2 {
+  /* Force all grid layouts to single column on mobile */
+  .grid.grid-cols-1.md\\:grid-cols-2,
+  .grid.grid-cols-1.md\\:grid-cols-3,
+  .grid.grid-cols-1.lg\\:grid-cols-3,
+  .grid.grid-cols-1.xl\\:grid-cols-3 {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
   }
 
-  .grid.grid-cols-1.md\\:grid-cols-3 {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+  /* Remove extra spacing from form fields */
+  .form-field,
+  .space-y-2 > * + *,
+  .space-y-3 > * + * {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
   }
 
   .card-header {
-    padding: 1rem 1.25rem !important;
+    padding: 0.75rem 1rem !important;
   }
 
   .card-header .text-lg {
-    font-size: 1rem !important;
-    line-height: 1.4 !important;
+    font-size: 0.95rem !important;
+    line-height: 1.3 !important;
+  }
+
+  /* Compact form sections */
+  .card-content.space-y-4,
+  .card-content.space-y-6 {
+    gap: 0.75rem !important;
+  }
+
+  /* Remove excessive padding from form containers */
+  .p-4.md\\:p-6 {
+    padding: 0.75rem !important;
+  }
+
+  .p-6 {
+    padding: 0.75rem !important;
+  }
+
+  /* Tighter spacing for labels and inputs */
+  label + input,
+  label + select,
+  label + textarea,
+  .form-label + .form-control,
+  .form-label + .form-select {
+    margin-top: 0.25rem !important;
   }
 }
 
