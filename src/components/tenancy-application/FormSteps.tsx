@@ -6,6 +6,7 @@ import CurrentAddressStep from "@/components/tenancy-application/steps/CurrentAd
 import AdditionalDetailsStep from "@/components/tenancy-application/steps/AdditionalDetailsStep";
 import TermsAndDataStep from "@/components/tenancy-application/steps/TermsAndDataStep";
 import { FormContextType } from "@/types/FormContext";
+import { Applicant } from "@/domain/types/Applicant";
 
 interface FormStepsProps {
   formContext: FormContextType;
@@ -33,6 +34,11 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
     handleApplicantCountChange,
     handleGuarantorOpen
   } = formContext;
+
+  // Create a wrapper function to match the expected signature for AdditionalDetailsStep
+  const handleUpdateDetails = (field: string, value: string | boolean) => {
+    updateAdditionalDetails(field, value);
+  };
 
   switch (currentStep) {
     case 1:
@@ -71,7 +77,7 @@ const FormSteps = ({ formContext }: FormStepsProps) => {
       return (
         <AdditionalDetailsStep
           additionalDetails={additionalDetails}
-          onUpdateDetails={updateAdditionalDetails}
+          onUpdateDetails={handleUpdateDetails}
           maxRent={propertyPreferences.maxRent}
           applicants={applicants}
           onUpdateApplicant={updateApplicant}
