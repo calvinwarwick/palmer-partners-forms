@@ -27,6 +27,8 @@ const AdditionalDetailsStep = ({
   applicants, 
   onUpdateApplicant 
 }: AdditionalDetailsStepProps) => {
+  const [pdfError, setPdfError] = useState(false);
+
   const formatCurrency = (amount: string) => {
     if (!amount) return "";
     const numericAmount = parseFloat(amount.replace(/[^\d.]/g, ''));
@@ -58,6 +60,97 @@ const AdditionalDetailsStep = ({
   };
 
   const repositCalculations = calculateRepositFees(maxRent);
+
+  // Enhanced PDF access functions with multiple fallback methods
+  const getPdfUrl = () => {
+    // Add cache-busting parameter to ensure fresh content
+    const timestamp = new Date().getTime();
+    return `/Reposit_Tenant_deposit_information.pdf?v=${timestamp}`;
+  };
+
+  const handlePdfView = async () => {
+    try {
+      const pdfUrl = getPdfUrl();
+      
+      // First, check if the PDF exists
+      const response = await fetch(pdfUrl, { method: 'HEAD' });
+      
+      if (!response.ok) {
+        throw new Error('PDF not found');
+      }
+      
+      // Try to open in new tab
+      const newWindow = window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+      
+      if (!newWindow) {
+        // If popup blocked, trigger download instead
+        handlePdfDownload();
+        toast({
+          title: "Download Started",
+          description: "The PDF is being downloaded since popup was blocked.",
+        });
+      } else {
+        // Check if the window successfully loaded
+        setTimeout(() => {
+          try {
+            if (newWindow.closed) {
+              return;
+            }
+            // If window is still loading or blank, offer download alternative
+            if (newWindow.location.href === 'about:blank') {
+              setPdfError(true);
+              toast({
+                title: "PDF Viewing Issue",
+                description: "Having trouble viewing the PDF? Try downloading it instead.",
+                variant: "destructive"
+              });
+            }
+          } catch (e) {
+            // Cross-origin issues are expected and normal
+          }
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('PDF access error:', error);
+      setPdfError(true);
+      toast({
+        title: "PDF Access Error",
+        description: "Unable to view PDF. Please try downloading it instead.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handlePdfDownload = () => {
+    try {
+      const pdfUrl = getPdfUrl();
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.download = 'Reposit_Tenant_deposit_information.pdf';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "Download Started",
+        description: "The Reposit deposit information PDF is being downloaded.",
+      });
+    } catch (error) {
+      console.error('PDF download error:', error);
+      toast({
+        title: "Download Error",
+        description: "Unable to download PDF. Please contact support.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDirectPdfAccess = () => {
+    // Force direct navigation to PDF URL
+    const pdfUrl = getPdfUrl();
+    window.location.href = pdfUrl;
+  };
 
   return (
     <div className="space-y-8 font-lexend">
@@ -179,16 +272,53 @@ const AdditionalDetailsStep = ({
                         The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment. 
                       </>
                     )}
-                    You can find more information about Reposit's deposit replacement scheme{" "}
-                    <a 
-                      href="/Reposit_Tenant_deposit_information.pdf" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-orange-500 hover:text-orange-600 underline"
-                    >
-                      here
-                    </a>.
+                    You can find more information about Reposit's deposit replacement scheme using the links below.
                   </p>
+                  
+                  {/* Enhanced PDF Access Options */}
+                  <div className="mt-3 space-y-2">
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePdfView}
+                        className="text-orange-500 hover:text-orange-600 hover:bg-orange-50 border-orange-300"
+                      >
+                        <ExternalLink className="h-4 w-4 mr-1" />
+                        View PDF
+                      </Button>
+                      
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handlePdfDownload}
+                        className="text-orange-500 hover:text-orange-600 hover:bg-orange-50 border-orange-300"
+                      >
+                        <Download className="h-4 w-4 mr-1" />
+                        Download PDF
+                      </Button>
+                      
+                      {pdfError && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={handleDirectPdfAccess}
+                          className="text-orange-500 hover:text-orange-600 hover:bg-orange-50 border-orange-300"
+                        >
+                          Direct Access
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {pdfError && (
+                      <p className="text-xs text-amber-600 bg-amber-50 p-2 rounded">
+                        Having trouble viewing the PDF? Try the download or direct access options above.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
               
