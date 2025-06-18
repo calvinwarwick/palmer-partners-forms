@@ -1,0 +1,102 @@
+
+/* Mobile form styling and touch targets */
+@media (max-width: 640px) {
+  .form-control,
+  .form-select {
+    @apply text-base;
+    min-height: 52px !important;
+    padding: 0.875rem 1rem;
+    margin-bottom: 12px !important;
+    font-size: 16px !important;
+  }
+  
+  input[type="date"] {
+    padding-left: 3rem !important;
+    min-height: 52px !important;
+  }
+  
+  .date-input-container {
+    margin-bottom: 12px !important;
+  }
+  
+  .mobile-form-grid {
+    gap: 12px !important;
+  }
+  
+  .mobile-form-grid > * {
+    @apply w-full;
+    margin-bottom: 12px !important;
+  }
+
+  /* Mobile checkbox sizing */
+  .mobile-checkbox {
+    @apply w-6 h-6 !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .btn,
+  button {
+    min-height: 52px !important;
+    @apply text-base;
+    padding: 0.875rem 1.75rem;
+    border-radius: 8px;
+  }
+
+  label {
+    @apply text-sm;
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  textarea {
+    min-height: 140px !important;
+    resize: vertical;
+    @apply text-base;
+    font-size: 16px !important;
+    padding: 0.875rem 1rem !important;
+  }
+
+  /* Specific mobile toggle adjustments - maintain exact desktop styling */
+  [data-radix-switch-root] {
+    width: 44px !important;
+    height: 24px !important;
+    min-width: 44px !important;
+    min-height: 24px !important;
+    max-width: 44px !important;
+    max-height: 24px !important;
+    flex-shrink: 0 !important;
+  }
+
+  [data-radix-switch-thumb] {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+  }
+}
+
+/* Ensure consistency at the exact 640px breakpoint */
+@media (max-width: 641px) {
+  [data-radix-switch-root] {
+    width: 44px !important;
+    height: 24px !important;
+    min-width: 44px !important;
+    min-height: 24px !important;
+    max-width: 44px !important;
+    max-height: 24px !important;
+    flex-shrink: 0 !important;
+  }
+
+  [data-radix-switch-thumb] {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+  }
+}
