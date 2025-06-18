@@ -1,0 +1,179 @@
+
+/* Responsive Input Controls - Fixed sizing across all devices */
+
+/* Base sizing for all input controls */
+.input-control-base {
+  flex-shrink: 0 !important;
+  transition: none !important;
+}
+
+/* Checkbox Controls */
+[data-radix-checkbox-root] {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-radix-checkbox-root] svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+/* Switch Controls */
+[data-radix-switch-root] {
+  width: 44px !important;
+  height: 24px !important;
+  min-width: 44px !important;
+  min-height: 24px !important;
+  max-width: 44px !important;
+  max-height: 24px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-radix-switch-thumb] {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+}
+
+/* Radio Button Controls */
+[data-radix-radio-group-item] {
+  width: 20px !important;
+  height: 20px !important;
+  min-width: 20px !important;
+  min-height: 20px !important;
+  max-width: 20px !important;
+  max-height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+[data-radix-radio-group-item] svg {
+  width: 8px !important;
+  height: 8px !important;
+}
+
+/* Mobile specific overrides */
+@media (max-width: 640px) {
+  /* Ensure touch targets are accessible but not oversized */
+  .mobile-input-wrapper {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    gap: 12px;
+  }
+  
+  .mobile-input-wrapper label {
+    flex: 1;
+    font-size: 16px !important; /* Prevent zoom on iOS */
+    line-height: 1.4;
+  }
+  
+  /* Checkbox mobile sizing */
+  [data-radix-checkbox-root] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+  }
+  
+  [data-radix-checkbox-root] svg {
+    width: 14px !important;
+    height: 14px !important;
+  }
+  
+  /* Switch mobile sizing */
+  [data-radix-switch-root] {
+    width: 48px !important;
+    height: 26px !important;
+    min-width: 48px !important;
+    min-height: 26px !important;
+    max-width: 48px !important;
+    max-height: 26px !important;
+  }
+  
+  [data-radix-switch-thumb] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+  }
+  
+  /* Radio mobile sizing */
+  [data-radix-radio-group-item] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    max-width: 22px !important;
+    max-height: 22px !important;
+  }
+  
+  [data-radix-radio-group-item] svg {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+/* Tablet sizing */
+@media (min-width: 641px) and (max-width: 1024px) {
+  [data-radix-checkbox-root],
+  [data-radix-radio-group-item] {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+    max-width: 20px !important;
+    max-height: 20px !important;
+  }
+  
+  [data-radix-switch-root] {
+    width: 44px !important;
+    height: 24px !important;
+    min-width: 44px !important;
+    min-height: 24px !important;
+    max-width: 44px !important;
+    max-height: 24px !important;
+  }
+}
+
+/* Desktop sizing */
+@media (min-width: 1025px) {
+  [data-radix-checkbox-root],
+  [data-radix-radio-group-item] {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+  }
+  
+  [data-radix-switch-root] {
+    width: 42px !important;
+    height: 22px !important;
+    min-width: 42px !important;
+    min-height: 22px !important;
+    max-width: 42px !important;
+    max-height: 22px !important;
+  }
+  
+  [data-radix-switch-thumb] {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    min-height: 18px !important;
+    max-width: 18px !important;
+    max-height: 18px !important;
+  }
+}
