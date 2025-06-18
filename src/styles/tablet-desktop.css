@@ -20,17 +20,6 @@
     min-height: 48px;
     padding: 0.75rem 1.5rem;
   }
-
-  /* Tablet-specific toggle and radio sizing */
-  [data-radix-switch-root] {
-    height: 1.5rem !important;
-    width: 2.75rem !important;
-  }
-
-  [data-radix-switch-thumb] {
-    height: 1.25rem !important;
-    width: 1.25rem !important;
-  }
 }
 
 @media (min-width: 1001px) {
