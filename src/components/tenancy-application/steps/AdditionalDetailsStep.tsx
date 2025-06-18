@@ -59,6 +59,19 @@ const AdditionalDetailsStep = ({
 
   const repositCalculations = calculateRepositFees(maxRent);
 
+  const handlePdfAccess = () => {
+    // Create multiple fallback methods to access the PDF
+    const pdfUrl = '/Reposit_Tenant_deposit_information.pdf';
+    
+    // Try opening in new tab first
+    const newWindow = window.open(pdfUrl, '_blank');
+    
+    // If popup was blocked, fallback to direct navigation
+    if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+      window.location.href = pdfUrl;
+    }
+  };
+
   return (
     <div className="space-y-8 font-lexend">
       <div>
@@ -180,14 +193,13 @@ const AdditionalDetailsStep = ({
                       </>
                     )}
                     You can find more information about Reposit's deposit replacement scheme{" "}
-                    <a 
-                      href="/Reposit_Tenant_deposit_information.pdf" 
-                      target="_blank" 
-                      rel="noopener noreferrer" 
-                      className="text-orange-500 hover:text-orange-600 underline"
+                    <button 
+                      type="button"
+                      onClick={handlePdfAccess}
+                      className="text-orange-500 hover:text-orange-600 underline cursor-pointer bg-transparent border-none p-0"
                     >
                       here
-                    </a>.
+                    </button>.
                   </p>
                 </div>
               </div>
