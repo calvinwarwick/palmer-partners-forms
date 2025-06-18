@@ -28,8 +28,8 @@
     margin-bottom: 12px !important;
   }
 
-  /* Mobile checkbox sizing */
-  .mobile-checkbox {
+  /* Mobile checkbox sizing - but NOT switches */
+  .mobile-checkbox:not([data-radix-switch-root]) {
     @apply w-6 h-6 !important;
     min-width: 24px !important;
     min-height: 24px !important;
@@ -37,7 +37,7 @@
   }
 
   .btn,
-  button {
+  button:not([data-radix-switch-root]) {
     min-height: 52px !important;
     @apply text-base;
     padding: 0.875rem 1.75rem;

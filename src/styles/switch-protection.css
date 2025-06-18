@@ -1,5 +1,3 @@
-
-
 /* Switch Component Protection - Ensures consistent styling across all screen sizes */
 
 /* Protect switches from global form styling */
@@ -34,6 +32,9 @@
   flex: none !important;
   vertical-align: baseline !important;
   box-sizing: border-box !important;
+  
+  /* Override any mobile styling that might interfere */
+  position: relative !important;
 }
 
 /* Switch states */
@@ -70,6 +71,12 @@
   ring: 0 !important;
   flex: none !important;
   box-sizing: border-box !important;
+  
+  /* Ensure thumb is always visible */
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 1 !important;
+  position: relative !important;
 }
 
 /* Thumb position states */
@@ -106,6 +113,10 @@
     appearance: none !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
+    
+    /* Ensure container is always visible */
+    overflow: visible !important;
+    position: relative !important;
   }
   
   [data-radix-switch-thumb] {
@@ -115,6 +126,13 @@
     max-height: 1.25rem !important;
     min-width: 1.25rem !important;
     max-width: 1.25rem !important;
+    
+    /* Force thumb visibility on mobile */
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 2 !important;
+    position: relative !important;
   }
   
   /* Prevent mobile checkbox styling from affecting switches */
@@ -125,6 +143,12 @@
     min-height: 1.5rem !important;
     max-width: 2.75rem !important;
     max-height: 1.5rem !important;
+  }
+  
+  /* Ensure switches are never treated as mobile checkboxes */
+  [data-radix-switch-root]:not(.should-be-checkbox) {
+    width: 2.75rem !important;
+    height: 1.5rem !important;
   }
 }
 
@@ -206,4 +230,3 @@ input[data-radix-switch-root] {
   background-image: none !important;
   box-shadow: none !important;
 }
-
