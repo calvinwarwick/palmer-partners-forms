@@ -37,7 +37,7 @@ export const ToggleInput = ({
       className={className}
     >
       <div className={cn(
-        "py-4 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors",
+        "py-4 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors switch-container",
         "flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
       )}>
         <label 
@@ -52,7 +52,7 @@ export const ToggleInput = ({
           checked={checked}
           onCheckedChange={onCheckedChange}
           disabled={disabled}
-          className="data-[state=checked]:bg-orange-500"
+          className="data-[state=checked]:bg-orange-500 flex-shrink-0"
         />
       </div>
     </FormField>

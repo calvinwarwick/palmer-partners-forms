@@ -36,7 +36,7 @@ export const CheckboxInput = ({
       className={className}
     >
       <div className={cn(
-        "py-4 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
+        "py-4 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors checkbox-container"
       )}>
         <div className="flex items-start gap-3">
           <Checkbox
@@ -44,7 +44,7 @@ export const CheckboxInput = ({
             checked={checked}
             onCheckedChange={onCheckedChange}
             disabled={disabled}
-            className="mt-0.5"
+            className="mt-0.5 flex-shrink-0"
           />
           <label 
             htmlFor={id} 

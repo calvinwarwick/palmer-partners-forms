@@ -18,7 +18,7 @@ const CheckboxToggle = React.forwardRef<
   CheckboxToggleProps
 >(({ id, label, checked, onCheckedChange, disabled = false, className, required = false }, ref) => {
   return (
-    <div className={cn("py-4 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors", className)}>
+    <div className={cn("py-4 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors checkbox-container", className)}>
       <div className="flex items-start gap-3">
         <Checkbox
           id={id}
@@ -26,7 +26,7 @@ const CheckboxToggle = React.forwardRef<
           checked={checked}
           onCheckedChange={onCheckedChange}
           disabled={disabled}
-          className="mt-0.5"
+          className="mt-0.5 flex-shrink-0"
         />
         <label 
           htmlFor={id} 

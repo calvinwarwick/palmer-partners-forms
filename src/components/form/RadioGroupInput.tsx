@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { FormField } from './FormField';
 import { cn } from '@/lib/utils';
 
@@ -43,35 +43,32 @@ export const RadioGroupInput = ({
       htmlFor={id}
       className={className}
     >
-      <div className="space-y-3">
-        {options.map((option) => (
-          <div 
-            key={option.value}
-            className={cn(
-              "py-3 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors"
-            )}
-          >
-            <div className="flex items-center gap-3">
-              <Checkbox
-                id={`${id}-${option.value}`}
-                checked={value === option.value}
-                onCheckedChange={(checked) => {
-                  if (checked) {
-                    onChange(option.value);
-                  }
-                }}
-                disabled={disabled}
-              />
-              <label 
-                htmlFor={`${id}-${option.value}`}
-                className="text-sm font-medium text-gray-700 cursor-pointer select-none flex-1"
-              >
-                {option.label}
-              </label>
+      <RadioGroup value={value} onValueChange={onChange} disabled={disabled}>
+        <div className="space-y-3">
+          {options.map((option) => (
+            <div 
+              key={option.value}
+              className={cn(
+                "py-3 px-4 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 transition-colors radio-container"
+              )}
+            >
+              <div className="flex items-center gap-3">
+                <RadioGroupItem
+                  value={option.value}
+                  id={`${id}-${option.value}`}
+                  className="flex-shrink-0"
+                />
+                <label 
+                  htmlFor={`${id}-${option.value}`}
+                  className="text-sm font-medium text-gray-700 cursor-pointer select-none flex-1"
+                >
+                  {option.label}
+                </label>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </RadioGroup>
     </FormField>
   );
 };

@@ -1,0 +1,136 @@
+
+/* Responsive Input Controls - Fixes scaling issues for checkboxes, switches, and radio buttons */
+
+/* Base sizing for all viewports */
+:root {
+  --checkbox-size: 20px;
+  --switch-width: 44px;
+  --switch-height: 24px;
+  --radio-size: 16px;
+}
+
+/* Mobile devices (up to 640px) */
+@media (max-width: 640px) {
+  :root {
+    --checkbox-size: 24px;
+    --switch-width: 48px;
+    --switch-height: 26px;
+    --radio-size: 18px;
+  }
+  
+  /* Ensure checkboxes don't grow beyond intended size */
+  [data-radix-checkbox-root] {
+    width: var(--checkbox-size) !important;
+    height: var(--checkbox-size) !important;
+    min-width: var(--checkbox-size) !important;
+    min-height: var(--checkbox-size) !important;
+    max-width: var(--checkbox-size) !important;
+    max-height: var(--checkbox-size) !important;
+    flex-shrink: 0 !important;
+  }
+  
+  /* Switch sizing constraints */
+  [data-radix-switch-root] {
+    width: var(--switch-width) !important;
+    height: var(--switch-height) !important;
+    min-width: var(--switch-width) !important;
+    min-height: var(--switch-height) !important;
+    max-width: var(--switch-width) !important;
+    max-height: var(--switch-height) !important;
+  }
+  
+  /* Radio button sizing */
+  [data-radix-radio-item] {
+    width: var(--radio-size) !important;
+    height: var(--radio-size) !important;
+    min-width: var(--radio-size) !important;
+    min-height: var(--radio-size) !important;
+    max-width: var(--radio-size) !important;
+    max-height: var(--radio-size) !important;
+  }
+}
+
+/* Tablet range (641px to 1000px) - Critical fix zone */
+@media (min-width: 641px) and (max-width: 1000px) {
+  :root {
+    --checkbox-size: 20px;
+    --switch-width: 44px;
+    --switch-height: 24px;
+    --radio-size: 16px;
+  }
+  
+  /* Prevent scaling issues in this critical range */
+  [data-radix-checkbox-root] {
+    width: var(--checkbox-size) !important;
+    height: var(--checkbox-size) !important;
+    min-width: var(--checkbox-size) !important;
+    min-height: var(--checkbox-size) !important;
+    max-width: var(--checkbox-size) !important;
+    max-height: var(--checkbox-size) !important;
+    flex-shrink: 0 !important;
+  }
+  
+  [data-radix-switch-root] {
+    width: var(--switch-width) !important;
+    height: var(--switch-height) !important;
+    min-width: var(--switch-width) !important;
+    min-height: var(--switch-height) !important;
+    max-width: var(--switch-width) !important;
+    max-height: var(--switch-height) !important;
+  }
+  
+  [data-radix-radio-item] {
+    width: var(--radio-size) !important;
+    height: var(--radio-size) !important;
+    min-width: var(--radio-size) !important;
+    min-height: var(--radio-size) !important;
+    max-width: var(--radio-size) !important;
+    max-height: var(--radio-size) !important;
+  }
+}
+
+/* Desktop (1001px and above) */
+@media (min-width: 1001px) {
+  :root {
+    --checkbox-size: 20px;
+    --switch-width: 44px;
+    --switch-height: 24px;
+    --radio-size: 16px;
+  }
+  
+  [data-radix-checkbox-root] {
+    width: var(--checkbox-size);
+    height: var(--checkbox-size);
+    min-width: var(--checkbox-size);
+    min-height: var(--checkbox-size);
+    max-width: var(--checkbox-size);
+    max-height: var(--checkbox-size);
+    flex-shrink: 0;
+  }
+  
+  [data-radix-switch-root] {
+    width: var(--switch-width);
+    height: var(--switch-height);
+    min-width: var(--switch-width);
+    min-height: var(--switch-height);
+    max-width: var(--switch-width);
+    max-height: var(--switch-height);
+  }
+  
+  [data-radix-radio-item] {
+    width: var(--radio-size);
+    height: var(--radio-size);
+    min-width: var(--radio-size);
+    min-height: var(--radio-size);
+    max-width: var(--radio-size);
+    max-height: var(--radio-size);
+  }
+}
+
+/* Additional safeguards */
+.checkbox-container [data-radix-checkbox-root],
+.switch-container [data-radix-switch-root],
+.radio-container [data-radix-radio-item] {
+  transform: none !important;
+  scale: none !important;
+}
