@@ -84,10 +84,16 @@ const handler = async (req: Request): Promise<Response> => {
     if (attachment) {
       console.log("Adding attachment:", attachment.filename, "Type:", attachment.type, "Content length:", attachment.content.length);
       
+      // Convert base64 to Uint8Array for Resend
+      const binaryString = atob(attachment.content);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      
       emailPayload.attachments = [{
         filename: attachment.filename,
-        content: attachment.content,
-        type: attachment.type,
+        content: bytes,
       }];
     }
 
