@@ -24,7 +24,44 @@ const PdfDemo = () => {
         currentPropertyStatus: "Rented Privately",
         moveInDate: "2022-01-15",
         vacateDate: "2024-05-30",
-        currentRentalAmount: "1800"
+        currentRentalAmount: "1800",
+        currentAddress: "45 Current Road, London",
+        currentPostcode: "SW2B 2BB",
+        timeAtAddress: "2 years 6 months",
+        landlordName: "John Smith",
+        landlordPhone: "+447700900123",
+        rentUpToDate: "yes",
+        noticePeriod: "1 month",
+        previousLandlordName: "Sarah Johnson",
+        previousLandlordPhone: "+447700900456"
+      },
+      {
+        id: "2",
+        firstName: "Emma",
+        lastName: "Thompson",
+        email: "emma.thompson@email.com",
+        phone: "+447549912063",
+        dateOfBirth: "1988-07-15",
+        employment: "Full-time Employment",
+        companyName: "Creative Design Agency",
+        jobTitle: "Senior Designer",
+        annualIncome: "48000",
+        lengthOfService: "4 years 2 months",
+        previousAddress: "789 Old Avenue, Manchester",
+        previousPostcode: "M1 3CD",
+        currentPropertyStatus: "Rented Privately",
+        moveInDate: "2021-03-10",
+        vacateDate: "2024-06-15",
+        currentRentalAmount: "1650",
+        currentAddress: "22 Modern Street, Manchester",
+        currentPostcode: "M2 4EF",
+        timeAtAddress: "3 years 3 months",
+        landlordName: "Michael Brown",
+        landlordPhone: "+447700900789",
+        rentUpToDate: "yes",
+        noticePeriod: "2 months",
+        previousLandlordName: "Lisa Wilson",
+        previousLandlordPhone: "+447700900012"
       }
     ],
     propertyPreferences: {
@@ -36,11 +73,11 @@ const PdfDemo = () => {
       initialTenancyTerm: "12 months"
     },
     additionalDetails: {
-      pets: false,
-      petDetails: "",
-      under18Count: "0",
-      childrenAges: "",
-      additionalRequests: "Parking space preferred",
+      pets: true,
+      petDetails: "1 small dog (Jack Russell, 5 years old, neutered, vaccinated)",
+      under18Count: "1",
+      childrenAges: "One child aged 8 years old",
+      additionalRequests: "Parking space preferred, garden access required for pet",
       ukPassport: "yes",
       adverseCredit: "no",
       adverseCreditDetails: "",
@@ -146,7 +183,7 @@ const PdfDemo = () => {
           </CardContent>
         </Card>
 
-        {/* Applicant Section */}
+        {/* Applicant Sections */}
         {demoData.applicants.map((applicant, index) => (
           <Card key={applicant.id} className="mb-6 border-0 shadow-none">
             <SectionHeader title={`Applicant - #${index + 1}`} />
@@ -170,12 +207,24 @@ const PdfDemo = () => {
 
                   {/* Current Property Details */}
                   <SubsectionHeader title="Current Property Details" />
-                  <DataRow label="Postcode" value={applicant.previousPostcode} />
-                  <DataRow label="Street Address" value={applicant.previousAddress} />
-                  <DataRow label="Move In Date" value={formatDate(applicant.moveInDate)} />
-                  <DataRow label="Vacate Date" value={formatDate(applicant.vacateDate)} />
+                  <DataRow label="Postcode" value={applicant.currentPostcode || applicant.previousPostcode} />
+                  <DataRow label="Street Address" value={applicant.currentAddress || applicant.previousAddress} />
+                  <DataRow label="Time at Address" value={applicant.timeAtAddress || 'N/A'} />
+                  <DataRow label="Landlord Name" value={applicant.landlordName || 'N/A'} />
+                  <DataRow label="Landlord Phone" value={applicant.landlordPhone || 'N/A'} />
+                  <DataRow label="Rent Up to Date" value={applicant.rentUpToDate === 'yes' ? 'Yes' : 'No'} />
+                  <DataRow label="Notice Period" value={applicant.noticePeriod || 'N/A'} />
                   <DataRow label="Current Property Status" value={applicant.currentPropertyStatus} />
                   <DataRow label="Current Rental Amount" value={applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : ''} />
+
+                  {/* Previous Property Details */}
+                  <SubsectionHeader title="Previous Property Details" />
+                  <DataRow label="Previous Address" value={applicant.previousAddress} />
+                  <DataRow label="Previous Postcode" value={applicant.previousPostcode} />
+                  <DataRow label="Move In Date" value={formatDate(applicant.moveInDate)} />
+                  <DataRow label="Vacate Date" value={formatDate(applicant.vacateDate)} />
+                  <DataRow label="Previous Landlord Name" value={applicant.previousLandlordName || 'N/A'} />
+                  <DataRow label="Previous Landlord Phone" value={applicant.previousLandlordPhone || 'N/A'} />
 
                   {/* Additional Information */}
                   <SubsectionHeader title="Additional Information" />

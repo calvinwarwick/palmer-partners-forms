@@ -64,21 +64,25 @@ export const generateApplicationPDF = async (data: {
     return y + 10;
   };
 
-  // Helper function for data rows - matching the demo
-  const addDataRow = (label: string, value: string, currentY: number, isSubsection: boolean = false) => {
+  // Helper function for subsection headers
+  const addSubsectionHeader = (title: string, currentY: number) => {
     const y = checkPageBreak(currentY);
     
-    if (isSubsection) {
-      doc.setFillColor(200, 200, 200);
-      doc.rect(20, y, 170, 12, 'F');
-      doc.setDrawColor(150, 150, 150);
-      doc.rect(20, y, 170, 12);
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(10);
-      doc.setTextColor(0, 0, 0);
-      doc.text(label, 105, y + 7, { align: 'center' });
-      return y + 12;
-    }
+    doc.setFillColor(200, 200, 200);
+    doc.rect(20, y, 170, 12, 'F');
+    doc.setDrawColor(150, 150, 150);
+    doc.rect(20, y, 170, 12);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, 105, y + 7, { align: 'center' });
+    
+    return y + 12;
+  };
+
+  // Helper function for data rows - matching the demo
+  const addDataRow = (label: string, value: string, currentY: number) => {
+    const y = checkPageBreak(currentY);
     
     const labelWidth = 170 * 0.35;
     const valueWidth = 170 * 0.65;
@@ -160,7 +164,7 @@ export const generateApplicationPDF = async (data: {
     yPosition = addDataRow('Mobile Number', applicant.phone || '', yPosition);
 
     // Employment Details
-    yPosition = addDataRow('Employment Details', '', yPosition, true);
+    yPosition = addSubsectionHeader('Employment Details', yPosition);
     yPosition = addDataRow('Contract Type', applicant.employment || '', yPosition);
     yPosition = addDataRow('Company Name', applicant.companyName || '', yPosition);
     yPosition = addDataRow('Job Title', applicant.jobTitle || '', yPosition);
@@ -168,16 +172,28 @@ export const generateApplicationPDF = async (data: {
     yPosition = addDataRow('Length of Service', applicant.lengthOfService || '', yPosition);
 
     // Current Property Details
-    yPosition = addDataRow('Current Property Details', '', yPosition, true);
-    yPosition = addDataRow('Postcode', applicant.previousPostcode || '', yPosition);
-    yPosition = addDataRow('Street Address', applicant.previousAddress || '', yPosition);
-    yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
-    yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
+    yPosition = addSubsectionHeader('Current Property Details', yPosition);
+    yPosition = addDataRow('Postcode', applicant.currentPostcode || applicant.previousPostcode || '', yPosition);
+    yPosition = addDataRow('Street Address', applicant.currentAddress || applicant.previousAddress || '', yPosition);
+    yPosition = addDataRow('Time at Address', applicant.timeAtAddress || '', yPosition);
+    yPosition = addDataRow('Landlord Name', applicant.landlordName || '', yPosition);
+    yPosition = addDataRow('Landlord Phone', applicant.landlordPhone || '', yPosition);
+    yPosition = addDataRow('Rent Up to Date', applicant.rentUpToDate === 'yes' ? 'Yes' : 'No', yPosition);
+    yPosition = addDataRow('Notice Period', applicant.noticePeriod || '', yPosition);
     yPosition = addDataRow('Current Property Status', applicant.currentPropertyStatus || '', yPosition);
     yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', yPosition);
 
+    // Previous Property Details
+    yPosition = addSubsectionHeader('Previous Property Details', yPosition);
+    yPosition = addDataRow('Previous Address', applicant.previousAddress || '', yPosition);
+    yPosition = addDataRow('Previous Postcode', applicant.previousPostcode || '', yPosition);
+    yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
+    yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
+    yPosition = addDataRow('Previous Landlord Name', applicant.previousLandlordName || '', yPosition);
+    yPosition = addDataRow('Previous Landlord Phone', applicant.previousLandlordPhone || '', yPosition);
+
     // Additional Information
-    yPosition = addDataRow('Additional Information', '', yPosition, true);
+    yPosition = addSubsectionHeader('Additional Information', yPosition);
     yPosition = addDataRow('UK/ROI Passport', data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No', yPosition);
     yPosition = addDataRow('Adverse Credit', data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No', yPosition);
     if (data.additionalDetails?.adverseCredit === 'yes' && data.additionalDetails?.adverseCreditDetails) {
