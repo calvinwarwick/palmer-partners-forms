@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,6 +26,7 @@ const AdminFiles = () => {
       // Generate a sample application data for testing
       const sampleApplicationData = {
         applicants: [{
+          id: "test-applicant-1",
           firstName: "John",
           lastName: "Doe", 
           email: testEmail,
