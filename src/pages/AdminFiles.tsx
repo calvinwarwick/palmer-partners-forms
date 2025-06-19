@@ -9,6 +9,7 @@ import { Mail, Settings } from "lucide-react";
 import FileUploadTab from "@/components/admin/FileUploadTab";
 import ApplicationHeader from "@/components/shared/ApplicationHeader";
 import { sendEmail } from "@/services/api/emailApi";
+import { generateApplicationPDF } from "@/services/pdfService";
 
 const AdminFiles = () => {
   const [testEmail, setTestEmail] = useState("");
@@ -23,56 +24,174 @@ const AdminFiles = () => {
     setSendingTest(true);
 
     try {
+      // Generate a sample application data for testing
+      const sampleApplicationData = {
+        applicants: [{
+          firstName: "John",
+          lastName: "Doe", 
+          email: testEmail,
+          phone: "07123456789",
+          dateOfBirth: "1990-01-01",
+          employment: "Full-time Employment",
+          companyName: "Test Company Ltd",
+          jobTitle: "Software Developer",
+          annualIncome: "50000",
+          lengthOfService: "2 years",
+          currentAddress: "123 Test Street",
+          currentPostcode: "SW1A 1AA",
+          timeAtAddress: "2 years",
+          landlordName: "Test Landlord",
+          landlordPhone: "07987654321",
+          rentUpToDate: "yes",
+          noticePeriod: "1 month",
+          currentPropertyStatus: "Renting",
+          currentRentalAmount: "1200",
+          previousAddress: "456 Previous Road",
+          previousPostcode: "SW1A 2BB",
+          moveInDate: "2022-01-01",
+          vacateDate: "2024-01-01",
+          previousLandlordName: "Previous Landlord",
+          previousLandlordPhone: "07111222333"
+        }],
+        propertyPreferences: {
+          streetAddress: "789 Demo Property Lane, London",
+          postcode: "SW1A 3CC",
+          maxRent: "1500",
+          moveInDate: "2024-02-01",
+          latestMoveInDate: "2024-02-15",
+          initialTenancyTerm: "12 months"
+        },
+        additionalDetails: {
+          pets: false,
+          under18Count: "0",
+          additionalRequests: "Test additional requests",
+          depositType: "Traditional Deposit",
+          ukPassport: "yes",
+          adverseCredit: "no",
+          guarantorRequired: "no"
+        },
+        dataSharing: {
+          utilities: true,
+          insurance: false
+        },
+        signature: "Test Digital Signature",
+        submittedAt: new Date().toISOString(),
+        applicationId: "TEST-" + Date.now()
+      };
+
+      console.log('Generating test PDF...');
+      const pdfBuffer = await generateApplicationPDF(sampleApplicationData);
+      console.log('Test PDF generated successfully, size:', pdfBuffer.byteLength, 'bytes');
+      
+      // Convert to base64 for email attachment
+      const convertArrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        for (let i = 0; i < bytes.byteLength; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
+      };
+      
+      const pdfBase64 = convertArrayBufferToBase64(pdfBuffer.buffer);
+      console.log('Test PDF converted to base64, length:', pdfBase64.length);
+
       const testEmailContent = `
-        <div style="font-family: Lexend, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
-          <div style="background: #212121; color: white; padding: 20px; text-align: center; margin-bottom: 20px;">
-            <div style="background: white; color: #212121; padding: 8px 16px; display: inline-block; border-radius: 4px; font-weight: bold; font-family: Lexend, sans-serif;">
-              Palmer & Partners
+        <html>
+          <head>
+            <style>
+              body { font-family: 'Lexend', Arial, sans-serif; line-height: 1.6; color: #333; }
+              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+              .header { background: linear-gradient(135deg, #FF6F00 0%, #FF8F00 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
+              .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+              .highlight { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
+              .status-badge { display: inline-block; background: #FF6F00; color: white; padding: 15px 30px; border-radius: 6px; font-weight: bold; }
+              .view-online-btn { display: inline-block; background: #212121; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; margin: 10px 0; }
+              .test-banner { background: #dc3545; color: white; padding: 10px; text-align: center; font-weight: bold; margin-bottom: 0; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <div class="test-banner">🧪 TEST EMAIL - This is a test of the customer confirmation email system</div>
+              <div class="header">
+                <h1 style="margin: 0; font-size: 28px; font-weight: bold;">Application Received</h1>
+              </div>
+              
+              <div class="content">
+                <h2 style="color: #212121; margin-bottom: 20px;">Dear John Doe,</h2>
+                
+                <p style="margin-bottom: 20px;">
+                  Thank you for submitting your tenancy application for <strong>789 Demo Property Lane, London</strong>.
+                </p>
+                
+                <div class="highlight">
+                  <h3 style="color: #212121; margin-top: 0;">Application Summary:</h3>
+                  <ul style="margin: 0;">
+                    <li>Property: 789 Demo Property Lane, London</li>
+                    <li>Number of Applicants: 1</li>
+                    <li>Preferred Move-in Date: 2024-02-01</li>
+                    <li>Maximum Rent: £1500</li>
+                  </ul>
+                </div>
+                
+                <p style="margin-bottom: 20px;">
+                  We'll review your application and get back to you within <strong style="color: #FF6F00;">2-3 business days</strong>.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                  Please find your completed application form attached to this email for your records.
+                </p>
+
+                <div style="text-align: center; margin: 20px 0;">
+                  <a href="${window.location.origin}/pdf/" class="view-online-btn" style="color: white; text-decoration: none;">
+                    View Your Application Online
+                  </a>
+                  <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                    You can also view your application anytime at: ${window.location.origin}/pdf/
+                  </p>
+                </div>
+                
+                <div style="text-align: center; margin: 30px 0;">
+                  <div class="status-badge">Application Status: Processing</div>
+                </div>
+                
+                <p style="color: #888; font-size: 14px; margin-top: 30px;">
+                  Best regards,<br>
+                  <strong>Palmer & Partners Team</strong>
+                </p>
+              </div>
             </div>
-            <div style="height: 4px; background: #FF6F00; margin-top: 15px;"></div>
-          </div>
-          
-          <h1 style="color: #212121; text-align: center; margin-bottom: 30px; font-family: Lexend, sans-serif;">Test Email - Admin Panel</h1>
-          
-          <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #212121; margin-top: 0; font-family: Lexend, sans-serif;">Test Email Confirmation</h2>
-            <p style="color: #666; margin-bottom: 0; font-family: Lexend, sans-serif;">This is a test email sent from the admin panel to verify email functionality is working correctly.</p>
-          </div>
-          
-          <div style="background: #FF6F00; color: white; padding: 15px; border-radius: 8px; text-align: center;">
-            <p style="margin: 0; font-weight: bold; font-family: Lexend, sans-serif;">Email system is working properly! ✅</p>
-          </div>
-          
-          <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="color: #999; font-size: 12px; margin: 0; font-family: Lexend, sans-serif;">
-              This email was sent from the Palmer & Partners admin panel for testing purposes.
-            </p>
-          </div>
-        </div>
+          </body>
+        </html>
       `;
 
       const success = await sendEmail({
         to: testEmail,
-        subject: "Test Email - Palmer & Partners Admin Panel",
+        subject: "TEST - Tenancy Application Confirmation - Palmer & Partners",
         html: testEmailContent,
-        bcc: "calvinwarwick+admin@gmail.com"
+        bcc: "calvinwarwick+admin@gmail.com",
+        attachment: {
+          filename: 'tenancy-application.pdf',
+          content: pdfBase64,
+          type: 'application/pdf'
+        }
       });
 
       if (success) {
-        toast.success(`Test email sent successfully to ${testEmail}`, {
-          description: "Check your inbox and spam folder",
+        toast.success(`Test confirmation email sent successfully to ${testEmail}`, {
+          description: "Complete with PDF attachment - check your inbox and spam folder",
           duration: 5000,
         });
         setTestEmail("");
       } else {
-        toast.error('Failed to send test email', {
+        toast.error('Failed to send test confirmation email', {
           description: "Please check the console for more details",
           duration: 5000,
         });
       }
     } catch (error) {
-      console.error('Error sending test email:', error);
-      toast.error('Failed to send test email', {
+      console.error('Error sending test confirmation email:', error);
+      toast.error('Failed to send test confirmation email', {
         description: error instanceof Error ? error.message : 'Unknown error occurred',
         duration: 5000,
       });
@@ -101,7 +220,7 @@ const AdminFiles = () => {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <Label htmlFor="test-email" className="text-sm font-medium text-dark-grey">
-                  Test Email Address
+                  Test Customer Confirmation Email
                 </Label>
                 <div className="flex gap-2">
                   <Input
@@ -127,8 +246,8 @@ const AdminFiles = () => {
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500">
-                  This will send a test confirmation email to verify the email system is working. 
-                  Note: The domain must be verified in Resend for emails to work.
+                  This will send an exact replica of the customer confirmation email with PDF attachment, 
+                  including all styling and content that customers receive when they submit their application.
                 </p>
               </div>
             </div>
