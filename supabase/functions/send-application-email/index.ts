@@ -76,7 +76,7 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const emailPayload: any = {
-      from: "Palmer & Partners <onboarding@resend.dev>",
+      from: "Palmer & Partners <noreply@forms.palmerpartners.uk>",
       to: [to],
       subject,
       html,
