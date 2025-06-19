@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -54,12 +55,15 @@ const AdminFiles = () => {
           previousLandlordPhone: "07111222333"
         }],
         propertyPreferences: {
+          propertyType: "apartment",
           streetAddress: "789 Demo Property Lane, London",
           postcode: "SW1A 3CC",
           maxRent: "1500",
+          preferredLocation: "Central London",
           moveInDate: "2024-02-01",
           latestMoveInDate: "2024-02-15",
-          initialTenancyTerm: "12 months"
+          initialTenancyTerm: "12 months",
+          additionalRequests: "Test additional requests"
         },
         additionalDetails: {
           pets: false,
