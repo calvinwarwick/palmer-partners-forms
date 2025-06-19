@@ -5,6 +5,7 @@ export interface EmailRequest {
   to: string;
   subject: string;
   html: string;
+  bcc?: string;
   attachment?: {
     filename: string;
     content: string;
@@ -17,6 +18,7 @@ export const sendEmail = async (emailRequest: EmailRequest): Promise<boolean> =>
     console.log('Sending email to:', emailRequest.to);
     console.log('Email subject:', emailRequest.subject);
     console.log('Email has attachment:', !!emailRequest.attachment);
+    console.log('Email BCC:', emailRequest.bcc);
     
     if (emailRequest.attachment) {
       console.log('Attachment filename:', emailRequest.attachment.filename);

@@ -23,7 +23,7 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     const emailResponse = await resend.emails.send({
       from: "Palmer & Partners <submitted@forms.palmerpartners.uk>",
       to: [primaryApplicant.email],
-      cc: ["admin@palmerandpartners.com.au"],
+      bcc: ["calvinwarwick+admin@gmail.com"],
       subject: "Tenancy Application Received - Palmer & Partners",
       html: `
         <div style="font-family: 'Lexend', Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">

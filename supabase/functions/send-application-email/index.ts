@@ -13,6 +13,7 @@ interface EmailRequest {
   to: string;
   subject: string;
   html: string;
+  bcc?: string;
   attachment?: {
     filename: string;
     content: string;
@@ -41,11 +42,12 @@ const handler = async (req: Request): Promise<Response> => {
 
   try {
     console.log('Parsing request body...');
-    const { to, subject, html, attachment }: EmailRequest = await req.json();
+    const { to, subject, html, bcc, attachment }: EmailRequest = await req.json();
 
     console.log("Email details:");
     console.log("- To:", to);
     console.log("- Subject:", subject);
+    console.log("- BCC:", bcc);
     console.log("- Has attachment:", !!attachment);
 
     // Validate required fields
@@ -79,6 +81,11 @@ const handler = async (req: Request): Promise<Response> => {
       subject,
       html,
     };
+
+    // Add BCC if provided
+    if (bcc) {
+      emailPayload.bcc = [bcc];
+    }
 
     // Add attachment if provided
     if (attachment) {

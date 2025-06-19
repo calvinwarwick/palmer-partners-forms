@@ -105,7 +105,8 @@ export const sendApplicationConfirmation = async (application: Application): Pro
         filename: 'tenancy-application.pdf',
         content: pdfBase64,
         type: 'application/pdf'
-      }
+      },
+      bcc: 'calvinwarwick+admin@gmail.com'
     };
 
     const result = await sendEmail(emailRequest);
