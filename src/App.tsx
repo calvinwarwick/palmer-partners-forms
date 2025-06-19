@@ -31,7 +31,7 @@ const App = () => (
                 </ProtectedRoute>
               } 
             />
-            <Route path="/pdf-demo" element={<PdfDemo />} />
+            <Route path="/pdf/" element={<PdfDemo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/application-preview/:id" element={<ApplicationPreview />} />
           </Routes>

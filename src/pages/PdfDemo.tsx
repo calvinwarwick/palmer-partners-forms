@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -146,6 +145,15 @@ const PdfDemo = () => {
       <ApplicationHeader />
       
       <div className="max-w-4xl mx-auto p-8">
+        {/* Updated header message */}
+        <div className="text-center mb-8 p-6 bg-orange-50 border border-orange-200 rounded-lg">
+          <h1 className="text-3xl font-bold text-dark-grey mb-4">Your Tenancy Application</h1>
+          <p className="text-gray-600">
+            This is how your submitted tenancy application appears. You can bookmark this page for your records.
+            The same format is sent to you as a PDF attachment via email.
+          </p>
+        </div>
+
         {/* Header with logo placeholder */}
         <div className="bg-dark-grey text-white py-6 px-4 mb-4 relative">
           <div className="bg-white text-dark-grey py-2 px-4 mx-auto w-fit rounded font-bold text-lg">
@@ -156,7 +164,7 @@ const PdfDemo = () => {
 
         {/* Main Title */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-dark-grey">Tenancy Application</h1>
+          <h2 className="text-3xl font-bold text-dark-grey">Tenancy Application</h2>
         </div>
 
         {/* Property Details Section */}

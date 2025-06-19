@@ -17,7 +17,7 @@ export const navItems = [
   },
   {
     title: "PDF Demo",
-    to: "/pdf-demo",
+    to: "/pdf/",
     icon: "fileText",
   },
 ];

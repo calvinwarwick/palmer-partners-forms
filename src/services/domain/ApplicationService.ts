@@ -1,4 +1,3 @@
-
 import { sendEmail } from '../api/emailApi';
 import { generateApplicationPDF } from '../pdfService';
 import { Application } from '@/domain/types/Applicant';
@@ -50,6 +49,7 @@ export const sendApplicationConfirmation = async (application: Application): Pro
             .content { background: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
             .highlight { background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0; }
             .status-badge { display: inline-block; background: #FF6F00; color: white; padding: 15px 30px; border-radius: 6px; font-weight: bold; }
+            .view-online-btn { display: inline-block; background: #212121; color: white; padding: 12px 24px; border-radius: 6px; text-decoration: none; margin: 10px 0; }
           </style>
         </head>
         <body>
@@ -82,6 +82,15 @@ export const sendApplicationConfirmation = async (application: Application): Pro
               <p style="margin-bottom: 20px;">
                 Please find your completed application form attached to this email for your records.
               </p>
+
+              <div style="text-align: center; margin: 20px 0;">
+                <a href="${window.location.origin}/pdf/" class="view-online-btn" style="color: white; text-decoration: none;">
+                  View Your Application Online
+                </a>
+                <p style="font-size: 14px; color: #666; margin-top: 10px;">
+                  You can also view your application anytime at: ${window.location.origin}/pdf/
+                </p>
+              </div>
               
               <div style="text-align: center; margin: 30px 0;">
                 <div class="status-badge">Application Status: Processing</div>
