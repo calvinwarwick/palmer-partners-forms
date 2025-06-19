@@ -95,15 +95,15 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
               description="This should be your basic salary excluding bonuses, commission, overtime etc."
               htmlFor={`annualIncome-${applicant.id}`}
             >
-              <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
+              <div className="currency-input-container">
+                <span className="currency-input-icon text-orange-500">£</span>
                 <Input
                   id={`annualIncome-${applicant.id}`}
                   type="number"
                   value={applicant.annualIncome || ""}
                   onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                   placeholder="Enter annual salary"
-                  className="pl-8"
+                  className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
                 />
               </div>
             </FormField>

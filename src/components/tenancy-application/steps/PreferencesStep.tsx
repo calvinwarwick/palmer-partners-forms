@@ -2,6 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Calendar } from "lucide-react";
 import { PropertyPreferences } from "@/domain/types/Applicant";
 
 interface PreferencesStepProps {
@@ -33,14 +34,18 @@ const PreferencesStep = ({ propertyPreferences, onUpdatePreferences }: Preferenc
           </div>
           <div>
             <Label htmlFor="maxRent">Maximum Monthly Rent (£) *</Label>
-            <Input
-              id="maxRent"
-              type="number"
-              value={propertyPreferences.maxRent}
-              onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
-              placeholder="e.g., 2500"
-              required
-            />
+            <div className="currency-input-container">
+              <span className="currency-input-icon text-orange-500">£</span>
+              <Input
+                id="maxRent"
+                type="number"
+                value={propertyPreferences.maxRent}
+                onChange={(e) => onUpdatePreferences("maxRent", e.target.value)}
+                placeholder="e.g., 2500"
+                className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
+                required
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="location">Preferred Location</Label>
@@ -53,12 +58,16 @@ const PreferencesStep = ({ propertyPreferences, onUpdatePreferences }: Preferenc
           </div>
           <div>
             <Label htmlFor="moveInDate">Preferred Move-in Date</Label>
-            <Input
-              id="moveInDate"
-              type="date"
-              value={propertyPreferences.moveInDate}
-              onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
-            />
+            <div className="date-input-container">
+              <Calendar className="date-input-icon" />
+              <Input
+                id="moveInDate"
+                type="date"
+                value={propertyPreferences.moveInDate}
+                onChange={(e) => onUpdatePreferences("moveInDate", e.target.value)}
+                className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12"
+              />
+            </div>
           </div>
           <div>
             <Label htmlFor="requests">Additional Requests</Label>

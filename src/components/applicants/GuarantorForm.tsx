@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Applicant } from "@/domain/types/Applicant";
-import { Shield } from "lucide-react";
+import { Shield, Calendar } from "lucide-react";
 interface GuarantorFormProps {
   applicant: Applicant;
   applicationId: string;
@@ -110,7 +110,10 @@ const GuarantorForm = ({
               </div>
               <div>
                 <Label htmlFor="dateOfBirth">Date of Birth</Label>
-                <Input id="dateOfBirth" type="date" value={guarantorData.dateOfBirth} onChange={e => handleInputChange('dateOfBirth', e.target.value)} className="form-control" />
+                <div className="date-input-container">
+                  <Calendar className="date-input-icon" />
+                  <Input id="dateOfBirth" type="date" value={guarantorData.dateOfBirth} onChange={e => handleInputChange('dateOfBirth', e.target.value)} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12" />
+                </div>
               </div>
               <div>
                 <Label htmlFor="relationship">Relationship to Applicant</Label>
@@ -174,7 +177,10 @@ const GuarantorForm = ({
               </div>
               <div>
                 <Label htmlFor="annualIncome">Annual Income</Label>
-                <Input id="annualIncome" value={guarantorData.annualIncome} onChange={e => handleInputChange('annualIncome', e.target.value)} placeholder="Enter annual income" className="form-control" />
+                <div className="currency-input-container">
+                  <span className="currency-input-icon text-orange-500">£</span>
+                  <Input id="annualIncome" value={guarantorData.annualIncome} onChange={e => handleInputChange('annualIncome', e.target.value)} placeholder="Enter annual income" className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl" />
+                </div>
               </div>
               <div>
                 <Label htmlFor="lengthOfService">Length of Service</Label>

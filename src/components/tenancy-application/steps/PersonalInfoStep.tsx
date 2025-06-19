@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -148,13 +148,17 @@ const PersonalInfoStep = ({
                   required
                   htmlFor={`dateOfBirth-${applicant.id}`}
                 >
-                  <Input
-                    id={`dateOfBirth-${applicant.id}`}
-                    type="date"
-                    value={applicant.dateOfBirth}
-                    onChange={(e) => handleDateOfBirthChange(applicant.id, e.target.value)}
-                    max="2300-12-31"
-                  />
+                  <div className="date-input-container">
+                    <Calendar className="date-input-icon" />
+                    <Input
+                      id={`dateOfBirth-${applicant.id}`}
+                      type="date"
+                      value={applicant.dateOfBirth}
+                      onChange={(e) => handleDateOfBirthChange(applicant.id, e.target.value)}
+                      max="2300-12-31"
+                      className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl text-left pl-12"
+                    />
+                  </div>
                 </FormField>
 
                 <FormField
