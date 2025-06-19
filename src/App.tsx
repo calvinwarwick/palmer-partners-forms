@@ -9,6 +9,7 @@ import ApplicationPreview from "./pages/ApplicationPreview";
 import Index from "./pages/Index";
 import Application from "./pages/Application";
 import Admin from "./pages/Admin";
+import AdminFiles from "./pages/AdminFiles";
 import PdfDemo from "./pages/PdfDemo";
 import Login from "./pages/Login";
 
@@ -28,6 +29,14 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Admin />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin-files" 
+              element={
+                <ProtectedRoute>
+                  <AdminFiles />
                 </ProtectedRoute>
               } 
             />
