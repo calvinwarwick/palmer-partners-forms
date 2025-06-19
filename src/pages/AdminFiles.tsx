@@ -24,27 +24,27 @@ const AdminFiles = () => {
 
     try {
       const testEmailContent = `
-        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <div style="font-family: Lexend, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: #212121; color: white; padding: 20px; text-align: center; margin-bottom: 20px;">
-            <div style="background: white; color: #212121; padding: 8px 16px; display: inline-block; border-radius: 4px; font-weight: bold;">
+            <div style="background: white; color: #212121; padding: 8px 16px; display: inline-block; border-radius: 4px; font-weight: bold; font-family: Lexend, sans-serif;">
               Palmer & Partners
             </div>
             <div style="height: 4px; background: #FF6F00; margin-top: 15px;"></div>
           </div>
           
-          <h1 style="color: #212121; text-align: center; margin-bottom: 30px;">Test Email - Admin Panel</h1>
+          <h1 style="color: #212121; text-align: center; margin-bottom: 30px; font-family: Lexend, sans-serif;">Test Email - Admin Panel</h1>
           
           <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #212121; margin-top: 0;">Test Email Confirmation</h2>
-            <p style="color: #666; margin-bottom: 0;">This is a test email sent from the admin panel to verify email functionality is working correctly.</p>
+            <h2 style="color: #212121; margin-top: 0; font-family: Lexend, sans-serif;">Test Email Confirmation</h2>
+            <p style="color: #666; margin-bottom: 0; font-family: Lexend, sans-serif;">This is a test email sent from the admin panel to verify email functionality is working correctly.</p>
           </div>
           
           <div style="background: #FF6F00; color: white; padding: 15px; border-radius: 8px; text-align: center;">
-            <p style="margin: 0; font-weight: bold;">Email system is working properly! ✅</p>
+            <p style="margin: 0; font-weight: bold; font-family: Lexend, sans-serif;">Email system is working properly! ✅</p>
           </div>
           
           <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
-            <p style="color: #999; font-size: 12px; margin: 0;">
+            <p style="color: #999; font-size: 12px; margin: 0; font-family: Lexend, sans-serif;">
               This email was sent from the Palmer & Partners admin panel for testing purposes.
             </p>
           </div>
@@ -59,14 +59,23 @@ const AdminFiles = () => {
       });
 
       if (success) {
-        toast.success(`Test email sent successfully to ${testEmail}`);
+        toast.success(`Test email sent successfully to ${testEmail}`, {
+          description: "Check your inbox and spam folder",
+          duration: 5000,
+        });
         setTestEmail("");
       } else {
-        toast.error('Failed to send test email');
+        toast.error('Failed to send test email', {
+          description: "Please check the console for more details",
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error('Error sending test email:', error);
-      toast.error('Failed to send test email');
+      toast.error('Failed to send test email', {
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        duration: 5000,
+      });
     } finally {
       setSendingTest(false);
     }
@@ -102,6 +111,11 @@ const AdminFiles = () => {
                     value={testEmail}
                     onChange={(e) => setTestEmail(e.target.value)}
                     className="flex-1"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !sendingTest) {
+                        handleSendTestEmail();
+                      }
+                    }}
                   />
                   <Button
                     onClick={handleSendTestEmail}
@@ -113,7 +127,8 @@ const AdminFiles = () => {
                   </Button>
                 </div>
                 <p className="text-xs text-gray-500">
-                  This will send a test confirmation email to verify the email system is working
+                  This will send a test confirmation email to verify the email system is working. 
+                  Note: The domain must be verified in Resend for emails to work.
                 </p>
               </div>
             </div>
