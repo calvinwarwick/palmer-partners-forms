@@ -1,13 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Calendar } from "lucide-react";
+import { User } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CustomToggle } from "@/components/ui/custom-toggle";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { SwitchField } from "@/components/ui/switch-field";
+import { FormField } from "@/components/ui/form-field";
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
 import { useState } from "react";
 
@@ -118,56 +117,116 @@ const PersonalInfoStep = ({
             </CardHeader>
             <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
-                <FormFieldWithTooltip label="First Name" tooltip="This should be your name as it appears on your passport." required={true} htmlFor={`firstName-${applicant.id}`}>
-                  <Input id={`firstName-${applicant.id}`} value={applicant.firstName} onChange={e => onUpdateApplicant(applicant.id, 'firstName', e.target.value)} placeholder="Enter first name" className="form-control" style={{
-                paddingLeft: '1rem'
-              }} />
-                </FormFieldWithTooltip>
+                <FormField
+                  label="First Name"
+                  required
+                  htmlFor={`firstName-${applicant.id}`}
+                >
+                  <Input
+                    id={`firstName-${applicant.id}`}
+                    value={applicant.firstName}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'firstName', e.target.value)}
+                    placeholder="Enter first name"
+                  />
+                </FormField>
 
-                <FormFieldWithTooltip label="Last Name" tooltip="This should be your name as it appears on your passport." required={true} htmlFor={`lastName-${applicant.id}`}>
-                  <Input id={`lastName-${applicant.id}`} value={applicant.lastName} onChange={e => onUpdateApplicant(applicant.id, 'lastName', e.target.value)} placeholder="Enter last name" className="form-control" style={{
-                paddingLeft: '1rem'
-              }} />
-                </FormFieldWithTooltip>
+                <FormField
+                  label="Last Name"
+                  required
+                  htmlFor={`lastName-${applicant.id}`}
+                >
+                  <Input
+                    id={`lastName-${applicant.id}`}
+                    value={applicant.lastName}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'lastName', e.target.value)}
+                    placeholder="Enter last name"
+                  />
+                </FormField>
 
-                <div className="space-y-2">
-                  <Label htmlFor={`dateOfBirth-${applicant.id}`} className="form-label">Date of Birth *</Label>
-                  <div className="date-input-container">
-                    <Calendar className="date-input-icon text-orange-500" />
-                    <Input id={`dateOfBirth-${applicant.id}`} name={`dateOfBirth-${applicant.id}`} type="date" value={applicant.dateOfBirth} onChange={e => handleDateOfBirthChange(applicant.id, e.target.value)} className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500" required max="2300-12-31" style={{
-                  boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px'
-                }} />
-                  </div>
-                </div>
+                <FormField
+                  label="Date of Birth"
+                  required
+                  htmlFor={`dateOfBirth-${applicant.id}`}
+                >
+                  <Input
+                    id={`dateOfBirth-${applicant.id}`}
+                    type="date"
+                    value={applicant.dateOfBirth}
+                    onChange={(e) => handleDateOfBirthChange(applicant.id, e.target.value)}
+                    max="2300-12-31"
+                  />
+                </FormField>
 
-                <FormFieldWithTooltip label="Email Address" tooltip="We must have a different email address for each applicant" required={true} htmlFor={`email-${applicant.id}`}>
-                  <Input id={`email-${applicant.id}`} type="email" value={applicant.email} onChange={e => onUpdateApplicant(applicant.id, 'email', e.target.value)} placeholder="Enter email address" className="form-control" style={{
-                paddingLeft: '1rem'
-              }} />
-                </FormFieldWithTooltip>
+                <FormField
+                  label="Email Address"
+                  description="We must have a different email address for each applicant"
+                  required
+                  htmlFor={`email-${applicant.id}`}
+                >
+                  <Input
+                    id={`email-${applicant.id}`}
+                    type="email"
+                    value={applicant.email}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
+                    placeholder="Enter email address"
+                  />
+                </FormField>
 
-                <div className="space-y-2">
-                  <Label htmlFor={`phone-${applicant.id}`} className="form-label">Mobile Number *</Label>
-                  <Input id={`phone-${applicant.id}`} value={applicant.phone} onChange={e => onUpdateApplicant(applicant.id, 'phone', e.target.value)} placeholder="Enter mobile number" className="form-control" style={{
-                paddingLeft: '1rem'
-              }} />
-                </div>
+                <FormField
+                  label="Mobile Number"
+                  required
+                  htmlFor={`phone-${applicant.id}`}
+                >
+                  <Input
+                    id={`phone-${applicant.id}`}
+                    type="tel"
+                    value={applicant.phone}
+                    onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
+                    placeholder="Enter mobile number"
+                  />
+                </FormField>
               </div>
 
               {/* Switch Questions */}
               <div className="space-y-4 md:space-y-6 pt-4 md:pt-6">
-                <CustomToggle id={`ukPassport-${applicant.id}`} label="Do you hold a UK or Republic of Ireland passport?" checked={toggles.ukPassport} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'ukPassport', checked)} />
+                <SwitchField
+                  id={`ukPassport-${applicant.id}`}
+                  label="Do you hold a UK or Republic of Ireland passport?"
+                  checked={toggles.ukPassport}
+                  onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'ukPassport', checked)}
+                />
                 
                 <div className="space-y-3 md:space-y-4">
-                  <CustomToggle id={`adverseCredit-${applicant.id}`} label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?" checked={toggles.adverseCredit} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'adverseCredit', checked)} />
+                  <SwitchField
+                    id={`adverseCredit-${applicant.id}`}
+                    label="Do you have any current or historical adverse credit e.g., debt management, IVA, CCJ or bankruptcy?"
+                    checked={toggles.adverseCredit}
+                    onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'adverseCredit', checked)}
+                  />
                   
-                  {toggles.adverseCredit && <Textarea id={`adverseCreditDetails-${applicant.id}`} value={applicant.adverseCreditDetails || ''} onChange={e => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)} placeholder="Please provide more details about your adverse credit history:" className="form-control resize-vertical border-gray-200 focus:border-orange-500 focus:ring-orange-500 bg-white rounded-md shadow-sm p-3" rows={25} style={{
-                  minHeight: '200px',
-                  paddingLeft: '1rem'
-                }} />}
+                  {toggles.adverseCredit && (
+                    <FormField
+                      label="Adverse Credit Details"
+                      required
+                      htmlFor={`adverseCreditDetails-${applicant.id}`}
+                    >
+                      <Textarea
+                        id={`adverseCreditDetails-${applicant.id}`}
+                        value={applicant.adverseCreditDetails || ''}
+                        onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
+                        placeholder="Please provide more details about your adverse credit history:"
+                        rows={6}
+                      />
+                    </FormField>
+                  )}
                 </div>
                 
-                <CustomToggle id={`guarantorRequired-${applicant.id}`} label="If required, can you supply a guarantor for this proposed tenancy?" checked={toggles.guarantorRequired} onCheckedChange={checked => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)} />
+                <SwitchField
+                  id={`guarantorRequired-${applicant.id}`}
+                  label="If required, can you supply a guarantor for this proposed tenancy?"
+                  checked={toggles.guarantorRequired}
+                  onCheckedChange={(checked) => updateApplicantToggle(applicant.id, 'guarantorRequired', checked)}
+                />
               </div>
               
               {toggles.guarantorRequired && <div className="space-y-4">

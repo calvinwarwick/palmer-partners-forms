@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { SwitchField } from "@/components/ui/switch-field";
+import { FormField } from "@/components/ui/form-field";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { CustomToggle } from "@/components/ui/custom-toggle";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Applicant } from "@/domain/types/Applicant";
 import { PawPrint, Baby, CreditCard, MessageSquare, Users, Download, ExternalLink } from "lucide-react";
@@ -92,7 +92,7 @@ const AdditionalDetailsStep = ({
         <CardContent className="space-y-6 p-6">
           {/* Pets Section */}
           <div className="space-y-6">
-            <CustomToggle
+            <SwitchField
               id="pets"
               label="Do you intend to have any pets at the property?"
               checked={additionalDetails.pets}
@@ -100,26 +100,29 @@ const AdditionalDetailsStep = ({
             />
             
             {additionalDetails.pets && (
-              <div>
+              <FormField
+                label="Pet Details"
+                required
+                htmlFor="petDetails"
+              >
                 <Textarea
                   id="petDetails"
                   value={additionalDetails.petDetails || ""}
                   onChange={(e) => onUpdateDetails("petDetails", e.target.value)}
                   placeholder="Please provide details about your pets (type, breed, age, etc.)"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required={additionalDetails.pets}
+                  rows={4}
                 />
-              </div>
+              </FormField>
             )}
           </div>
 
           {/* Children Section */}
           <div className="space-y-6">
-            <div className="space-y-3">
-              <Label className="text-sm font-medium text-gray-700">
-                Do you have any children? <span className="text-red-500">*</span>
-              </Label>
+            <FormField
+              label="Do you have any children?"
+              required
+              htmlFor="childrenCount"
+            >
               <Select 
                 value={additionalDetails.childrenCount || ""} 
                 onValueChange={(value) => {
@@ -127,10 +130,10 @@ const AdditionalDetailsStep = ({
                   onUpdateDetails("children", value !== "none");
                 }}
               >
-                <SelectTrigger className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl" style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}>
+                <SelectTrigger id="childrenCount">
                   <SelectValue placeholder="Select an option" />
                 </SelectTrigger>
-                <SelectContent className="bg-white border border-gray-200 shadow-lg rounded-xl z-50">
+                <SelectContent>
                   <SelectItem value="none">None</SelectItem>
                   <SelectItem value="1">1</SelectItem>
                   <SelectItem value="2">2</SelectItem>
@@ -139,20 +142,22 @@ const AdditionalDetailsStep = ({
                   <SelectItem value="5+">5+</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </FormField>
             
             {additionalDetails.children && additionalDetails.childrenCount !== "none" && (
-              <div>
+              <FormField
+                label="Children Details"
+                required
+                htmlFor="childrenDetails"
+              >
                 <Textarea
                   id="childrenDetails"
                   value={additionalDetails.childrenDetails || ""}
                   onChange={(e) => onUpdateDetails("childrenDetails", e.target.value)}
                   placeholder="Please provide ages of children living at the property full or part time. (e.g. Jess - 6, Robert - 15)*"
-                  className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-                  style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
-                  required={additionalDetails.children}
+                  rows={3}
                 />
-              </div>
+              </FormField>
             )}
           </div>
         </CardContent>
@@ -170,55 +175,56 @@ const AdditionalDetailsStep = ({
         </CardHeader>
         <CardContent className="space-y-6 p-6">
           <div className="space-y-4">
-            <Label className="text-sm font-medium text-gray-700">
-              Deposit type <span className="text-red-500">*</span>
-            </Label>
-            
-            <RadioGroup 
-              value={additionalDetails.depositType || ""} 
-              onValueChange={(value) => onUpdateDetails("depositType", value)}
-              className="space-y-4"
+            <FormField
+              label="Deposit type"
+              required
             >
-              <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-xl">
-                <RadioGroupItem value="deposit-replacement" id="deposit-replacement" className="mt-1" />
-                <div className="flex-1">
-                  <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
-                    Deposit replacement
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                    I would like to use a deposit replacement option. If application is agreed, please pass my details to Reposit so that I can begin this process.{" "}
-                    {maxRent && (
-                      <>
-                        The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment.{" "}
-                      </>
-                    )}
-                    You can find more information about Reposit's deposit replacement scheme{" "}
-                    <button 
-                      type="button"
-                      onClick={handlePdfAccess}
-                      className="text-orange-500 hover:text-orange-600 underline cursor-pointer bg-transparent border-none p-0"
-                    >
-                      here
-                    </button>.
-                  </p>
+              <RadioGroup 
+                value={additionalDetails.depositType || ""} 
+                onValueChange={(value) => onUpdateDetails("depositType", value)}
+                className="space-y-4"
+              >
+                <div className="flex items-start space-x-3 p-4 border-2 border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="deposit-replacement" id="deposit-replacement" className="mt-1" />
+                  <div className="flex-1">
+                    <Label htmlFor="deposit-replacement" className="font-medium text-gray-900 cursor-pointer">
+                      Deposit replacement
+                    </Label>
+                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                      I would like to use a deposit replacement option. If application is agreed, please pass my details to Reposit so that I can begin this process.{" "}
+                      {maxRent && (
+                        <>
+                          The fee for this is estimated to be £{repositCalculations.repositFee}, saving you £{repositCalculations.upfrontSavings} on upfront payment.{" "}
+                        </>
+                      )}
+                      You can find more information about Reposit's deposit replacement scheme{" "}
+                      <button 
+                        type="button"
+                        onClick={handlePdfAccess}
+                        className="text-orange-500 hover:text-orange-600 underline cursor-pointer bg-transparent border-none p-0"
+                      >
+                        here
+                      </button>.
+                    </p>
+                  </div>
                 </div>
-              </div>
-              
-              <div className="flex items-start space-x-3 p-4 border border-gray-200 rounded-xl">
-                <RadioGroupItem value="traditional-deposit" id="traditional-deposit" className="mt-1" />
-                <div className="flex-1">
-                  <Label htmlFor="traditional-deposit" className="font-medium text-gray-900 cursor-pointer">
-                    Traditional deposit
-                  </Label>
-                  <p className="text-sm text-gray-600 mt-1">
-                    I would like to provide a traditional deposit equivalent to 5 weeks' rent
-                    {maxRent && (
-                      <> totalling £{calculateDepositAmount(maxRent)}</>
-                    )} and I will ensure the full amount is paid before the tenancy begins.
-                  </p>
+                
+                <div className="flex items-start space-x-3 p-4 border-2 border-gray-200 rounded-lg hover:border-gray-300 hover:bg-gray-50 transition-colors">
+                  <RadioGroupItem value="traditional-deposit" id="traditional-deposit" className="mt-1" />
+                  <div className="flex-1">
+                    <Label htmlFor="traditional-deposit" className="font-medium text-gray-900 cursor-pointer">
+                      Traditional deposit
+                    </Label>
+                    <p className="text-sm text-gray-600 mt-1 leading-relaxed">
+                      I would like to provide a traditional deposit equivalent to 5 weeks' rent
+                      {maxRent && (
+                        <> totalling £{calculateDepositAmount(maxRent)}</>
+                      )} and I will ensure the full amount is paid before the tenancy begins.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </RadioGroup>
+              </RadioGroup>
+            </FormField>
             
             <p className="text-sm text-gray-500 mt-2">
               Please note, the above sums are estimated and are based on the "Rental amount" that you have entered at the top of this form and will change if your application is agreed at a different rent.
@@ -238,19 +244,21 @@ const AdditionalDetailsStep = ({
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 p-6">
-          <div>
+          <FormField
+            label="Conditions of Offer"
+            htmlFor="additionalRequests"
+          >
             <Textarea
               id="additionalRequests"
               value={additionalDetails.additionalRequests || ""}
               onChange={(e) => onUpdateDetails("additionalRequests", e.target.value)}
               placeholder="Please provide any conditions attached to your offer that you would like to discuss with your landlord."
-              className="form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
-              style={{ boxShadow: 'rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px' }}
+              rows={4}
             />
-            <p className="text-sm text-gray-500 mt-2">
-              If approved, these conditions will be added to your tenancy agreement.
-            </p>
-          </div>
+          </FormField>
+          <p className="text-sm text-gray-500 mt-2">
+            If approved, these conditions will be added to your tenancy agreement.
+          </p>
         </CardContent>
       </Card>
     </div>

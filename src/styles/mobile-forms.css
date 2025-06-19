@@ -28,13 +28,16 @@
     margin-bottom: 0.5rem !important;
   }
 
-  /* Mobile checkbox sizing */
+  /* Mobile checkbox and radio sizing */
   .mobile-checkbox {
     @apply w-5 h-5 !important;
     min-width: 20px !important;
     min-height: 20px !important;
     flex-shrink: 0 !important;
+    touch-action: manipulation !important;
   }
+  
+  /* Mobile toggle containers - removed */
 
   .btn,
   button {
@@ -58,10 +61,28 @@
     padding: 0.75rem 0.875rem !important;
   }
 
-  /* Specific mobile toggle adjustments */
-  [data-radix-switch-root] {
-    min-width: 40px !important;
-    min-height: 22px !important;
+  /* Mobile switch styling removed - handled by components */
+  
+  /* Mobile radio button enhancements */
+  [data-radix-radio-group-item] {
+    min-width: 20px !important;
+    min-height: 20px !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Radio group container spacing */
+  [data-radix-radio-group] .space-y-4 > * {
+    margin-top: 1rem !important;
+  }
+  
+  /* Ensure radio button labels have proper touch targets */
+  label[for*="deposit-"], 
+  label[for*="traditional-"] {
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+    cursor: pointer !important;
+    touch-action: manipulation !important;
   }
 
   /* Tighter form field spacing */

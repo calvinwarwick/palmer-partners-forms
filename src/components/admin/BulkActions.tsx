@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Download, Trash2, Mail, FileText, Users, CheckCircle } from "lucide-react";
 import { useRef, useEffect } from "react";
 
@@ -17,13 +17,13 @@ const BulkActions = ({
   onBulkExport,
   totalApplications
 }: BulkActionsProps) => {
-  const switchRef = useRef<HTMLButtonElement>(null);
+  const checkboxRef = useRef<HTMLButtonElement>(null);
   const isAllSelected = selectedApplications.length === totalApplications && totalApplications > 0;
   const isIndeterminate = selectedApplications.length > 0 && selectedApplications.length < totalApplications;
 
   useEffect(() => {
-    if (switchRef.current) {
-      (switchRef.current as any).indeterminate = isIndeterminate;
+    if (checkboxRef.current) {
+      (checkboxRef.current as any).indeterminate = isIndeterminate;
     }
   }, [isIndeterminate]);
 
@@ -39,11 +39,11 @@ const BulkActions = ({
             
             <div className="space-y-2">
               <div className="flex items-center space-x-3">
-                <Switch
-                  ref={switchRef}
+                <Checkbox
+                  ref={checkboxRef}
                   checked={isAllSelected}
                   onCheckedChange={onSelectAll}
-                  className="data-[state=checked]:bg-orange-500"
+                  className="h-5 w-5 border-2 border-orange-500 data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
                 />
                 <span className="text-sm font-medium text-gray-900">
                   Select all applications

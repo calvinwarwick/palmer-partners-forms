@@ -1,0 +1,73 @@
+/* Switch component overrides - ensures no conflicts */
+
+/* Force consistent sizing for all Radix Switch components */
+[data-radix-switch-root] {
+  height: 32px !important;
+  width: 56px !important;
+  border-radius: 9999px !important;
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+  cursor: pointer !important;
+  border: 2px solid transparent !important;
+  outline: none !important;
+  transition: background-color 200ms ease-in-out !important;
+  touch-action: manipulation !important;
+}
+
+/* Switch thumb consistency */
+[data-radix-switch-thumb] {
+  height: 28px !important;
+  width: 28px !important;
+  border-radius: 50% !important;
+  background-color: white !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  transition: transform 200ms ease-in-out !important;
+  position: relative !important;
+  pointer-events: none !important;
+  display: block !important;
+}
+
+/* State-specific styling */
+[data-radix-switch-root][data-state="checked"] {
+  background-color: #e35c00 !important;
+}
+
+[data-radix-switch-root][data-state="unchecked"] {
+  background-color: #d1d5db !important;
+}
+
+[data-radix-switch-root][data-state="checked"] [data-radix-switch-thumb] {
+  transform: translateX(24px) !important;
+}
+
+[data-radix-switch-root][data-state="unchecked"] [data-radix-switch-thumb] {
+  transform: translateX(0px) !important;
+}
+
+/* Focus states */
+[data-radix-switch-root]:focus-visible {
+  outline: 2px solid #e35c00 !important;
+  outline-offset: 2px !important;
+}
+
+/* Disabled states */
+[data-radix-switch-root]:disabled {
+  opacity: 0.5 !important;
+  cursor: not-allowed !important;
+}
+
+/* Ensure no margin/padding issues */
+[data-radix-switch-root],
+[data-radix-switch-thumb] {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  box-sizing: border-box !important;
+}
+
+/* Override any potential Bootstrap or other framework interference */
+[data-radix-switch-root] * {
+  box-sizing: border-box !important;
+}

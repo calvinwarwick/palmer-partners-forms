@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Applicant } from "@/domain/types/Applicant";
-import FormFieldWithTooltip from "@/components/ui/form-field-with-tooltip";
+import { FormField } from "@/components/ui/form-field";
 import { Info } from "lucide-react";
 
 interface EmploymentFieldsProps {
@@ -90,23 +90,23 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormFieldWithTooltip
+            <FormField
               label="Annual Salary"
-              tooltip="This should be your basic salary excluding bonuses, commission, overtime etc."
+              description="This should be your basic salary excluding bonuses, commission, overtime etc."
               htmlFor={`annualIncome-${applicant.id}`}
             >
-              <div className="currency-input-container">
-                <span className="currency-input-icon">£</span>
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">£</span>
                 <Input
                   id={`annualIncome-${applicant.id}`}
                   type="number"
                   value={applicant.annualIncome || ""}
                   onChange={(e) => onUpdateApplicant(applicant.id, "annualIncome", e.target.value)}
                   placeholder="Enter annual salary"
-                  className="currency-input form-control border-gray-200 focus:border-orange-500 focus:ring-orange-500"
+                  className="pl-8"
                 />
               </div>
-            </FormFieldWithTooltip>
+            </FormField>
             
             <div className="space-y-2">
               <Label htmlFor={`lengthOfService-${applicant.id}`} className="form-label text-gray-700 font-medium">

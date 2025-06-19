@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Application from "./pages/Application";
 import Admin from "./pages/Admin";
 import PdfDemo from "./pages/PdfDemo";
+import FormDemo from "./pages/FormDemo";
 import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               } 
             />
             <Route path="/pdf/" element={<PdfDemo />} />
+            <Route path="/form-demo" element={<FormDemo />} />
             <Route path="/login" element={<Login />} />
             <Route path="/application-preview/:id" element={<ApplicationPreview />} />
           </Routes>

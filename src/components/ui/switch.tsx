@@ -1,27 +1,44 @@
-
 import * as React from "react"
-import * as SwitchPrimitives from "@radix-ui/react-switch"
+import * as SwitchPrimitive from "@radix-ui/react-switch"
 import { cn } from "@/lib/utils"
 
 const Switch = React.forwardRef<
-  React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
+  React.ElementRef<typeof SwitchPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <SwitchPrimitives.Root
+  <SwitchPrimitive.Root
     className={cn(
-      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-orange-500 data-[state=unchecked]:bg-gray-300",
+      // Base layout - fixed size for consistency across all viewports
+      "peer inline-flex h-8 w-14 shrink-0",
+      // Visual styling
+      "cursor-pointer items-center rounded-full border-2 border-transparent",
+      // State colors
+      "data-[state=checked]:bg-orange-500 data-[state=unchecked]:bg-gray-300",
+      // Transitions
+      "transition-colors duration-200 ease-in-out",
+      // Focus states
+      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white",
+      // Disabled states
+      "disabled:cursor-not-allowed disabled:opacity-50",
+      // Touch optimization
+      "touch-manipulation",
       className
     )}
     {...props}
     ref={ref}
   >
-    <SwitchPrimitives.Thumb
+    <SwitchPrimitive.Thumb
       className={cn(
-        "pointer-events-none block h-5 w-5 rounded-full bg-white shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+        // Base thumb styling - fixed size for consistency
+        "pointer-events-none block h-7 w-7 rounded-full bg-white shadow-lg ring-0",
+        // Smooth transitions
+        "transition-transform duration-200 ease-in-out",
+        // Position states - precise positioning for 56px width switch
+        "data-[state=checked]:translate-x-6 data-[state=unchecked]:translate-x-0"
       )}
     />
-  </SwitchPrimitives.Root>
+  </SwitchPrimitive.Root>
 ))
-Switch.displayName = SwitchPrimitives.Root.displayName
+Switch.displayName = SwitchPrimitive.Root.displayName
 
 export { Switch }
