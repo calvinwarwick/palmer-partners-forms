@@ -140,12 +140,12 @@ export const generateApplicationPDF = async (data: {
   yPosition = addDataRow('Preferred Move-in Date', formatDate(data.propertyPreferences?.moveInDate || ''), yPosition);
   yPosition = addDataRow('Latest Move-in Date', formatDate(data.propertyPreferences?.latestMoveInDate || ''), yPosition);
   yPosition = addDataRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm || '', yPosition);
-  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets === 'yes' ? 'Yes' : 'No', yPosition);
+  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets ? 'Yes' : 'No', yPosition);
   yPosition = addDataRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
   if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
     yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
   }
-  yPosition = addDataRow('Conditions of Offer', data.additionalDetails?.conditionsOfOffer || '', yPosition);
+  yPosition = addDataRow('Additional Requests', data.additionalDetails?.additionalRequests || '', yPosition);
   yPosition = addDataRow('Deposit Type', data.additionalDetails?.depositType || '', yPosition);
 
   // Applicants Section
@@ -183,7 +183,7 @@ export const generateApplicationPDF = async (data: {
       yPosition = addDataRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails, yPosition);
     }
     yPosition = addDataRow('Requires Guarantor', data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
-    if (data.additionalDetails?.pets === 'yes' && data.additionalDetails?.petDetails) {
+    if (data.additionalDetails?.pets && data.additionalDetails?.petDetails) {
       yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
     }
   });
