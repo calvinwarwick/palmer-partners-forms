@@ -23,12 +23,12 @@ export const generateApplicationPDF = async (data: {
     return currentY;
   };
 
-  // Header with logo placeholder
+  // Header with logo placeholder - matching the demo
   const headerHeight = 25;
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, headerHeight, 'F');
 
-  // Logo placeholder (white rectangle with text)
+  // Logo placeholder (white rectangle with text) - centered
   doc.setFillColor(255, 255, 255);
   doc.rect(85, 8, 40, 9, 'F');
   doc.setTextColor(33, 33, 33);
@@ -42,14 +42,14 @@ export const generateApplicationPDF = async (data: {
 
   yPosition = headerHeight + 15;
 
-  // Main title
+  // Main title - matching the demo
   doc.setTextColor(33, 33, 33);
   doc.setFontSize(24);
   doc.setFont('helvetica', 'bold');
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
   yPosition += 15;
 
-  // Helper function to add section header
+  // Helper function to add section header - matching the demo
   const addSectionHeader = (title: string, currentY: number) => {
     const y = checkPageBreak(currentY + 10);
     
@@ -64,7 +64,7 @@ export const generateApplicationPDF = async (data: {
     return y + 10;
   };
 
-  // Helper function for data rows
+  // Helper function for data rows - matching the demo
   const addDataRow = (label: string, value: string, currentY: number, isSubsection: boolean = false) => {
     const y = checkPageBreak(currentY);
     
@@ -84,14 +84,14 @@ export const generateApplicationPDF = async (data: {
     const valueWidth = 170 * 0.65;
     const rowHeight = 12;
     
-    // Label column
+    // Label column - matching the demo
     doc.setFillColor(243, 244, 246);
     doc.rect(20, y, labelWidth, rowHeight, 'F');
     doc.setDrawColor(209, 213, 219);
     doc.setLineWidth(0.5);
     doc.rect(20, y, labelWidth, rowHeight);
     
-    // Value column
+    // Value column - matching the demo
     doc.setFillColor(255, 255, 255);
     doc.rect(20 + labelWidth, y, valueWidth, rowHeight, 'F');
     doc.rect(20 + labelWidth, y, valueWidth, rowHeight);
@@ -107,7 +107,7 @@ export const generateApplicationPDF = async (data: {
     return y + rowHeight;
   };
 
-  // Helper function to format dates
+  // Helper function to format dates - matching the demo
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     try {
@@ -132,7 +132,7 @@ export const generateApplicationPDF = async (data: {
     }
   };
 
-  // Property Details Section
+  // Property Details Section - matching the demo exactly
   yPosition = addSectionHeader('Property Details', yPosition);
   yPosition = addDataRow('Street Address', data.propertyPreferences?.streetAddress || '', yPosition);
   yPosition = addDataRow('Postcode', data.propertyPreferences?.postcode || '', yPosition);
@@ -148,10 +148,11 @@ export const generateApplicationPDF = async (data: {
   yPosition = addDataRow('Additional Requests', data.additionalDetails?.additionalRequests || '', yPosition);
   yPosition = addDataRow('Deposit Type', data.additionalDetails?.depositType || '', yPosition);
 
-  // Applicants Section
+  // Applicants Section - matching the demo exactly
   data.applicants.forEach((applicant, index) => {
     yPosition = addSectionHeader(`Applicant - #${index + 1}`, yPosition);
     
+    // Personal Details
     yPosition = addDataRow('First Name', applicant.firstName || '', yPosition);
     yPosition = addDataRow('Last Name', applicant.lastName || '', yPosition);
     yPosition = addDataRow('Date of Birth', formatDate(applicant.dateOfBirth || ''), yPosition);
@@ -188,12 +189,12 @@ export const generateApplicationPDF = async (data: {
     }
   });
 
-  // Data Sharing Section
+  // Data Sharing Section - matching the demo exactly
   yPosition = addSectionHeader('Data Sharing', yPosition);
   yPosition = addDataRow('Accept Utilities', data.dataSharing?.utilities ? 'Yes' : 'No', yPosition);
   yPosition = addDataRow('Accept Insurance', data.dataSharing?.insurance ? 'Yes' : 'No', yPosition);
 
-  // Signature Section
+  // Signature Section - matching the demo exactly
   yPosition = addSectionHeader('Signature', yPosition);
   yPosition = addDataRow('Full Name', `${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}`, yPosition);
   
@@ -226,16 +227,16 @@ export const generateApplicationPDF = async (data: {
       doc.addImage(data.signature, 'PNG', 25 + labelWidth, yPosition + 5, maxSignatureWidth, maxSignatureHeight);
     } catch (error) {
       console.warn('Could not add signature image, using placeholder');
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(10);
-      doc.setTextColor(107, 114, 128);
-      doc.text('Digital Signature Applied', 25 + labelWidth + (valueWidth - 10) / 2, yPosition + 14, { align: 'center' });
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Digital Signature Applied', 25 + labelWidth + 5, yPosition + 14);
     }
   } else {
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    doc.text(data.signature || 'Digital Signature Applied', 25 + labelWidth, yPosition + 14);
+    doc.text(data.signature || 'Digital Signature Applied', 25 + labelWidth + 5, yPosition + 14);
   }
   
   yPosition += signatureRowHeight;

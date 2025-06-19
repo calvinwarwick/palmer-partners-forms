@@ -13,42 +13,70 @@ const PdfDemo = () => {
         lastName: "Warwick",
         email: "calvinwarwick@gmail.com",
         phone: "+447549912062",
-        dateOfBirth: "31st December 2024",
-        employment: "employed",
+        dateOfBirth: "1990-12-31",
+        employment: "Full-time Employment",
         companyName: "Tech Solutions Ltd",
         jobTitle: "Software Engineer",
         annualIncome: "50000",
         lengthOfService: "3 years",
-        previousAddress: "Orchard House, New Cut",
-        previousPostcode: "IP7 5DA",
+        previousAddress: "123 Previous Street, London",
+        previousPostcode: "SW1A 1AA",
         currentPropertyStatus: "Rented Privately",
         moveInDate: "2022-01-15",
         vacateDate: "2024-05-30",
-        currentRentalAmount: "1800",
-        ukPassport: "yes",
-        adverseCredit: "no",
-        guarantorRequired: "no"
+        currentRentalAmount: "1800"
       }
     ],
     propertyPreferences: {
-      streetAddress: "Orchard House, New Cut",
+      streetAddress: "Orchard House, New Cut, Hadleigh",
       postcode: "IP7 5DA",
-      maxRent: "123",
-      moveInDate: "1st December 2026",
-      latestMoveInDate: "1st January 2027",
-      initialTenancyTerm: "1 year"
+      maxRent: "2500",
+      moveInDate: "2024-12-01",
+      latestMoveInDate: "2025-01-01",
+      initialTenancyTerm: "12 months"
     },
     additionalDetails: {
       pets: false,
-      children: false,
-      additionalRequests: ""
+      petDetails: "",
+      under18Count: "0",
+      childrenAges: "",
+      additionalRequests: "Parking space preferred",
+      ukPassport: "yes",
+      adverseCredit: "no",
+      adverseCreditDetails: "",
+      guarantorRequired: "no",
+      depositType: "Standard Deposit"
     },
     dataSharing: {
-      utilities: false,
-      insurance: true
+      utilities: true,
+      insurance: false
     },
-    signature: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", // Demo signature
-    submittedAt: "2025-02-10T12:38:00.000Z"
+    signature: "Calvin Warwick",
+    submittedAt: "2024-12-10T12:38:00.000Z"
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.toLocaleDateString('en-GB', { month: 'long' });
+      const year = date.getFullYear();
+      
+      const getOrdinalSuffix = (day: number) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      };
+      
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+    } catch {
+      return dateString;
+    }
   };
 
   const SectionHeader = ({ title }: { title: string }) => (
@@ -81,6 +109,14 @@ const PdfDemo = () => {
       <ApplicationHeader />
       
       <div className="max-w-4xl mx-auto p-8">
+        {/* Header with logo placeholder */}
+        <div className="bg-dark-grey text-white py-6 px-4 mb-4 relative">
+          <div className="bg-white text-dark-grey py-2 px-4 mx-auto w-fit rounded font-bold text-lg">
+            Palmer & Partners
+          </div>
+          <div className="absolute bottom-0 left-0 right-0 h-1 bg-orange-500"></div>
+        </div>
+
         {/* Main Title */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-dark-grey">Tenancy Application</h1>
@@ -95,12 +131,16 @@ const PdfDemo = () => {
                 <DataRow label="Street Address" value={demoData.propertyPreferences.streetAddress} />
                 <DataRow label="Postcode" value={demoData.propertyPreferences.postcode} />
                 <DataRow label="Rental Amount" value={`£${demoData.propertyPreferences.maxRent}`} />
-                <DataRow label="Preferred Move-in Date" value={demoData.propertyPreferences.moveInDate} />
-                <DataRow label="Latest Move-in Date" value={demoData.propertyPreferences.latestMoveInDate} />
+                <DataRow label="Preferred Move-in Date" value={formatDate(demoData.propertyPreferences.moveInDate)} />
+                <DataRow label="Latest Move-in Date" value={formatDate(demoData.propertyPreferences.latestMoveInDate)} />
                 <DataRow label="Initial Tenancy Term" value={demoData.propertyPreferences.initialTenancyTerm} />
                 <DataRow label="Has Pets" value={demoData.additionalDetails.pets ? 'Yes' : 'No'} />
-                <DataRow label="Under 18s" value={demoData.additionalDetails.children ? 'Yes' : 'No'} />
+                <DataRow label="Under 18s" value={demoData.additionalDetails.under18Count} />
+                {demoData.additionalDetails.under18Count && parseInt(demoData.additionalDetails.under18Count) > 0 && demoData.additionalDetails.childrenAges && (
+                  <DataRow label="Under 18s Details" value={demoData.additionalDetails.childrenAges} />
+                )}
                 <DataRow label="Additional Requests" value={demoData.additionalDetails.additionalRequests} />
+                <DataRow label="Deposit Type" value={demoData.additionalDetails.depositType} />
               </TableBody>
             </Table>
           </CardContent>
@@ -116,7 +156,7 @@ const PdfDemo = () => {
                   {/* Personal Details */}
                   <DataRow label="First Name" value={applicant.firstName} />
                   <DataRow label="Last Name" value={applicant.lastName} />
-                  <DataRow label="Date of Birth" value={applicant.dateOfBirth} />
+                  <DataRow label="Date of Birth" value={formatDate(applicant.dateOfBirth)} />
                   <DataRow label="Email Address" value={applicant.email} />
                   <DataRow label="Mobile Number" value={applicant.phone} />
 
@@ -132,16 +172,22 @@ const PdfDemo = () => {
                   <SubsectionHeader title="Current Property Details" />
                   <DataRow label="Postcode" value={applicant.previousPostcode} />
                   <DataRow label="Street Address" value={applicant.previousAddress} />
-                  <DataRow label="Move In Date" value={applicant.moveInDate} />
-                  <DataRow label="Vacate Date" value={applicant.vacateDate} />
+                  <DataRow label="Move In Date" value={formatDate(applicant.moveInDate)} />
+                  <DataRow label="Vacate Date" value={formatDate(applicant.vacateDate)} />
                   <DataRow label="Current Property Status" value={applicant.currentPropertyStatus} />
                   <DataRow label="Current Rental Amount" value={applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : ''} />
 
                   {/* Additional Information */}
                   <SubsectionHeader title="Additional Information" />
-                  <DataRow label="UK/ROI Passport" value={applicant.ukPassport === 'yes' ? 'Yes' : 'No'} />
-                  <DataRow label="Adverse Credit" value={applicant.adverseCredit === 'yes' ? 'Yes' : 'No'} />
-                  <DataRow label="Requires Guarantor" value={applicant.guarantorRequired === 'yes' ? 'Yes' : 'No'} />
+                  <DataRow label="UK/ROI Passport" value={demoData.additionalDetails.ukPassport === 'yes' ? 'Yes' : 'No'} />
+                  <DataRow label="Adverse Credit" value={demoData.additionalDetails.adverseCredit === 'yes' ? 'Yes' : 'No'} />
+                  {demoData.additionalDetails.adverseCredit === 'yes' && demoData.additionalDetails.adverseCreditDetails && (
+                    <DataRow label="Adverse Credit Details" value={demoData.additionalDetails.adverseCreditDetails} />
+                  )}
+                  <DataRow label="Requires Guarantor" value={demoData.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No'} />
+                  {demoData.additionalDetails.pets && demoData.additionalDetails.petDetails && (
+                    <DataRow label="Pet Details" value={demoData.additionalDetails.petDetails} />
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -181,8 +227,8 @@ const PdfDemo = () => {
                         style={{ maxWidth: '100%', maxHeight: '40px' }}
                       />
                     ) : (
-                      <div className="bg-gray-100 border border-gray-200 p-4 text-center text-gray-600">
-                        Digital Signature Applied
+                      <div className="text-lg italic">
+                        {demoData.signature || 'Digital Signature Applied'}
                       </div>
                     )}
                   </TableCell>
@@ -195,7 +241,7 @@ const PdfDemo = () => {
 
         {/* Footer note */}
         <div className="text-center text-sm text-gray-600 mt-8">
-          <p>This is a live web version of the tenancy application format sent to customers.</p>
+          <p>This is a live web version of the tenancy application format sent to customers via email as a PDF attachment.</p>
         </div>
       </div>
     </div>
