@@ -23,7 +23,7 @@ export const generateApplicationPDF = async (data: {
     return currentY;
   };
 
-  // Header with logo placeholder - matching the demo
+  // Header with logo placeholder - matching the demo exactly
   const headerHeight = 25;
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, headerHeight, 'F');
@@ -49,7 +49,7 @@ export const generateApplicationPDF = async (data: {
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
   yPosition += 15;
 
-  // Helper function to add section header - matching the demo
+  // Helper function to add section header - matching the demo exactly
   const addSectionHeader = (title: string, currentY: number) => {
     const y = checkPageBreak(currentY + 10);
     
@@ -80,7 +80,7 @@ export const generateApplicationPDF = async (data: {
     return y + 12;
   };
 
-  // Helper function for data rows - matching the demo
+  // Helper function for data rows - matching the demo exactly
   const addDataRow = (label: string, value: string, currentY: number) => {
     const y = checkPageBreak(currentY);
     
@@ -111,7 +111,7 @@ export const generateApplicationPDF = async (data: {
     return y + rowHeight;
   };
 
-  // Helper function to format dates - matching the demo
+  // Helper function to format dates - matching the demo exactly
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     try {
@@ -175,11 +175,11 @@ export const generateApplicationPDF = async (data: {
     yPosition = addSubsectionHeader('Current Property Details', yPosition);
     yPosition = addDataRow('Postcode', applicant.currentPostcode || applicant.previousPostcode || '', yPosition);
     yPosition = addDataRow('Street Address', applicant.currentAddress || applicant.previousAddress || '', yPosition);
-    yPosition = addDataRow('Time at Address', applicant.timeAtAddress || '', yPosition);
-    yPosition = addDataRow('Landlord Name', applicant.landlordName || '', yPosition);
-    yPosition = addDataRow('Landlord Phone', applicant.landlordPhone || '', yPosition);
+    yPosition = addDataRow('Time at Address', applicant.timeAtAddress || 'N/A', yPosition);
+    yPosition = addDataRow('Landlord Name', applicant.landlordName || 'N/A', yPosition);
+    yPosition = addDataRow('Landlord Phone', applicant.landlordPhone || 'N/A', yPosition);
     yPosition = addDataRow('Rent Up to Date', applicant.rentUpToDate === 'yes' ? 'Yes' : 'No', yPosition);
-    yPosition = addDataRow('Notice Period', applicant.noticePeriod || '', yPosition);
+    yPosition = addDataRow('Notice Period', applicant.noticePeriod || 'N/A', yPosition);
     yPosition = addDataRow('Current Property Status', applicant.currentPropertyStatus || '', yPosition);
     yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', yPosition);
 
@@ -189,8 +189,8 @@ export const generateApplicationPDF = async (data: {
     yPosition = addDataRow('Previous Postcode', applicant.previousPostcode || '', yPosition);
     yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
     yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
-    yPosition = addDataRow('Previous Landlord Name', applicant.previousLandlordName || '', yPosition);
-    yPosition = addDataRow('Previous Landlord Phone', applicant.previousLandlordPhone || '', yPosition);
+    yPosition = addDataRow('Previous Landlord Name', applicant.previousLandlordName || 'N/A', yPosition);
+    yPosition = addDataRow('Previous Landlord Phone', applicant.previousLandlordPhone || 'N/A', yPosition);
 
     // Additional Information
     yPosition = addSubsectionHeader('Additional Information', yPosition);
@@ -202,6 +202,13 @@ export const generateApplicationPDF = async (data: {
     yPosition = addDataRow('Requires Guarantor', data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
     if (data.additionalDetails?.pets && data.additionalDetails?.petDetails) {
       yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
+    }
+
+    // Guarantor Details - NEW SECTION
+    if (applicant.guarantorAdded && applicant.guarantorName) {
+      yPosition = addSubsectionHeader('Guarantor Details', yPosition);
+      yPosition = addDataRow('Guarantor Name', applicant.guarantorName || '', yPosition);
+      yPosition = addDataRow('Relationship', applicant.guarantorRelationship || '', yPosition);
     }
   });
 

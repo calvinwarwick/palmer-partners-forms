@@ -32,7 +32,10 @@ const PdfDemo = () => {
         rentUpToDate: "yes",
         noticePeriod: "1 month",
         previousLandlordName: "Sarah Johnson",
-        previousLandlordPhone: "+447700900456"
+        previousLandlordPhone: "+447700900456",
+        guarantorAdded: true,
+        guarantorName: "Robert Warwick",
+        guarantorRelationship: "Father"
       },
       {
         id: "2",
@@ -60,7 +63,10 @@ const PdfDemo = () => {
         rentUpToDate: "yes",
         noticePeriod: "2 months",
         previousLandlordName: "Lisa Wilson",
-        previousLandlordPhone: "+447700900012"
+        previousLandlordPhone: "+447700900012",
+        guarantorAdded: false,
+        guarantorName: "",
+        guarantorRelationship: ""
       }
     ],
     propertyPreferences: {
@@ -244,6 +250,15 @@ const PdfDemo = () => {
                   <DataRow label="Requires Guarantor" value={demoData.additionalDetails.guarantorRequired === 'yes' ? 'Yes' : 'No'} />
                   {demoData.additionalDetails.pets && demoData.additionalDetails.petDetails && (
                     <DataRow label="Pet Details" value={demoData.additionalDetails.petDetails} />
+                  )}
+
+                  {/* Guarantor Details - NEW SECTION */}
+                  {applicant.guarantorAdded && applicant.guarantorName && (
+                    <>
+                      <SubsectionHeader title="Guarantor Details" />
+                      <DataRow label="Guarantor Name" value={applicant.guarantorName} />
+                      <DataRow label="Relationship" value={applicant.guarantorRelationship} />
+                    </>
                   )}
                 </TableBody>
               </Table>
