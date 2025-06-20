@@ -7,8 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Download, MoreHorizontal, Search, Calendar as CalendarIcon, Trash2, Filter } from "lucide-react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Eye, Search, Calendar as CalendarIcon, Trash2, Filter } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
 import { format, formatDistanceToNow } from "date-fns";
@@ -436,19 +435,15 @@ const ApplicantsTab = () => {
                       {formatTimeAgo(applicant.createdAt)}
                     </span>
                     <div className="flex items-center gap-2">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-7 w-7 p-0">
-                            <MoreHorizontal className="h-3 w-3" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
-                          <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
-                            <Download className="h-4 w-4 mr-2" />
-                            Generate PDF
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewApplicant(applicant)}
+                        className="h-7 text-xs"
+                      >
+                        <Eye className="h-3 w-3 mr-1" />
+                        View
+                      </Button>
                     </div>
                   </div>
                 </div>
@@ -520,19 +515,15 @@ const ApplicantsTab = () => {
                     
                     <TableCell>
                       <div className="flex items-center space-x-2">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="bg-white shadow-lg border z-50">
-                            <DropdownMenuItem onClick={() => handleViewApplicant(applicant)}>
-                              <Download className="h-4 w-4 mr-2" />
-                              Generate PDF
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleViewApplicant(applicant)}
+                          className="h-8"
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          View
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
