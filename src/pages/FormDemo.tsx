@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,7 +15,7 @@ import { FormSelect } from '@/components/ui/form-select';
 import { FormRadio } from '@/components/ui/form-radio';
 import { FormCheckbox } from '@/components/ui/form-checkbox';
 import { Label } from '@/components/ui/label';
-import { Eye, Smartphone, Monitor, Tablet } from 'lucide-react';
+import { Eye, Smartphone, Monitor, Tablet, Calendar, DollarSign } from 'lucide-react';
 
 const FormDemo: React.FC = () => {
   // Form state
@@ -24,6 +25,9 @@ const FormDemo: React.FC = () => {
     email: '',
     phone: '',
     dateOfBirth: '',
+    startDate: '',
+    budget: '',
+    salary: '',
     bio: '',
     
     // Switches
@@ -217,6 +221,86 @@ const FormDemo: React.FC = () => {
                 </div>
               </div>
 
+              {/* Date Inputs */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Date Inputs</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    label="Start Date"
+                    htmlFor="startDate"
+                  >
+                    <div className="date-input-container">
+                      <Calendar className="date-input-icon" />
+                      <Input
+                        id="startDate"
+                        type="date"
+                        value={formData.startDate}
+                        onChange={(e) => setFormData(prev => ({ ...prev, startDate: e.target.value }))}
+                        className="pl-12"
+                      />
+                    </div>
+                  </FormField>
+                  
+                  <FormField
+                    label="Date of Birth (with icon)"
+                    htmlFor="dobWithIcon"
+                  >
+                    <div className="date-input-container">
+                      <Calendar className="date-input-icon" />
+                      <Input
+                        id="dobWithIcon"
+                        type="date"
+                        value={formData.dateOfBirth}
+                        onChange={(e) => setFormData(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                        className="pl-12"
+                      />
+                    </div>
+                  </FormField>
+                </div>
+              </div>
+
+              {/* Currency Inputs */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Currency Inputs</h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    label="Budget"
+                    htmlFor="budget"
+                  >
+                    <div className="currency-input-container">
+                      <span className="currency-input-icon">£</span>
+                      <Input
+                        id="budget"
+                        type="number"
+                        value={formData.budget}
+                        onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
+                        placeholder="0.00"
+                        className="currency-input"
+                      />
+                    </div>
+                  </FormField>
+                  
+                  <FormField
+                    label="Annual Salary"
+                    htmlFor="salary"
+                  >
+                    <div className="currency-input-container">
+                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-orange-500 z-10 h-4 w-4" />
+                      <Input
+                        id="salary"
+                        type="number"
+                        value={formData.salary}
+                        onChange={(e) => setFormData(prev => ({ ...prev, salary: e.target.value }))}
+                        placeholder="0.00"
+                        className="pl-10"
+                      />
+                    </div>
+                  </FormField>
+                </div>
+              </div>
+
               {/* Textarea */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Textarea</h3>
@@ -350,6 +434,9 @@ const FormDemo: React.FC = () => {
                       email: '',
                       phone: '',
                       dateOfBirth: '',
+                      startDate: '',
+                      budget: '',
+                      salary: '',
                       bio: '',
                       newsletter: false,
                       notifications: true,

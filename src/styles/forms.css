@@ -251,14 +251,10 @@ textarea:focus {
   box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Card styling improvements */
+/* Card styling improvements - removed hover effects */
 .form-card {
   @apply bg-white rounded-xl border shadow-sm;
   border-color: rgb(228, 228, 231) !important;
-}
-
-.form-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
 .form-section {
@@ -296,8 +292,6 @@ input:focus, select:focus, textarea:focus {
   border-color: #e35c00 !important;
   box-shadow: 0 0 0 3px rgba(227, 92, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1) !important;
 }
-
-/* Switch styling removed - handled by components */
 
 /* Better error states */
 .form-control.error,
