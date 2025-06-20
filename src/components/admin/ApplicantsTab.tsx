@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -432,7 +433,7 @@ const ApplicantsTab = () => {
                   </div>
                   
                   <div className="text-xs text-gray-600">
-                    <p>DOB: {applicant.dateOfBirth}</p>
+                    <p>{applicant.dateOfBirth}</p>
                   </div>
                   
                   <div className="flex items-center justify-between pt-2">
