@@ -37,19 +37,21 @@
     touch-action: manipulation !important;
   }
 
+  /* Button styling - exclude toggle buttons */
   .btn,
-  button:not([data-radix-toggle]) {
+  button:not([data-radix-toggle]):not([data-radix-toggle-group-item]) {
     min-height: 48px !important;
     @apply text-base;
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
   }
 
-  /* Remove padding and min-height from toggle buttons */
+  /* Explicitly remove all styling from toggle buttons */
   button[data-radix-toggle],
   [data-radix-toggle-group-item] {
     padding: 0 !important;
     min-height: auto !important;
+    margin: 0 !important;
   }
 
   label {
