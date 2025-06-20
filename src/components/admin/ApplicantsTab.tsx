@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Eye, Search, Calendar as CalendarIcon, Trash2, Filter } from "lucide-react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { usePdfGeneration } from "@/hooks/usePdfGeneration";
@@ -14,6 +15,7 @@ import { format, formatDistanceToNow } from "date-fns";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { DateRange } from "react-day-picker";
+import ApplicationPreviewContent from "./ApplicationPreviewContent";
 
 interface Applicant {
   id: string;
@@ -45,6 +47,8 @@ const ApplicantsTab = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const checkboxRef = useRef<HTMLButtonElement>(null);
+  const [selectedApplicationForPreview, setSelectedApplicationForPreview] = useState<any | null>(null);
+  const [isPreviewSheetOpen, setIsPreviewSheetOpen] = useState(false);
 
   // Filter states
   const [searchTerm, setSearchTerm] = useState("");
@@ -238,9 +242,24 @@ const ApplicantsTab = () => {
     }
   };
 
-  const handleViewApplicant = (applicant: Applicant) => {
-    // Navigate to the application preview page for this applicant's application
-    navigate(`/application-preview/${applicant.applicationId}`);
+  const handleViewApplicant = async (applicant: Applicant) => {
+    try {
+      // Fetch the full application data
+      const { data, error } = await supabase
+        .from('tenancy_applications')
+        .select('*')
+        .eq('id', applicant.applicationId)
+        .single();
+
+      if (error) throw error;
+
+      // Set the application for preview
+      setSelectedApplicationForPreview(data);
+      setIsPreviewSheetOpen(true);
+    } catch (error) {
+      console.error('Error fetching application:', error);
+      toast.error('Failed to load application preview');
+    }
   };
 
   const handleGenerateApplicantPdf = async (applicant: Applicant) => {
@@ -544,6 +563,22 @@ const ApplicantsTab = () => {
         </div>
       )}
     </div>
+
+    {/* Preview Sheet */}
+    <Sheet open={isPreviewSheetOpen} onOpenChange={setIsPreviewSheetOpen}>
+      <SheetContent className="w-full sm:max-w-4xl h-full p-0">
+        <div className="h-full flex flex-col">
+          <div className="p-6 border-b">
+            <h2 className="text-xl font-semibold">Application Preview</h2>
+          </div>
+          <div className="flex-1 p-6 overflow-hidden">
+            {selectedApplicationForPreview && (
+              <ApplicationPreviewContent application={selectedApplicationForPreview} />
+            )}
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 
