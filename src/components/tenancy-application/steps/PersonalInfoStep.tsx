@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { User, Calendar, HelpCircle } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -121,7 +121,21 @@ const PersonalInfoStep = ({
               <CardContent className="space-y-4 md:space-y-6 p-4 md:p-6">
                 <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-3 gap-4 md:gap-6">
                   <FormField
-                    label="First Name"
+                    label={
+                      <div className="flex items-center gap-2">
+                        <span>First Name</span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="bg-orange-500 rounded-full w-5 h-5 flex items-center justify-center cursor-help">
+                              <span className="text-white text-xs font-bold">?</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>This should be your name as it appears on your passport.</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    }
                     required
                     htmlFor={`firstName-${applicant.id}`}
                   >
@@ -134,7 +148,21 @@ const PersonalInfoStep = ({
                   </FormField>
 
                   <FormField
-                    label="Last Name"
+                    label={
+                      <div className="flex items-center gap-2">
+                        <span>Last Name</span>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="bg-orange-500 rounded-full w-5 h-5 flex items-center justify-center cursor-help">
+                              <span className="text-white text-xs font-bold">?</span>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>This should be your name as it appears on your passport.</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    }
                     required
                     htmlFor={`lastName-${applicant.id}`}
                   >
