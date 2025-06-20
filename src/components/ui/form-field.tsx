@@ -1,10 +1,11 @@
+
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
 interface FormFieldProps {
   children: React.ReactNode
-  label?: string
+  label?: string | React.ReactNode
   description?: string
   error?: string
   required?: boolean
@@ -18,8 +19,17 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
       <div ref={ref} className={cn("space-y-2", className)}>
         {label && (
           <Label htmlFor={htmlFor} className="text-sm font-medium text-gray-700">
-            {label}
-            {required && <span className="text-red-500 ml-1">*</span>}
+            {typeof label === 'string' ? (
+              <>
+                {label}
+                {required && <span className="text-red-500 ml-1">*</span>}
+              </>
+            ) : (
+              <div className="flex items-center">
+                {label}
+                {required && <span className="text-red-500 ml-1">*</span>}
+              </div>
+            )}
           </Label>
         )}
         {children}
