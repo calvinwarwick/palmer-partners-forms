@@ -15,8 +15,8 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     
     console.log('Sending email to:', primaryApplicant.email);
     
-    // Generate actual PDF with application data
-    const pdfBase64 = await generateApplicationPDF(application);
+    // Generate comprehensive PDF with all application data
+    const pdfBase64 = await generateComprehensiveApplicationPDF(application);
     console.log('PDF generated, length:', pdfBase64.length);
     
     console.log('Attempting to send email with Resend...');
@@ -98,15 +98,37 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
   }
 };
 
-// Actual PDF generation function for edge environment
-const generateApplicationPDF = async (data: any): Promise<string> => {
-  console.log('Generating PDF with application data...');
+// Comprehensive PDF generation function for edge environment
+const generateComprehensiveApplicationPDF = async (data: any): Promise<string> => {
+  console.log('Generating comprehensive PDF with all application data...');
   
-  // This is a simplified PDF generation for the edge function
-  // In a production environment, you might want to use a different PDF library
-  // that works better in edge functions, or call the main PDF service
-  
-  const pdfContent = `
+  // Helper function to format dates
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '';
+    try {
+      const date = new Date(dateString);
+      const day = date.getDate();
+      const month = date.toLocaleDateString('en-GB', { month: 'long' });
+      const year = date.getFullYear();
+      
+      const getOrdinalSuffix = (day: number) => {
+        if (day > 3 && day < 21) return 'th';
+        switch (day % 10) {
+          case 1: return 'st';
+          case 2: return 'nd';
+          case 3: return 'rd';
+          default: return 'th';
+        }
+      };
+      
+      return `${day}${getOrdinalSuffix(day)} ${month} ${year}`;
+    } catch {
+      return dateString;
+    }
+  };
+
+  // Build comprehensive PDF content with all application data
+  let pdfContent = `
 %PDF-1.4
 1 0 obj
 <<
@@ -131,9 +153,10 @@ endobj
 /Resources <<
 /Font <<
 /F1 4 0 R
+/F2 5 0 R
 >>
 >>
-/Contents 5 0 R
+/Contents 6 0 R
 >>
 endobj
 
@@ -147,45 +170,143 @@ endobj
 
 5 0 obj
 <<
-/Length 200
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica-Bold
+>>
+endobj
+
+6 0 obj
+<<
+/Length 2500
 >>
 stream
 BT
-/F1 16 Tf
+/F2 24 Tf
 50 750 Td
 (Palmer & Partners - Tenancy Application) Tj
-0 -30 Td
+0 -40 Td
+
+/F2 16 Tf
+(Property Details) Tj
+0 -25 Td
 /F1 12 Tf
-(Applicant: ${data.applicants[0]?.firstName} ${data.applicants[0]?.lastName}) Tj
+(Street Address: ${data.propertyPreferences?.streetAddress || 'N/A'}) Tj
 0 -20 Td
-(Property: ${data.propertyPreferences?.streetAddress || 'N/A'}) Tj
+(Postcode: ${data.propertyPreferences?.postcode || 'N/A'}) Tj
 0 -20 Td
-(Max Rent: £${data.propertyPreferences?.maxRent || 'N/A'}) Tj
+(Maximum Rent: £${data.propertyPreferences?.maxRent || 'N/A'}) Tj
 0 -20 Td
-(Move-in Date: ${data.propertyPreferences?.moveInDate || 'N/A'}) Tj
+(Move-in Date: ${formatDate(data.propertyPreferences?.moveInDate || '')}) Tj
+0 -20 Td
+(Latest Move-in Date: ${formatDate(data.propertyPreferences?.latestMoveInDate || '')}) Tj
+0 -20 Td
+(Initial Tenancy Term: ${data.propertyPreferences?.initialTenancyTerm || 'N/A'}) Tj
+0 -30 Td
+
+/F2 16 Tf
+(Primary Applicant) Tj
+0 -25 Td
+/F1 12 Tf
+(Name: ${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}) Tj
+0 -20 Td
+(Email: ${data.applicants[0]?.email || ''}) Tj
+0 -20 Td
+(Phone: ${data.applicants[0]?.phone || ''}) Tj
+0 -20 Td
+(Date of Birth: ${formatDate(data.applicants[0]?.dateOfBirth || '')}) Tj
+0 -30 Td
+
+/F2 16 Tf
+(Employment Details) Tj
+0 -25 Td
+/F1 12 Tf
+(Employment Status: ${data.applicants[0]?.employment || ''}) Tj
+0 -20 Td
+(Company Name: ${data.applicants[0]?.companyName || ''}) Tj
+0 -20 Td
+(Job Title: ${data.applicants[0]?.jobTitle || ''}) Tj
+0 -20 Td
+(Annual Income: £${data.applicants[0]?.annualIncome || ''}) Tj
+0 -20 Td
+(Length of Service: ${data.applicants[0]?.lengthOfService || ''}) Tj
+0 -30 Td
+
+/F2 16 Tf
+(Current Address) Tj
+0 -25 Td
+/F1 12 Tf
+(Current Address: ${data.applicants[0]?.currentAddress || ''}) Tj
+0 -20 Td
+(Current Postcode: ${data.applicants[0]?.currentPostcode || ''}) Tj
+0 -20 Td
+(Time at Address: ${data.applicants[0]?.timeAtAddress || ''}) Tj
+0 -20 Td
+(Landlord Name: ${data.applicants[0]?.landlordName || ''}) Tj
+0 -20 Td
+(Landlord Phone: ${data.applicants[0]?.landlordPhone || ''}) Tj
+0 -20 Td
+(Rent Up to Date: ${data.applicants[0]?.rentUpToDate === 'yes' ? 'Yes' : 'No'}) Tj
+0 -30 Td
+
+/F2 16 Tf
+(Additional Information) Tj
+0 -25 Td
+/F1 12 Tf
+(Pets: ${data.additionalDetails?.pets ? 'Yes' : 'No'}) Tj
+0 -20 Td
+(Under 18s: ${data.additionalDetails?.under18Count || '0'}) Tj
+0 -20 Td
+(UK/ROI Passport: ${data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No'}) Tj
+0 -20 Td
+(Adverse Credit: ${data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No'}) Tj
+0 -20 Td
+(Guarantor Required: ${data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No'}) Tj
+0 -20 Td
+(Deposit Type: ${data.additionalDetails?.depositType || ''}) Tj
+0 -30 Td
+
+/F2 16 Tf
+(Data Sharing) Tj
+0 -25 Td
+/F1 12 Tf
+(Utilities: ${data.dataSharing?.utilities ? 'Yes' : 'No'}) Tj
+0 -20 Td
+(Insurance: ${data.dataSharing?.insurance ? 'Yes' : 'No'}) Tj
+0 -30 Td
+
+/F2 16 Tf
+(Signature) Tj
+0 -25 Td
+/F1 12 Tf
+(Signed: ${data.signature ? 'Digital Signature Applied' : 'Not Signed'}) Tj
+0 -20 Td
+(Submitted: ${new Date().toLocaleString()}) Tj
+
 ET
 endstream
 endobj
 
 xref
-0 6
+0 7
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
 0000000115 00000 n 
 0000000245 00000 n 
 0000000316 00000 n 
+0000000392 00000 n 
 trailer
 <<
-/Size 6
+/Size 7
 /Root 1 0 R
 >>
 startxref
-567
+2945
 %%EOF`;
   
   // Convert to base64
   const base64 = btoa(pdfContent);
-  console.log('PDF generated successfully with application data');
+  console.log('Comprehensive PDF generated successfully with all application data');
   return base64;
 };
