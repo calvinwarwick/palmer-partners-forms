@@ -18,19 +18,35 @@ const FormField = React.forwardRef<HTMLDivElement, FormFieldProps>(
     return (
       <div ref={ref} className={cn("space-y-2", className)}>
         {label && (
-          <Label htmlFor={htmlFor} className="text-sm font-medium text-gray-700">
-            {typeof label === 'string' ? (
-              <>
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
-              </>
-            ) : (
-              <div className="flex items-center">
-                {label}
-                {required && <span className="text-red-500 ml-1">*</span>}
+          <div className="flex items-center justify-between w-full">
+            <Label htmlFor={htmlFor} className="text-sm font-medium text-gray-700">
+              {typeof label === 'string' ? (
+                <>
+                  {label}
+                  {required && <span className="text-red-500 ml-1">*</span>}
+                </>
+              ) : (
+                <div className="flex items-center">
+                  {React.isValidElement(label) && label.props.children ? (
+                    <>
+                      {typeof label.props.children === 'string' ? label.props.children : label.props.children[0]}
+                      {required && <span className="text-red-500 ml-1">*</span>}
+                    </>
+                  ) : (
+                    <>
+                      {label}
+                      {required && <span className="text-red-500 ml-1">*</span>}
+                    </>
+                  )}
+                </div>
+              )}
+            </Label>
+            {React.isValidElement(label) && label.props.children && Array.isArray(label.props.children) && label.props.children[1] && (
+              <div className="ml-auto">
+                {label.props.children[1]}
               </div>
             )}
-          </Label>
+          </div>
         )}
         {children}
         {description && (
