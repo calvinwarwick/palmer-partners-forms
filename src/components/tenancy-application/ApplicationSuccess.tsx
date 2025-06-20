@@ -14,11 +14,6 @@ const ApplicationSuccess = ({ applicants }: ApplicationSuccessProps) => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 py-12 px-4">
       <Card className="max-w-2xl w-full shadow-lg border border-gray-200 bg-white">
         <CardContent className="pt-12 pb-10 px-10 text-center">
-          {/* Title */}
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">
-            Application Submitted Successfully
-          </h1>
-          
           {/* Email Confirmation Section */}
           <div className="bg-gray-50 p-6 rounded-lg mb-8 border border-gray-200">
             <div className="flex items-center justify-center mb-4">

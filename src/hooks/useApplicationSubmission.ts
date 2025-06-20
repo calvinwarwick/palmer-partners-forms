@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Application } from '@/domain/types/Applicant';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
 import { useActivityTracking } from './useActivityTracking';
 
 export const useApplicationSubmission = () => {
@@ -18,7 +17,6 @@ export const useApplicationSubmission = () => {
       
       // Show immediate success to user
       setIsSubmitted(true);
-      toast.success('Application submitted successfully! Processing in background...');
       
       // Schedule background processing
       const { error } = await supabase.functions.invoke('process-application', {
@@ -30,7 +28,6 @@ export const useApplicationSubmission = () => {
 
       if (error) {
         console.error('Background processing scheduling error:', error);
-        // Don't show error to user since form was "submitted" successfully
         // Log the error for admin review
         await logActivity({
           action: 'Background Processing Failed',
@@ -47,7 +44,6 @@ export const useApplicationSubmission = () => {
     } catch (error) {
       console.error('Error submitting application:', error);
       setIsSubmitted(false);
-      toast.error('Failed to submit application. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

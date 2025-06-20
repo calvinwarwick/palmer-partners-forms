@@ -1,4 +1,5 @@
 
+
 /* Mobile form styling and touch targets */
 @media (max-width: 640px) {
   .form-control,
@@ -36,15 +37,13 @@
     flex-shrink: 0 !important;
     touch-action: manipulation !important;
   }
-  
-  /* Mobile toggle containers - removed */
 
-  .btn,
-  button {
-    min-height: 48px !important;
-    @apply text-base;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+  /* Explicitly remove all styling from toggle buttons */
+  button[data-radix-toggle],
+  [data-radix-toggle-group-item] {
+    padding: 0 !important;
+    min-height: auto !important;
+    margin: 0 !important;
   }
 
   label {
@@ -60,8 +59,6 @@
     font-size: 16px !important;
     padding: 0.75rem 0.875rem !important;
   }
-
-  /* Mobile switch styling removed - handled by components */
   
   /* Mobile radio button enhancements */
   [data-radix-radio-group-item] {
@@ -99,3 +96,4 @@
     margin-top: 0.5rem !important;
   }
 }
+
