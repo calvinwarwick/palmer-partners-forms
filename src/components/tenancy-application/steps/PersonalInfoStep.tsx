@@ -170,8 +170,8 @@ const PersonalInfoStep = ({
                         <span>Email Address</span>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="bg-orange-500 rounded-full p-1 cursor-help">
-                              <HelpCircle className="h-3 w-3 text-white" />
+                            <div className="bg-orange-500 rounded-full w-5 h-5 flex items-center justify-center cursor-help">
+                              <span className="text-white text-xs font-bold">?</span>
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
