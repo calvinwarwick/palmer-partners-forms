@@ -298,7 +298,6 @@ const ApplicantsTab = () => {
                   onClick={handleBulkExport}
                   className="h-8 text-xs border-green-500 hover:bg-green-50 text-green-600 hover:text-green-700"
                 >
-                  <Download className="h-3 w-3 mr-1" />
                   Export
                 </Button>
                 
