@@ -98,7 +98,7 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
   }
 };
 
-// Comprehensive PDF generation function for edge environment
+// Comprehensive PDF generation function for edge environment with proper multi-page support
 const generateComprehensiveApplicationPDF = async (data: any): Promise<string> => {
   console.log('Generating comprehensive PDF with all application data...');
   
@@ -127,9 +127,8 @@ const generateComprehensiveApplicationPDF = async (data: any): Promise<string> =
     }
   };
 
-  // Build comprehensive PDF content with all application data
-  let pdfContent = `
-%PDF-1.4
+  // Build comprehensive PDF content with proper multi-page layout
+  let pdfContent = `%PDF-1.4
 1 0 obj
 <<
 /Type /Catalog
@@ -140,8 +139,8 @@ endobj
 2 0 obj
 <<
 /Type /Pages
-/Kids [3 0 R]
-/Count 1
+/Kids [3 0 R 4 0 R 5 0 R]
+/Count 3
 >>
 endobj
 
@@ -152,15 +151,45 @@ endobj
 /MediaBox [0 0 612 792]
 /Resources <<
 /Font <<
-/F1 4 0 R
-/F2 5 0 R
+/F1 6 0 R
+/F2 7 0 R
 >>
 >>
-/Contents 6 0 R
+/Contents 8 0 R
 >>
 endobj
 
 4 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F2 7 0 R
+>>
+>>
+/Contents 9 0 R
+>>
+endobj
+
+5 0 obj
+<<
+/Type /Page
+/Parent 2 0 R
+/MediaBox [0 0 612 792]
+/Resources <<
+/Font <<
+/F1 6 0 R
+/F2 7 0 R
+>>
+>>
+/Contents 10 0 R
+>>
+endobj
+
+6 0 obj
 <<
 /Type /Font
 /Subtype /Type1
@@ -168,7 +197,7 @@ endobj
 >>
 endobj
 
-5 0 obj
+7 0 obj
 <<
 /Type /Font
 /Subtype /Type1
@@ -176,137 +205,466 @@ endobj
 >>
 endobj
 
-6 0 obj
+8 0 obj
+<<
+/Length 3500
+>>
+stream
+BT
+% Header with logos and company name
+/F2 18 Tf
+0.2 0.2 0.2 rg
+50 750 Td
+(Palmer & Partners) Tj
+
+% Orange underline
+0.85 0.44 0 rg
+50 742 512 2 re
+f
+
+% Main title
+/F2 24 Tf
+0.2 0.2 0.2 rg
+50 700 Td
+(Tenancy Application) Tj
+
+% Property Details Section
+0 -50 Td
+/F2 16 Tf
+0.2 0.2 0.2 rg
+(Property Details) Tj
+
+% Property details table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Street Address) Tj
+210 0 Td
+0 0 0 rg
+(${data.propertyPreferences?.streetAddress || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Postcode) Tj
+210 0 Td
+(${data.propertyPreferences?.postcode || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Maximum Rent) Tj
+210 0 Td
+(£${data.propertyPreferences?.maxRent || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Move-in Date) Tj
+210 0 Td
+(${formatDate(data.propertyPreferences?.moveInDate || '')}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Latest Move-in Date) Tj
+210 0 Td
+(${formatDate(data.propertyPreferences?.latestMoveInDate || '')}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Initial Tenancy Term) Tj
+210 0 Td
+(${data.propertyPreferences?.initialTenancyTerm || 'N/A'}) Tj
+
+% Primary Applicant Section
+-215 -50 Td
+/F2 16 Tf
+0.2 0.2 0.2 rg
+(Primary Applicant) Tj
+
+% Applicant details table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Name) Tj
+210 0 Td
+(${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Email) Tj
+210 0 Td
+(${data.applicants[0]?.email || ''}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Phone) Tj
+210 0 Td
+(${data.applicants[0]?.phone || ''}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Date of Birth) Tj
+210 0 Td
+(${formatDate(data.applicants[0]?.dateOfBirth || '')}) Tj
+
+ET
+endstream
+endobj
+
+9 0 obj
+<<
+/Length 3000
+>>
+stream
+BT
+% Page 2 Header
+/F2 18 Tf
+0.2 0.2 0.2 rg
+50 750 Td
+(Palmer & Partners - Tenancy Application \\(Page 2\\)) Tj
+
+% Orange underline
+0.85 0.44 0 rg
+50 742 512 2 re
+f
+
+% Employment Details Section
+/F2 16 Tf
+0.2 0.2 0.2 rg
+50 700 Td
+(Employment Details) Tj
+
+% Employment table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Employment Status) Tj
+210 0 Td
+(${data.applicants[0]?.employment || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Company Name) Tj
+210 0 Td
+(${data.applicants[0]?.companyName || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Job Title) Tj
+210 0 Td
+(${data.applicants[0]?.jobTitle || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Annual Income) Tj
+210 0 Td
+(£${data.applicants[0]?.annualIncome || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Length of Service) Tj
+210 0 Td
+(${data.applicants[0]?.lengthOfService || 'N/A'}) Tj
+
+% Current Address Section
+-215 -50 Td
+/F2 16 Tf
+0.2 0.2 0.2 rg
+(Current Address) Tj
+
+% Address table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Current Address) Tj
+210 0 Td
+(${data.applicants[0]?.currentAddress || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Current Postcode) Tj
+210 0 Td
+(${data.applicants[0]?.currentPostcode || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Time at Address) Tj
+210 0 Td
+(${data.applicants[0]?.timeAtAddress || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Landlord Name) Tj
+210 0 Td
+(${data.applicants[0]?.landlordName || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Landlord Phone) Tj
+210 0 Td
+(${data.applicants[0]?.landlordPhone || 'N/A'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Rent Up to Date) Tj
+210 0 Td
+(${data.applicants[0]?.rentUpToDate === 'yes' ? 'Yes' : 'No'}) Tj
+
+ET
+endstream
+endobj
+
+10 0 obj
 <<
 /Length 2500
 >>
 stream
 BT
-/F2 24 Tf
+% Page 3 Header
+/F2 18 Tf
+0.2 0.2 0.2 rg
 50 750 Td
-(Palmer & Partners - Tenancy Application) Tj
-0 -40 Td
+(Palmer & Partners - Tenancy Application \\(Page 3\\)) Tj
 
-/F2 16 Tf
-(Property Details) Tj
-0 -25 Td
-/F1 12 Tf
-(Street Address: ${data.propertyPreferences?.streetAddress || 'N/A'}) Tj
-0 -20 Td
-(Postcode: ${data.propertyPreferences?.postcode || 'N/A'}) Tj
-0 -20 Td
-(Maximum Rent: £${data.propertyPreferences?.maxRent || 'N/A'}) Tj
-0 -20 Td
-(Move-in Date: ${formatDate(data.propertyPreferences?.moveInDate || '')}) Tj
-0 -20 Td
-(Latest Move-in Date: ${formatDate(data.propertyPreferences?.latestMoveInDate || '')}) Tj
-0 -20 Td
-(Initial Tenancy Term: ${data.propertyPreferences?.initialTenancyTerm || 'N/A'}) Tj
-0 -30 Td
+% Orange underline
+0.85 0.44 0 rg
+50 742 512 2 re
+f
 
+% Additional Information Section
 /F2 16 Tf
-(Primary Applicant) Tj
-0 -25 Td
-/F1 12 Tf
-(Name: ${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}) Tj
-0 -20 Td
-(Email: ${data.applicants[0]?.email || ''}) Tj
-0 -20 Td
-(Phone: ${data.applicants[0]?.phone || ''}) Tj
-0 -20 Td
-(Date of Birth: ${formatDate(data.applicants[0]?.dateOfBirth || '')}) Tj
-0 -30 Td
-
-/F2 16 Tf
-(Employment Details) Tj
-0 -25 Td
-/F1 12 Tf
-(Employment Status: ${data.applicants[0]?.employment || ''}) Tj
-0 -20 Td
-(Company Name: ${data.applicants[0]?.companyName || ''}) Tj
-0 -20 Td
-(Job Title: ${data.applicants[0]?.jobTitle || ''}) Tj
-0 -20 Td
-(Annual Income: £${data.applicants[0]?.annualIncome || ''}) Tj
-0 -20 Td
-(Length of Service: ${data.applicants[0]?.lengthOfService || ''}) Tj
-0 -30 Td
-
-/F2 16 Tf
-(Current Address) Tj
-0 -25 Td
-/F1 12 Tf
-(Current Address: ${data.applicants[0]?.currentAddress || ''}) Tj
-0 -20 Td
-(Current Postcode: ${data.applicants[0]?.currentPostcode || ''}) Tj
-0 -20 Td
-(Time at Address: ${data.applicants[0]?.timeAtAddress || ''}) Tj
-0 -20 Td
-(Landlord Name: ${data.applicants[0]?.landlordName || ''}) Tj
-0 -20 Td
-(Landlord Phone: ${data.applicants[0]?.landlordPhone || ''}) Tj
-0 -20 Td
-(Rent Up to Date: ${data.applicants[0]?.rentUpToDate === 'yes' ? 'Yes' : 'No'}) Tj
-0 -30 Td
-
-/F2 16 Tf
+0.2 0.2 0.2 rg
+50 700 Td
 (Additional Information) Tj
-0 -25 Td
-/F1 12 Tf
-(Pets: ${data.additionalDetails?.pets ? 'Yes' : 'No'}) Tj
-0 -20 Td
-(Under 18s: ${data.additionalDetails?.under18Count || '0'}) Tj
-0 -20 Td
-(UK/ROI Passport: ${data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No'}) Tj
-0 -20 Td
-(Adverse Credit: ${data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No'}) Tj
-0 -20 Td
-(Guarantor Required: ${data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No'}) Tj
-0 -20 Td
-(Deposit Type: ${data.additionalDetails?.depositType || ''}) Tj
-0 -30 Td
 
+% Additional info table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Pets) Tj
+210 0 Td
+(${data.additionalDetails?.pets ? 'Yes' : 'No'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Under 18s) Tj
+210 0 Td
+(${data.additionalDetails?.under18Count || '0'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(UK/ROI Passport) Tj
+210 0 Td
+(${data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Adverse Credit) Tj
+210 0 Td
+(${data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Guarantor Required) Tj
+210 0 Td
+(${data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Deposit Type) Tj
+210 0 Td
+(${data.additionalDetails?.depositType || 'N/A'}) Tj
+
+% Data Sharing Section
+-215 -50 Td
 /F2 16 Tf
+0.2 0.2 0.2 rg
 (Data Sharing) Tj
-0 -25 Td
-/F1 12 Tf
-(Utilities: ${data.dataSharing?.utilities ? 'Yes' : 'No'}) Tj
-0 -20 Td
-(Insurance: ${data.dataSharing?.insurance ? 'Yes' : 'No'}) Tj
-0 -30 Td
 
+% Data sharing table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Utilities) Tj
+210 0 Td
+(${data.dataSharing?.utilities ? 'Yes' : 'No'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Insurance) Tj
+210 0 Td
+(${data.dataSharing?.insurance ? 'Yes' : 'No'}) Tj
+
+% Signature Section
+-215 -50 Td
 /F2 16 Tf
+0.2 0.2 0.2 rg
 (Signature) Tj
-0 -25 Td
-/F1 12 Tf
-(Signed: ${data.signature ? 'Digital Signature Applied' : 'Not Signed'}) Tj
-0 -20 Td
-(Submitted: ${new Date().toLocaleString()}) Tj
+
+% Signature table
+0 -30 Td
+/F2 10 Tf
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Signed) Tj
+210 0 Td
+(${data.signature ? 'Digital Signature Applied' : 'Not Signed'}) Tj
+
+-210 -20 Td
+0.9 0.9 0.9 rg
+0 0 200 15 re
+f
+0 0 0 rg
+5 5 Td
+(Submitted) Tj
+210 0 Td
+(${new Date().toLocaleString()}) Tj
 
 ET
 endstream
 endobj
 
 xref
-0 7
+0 11
 0000000000 65535 f 
 0000000009 00000 n 
 0000000058 00000 n 
-0000000115 00000 n 
-0000000245 00000 n 
-0000000316 00000 n 
-0000000392 00000 n 
+0000000123 00000 n 
+0000000253 00000 n 
+0000000383 00000 n 
+0000000513 00000 n 
+0000000584 00000 n 
+0000000660 00000 n 
+0000004215 00000 n 
+0000007270 00000 n 
 trailer
 <<
-/Size 7
+/Size 11
 /Root 1 0 R
 >>
 startxref
-2945
+9820
 %%EOF`;
   
   // Convert to base64
   const base64 = btoa(pdfContent);
-  console.log('Comprehensive PDF generated successfully with all application data');
+  console.log('Comprehensive multi-page PDF generated successfully with all application data');
   return base64;
 };
