@@ -1,4 +1,3 @@
-
 import { Resend } from 'npm:resend@2.0.0';
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -163,22 +162,28 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
     }
   };
 
-  // Header with logos - matching your reference image exactly
+  // Header with logos - maintaining proper aspect ratio
   const headerHeight = 25;
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, headerHeight, 'F');
 
-  // Load and add the logos
+  // Load and add the logos with proper aspect ratio
   try {
     const leftLogoBase64 = await loadImageAsBase64('https://c0c4d145-b715-4d36-855a-41890ccb2e58.lovableproject.com/lovable-uploads/8958574e-86f0-4482-9a99-322142a0f734.png');
     const rightLogoBase64 = await loadImageAsBase64('https://c0c4d145-b715-4d36-855a-41890ccb2e58.lovableproject.com/lovable-uploads/fb64eebc-b467-4dd1-b635-6d1817b04c67.png');
     
     if (leftLogoBase64) {
-      doc.addImage(`data:image/png;base64,${leftLogoBase64}`, 'PNG', 10, 5, 40, 15);
+      // Maintain aspect ratio for left logo (text logo is wider)
+      const leftLogoWidth = 35;
+      const leftLogoHeight = 12;
+      doc.addImage(`data:image/png;base64,${leftLogoBase64}`, 'PNG', 10, 6.5, leftLogoWidth, leftLogoHeight);
     }
     
     if (rightLogoBase64) {
-      doc.addImage(`data:image/png;base64,${rightLogoBase64}`, 'PNG', 160, 5, 40, 15);
+      // Maintain aspect ratio for right logo (P logo is more square)
+      const rightLogoWidth = 15;
+      const rightLogoHeight = 15;
+      doc.addImage(`data:image/png;base64,${rightLogoBase64}`, 'PNG', 185, 5, rightLogoWidth, rightLogoHeight);
     }
   } catch (error) {
     console.warn('Could not add logos, using text fallback');
@@ -410,10 +415,21 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
   const submittedDate = data.submittedAt ? new Date(data.submittedAt).toLocaleString() : new Date().toLocaleString();
   yPosition = addDataRow('Submitted At', submittedDate, yPosition);
 
-  // Add Terms and Conditions - matching exactly with the form
+  // Add Terms and Conditions - properly styled in table format
   yPosition = checkPageBreak(yPosition + 20);
   yPosition = addSectionHeader('Terms and Conditions', yPosition);
   
+  // Create a table cell for terms and conditions
+  const termsY = checkPageBreak(yPosition);
+  const termsHeight = 180; // Increased height for better spacing
+  
+  // Terms cell background
+  doc.setFillColor(255, 255, 255);
+  doc.rect(20, termsY, 170, termsHeight, 'F');
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.5);
+  doc.rect(20, termsY, 170, termsHeight);
+
   const termsText = `By submitting this application, you agree to the following terms and conditions:
 
 If your offer is accepted by the landlord of your chosen property, the "Holding Deposit" will become payable. Upon receipt of this payment Palmer & Partners will commence the referencing process. This is usually done via an online form sent to your email address. This form must be completed within 72 hours to avoid the failure of your tenancy application.
@@ -466,15 +482,29 @@ Palmer & Partners are fully compliant with all relevant Data Protection and G.D.
 Complaints Procedure:
 Should a tenant/applicant have any problems with Palmer & Partners' services you should write to the branch manager. This complaint will be acknowledged within 3 working days of receipt and an investigation undertaken. A formal written outcome of the investigation will be sent to you. If you remain dissatisfied, you should write to the Managing Director – the same time limits apply. Following the Managing Director's investigation, a written statement expressing Palmer & Partners' final view will be sent to you, including any offer made. This letter will confirm that, should still remain dissatisfied, you are entitled to refer the matter to The Property Ombudsman (TPO) for review within six months. The TPO will only review complaints made by consumers and only once the in-house complaints procedure has been completed.`;
 
+  // Style the terms text with small font and proper line height
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
+  doc.setFontSize(7); // Smaller font size
   doc.setTextColor(0, 0, 0);
   
-  const lines = doc.splitTextToSize(termsText, 170);
+  const lines = doc.splitTextToSize(termsText, 160); // Narrower width for padding
+  let currentTermsY = termsY + 8; // Start with padding from top
+  
   for (let i = 0; i < lines.length; i++) {
-    yPosition = checkPageBreak(yPosition + 5);
-    doc.text(lines[i], 20, yPosition);
-    yPosition += 5;
+    if (currentTermsY > termsY + termsHeight - 8) {
+      // Need new page for terms continuation
+      doc.addPage();
+      currentTermsY = 20;
+      
+      // Continue terms cell on new page
+      doc.setFillColor(255, 255, 255);
+      doc.rect(20, currentTermsY - 8, 170, 200, 'F');
+      doc.setDrawColor(200, 200, 200);
+      doc.rect(20, currentTermsY - 8, 170, 200);
+    }
+    
+    doc.text(lines[i], 25, currentTermsY); // Left padding of 5 units
+    currentTermsY += 3; // Reduced line height for compact appearance
   }
 
   // Convert to base64
