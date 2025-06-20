@@ -8,6 +8,11 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { FormField } from '@/components/ui/form-field';
+import { FormInput } from '@/components/ui/form-input';
+import { FormSwitch } from '@/components/ui/form-switch';
+import { FormSelect } from '@/components/ui/form-select';
+import { FormRadio } from '@/components/ui/form-radio';
+import { FormCheckbox } from '@/components/ui/form-checkbox';
 import { Label } from '@/components/ui/label';
 import { Eye, Smartphone, Monitor, Tablet } from 'lucide-react';
 
