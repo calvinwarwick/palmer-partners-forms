@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,7 +10,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Applicant } from "@/domain/types/Applicant";
 import ApplicantCountSelector from "./ApplicantCountSelector";
 import GuarantorSummary from "@/components/applicants/GuarantorSummary";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface PersonalInfoStepProps {
   applicants: Applicant[];
@@ -36,6 +37,13 @@ const PersonalInfoStep = ({
     };
   }>({});
   const [hasApplicantSelection, setHasApplicantSelection] = useState(false);
+
+  // Set hasApplicantSelection to true if applicants already exist (e.g., when returning to this step)
+  useEffect(() => {
+    if (applicants.length > 0) {
+      setHasApplicantSelection(true);
+    }
+  }, [applicants.length]);
 
   const updateApplicantToggle = (applicantId: string, field: string, value: boolean) => {
     setApplicantToggles(prev => ({
