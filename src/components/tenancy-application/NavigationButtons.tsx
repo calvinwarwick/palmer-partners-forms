@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Send, TestTube, Zap } from "lucide-react";
 interface NavigationButtonsProps {
@@ -44,7 +45,7 @@ const NavigationButtons = ({
           {isLastStep ? <Button type="button" onClick={onSubmit} disabled={!canSubmit || isSubmitting} className="min-w-[120px] bg-orange-500 hover:bg-orange-600 text-white">
               {isSubmitting ? "Submitting..." : <>
                   <Send className="h-4 w-4 mr-2" />
-                  Submit Application
+                  Submit
                 </>}
             </Button> : <Button type="button" onClick={onNext} disabled={!canSubmit} className="min-w-[120px] bg-orange-500 hover:bg-orange-600 text-white">
               Next
