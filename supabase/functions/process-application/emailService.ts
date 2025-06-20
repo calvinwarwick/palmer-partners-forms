@@ -126,18 +126,43 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
     return currentY;
   };
 
-  // Header with logo placeholder - matching the demo exactly
+  // Helper function to format currency
+  const formatCurrency = (amount: string | number) => {
+    if (!amount) return '';
+    const num = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return `£${num.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  };
+
+  // Helper function to format phone numbers in UK format
+  const formatPhoneNumber = (phone: string) => {
+    if (!phone) return '';
+    // Remove all non-digits
+    const digits = phone.replace(/\D/g, '');
+    // Format as UK mobile number
+    if (digits.length === 11 && digits.startsWith('07')) {
+      return `${digits.slice(0, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`;
+    }
+    return phone; // Return original if not standard UK mobile
+  };
+
+  // Header with logos - matching your reference image exactly
   const headerHeight = 25;
   doc.setFillColor(33, 33, 33); // #212121 dark grey
   doc.rect(0, 0, 210, headerHeight, 'F');
 
-  // Logo placeholder (white rectangle with text) - centered
-  doc.setFillColor(255, 255, 255);
-  doc.rect(85, 8, 40, 9, 'F');
-  doc.setTextColor(33, 33, 33);
-  doc.setFontSize(12);
+  // Add Palmer & Partners text in white (since we can't load external images in Deno)
+  doc.setTextColor(255, 255, 255);
+  doc.setFontSize(16);
   doc.setFont('helvetica', 'bold');
-  doc.text('Palmer & Partners', 105, 14, { align: 'center' });
+  doc.text('Palmer', 25, 16);
+  
+  // Add & in orange
+  doc.setTextColor(255, 111, 0);
+  doc.text('&', 55, 16);
+  
+  // Add Partners in white
+  doc.setTextColor(255, 255, 255);
+  doc.text('Partners', 65, 16);
 
   // Orange bottom border
   doc.setFillColor(255, 111, 0); // #FF6F00 orange
@@ -145,76 +170,59 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
 
   yPosition = headerHeight + 15;
 
-  // Main title - matching the demo
+  // Main title - matching your reference
   doc.setTextColor(33, 33, 33);
-  doc.setFontSize(24);
+  doc.setFontSize(18);
   doc.setFont('helvetica', 'bold');
   doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
-  yPosition += 15;
+  yPosition += 20;
 
-  // Helper function to add section header - matching the demo exactly
+  // Helper function to add section header - matching your reference exactly
   const addSectionHeader = (title: string, currentY: number) => {
-    const y = checkPageBreak(currentY + 10);
+    const y = checkPageBreak(currentY + 5);
     
     doc.setFillColor(33, 33, 33);
-    doc.rect(20, y - 5, 170, 15, 'F');
+    doc.rect(20, y, 170, 12, 'F');
     
     doc.setTextColor(255, 255, 255);
-    doc.setFontSize(12);
+    doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
-    doc.text(title, 105, y + 4, { align: 'center' });
-    
-    return y + 10;
-  };
-
-  // Helper function for subsection headers
-  const addSubsectionHeader = (title: string, currentY: number) => {
-    const y = checkPageBreak(currentY);
-    
-    doc.setFillColor(200, 200, 200);
-    doc.rect(20, y, 170, 12, 'F');
-    doc.setDrawColor(150, 150, 150);
-    doc.rect(20, y, 170, 12);
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(0, 0, 0);
-    doc.text(title, 105, y + 7, { align: 'center' });
+    doc.text(title, 105, y + 8, { align: 'center' });
     
     return y + 12;
   };
 
-  // Helper function for data rows - matching the demo exactly
+  // Helper function for data rows - matching your reference exactly
   const addDataRow = (label: string, value: string, currentY: number) => {
     const y = checkPageBreak(currentY);
     
-    const labelWidth = 170 * 0.35;
-    const valueWidth = 170 * 0.65;
-    const rowHeight = 12;
+    const labelWidth = 170 * 0.4;
+    const valueWidth = 170 * 0.6;
+    const rowHeight = 10;
     
-    // Label column - matching the demo
-    doc.setFillColor(243, 244, 246);
+    // Label column - light grey background
+    doc.setFillColor(240, 240, 240);
     doc.rect(20, y, labelWidth, rowHeight, 'F');
-    doc.setDrawColor(209, 213, 219);
+    doc.setDrawColor(200, 200, 200);
     doc.setLineWidth(0.5);
     doc.rect(20, y, labelWidth, rowHeight);
     
-    // Value column - matching the demo
+    // Value column - white background
     doc.setFillColor(255, 255, 255);
     doc.rect(20 + labelWidth, y, valueWidth, rowHeight, 'F');
     doc.rect(20 + labelWidth, y, valueWidth, rowHeight);
     
-    doc.setFont('helvetica', 'bold');
+    doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(0, 0, 0);
-    doc.text(label, 25, y + 7);
+    doc.text(label, 22, y + 6);
     
-    doc.setFont('helvetica', 'normal');
-    doc.text(value || '-', 25 + labelWidth, y + 7);
+    doc.text(value || '-', 22 + labelWidth, y + 6);
     
     return y + rowHeight;
   };
 
-  // Helper function to format dates - matching the demo exactly
+  // Helper function to format dates
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     try {
@@ -239,23 +247,38 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
     }
   };
 
-  // Property Details Section - matching the demo exactly
+  // Property Details Section - matching your reference exactly
   yPosition = addSectionHeader('Property Details', yPosition);
   yPosition = addDataRow('Street Address', data.propertyPreferences?.streetAddress || '', yPosition);
   yPosition = addDataRow('Postcode', data.propertyPreferences?.postcode || '', yPosition);
-  yPosition = addDataRow('Rental Amount', data.propertyPreferences?.maxRent ? `£${data.propertyPreferences.maxRent}` : '', yPosition);
+  yPosition = addDataRow('Rental Amount', data.propertyPreferences?.maxRent ? formatCurrency(data.propertyPreferences.maxRent) : '', yPosition);
   yPosition = addDataRow('Preferred Move-in Date', formatDate(data.propertyPreferences?.moveInDate || ''), yPosition);
   yPosition = addDataRow('Latest Move-in Date', formatDate(data.propertyPreferences?.latestMoveInDate || ''), yPosition);
   yPosition = addDataRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm || '', yPosition);
   yPosition = addDataRow('Has Pets', data.additionalDetails?.pets ? 'Yes' : 'No', yPosition);
-  yPosition = addDataRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
+  
+  // Under 18s - show "None" if 0
+  const under18Count = data.additionalDetails?.under18Count;
+  const under18Display = (!under18Count || under18Count === '0') ? 'None' : under18Count;
+  yPosition = addDataRow('Under 18s', under18Display, yPosition);
+  
   if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
     yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
   }
-  yPosition = addDataRow('Additional Requests', data.additionalDetails?.additionalRequests || '', yPosition);
-  yPosition = addDataRow('Deposit Type', data.additionalDetails?.depositType || '', yPosition);
+  yPosition = addDataRow('Conditions of Offer', data.additionalDetails?.additionalRequests || '-', yPosition);
+  
+  // Deposit Type - format as requested
+  let depositDisplay = '';
+  if (data.additionalDetails?.depositType === 'traditional') {
+    depositDisplay = 'Traditional deposit';
+  } else if (data.additionalDetails?.depositType === 'replacement') {
+    depositDisplay = 'Deposit replacement';
+  } else {
+    depositDisplay = data.additionalDetails?.depositType || '';
+  }
+  yPosition = addDataRow('Deposit Type', depositDisplay, yPosition);
 
-  // Applicants Section - matching the demo exactly
+  // Applicants Section
   data.applicants.forEach((applicant: any, index: number) => {
     yPosition = addSectionHeader(`Applicant - #${index + 1}`, yPosition);
     
@@ -264,39 +287,35 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
     yPosition = addDataRow('Last Name', applicant.lastName || '', yPosition);
     yPosition = addDataRow('Date of Birth', formatDate(applicant.dateOfBirth || ''), yPosition);
     yPosition = addDataRow('Email Address', applicant.email || '', yPosition);
-    yPosition = addDataRow('Mobile Number', applicant.phone || '', yPosition);
+    yPosition = addDataRow('Mobile Number', formatPhoneNumber(applicant.phone || ''), yPosition);
 
     // Employment Details
-    yPosition = addSubsectionHeader('Employment Details', yPosition);
+    yPosition = addSectionHeader('Employment Details', yPosition);
     yPosition = addDataRow('Contract Type', applicant.employment || '', yPosition);
     yPosition = addDataRow('Company Name', applicant.companyName || '', yPosition);
     yPosition = addDataRow('Job Title', applicant.jobTitle || '', yPosition);
-    yPosition = addDataRow('Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '', yPosition);
+    yPosition = addDataRow('Annual Salary', applicant.annualIncome ? formatCurrency(applicant.annualIncome) : '', yPosition);
     yPosition = addDataRow('Length of Service', applicant.lengthOfService || '', yPosition);
 
     // Current Property Details
-    yPosition = addSubsectionHeader('Current Property Details', yPosition);
+    yPosition = addSectionHeader('Current Property Details', yPosition);
     yPosition = addDataRow('Postcode', applicant.currentPostcode || applicant.previousPostcode || '', yPosition);
     yPosition = addDataRow('Street Address', applicant.currentAddress || applicant.previousAddress || '', yPosition);
     yPosition = addDataRow('Time at Address', applicant.timeAtAddress || 'N/A', yPosition);
-    yPosition = addDataRow('Landlord Name', applicant.landlordName || 'N/A', yPosition);
-    yPosition = addDataRow('Landlord Phone', applicant.landlordPhone || 'N/A', yPosition);
-    yPosition = addDataRow('Rent Up to Date', applicant.rentUpToDate === 'yes' ? 'Yes' : 'No', yPosition);
-    yPosition = addDataRow('Notice Period', applicant.noticePeriod || 'N/A', yPosition);
     yPosition = addDataRow('Current Property Status', applicant.currentPropertyStatus || '', yPosition);
-    yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', yPosition);
+    yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? formatCurrency(applicant.currentRentalAmount) : '', yPosition);
 
     // Previous Property Details
-    yPosition = addSubsectionHeader('Previous Property Details', yPosition);
+    yPosition = addSectionHeader('Previous Property Details', yPosition);
     yPosition = addDataRow('Previous Address', applicant.previousAddress || '', yPosition);
     yPosition = addDataRow('Previous Postcode', applicant.previousPostcode || '', yPosition);
     yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
     yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
     yPosition = addDataRow('Previous Landlord Name', applicant.previousLandlordName || 'N/A', yPosition);
-    yPosition = addDataRow('Previous Landlord Phone', applicant.previousLandlordPhone || 'N/A', yPosition);
+    yPosition = addDataRow('Previous Landlord Phone', formatPhoneNumber(applicant.previousLandlordPhone || ''), yPosition);
 
     // Additional Information
-    yPosition = addSubsectionHeader('Additional Information', yPosition);
+    yPosition = addSectionHeader('Additional Information', yPosition);
     yPosition = addDataRow('UK/ROI Passport', data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No', yPosition);
     yPosition = addDataRow('Adverse Credit', data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No', yPosition);
     if (data.additionalDetails?.adverseCredit === 'yes' && data.additionalDetails?.adverseCreditDetails) {
@@ -309,36 +328,36 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
 
     // Guarantor Details
     if (applicant.guarantorAdded && applicant.guarantorName) {
-      yPosition = addSubsectionHeader('Guarantor Details', yPosition);
+      yPosition = addSectionHeader('Guarantor Details', yPosition);
       yPosition = addDataRow('Guarantor Name', applicant.guarantorName || '', yPosition);
       yPosition = addDataRow('Relationship', applicant.guarantorRelationship || '', yPosition);
     }
   });
 
-  // Data Sharing Section - matching the demo exactly
+  // Data Sharing Section
   yPosition = addSectionHeader('Data Sharing', yPosition);
   yPosition = addDataRow('Accept Utilities', data.dataSharing?.utilities ? 'Yes' : 'No', yPosition);
   yPosition = addDataRow('Accept Insurance', data.dataSharing?.insurance ? 'Yes' : 'No', yPosition);
 
-  // Signature Section - matching the demo exactly
+  // Signature Section
   yPosition = addSectionHeader('Signature', yPosition);
   yPosition = addDataRow('Full Name', `${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}`, yPosition);
   
   // Signature row
   yPosition = checkPageBreak(yPosition);
-  const labelWidth = 170 * 0.35;
-  const valueWidth = 170 * 0.65;
-  const signatureRowHeight = 25;
+  const labelWidth = 170 * 0.4;
+  const valueWidth = 170 * 0.6;
+  const signatureRowHeight = 20;
   
   // Signature label
-  doc.setFillColor(243, 244, 246);
+  doc.setFillColor(240, 240, 240);
   doc.rect(20, yPosition, labelWidth, signatureRowHeight, 'F');
-  doc.setDrawColor(209, 213, 219);
+  doc.setDrawColor(200, 200, 200);
   doc.rect(20, yPosition, labelWidth, signatureRowHeight);
-  doc.setFont('helvetica', 'bold');
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(9);
   doc.setTextColor(0, 0, 0);
-  doc.text('Signature', 25, yPosition + 7);
+  doc.text('Signature', 22, yPosition + 6);
   
   // Signature value
   doc.setFillColor(255, 255, 255);
@@ -349,20 +368,20 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
   if (data.signature && data.signature.startsWith('data:image/')) {
     try {
       const maxSignatureWidth = valueWidth - 10;
-      const maxSignatureHeight = 15;
-      doc.addImage(data.signature, 'PNG', 25 + labelWidth, yPosition + 5, maxSignatureWidth, maxSignatureHeight);
+      const maxSignatureHeight = 12;
+      doc.addImage(data.signature, 'PNG', 22 + labelWidth, yPosition + 4, maxSignatureWidth, maxSignatureHeight);
     } catch (error) {
       console.warn('Could not add signature image, using placeholder');
       doc.setFont('helvetica', 'italic');
-      doc.setFontSize(12);
+      doc.setFontSize(9);
       doc.setTextColor(0, 0, 0);
-      doc.text('Digital Signature Applied', 25 + labelWidth + 5, yPosition + 14);
+      doc.text('Digital Signature Applied', 22 + labelWidth, yPosition + 12);
     }
   } else {
     doc.setFont('helvetica', 'italic');
-    doc.setFontSize(12);
+    doc.setFontSize(9);
     doc.setTextColor(0, 0, 0);
-    doc.text(data.signature || 'Digital Signature Applied', 25 + labelWidth + 5, yPosition + 14);
+    doc.text(data.signature || 'Digital Signature Applied', 22 + labelWidth, yPosition + 12);
   }
   
   yPosition += signatureRowHeight;
@@ -370,6 +389,36 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
   // Submitted at
   const submittedDate = data.submittedAt ? new Date(data.submittedAt).toLocaleString() : new Date().toLocaleString();
   yPosition = addDataRow('Submitted At', submittedDate, yPosition);
+
+  // Add Terms and Conditions
+  yPosition = checkPageBreak(yPosition + 20);
+  yPosition = addSectionHeader('Terms and Conditions', yPosition);
+  
+  const termsText = `By submitting this application, you agree to the following terms and conditions:
+
+1. All information provided is true and accurate to the best of your knowledge.
+2. You consent to credit and reference checks being carried out.
+3. You understand that providing false information may result in rejection of your application.
+4. You agree to pay the first month's rent and deposit upon acceptance of your application.
+5. You understand that this application does not guarantee tenancy of the property.
+6. Personal data will be processed in accordance with GDPR and our Privacy Policy.
+7. You consent to being contacted regarding your application and related services.
+8. Any holding deposit paid is subject to the terms of the Tenant Fees Act 2019.
+9. You agree to provide additional documentation if requested.
+10. This application is valid for 30 days from submission date.
+
+For full terms and conditions, please visit our website or contact our office.`;
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(0, 0, 0);
+  
+  const lines = doc.splitTextToSize(termsText, 170);
+  for (let i = 0; i < lines.length; i++) {
+    yPosition = checkPageBreak(yPosition + 5);
+    doc.text(lines[i], 20, yPosition);
+    yPosition += 5;
+  }
 
   // Convert to base64
   const pdfOutput = doc.output('arraybuffer');
@@ -380,6 +429,6 @@ const generateApplicationPDF = async (data: any): Promise<string> => {
   }
   const base64 = btoa(binary);
   
-  console.log('PDF generated successfully using admin preview logic');
+  console.log('PDF generated successfully with proper styling and terms');
   return base64;
 };
