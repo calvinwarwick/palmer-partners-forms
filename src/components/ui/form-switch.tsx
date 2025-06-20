@@ -33,10 +33,9 @@ const FormSwitch = React.forwardRef<
   return (
     <div className={cn(
       "w-full p-4 border-2 border-gray-200 rounded-lg bg-white",
-      !disabled && "hover:border-gray-300 hover:bg-gray-50",
       disabled && "opacity-50 cursor-not-allowed",
       error && "border-red-500",
-      "transition-all duration-200 touch-manipulation",
+      "transition-colors duration-200 touch-manipulation",
       className
     )}>
       <div className="flex items-center justify-between gap-4">
