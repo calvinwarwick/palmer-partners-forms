@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { User, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -254,7 +253,7 @@ const PersonalInfoStep = ({
                     
                     {toggles.adverseCredit && (
                       <FormField
-                        label="Adverse Credit Details"
+                        label="Please provide details on any adverse credit"
                         required
                         htmlFor={`adverseCreditDetails-${applicant.id}`}
                       >
@@ -262,7 +261,7 @@ const PersonalInfoStep = ({
                           id={`adverseCreditDetails-${applicant.id}`}
                           value={applicant.adverseCreditDetails || ''}
                           onChange={(e) => onUpdateApplicant(applicant.id, 'adverseCreditDetails', e.target.value)}
-                          placeholder="Please provide more details about your adverse credit history:"
+                          placeholder=""
                           rows={6}
                         />
                       </FormField>
