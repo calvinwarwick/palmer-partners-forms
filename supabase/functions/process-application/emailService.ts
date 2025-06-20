@@ -15,8 +15,17 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
     
     console.log('Sending email to:', primaryApplicant.email);
     
-    // Generate comprehensive PDF with all application data
-    const pdfBase64 = await generateComprehensiveApplicationPDF(application);
+    // Generate PDF using the same service that works for admin preview
+    const pdfBase64 = await generateApplicationPDF({
+      applicants: application.applicants,
+      propertyPreferences: application.propertyPreferences,
+      additionalDetails: application.additionalDetails,
+      dataSharing: application.dataSharing,
+      signature: application.signature,
+      submittedAt: new Date().toISOString(),
+      applicationId: 'APP-' + Date.now()
+    });
+    
     console.log('PDF generated, length:', pdfBase64.length);
     
     console.log('Attempting to send email with Resend...');
@@ -98,11 +107,114 @@ export const sendApplicationEmailWithPDF = async (application: any): Promise<boo
   }
 };
 
-// Comprehensive PDF generation function for edge environment with proper multi-page support
-const generateComprehensiveApplicationPDF = async (data: any): Promise<string> => {
-  console.log('Generating comprehensive PDF with all application data...');
+// Use the same PDF generation logic that works perfectly in the admin preview
+const generateApplicationPDF = async (data: any): Promise<string> => {
+  console.log('Generating PDF using the same logic as admin preview...');
   
-  // Helper function to format dates
+  // Import jsPDF - this is available in Deno edge runtime
+  const jsPDF = (await import('https://cdn.skypack.dev/jspdf')).default;
+  
+  const doc = new jsPDF();
+  let yPosition = 20;
+
+  // Helper function to check if we need a new page
+  const checkPageBreak = (currentY: number, lineHeight: number = 10) => {
+    if (currentY > 270) {
+      doc.addPage();
+      return 20;
+    }
+    return currentY;
+  };
+
+  // Header with logo placeholder - matching the demo exactly
+  const headerHeight = 25;
+  doc.setFillColor(33, 33, 33); // #212121 dark grey
+  doc.rect(0, 0, 210, headerHeight, 'F');
+
+  // Logo placeholder (white rectangle with text) - centered
+  doc.setFillColor(255, 255, 255);
+  doc.rect(85, 8, 40, 9, 'F');
+  doc.setTextColor(33, 33, 33);
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Palmer & Partners', 105, 14, { align: 'center' });
+
+  // Orange bottom border
+  doc.setFillColor(255, 111, 0); // #FF6F00 orange
+  doc.rect(0, headerHeight, 210, 2, 'F');
+
+  yPosition = headerHeight + 15;
+
+  // Main title - matching the demo
+  doc.setTextColor(33, 33, 33);
+  doc.setFontSize(24);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Tenancy Application', 105, yPosition, { align: 'center' });
+  yPosition += 15;
+
+  // Helper function to add section header - matching the demo exactly
+  const addSectionHeader = (title: string, currentY: number) => {
+    const y = checkPageBreak(currentY + 10);
+    
+    doc.setFillColor(33, 33, 33);
+    doc.rect(20, y - 5, 170, 15, 'F');
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, 105, y + 4, { align: 'center' });
+    
+    return y + 10;
+  };
+
+  // Helper function for subsection headers
+  const addSubsectionHeader = (title: string, currentY: number) => {
+    const y = checkPageBreak(currentY);
+    
+    doc.setFillColor(200, 200, 200);
+    doc.rect(20, y, 170, 12, 'F');
+    doc.setDrawColor(150, 150, 150);
+    doc.rect(20, y, 170, 12);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.text(title, 105, y + 7, { align: 'center' });
+    
+    return y + 12;
+  };
+
+  // Helper function for data rows - matching the demo exactly
+  const addDataRow = (label: string, value: string, currentY: number) => {
+    const y = checkPageBreak(currentY);
+    
+    const labelWidth = 170 * 0.35;
+    const valueWidth = 170 * 0.65;
+    const rowHeight = 12;
+    
+    // Label column - matching the demo
+    doc.setFillColor(243, 244, 246);
+    doc.rect(20, y, labelWidth, rowHeight, 'F');
+    doc.setDrawColor(209, 213, 219);
+    doc.setLineWidth(0.5);
+    doc.rect(20, y, labelWidth, rowHeight);
+    
+    // Value column - matching the demo
+    doc.setFillColor(255, 255, 255);
+    doc.rect(20 + labelWidth, y, valueWidth, rowHeight, 'F');
+    doc.rect(20 + labelWidth, y, valueWidth, rowHeight);
+    
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.text(label, 25, y + 7);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.text(value || '-', 25 + labelWidth, y + 7);
+    
+    return y + rowHeight;
+  };
+
+  // Helper function to format dates - matching the demo exactly
   const formatDate = (dateString: string) => {
     if (!dateString) return '';
     try {
@@ -127,544 +239,147 @@ const generateComprehensiveApplicationPDF = async (data: any): Promise<string> =
     }
   };
 
-  // Build comprehensive PDF content with proper multi-page layout
-  let pdfContent = `%PDF-1.4
-1 0 obj
-<<
-/Type /Catalog
-/Pages 2 0 R
->>
-endobj
+  // Property Details Section - matching the demo exactly
+  yPosition = addSectionHeader('Property Details', yPosition);
+  yPosition = addDataRow('Street Address', data.propertyPreferences?.streetAddress || '', yPosition);
+  yPosition = addDataRow('Postcode', data.propertyPreferences?.postcode || '', yPosition);
+  yPosition = addDataRow('Rental Amount', data.propertyPreferences?.maxRent ? `£${data.propertyPreferences.maxRent}` : '', yPosition);
+  yPosition = addDataRow('Preferred Move-in Date', formatDate(data.propertyPreferences?.moveInDate || ''), yPosition);
+  yPosition = addDataRow('Latest Move-in Date', formatDate(data.propertyPreferences?.latestMoveInDate || ''), yPosition);
+  yPosition = addDataRow('Initial Tenancy Term', data.propertyPreferences?.initialTenancyTerm || '', yPosition);
+  yPosition = addDataRow('Has Pets', data.additionalDetails?.pets ? 'Yes' : 'No', yPosition);
+  yPosition = addDataRow('Under 18s', data.additionalDetails?.under18Count || '0', yPosition);
+  if (data.additionalDetails?.under18Count && parseInt(data.additionalDetails.under18Count) > 0 && data.additionalDetails?.childrenAges) {
+    yPosition = addDataRow('Under 18s Details', data.additionalDetails.childrenAges, yPosition);
+  }
+  yPosition = addDataRow('Additional Requests', data.additionalDetails?.additionalRequests || '', yPosition);
+  yPosition = addDataRow('Deposit Type', data.additionalDetails?.depositType || '', yPosition);
 
-2 0 obj
-<<
-/Type /Pages
-/Kids [3 0 R 4 0 R 5 0 R]
-/Count 3
->>
-endobj
+  // Applicants Section - matching the demo exactly
+  data.applicants.forEach((applicant: any, index: number) => {
+    yPosition = addSectionHeader(`Applicant - #${index + 1}`, yPosition);
+    
+    // Personal Details
+    yPosition = addDataRow('First Name', applicant.firstName || '', yPosition);
+    yPosition = addDataRow('Last Name', applicant.lastName || '', yPosition);
+    yPosition = addDataRow('Date of Birth', formatDate(applicant.dateOfBirth || ''), yPosition);
+    yPosition = addDataRow('Email Address', applicant.email || '', yPosition);
+    yPosition = addDataRow('Mobile Number', applicant.phone || '', yPosition);
 
-3 0 obj
-<<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Resources <<
-/Font <<
-/F1 6 0 R
-/F2 7 0 R
->>
->>
-/Contents 8 0 R
->>
-endobj
+    // Employment Details
+    yPosition = addSubsectionHeader('Employment Details', yPosition);
+    yPosition = addDataRow('Contract Type', applicant.employment || '', yPosition);
+    yPosition = addDataRow('Company Name', applicant.companyName || '', yPosition);
+    yPosition = addDataRow('Job Title', applicant.jobTitle || '', yPosition);
+    yPosition = addDataRow('Annual Salary', applicant.annualIncome ? `£${applicant.annualIncome}` : '', yPosition);
+    yPosition = addDataRow('Length of Service', applicant.lengthOfService || '', yPosition);
 
-4 0 obj
-<<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Resources <<
-/Font <<
-/F1 6 0 R
-/F2 7 0 R
->>
->>
-/Contents 9 0 R
->>
-endobj
+    // Current Property Details
+    yPosition = addSubsectionHeader('Current Property Details', yPosition);
+    yPosition = addDataRow('Postcode', applicant.currentPostcode || applicant.previousPostcode || '', yPosition);
+    yPosition = addDataRow('Street Address', applicant.currentAddress || applicant.previousAddress || '', yPosition);
+    yPosition = addDataRow('Time at Address', applicant.timeAtAddress || 'N/A', yPosition);
+    yPosition = addDataRow('Landlord Name', applicant.landlordName || 'N/A', yPosition);
+    yPosition = addDataRow('Landlord Phone', applicant.landlordPhone || 'N/A', yPosition);
+    yPosition = addDataRow('Rent Up to Date', applicant.rentUpToDate === 'yes' ? 'Yes' : 'No', yPosition);
+    yPosition = addDataRow('Notice Period', applicant.noticePeriod || 'N/A', yPosition);
+    yPosition = addDataRow('Current Property Status', applicant.currentPropertyStatus || '', yPosition);
+    yPosition = addDataRow('Current Rental Amount', applicant.currentRentalAmount ? `£${applicant.currentRentalAmount}` : '', yPosition);
 
-5 0 obj
-<<
-/Type /Page
-/Parent 2 0 R
-/MediaBox [0 0 612 792]
-/Resources <<
-/Font <<
-/F1 6 0 R
-/F2 7 0 R
->>
->>
-/Contents 10 0 R
->>
-endobj
+    // Previous Property Details
+    yPosition = addSubsectionHeader('Previous Property Details', yPosition);
+    yPosition = addDataRow('Previous Address', applicant.previousAddress || '', yPosition);
+    yPosition = addDataRow('Previous Postcode', applicant.previousPostcode || '', yPosition);
+    yPosition = addDataRow('Move In Date', formatDate(applicant.moveInDate || ''), yPosition);
+    yPosition = addDataRow('Vacate Date', formatDate(applicant.vacateDate || ''), yPosition);
+    yPosition = addDataRow('Previous Landlord Name', applicant.previousLandlordName || 'N/A', yPosition);
+    yPosition = addDataRow('Previous Landlord Phone', applicant.previousLandlordPhone || 'N/A', yPosition);
 
-6 0 obj
-<<
-/Type /Font
-/Subtype /Type1
-/BaseFont /Helvetica
->>
-endobj
+    // Additional Information
+    yPosition = addSubsectionHeader('Additional Information', yPosition);
+    yPosition = addDataRow('UK/ROI Passport', data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No', yPosition);
+    yPosition = addDataRow('Adverse Credit', data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No', yPosition);
+    if (data.additionalDetails?.adverseCredit === 'yes' && data.additionalDetails?.adverseCreditDetails) {
+      yPosition = addDataRow('Adverse Credit Details', data.additionalDetails.adverseCreditDetails, yPosition);
+    }
+    yPosition = addDataRow('Requires Guarantor', data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No', yPosition);
+    if (data.additionalDetails?.pets && data.additionalDetails?.petDetails) {
+      yPosition = addDataRow('Pet Details', data.additionalDetails.petDetails, yPosition);
+    }
 
-7 0 obj
-<<
-/Type /Font
-/Subtype /Type1
-/BaseFont /Helvetica-Bold
->>
-endobj
+    // Guarantor Details
+    if (applicant.guarantorAdded && applicant.guarantorName) {
+      yPosition = addSubsectionHeader('Guarantor Details', yPosition);
+      yPosition = addDataRow('Guarantor Name', applicant.guarantorName || '', yPosition);
+      yPosition = addDataRow('Relationship', applicant.guarantorRelationship || '', yPosition);
+    }
+  });
 
-8 0 obj
-<<
-/Length 3500
->>
-stream
-BT
-% Header with logos and company name
-/F2 18 Tf
-0.2 0.2 0.2 rg
-50 750 Td
-(Palmer & Partners) Tj
+  // Data Sharing Section - matching the demo exactly
+  yPosition = addSectionHeader('Data Sharing', yPosition);
+  yPosition = addDataRow('Accept Utilities', data.dataSharing?.utilities ? 'Yes' : 'No', yPosition);
+  yPosition = addDataRow('Accept Insurance', data.dataSharing?.insurance ? 'Yes' : 'No', yPosition);
 
-% Orange underline
-0.85 0.44 0 rg
-50 742 512 2 re
-f
-
-% Main title
-/F2 24 Tf
-0.2 0.2 0.2 rg
-50 700 Td
-(Tenancy Application) Tj
-
-% Property Details Section
-0 -50 Td
-/F2 16 Tf
-0.2 0.2 0.2 rg
-(Property Details) Tj
-
-% Property details table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Street Address) Tj
-210 0 Td
-0 0 0 rg
-(${data.propertyPreferences?.streetAddress || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Postcode) Tj
-210 0 Td
-(${data.propertyPreferences?.postcode || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Maximum Rent) Tj
-210 0 Td
-(£${data.propertyPreferences?.maxRent || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Move-in Date) Tj
-210 0 Td
-(${formatDate(data.propertyPreferences?.moveInDate || '')}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Latest Move-in Date) Tj
-210 0 Td
-(${formatDate(data.propertyPreferences?.latestMoveInDate || '')}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Initial Tenancy Term) Tj
-210 0 Td
-(${data.propertyPreferences?.initialTenancyTerm || 'N/A'}) Tj
-
-% Primary Applicant Section
--215 -50 Td
-/F2 16 Tf
-0.2 0.2 0.2 rg
-(Primary Applicant) Tj
-
-% Applicant details table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Name) Tj
-210 0 Td
-(${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Email) Tj
-210 0 Td
-(${data.applicants[0]?.email || ''}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Phone) Tj
-210 0 Td
-(${data.applicants[0]?.phone || ''}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Date of Birth) Tj
-210 0 Td
-(${formatDate(data.applicants[0]?.dateOfBirth || '')}) Tj
-
-ET
-endstream
-endobj
-
-9 0 obj
-<<
-/Length 3000
->>
-stream
-BT
-% Page 2 Header
-/F2 18 Tf
-0.2 0.2 0.2 rg
-50 750 Td
-(Palmer & Partners - Tenancy Application \\(Page 2\\)) Tj
-
-% Orange underline
-0.85 0.44 0 rg
-50 742 512 2 re
-f
-
-% Employment Details Section
-/F2 16 Tf
-0.2 0.2 0.2 rg
-50 700 Td
-(Employment Details) Tj
-
-% Employment table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Employment Status) Tj
-210 0 Td
-(${data.applicants[0]?.employment || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Company Name) Tj
-210 0 Td
-(${data.applicants[0]?.companyName || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Job Title) Tj
-210 0 Td
-(${data.applicants[0]?.jobTitle || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Annual Income) Tj
-210 0 Td
-(£${data.applicants[0]?.annualIncome || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Length of Service) Tj
-210 0 Td
-(${data.applicants[0]?.lengthOfService || 'N/A'}) Tj
-
-% Current Address Section
--215 -50 Td
-/F2 16 Tf
-0.2 0.2 0.2 rg
-(Current Address) Tj
-
-% Address table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Current Address) Tj
-210 0 Td
-(${data.applicants[0]?.currentAddress || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Current Postcode) Tj
-210 0 Td
-(${data.applicants[0]?.currentPostcode || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Time at Address) Tj
-210 0 Td
-(${data.applicants[0]?.timeAtAddress || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Landlord Name) Tj
-210 0 Td
-(${data.applicants[0]?.landlordName || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Landlord Phone) Tj
-210 0 Td
-(${data.applicants[0]?.landlordPhone || 'N/A'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Rent Up to Date) Tj
-210 0 Td
-(${data.applicants[0]?.rentUpToDate === 'yes' ? 'Yes' : 'No'}) Tj
-
-ET
-endstream
-endobj
-
-10 0 obj
-<<
-/Length 2500
->>
-stream
-BT
-% Page 3 Header
-/F2 18 Tf
-0.2 0.2 0.2 rg
-50 750 Td
-(Palmer & Partners - Tenancy Application \\(Page 3\\)) Tj
-
-% Orange underline
-0.85 0.44 0 rg
-50 742 512 2 re
-f
-
-% Additional Information Section
-/F2 16 Tf
-0.2 0.2 0.2 rg
-50 700 Td
-(Additional Information) Tj
-
-% Additional info table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Pets) Tj
-210 0 Td
-(${data.additionalDetails?.pets ? 'Yes' : 'No'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Under 18s) Tj
-210 0 Td
-(${data.additionalDetails?.under18Count || '0'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(UK/ROI Passport) Tj
-210 0 Td
-(${data.additionalDetails?.ukPassport === 'yes' ? 'Yes' : 'No'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Adverse Credit) Tj
-210 0 Td
-(${data.additionalDetails?.adverseCredit === 'yes' ? 'Yes' : 'No'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Guarantor Required) Tj
-210 0 Td
-(${data.additionalDetails?.guarantorRequired === 'yes' ? 'Yes' : 'No'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Deposit Type) Tj
-210 0 Td
-(${data.additionalDetails?.depositType || 'N/A'}) Tj
-
-% Data Sharing Section
--215 -50 Td
-/F2 16 Tf
-0.2 0.2 0.2 rg
-(Data Sharing) Tj
-
-% Data sharing table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Utilities) Tj
-210 0 Td
-(${data.dataSharing?.utilities ? 'Yes' : 'No'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Insurance) Tj
-210 0 Td
-(${data.dataSharing?.insurance ? 'Yes' : 'No'}) Tj
-
-% Signature Section
--215 -50 Td
-/F2 16 Tf
-0.2 0.2 0.2 rg
-(Signature) Tj
-
-% Signature table
-0 -30 Td
-/F2 10 Tf
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Signed) Tj
-210 0 Td
-(${data.signature ? 'Digital Signature Applied' : 'Not Signed'}) Tj
-
--210 -20 Td
-0.9 0.9 0.9 rg
-0 0 200 15 re
-f
-0 0 0 rg
-5 5 Td
-(Submitted) Tj
-210 0 Td
-(${new Date().toLocaleString()}) Tj
-
-ET
-endstream
-endobj
-
-xref
-0 11
-0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000123 00000 n 
-0000000253 00000 n 
-0000000383 00000 n 
-0000000513 00000 n 
-0000000584 00000 n 
-0000000660 00000 n 
-0000004215 00000 n 
-0000007270 00000 n 
-trailer
-<<
-/Size 11
-/Root 1 0 R
->>
-startxref
-9820
-%%EOF`;
+  // Signature Section - matching the demo exactly
+  yPosition = addSectionHeader('Signature', yPosition);
+  yPosition = addDataRow('Full Name', `${data.applicants[0]?.firstName || ''} ${data.applicants[0]?.lastName || ''}`, yPosition);
   
+  // Signature row
+  yPosition = checkPageBreak(yPosition);
+  const labelWidth = 170 * 0.35;
+  const valueWidth = 170 * 0.65;
+  const signatureRowHeight = 25;
+  
+  // Signature label
+  doc.setFillColor(243, 244, 246);
+  doc.rect(20, yPosition, labelWidth, signatureRowHeight, 'F');
+  doc.setDrawColor(209, 213, 219);
+  doc.rect(20, yPosition, labelWidth, signatureRowHeight);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
+  doc.setTextColor(0, 0, 0);
+  doc.text('Signature', 25, yPosition + 7);
+  
+  // Signature value
+  doc.setFillColor(255, 255, 255);
+  doc.rect(20 + labelWidth, yPosition, valueWidth, signatureRowHeight, 'F');
+  doc.rect(20 + labelWidth, yPosition, valueWidth, signatureRowHeight);
+  
+  // Add signature if it exists
+  if (data.signature && data.signature.startsWith('data:image/')) {
+    try {
+      const maxSignatureWidth = valueWidth - 10;
+      const maxSignatureHeight = 15;
+      doc.addImage(data.signature, 'PNG', 25 + labelWidth, yPosition + 5, maxSignatureWidth, maxSignatureHeight);
+    } catch (error) {
+      console.warn('Could not add signature image, using placeholder');
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Digital Signature Applied', 25 + labelWidth + 5, yPosition + 14);
+    }
+  } else {
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(data.signature || 'Digital Signature Applied', 25 + labelWidth + 5, yPosition + 14);
+  }
+  
+  yPosition += signatureRowHeight;
+  
+  // Submitted at
+  const submittedDate = data.submittedAt ? new Date(data.submittedAt).toLocaleString() : new Date().toLocaleString();
+  yPosition = addDataRow('Submitted At', submittedDate, yPosition);
+
   // Convert to base64
-  const base64 = btoa(pdfContent);
-  console.log('Comprehensive multi-page PDF generated successfully with all application data');
+  const pdfOutput = doc.output('arraybuffer');
+  const uint8Array = new Uint8Array(pdfOutput);
+  let binary = '';
+  for (let i = 0; i < uint8Array.byteLength; i++) {
+    binary += String.fromCharCode(uint8Array[i]);
+  }
+  const base64 = btoa(binary);
+  
+  console.log('PDF generated successfully using admin preview logic');
   return base64;
 };
