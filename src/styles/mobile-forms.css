@@ -1,4 +1,5 @@
 
+
 /* Mobile form styling and touch targets */
 @media (max-width: 640px) {
   .form-control,
@@ -35,15 +36,6 @@
     min-height: 20px !important;
     flex-shrink: 0 !important;
     touch-action: manipulation !important;
-  }
-
-  /* Button styling - exclude toggle buttons */
-  .btn,
-  button:not([data-radix-toggle]):not([data-radix-toggle-group-item]) {
-    min-height: 48px !important;
-    @apply text-base;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
   }
 
   /* Explicitly remove all styling from toggle buttons */
@@ -104,3 +96,4 @@
     margin-top: 0.5rem !important;
   }
 }
+

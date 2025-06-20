@@ -1,4 +1,5 @@
 
+
 /* Tablet and desktop styles */
 @media (min-width: 641px) and (max-width: 1000px) {
   .form-control,
@@ -15,10 +16,19 @@
     border-radius: 12px;
   }
 
+  /* Exclude toggle buttons from button styling */
   .btn,
-  button {
+  button:not([data-radix-toggle]):not([data-radix-toggle-group-item]) {
     min-height: 48px;
     padding: 0.75rem 1.5rem;
+  }
+
+  /* Explicitly remove styling from toggle buttons */
+  button[data-radix-toggle],
+  [data-radix-toggle-group-item] {
+    padding: 0 !important;
+    min-height: auto !important;
+    margin: 0 !important;
   }
 }
 
@@ -43,4 +53,13 @@
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
   }
+
+  /* Explicitly remove styling from toggle buttons on desktop too */
+  button[data-radix-toggle],
+  [data-radix-toggle-group-item] {
+    padding: 0 !important;
+    min-height: auto !important;
+    margin: 0 !important;
+  }
 }
+
