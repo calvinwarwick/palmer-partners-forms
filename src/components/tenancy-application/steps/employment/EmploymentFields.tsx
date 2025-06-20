@@ -50,12 +50,12 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
         <FormField
           label="Employer Name"
           required
-          htmlFor={`employerName-${applicant.id}`}
+          htmlFor={`employer-${applicant.id}`}
         >
           <Input
-            id={`employerName-${applicant.id}`}
-            value={applicant.employerName}
-            onChange={(e) => onUpdateApplicant(applicant.id, 'employerName', e.target.value)}
+            id={`employer-${applicant.id}`}
+            value={applicant.employer}
+            onChange={(e) => onUpdateApplicant(applicant.id, 'employer', e.target.value)}
             placeholder="Enter employer name"
           />
         </FormField>
@@ -90,15 +90,15 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
             </div>
           }
           required
-          htmlFor={`annualSalary-${applicant.id}`}
+          htmlFor={`annualIncome-${applicant.id}`}
         >
           <div className="currency-input-container">
             <span className="currency-input-icon text-orange-500">£</span>
             <Input
-              id={`annualSalary-${applicant.id}`}
+              id={`annualIncome-${applicant.id}`}
               type="number"
-              value={applicant.annualSalary}
-              onChange={(e) => onUpdateApplicant(applicant.id, 'annualSalary', e.target.value)}
+              value={applicant.annualIncome}
+              onChange={(e) => onUpdateApplicant(applicant.id, 'annualIncome', e.target.value)}
               placeholder="e.g., 45000"
               className="currency-input border-gray-200 focus:border-orange-500 focus:ring-orange-500 rounded-xl"
             />
@@ -107,26 +107,26 @@ const EmploymentFields = ({ applicant, onUpdateApplicant }: EmploymentFieldsProp
 
         <FormField
           label="Work Phone"
-          htmlFor={`workPhone-${applicant.id}`}
+          htmlFor={`phone-${applicant.id}`}
         >
           <Input
-            id={`workPhone-${applicant.id}`}
+            id={`phone-${applicant.id}`}
             type="tel"
-            value={applicant.workPhone}
-            onChange={(e) => onUpdateApplicant(applicant.id, 'workPhone', e.target.value)}
+            value={applicant.phone}
+            onChange={(e) => onUpdateApplicant(applicant.id, 'phone', e.target.value)}
             placeholder="Enter work phone number"
           />
         </FormField>
 
         <FormField
           label="Work Email"
-          htmlFor={`workEmail-${applicant.id}`}
+          htmlFor={`email-${applicant.id}`}
         >
           <Input
-            id={`workEmail-${applicant.id}`}
+            id={`email-${applicant.id}`}
             type="email"
-            value={applicant.workEmail}
-            onChange={(e) => onUpdateApplicant(applicant.id, 'workEmail', e.target.value)}
+            value={applicant.email}
+            onChange={(e) => onUpdateApplicant(applicant.id, 'email', e.target.value)}
             placeholder="Enter work email address"
           />
         </FormField>
